@@ -428,6 +428,16 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
 .card.clickable:hover { transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.13); }
 .card.clickable .ch::after { content:'→';margin-left:auto;font-size:13px;color:var(--tx3);transition:transform .15s; }
 .card.clickable:hover .ch::after { transform:translateX(3px); }
+
+/* ── QUOTES ─────────────────────────────────────── */
+.quote-bar {
+  text-align:center; padding:10px 20px; margin-bottom:16px;
+  font-size:12.5px; color:var(--tx3); font-style:italic;
+  background:linear-gradient(135deg,rgba(38,198,160,.07),rgba(171,124,239,.07));
+  border-radius:12px; border:1px solid rgba(38,198,160,.15);
+  font-family:'Nunito',sans-serif; line-height:1.5;
+}
+.quote-bar span { color:var(--tx2); font-weight:600; font-style:normal; }
 </style>
 </head>
 <body>
@@ -499,7 +509,7 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
 <div class="wrap">
 
   <!-- ══ DASHBOARD ══════════════════════════════════ -->
-  <div class="panel on" id="panel-dash">
+  <div class="panel on" id="panel-dash"><div class="quote-bar" id="qb-panel-dash"></div>
     <div id="ld" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;gap:18px">
       <div style="font-size:60px;animation:float-bounce 2s ease-in-out infinite">🌻</div>
       <div style="font-size:13px;color:var(--tx2);font-family:'JetBrains Mono',monospace;letter-spacing:1px">loading team data…</div>
@@ -609,7 +619,7 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
   </div>
 
   <!-- ══ CALENDAR ══════════════════════════════════ -->
-  <div class="panel" id="panel-cal">
+  <div class="panel" id="panel-cal"><div class="quote-bar" id="qb-panel-cal"></div>
     <div class="cc">
       <div class="mn">
         <button class="nb" onclick="pm()">‹</button>
@@ -634,7 +644,7 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
   </div>
 
   <!-- ══ ANNUAL ════════════════════════════════════ -->
-  <div class="panel" id="panel-ann">
+  <div class="panel" id="panel-ann"><div class="quote-bar" id="qb-panel-ann"></div>
     <div class="g2">
       <div class="card">
         <div class="ch"><div class="ct">🦋 Monthly Activity</div><div class="cm">2026 · leaves & OT</div></div>
@@ -659,7 +669,7 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
   </div>
 
   <!-- ══ LEAVE ════════════════════════════════════ -->
-  <div class="panel" id="panel-lv">
+  <div class="panel" id="panel-lv"><div class="quote-bar" id="qb-panel-lv"></div>
     <div class="card" style="margin-bottom:16px">
       <div class="ch"><div class="ct">🌱 Leave Credits Remaining</div><div class="cm">VL: 15 days/yr · SL: 5 days/yr</div></div>
       <div class="cg" id="lcr"></div>
@@ -674,7 +684,7 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
   </div>
 
   <!-- ══ OT ════════════════════════════════════════ -->
-  <div class="panel" id="panel-ot">
+  <div class="panel" id="panel-ot"><div class="quote-bar" id="qb-panel-ot"></div>
     <div class="card" style="margin-bottom:16px">
       <div class="ch"><div class="ct">⏰ Overtime Log</div><div class="cm">DOLE: Regular ×1.25 · Rest Day ×1.30 · Holiday ×2.00</div></div>
       <div class="tw"><table>
@@ -752,6 +762,13 @@ const HOL={
 };
 
 // Chip config — bright summer colors
+const DEPT_COLORS={
+  'Procurement':'background:#e8f5e9;color:#2e7d32',
+  'Warehouse':'background:#e3f2fd;color:#1565c0',
+  'Trainee':'background:#fff3e0;color:#e65100',
+  'Admin':'background:#f3e5f5;color:#7b1fa2',
+  'Operations':'background:#fce4ec;color:#c62828',
+};
 const CC={
   'P':    {bg:'#e8f5e9',c:'#2e7d32',bd:'#a5d6a7'},
   'VL':   {bg:'#f3e5f5',c:'#7b1fa2',bd:'#ce93d8'},
@@ -920,7 +937,7 @@ function renderAll(){
   document.getElementById('de').style.display='none';
   document.getElementById('dc').style.display='block';
   rdDash(); rdCal(); rdAnn(); rdLv(); rdOT();
-  populateForms();
+  populateForms(); injectQuotes();
 }
 
 function mkChip(code,isSun,emp,ds){
@@ -1015,8 +1032,8 @@ function rdDash(){
       <td style="font-size:11.5px;color:var(--tx2)">${m.workDays||'—'}</td>
       <td style="font-size:11.5px;color:var(--tx3)">${m.notes||'—'}</td>
       <td><div class="emp-row-actions">
-        <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10.5px" onclick="openEditEmp(${JSON.stringify(m)})">✏️</button>
-        <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10.5px" onclick="confirmDeleteEmp('${m.name.replace(/'/g,"\\'")}',${m.rowIndex||0})">🗑</button>
+        <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10.5px" onclick="openEditEmpByIdx(${m.rowIndex||0})">✏️</button>
+        <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10.5px" onclick="confirmDeleteEmp('${m.name.replace(/'/g,String.fromCharCode(39))}',${m.rowIndex||0})">🗑</button>
       </div></td></tr>`;
   });
   document.getElementById('dtb').innerHTML=th;
@@ -1541,6 +1558,12 @@ function openAddEmp() {
   document.getElementById('empMo').classList.add('open');
 }
 
+function openEditEmpByIdx(rowIndex) {
+  if (!DATA || !DATA.team) return;
+  const m = DATA.team.find(t => t.rowIndex === rowIndex);
+  if (!m) { toast('Employee not found','er'); return; }
+  openEditEmp(m);
+}
 function openEditEmp(m) {
   document.getElementById('empMoTitle').textContent  = 'Edit Employee';
   document.getElementById('empMoSub').textContent    = m.name;
@@ -1643,6 +1666,87 @@ async function doApprove(type, rowIndex, decision, empName) {
   }
 }
 
+
+// ══════════════════════════════════════════════════
+// QUOTES — rotating motivational quotes
+// ══════════════════════════════════════════════════
+const QUOTES = [
+  { q: "The secret of getting ahead is getting started.", a: "Mark Twain" },
+  { q: "Teamwork makes the dream work.", a: "John C. Maxwell" },
+  { q: "Great things are never done by one person — they're done by a team.", a: "Steve Jobs" },
+  { q: "Coming together is a beginning. Keeping together is progress. Working together is success.", a: "Henry Ford" },
+  { q: "Hard work beats talent when talent doesn't work hard.", a: "Tim Notke" },
+  { q: "Success is not final, failure is not fatal — it is the courage to continue that counts.", a: "Winston Churchill" },
+  { q: "Don't watch the clock; do what it does — keep going.", a: "Sam Levenson" },
+  { q: "The only way to do great work is to love what you do.", a: "Steve Jobs" },
+  { q: "Strive not to be a success, but rather to be of value.", a: "Albert Einstein" },
+  { q: "Push yourself, because no one else is going to do it for you.", a: "Unknown" },
+  { q: "Ang tagumpay ay hindi isang aksidente — ito ay resulta ng iyong pagsisikap.", a: "Anonymous" },
+  { q: "Bawat araw ay isang bagong pagkakataon para gumaling.", a: "Filipino Proverb" },
+];
+function getQuote() {
+  const idx = Math.floor(Date.now() / (1000*60*60*6)) % QUOTES.length; // changes every 6 hrs
+  const q = QUOTES[idx];
+  return `"${q.q}" <span>— ${q.a}</span>`;
+}
+function injectQuotes() {
+  document.querySelectorAll('.quote-bar').forEach(el => {
+    el.innerHTML = '💬 ' + getQuote();
+  });
+}
+
+// ══════════════════════════════════════════════════
+// EMPLOYEE DETAIL MODAL
+// ══════════════════════════════════════════════════
+function showEmpDetail(name) {
+  if (!DATA) return;
+  const leaves = (DATA.leaves||[]).filter(l=>l.employee===name);
+  const ot     = (DATA.otLog||[]).filter(o=>o.employee===name);
+  const member = (DATA.team||[]).find(m=>m.name===name);
+
+  const totalOT  = ot.reduce((s,o)=>s+(o.hours||0),0);
+  const vlDays   = leaves.filter(l=>l.type==='VL').reduce((s,l)=>s+(l.days||0),0);
+  const slDays   = leaves.filter(l=>l.type==='SL').reduce((s,l)=>s+(l.days||0),0);
+  const elDays   = leaves.filter(l=>l.type==='EL').reduce((s,l)=>s+(l.days||0),0);
+
+  let lvRows = leaves.length ? leaves.map(l=>{
+    const st=l.status||'PENDING';
+    const bs=st==='APPROVED'?'color:#2e7d32':st==='DENIED'?'color:#c62828':'color:#e65100';
+    return `<tr>
+      <td style="font-size:11px;font-family:'JetBrains Mono',monospace">${fmtD(l.from)}${l.to&&l.to!==l.from?' → '+fmtD(l.to):''}</td>
+      <td><span class="chip" style="background:${(CC[l.type]||{bg:'#f5f5f5'}).bg};color:${(CC[l.type]||{c:'#666'}).c}">${l.type}</span></td>
+      <td style="font-size:11px;text-align:center">${l.days||1}d</td>
+      <td style="font-size:11px;${bs};font-weight:700">${st}</td>
+      <td style="font-size:10.5px;color:var(--tx3)">${l.reason||'—'}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="5" style="color:var(--tx3);text-align:center;font-size:11px;padding:12px">No leave records</td></tr>';
+
+  let otRows = ot.length ? [...ot].sort((a,b)=>b.date.localeCompare(a.date)).map(o=>`<tr>
+    <td style="font-size:11px;font-family:'JetBrains Mono',monospace">${fmtD(o.date)}</td>
+    <td style="font-size:11px;color:var(--tx2)">${o.dayType||'—'}</td>
+    <td style="font-size:11px;font-family:'JetBrains Mono',monospace">${o.timeIn&&o.timeOut?o.timeIn+'–'+o.timeOut:'—'}</td>
+    <td style="font-size:12px;font-weight:800;color:#e65100;font-family:'JetBrains Mono',monospace;text-align:center">${o.hours?o.hours.toFixed(1):'—'}h</td>
+    <td style="font-size:10.5px;color:var(--tx3)">${o.reason||'—'}</td>
+  </tr>`).join('') : '<tr><td colspan="5" style="color:var(--tx3);text-align:center;font-size:11px;padding:12px">No OT records</td></tr>';
+
+  const dept = member ? member.dept : '';
+  const deptColor = DEPT_COLORS[dept] || 'background:#e3f2fd;color:#1565c0';
+
+  document.getElementById('empDetailTitle').textContent = name.replace(' (You)','');
+  document.getElementById('empDetailSub').innerHTML =
+    `<span style="font-size:10.5px;${deptColor};padding:2px 9px;border-radius:6px;font-weight:700">${dept||'—'}</span>
+     &nbsp;·&nbsp; VL: <b>${vlDays}</b>d &nbsp;·&nbsp; SL: <b>${slDays}</b>d &nbsp;·&nbsp; EL: <b>${elDays}</b>d &nbsp;·&nbsp; OT: <b>${totalOT.toFixed(1)}</b>h`;
+  document.getElementById('empDetailLv').innerHTML = lvRows;
+  document.getElementById('empDetailOT').innerHTML = otRows;
+  document.getElementById('empDetailMo').classList.add('open');
+}
+function closeEmpDetail() {
+  document.getElementById('empDetailMo').classList.remove('open');
+}
+document.getElementById('empDetailMo')?.addEventListener('click', e=>{
+  if(e.target===document.getElementById('empDetailMo')) closeEmpDetail();
+});
+
 setInterval(doSync,60000);
 doSync();
 </script>
@@ -1676,6 +1780,31 @@ doSync();
       <div class="form-status" id="empFormStatus" style="margin-right:auto"></div>
       <button class="btn bs" onclick="closeEmpMo()">Cancel</button>
       <button class="btn bp" id="empSaveBtn" onclick="saveEmployee()">Save Employee</button>
+    </div>
+  </div>
+</div>
+
+<!-- EMPLOYEE DETAIL MODAL -->
+<div class="mo" id="empDetailMo">
+  <div class="md" style="width:680px;max-width:96vw;max-height:85vh;overflow-y:auto">
+    <div class="mtt" id="empDetailTitle">Employee</div>
+    <div class="mst" id="empDetailSub"></div>
+    <div style="margin-top:16px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:8px">🌿 Leave History</div>
+      <div class="tw"><table>
+        <thead><tr><th>Date</th><th>Type</th><th class="c">Days</th><th>Status</th><th>Reason</th></tr></thead>
+        <tbody id="empDetailLv"></tbody>
+      </table></div>
+    </div>
+    <div style="margin-top:16px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:8px">⏰ OT History</div>
+      <div class="tw"><table>
+        <thead><tr><th>Date</th><th>Day Type</th><th>Time</th><th class="c">Hours</th><th>Reason</th></tr></thead>
+        <tbody id="empDetailOT"></tbody>
+      </table></div>
+    </div>
+    <div class="ma" style="margin-top:18px">
+      <button class="btn bp" onclick="closeEmpDetail()">Close</button>
     </div>
   </div>
 </div>
