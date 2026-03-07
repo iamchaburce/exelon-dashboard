@@ -438,6 +438,46 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
   font-family:'Nunito',sans-serif; line-height:1.5;
 }
 .quote-bar span { color:var(--tx2); font-weight:600; font-style:normal; }
+
+/* ── DASHBOARD ENHANCEMENTS ──────────────────────── */
+.greeting-bar {
+  display:flex; align-items:center; gap:14px;
+  background:linear-gradient(135deg,#00897b,#0288d1);
+  border-radius:16px; padding:16px 22px; margin-bottom:20px;
+  color:#fff; position:relative; overflow:hidden;
+}
+.greeting-bar::after {
+  content:'🌿'; position:absolute; right:20px; top:50%;
+  transform:translateY(-50%); font-size:48px; opacity:.15;
+}
+.greeting-title { font-size:18px; font-weight:900; margin-bottom:2px; }
+.greeting-sub   { font-size:12px; opacity:.85; }
+.greeting-time  { font-family:'JetBrains Mono',monospace; font-size:13px;
+  background:rgba(255,255,255,.15); padding:3px 10px; border-radius:7px; margin-left:auto; }
+
+/* today snapshot */
+.today-snap {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:10px; margin-bottom:18px;
+}
+.snap-card {
+  background:var(--bg2); border:1.5px solid var(--bdr);
+  border-radius:12px; padding:12px 14px; text-align:center;
+  transition:all .18s;
+}
+.snap-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
+.snap-name { font-size:11px; font-weight:700; color:var(--tx2); margin-bottom:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.snap-code { font-size:15px; font-weight:900; }
+
+/* kpi pulse on pending */
+.kpi.has-pending { animation: kpi-pulse 2.5s ease-in-out infinite; }
+@keyframes kpi-pulse {
+  0%,100% { box-shadow: 0 4px 18px rgba(249,168,37,.3); }
+  50%      { box-shadow: 0 4px 28px rgba(249,168,37,.7); }
+}
+/* card hover */
+.card { transition: box-shadow .2s; }
+.card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.09); }
 </style>
 </head>
 <body>
@@ -515,6 +555,11 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
       <div style="font-size:13px;color:var(--tx2);font-family:'JetBrains Mono',monospace;letter-spacing:1px">loading team data…</div>
     </div>
     <div id="dc" style="display:none">
+      <div class="greeting-bar" id="greetBar"></div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:8px">📍 Today's Attendance</div>
+        <div class="today-snap" id="todaySnap"></div>
+      </div>
       <div class="kpis" id="kpis"></div>
       <!-- QUICK ADD FORMS -->
       <div class="g2" style="margin-bottom:16px">
@@ -973,11 +1018,39 @@ function emp0(cols,msg='No records yet'){return`<tr><td colspan="${cols}" style=
 // DASHBOARD
 // ══════════════════════════════════════════════════
 function rdDash(){
-  const{team,leaves,otLog}=DATA;
+  const{team,leaves,otLog,calendar}=DATA;
   const today=new Date().toISOString().split('T')[0];
+  const now=new Date();
   const hleft=Object.keys(HOL).filter(d=>d>=today).length;
   const totLv=leaves.length, pendLv=leaves.filter(l=>(l.status||'').toUpperCase()==='PENDING').length;
+  const pendOT=otLog.filter(o=>(o.status||'').toUpperCase()==='PENDING').length;
   const totOTh=otLog.reduce((s,o)=>s+(o.hours||0),0);
+
+  // Greeting
+  const hr=now.getHours();
+  const greet=hr<12?'🌅 Good Morning':'🌞 Good Afternoon';
+  const dayStr=now.toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+  const timeStr=now.toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
+  const gb=document.getElementById('greetBar');
+  if(gb) gb.innerHTML=`
+    <div>
+      <div class="greeting-title">${greet}, Chary! 👋</div>
+      <div class="greeting-sub">${dayStr} · ${pendLv+pendOT} pending approval${pendLv+pendOT!==1?'s':''}</div>
+    </div>
+    <div class="greeting-time">${timeStr}</div>`;
+
+  // Today snapshot — show each member's attendance today
+  const cal=calendar||{};
+  const snaps=team.map(m=>{
+    const code=(cal[m.name]||{})[today]||'';
+    const cfg=CC[code];
+    const chip=code
+      ? `<div class="snap-code" style="color:${cfg?cfg.c:'#9e9e9e'}">${code}</div>`
+      : `<div class="snap-code" style="color:#bbb;font-size:11px">—</div>`;
+    return `<div class="snap-card">${chip}<div class="snap-name">${m.name.replace(' (You)','').split(' ')[0]}</div></div>`;
+  }).join('');
+  const sb=document.getElementById('todaySnap');
+  if(sb) sb.innerHTML=snaps;
 
   const kpis=[
     {l:'Team Members',   v:team.length,    s:'Procurement & Warehouse'},
@@ -989,10 +1062,10 @@ function rdDash(){
   ];
   const kpiLinks=['','lv','ann','','cal'];
   document.getElementById('kpis').innerHTML=kpis.map((k,i)=>`
-    <div class="kpi ${KPI_DATA[i].cls}" ${kpiLinks[i]?`onclick="switchTab('${kpiLinks[i]}')" style="cursor:pointer"`:''} title="${kpiLinks[i]?'Click to open '+k.l:''}">
+    <div class="kpi ${KPI_DATA[i].cls}${i===1&&pendLv>0?' has-pending':''}" ${kpiLinks[i]?`onclick="switchTab('${kpiLinks[i]}')" style="cursor:pointer"`:''} title="${kpiLinks[i]?'Click to open '+k.l:''}">
       <div class="kpi-art">${KPI_DATA[i].art}</div>
       <div class="kl">${k.l}</div>
-      <div class="kv" ${k.small?'style="font-size:20px"':''}>${k.v}</div>
+      <div class="kv" ${k.small?'style="font-size:20px"':''}>${k.v}${i===1&&pendLv>0?`<sup style="font-size:10px;background:rgba(255,255,255,.3);padding:1px 5px;border-radius:5px;margin-left:4px">${pendLv}⏳</sup>`:''}</div>
       <div class="ks">${k.s}</div>
     </div>`).join('');
 
@@ -1343,6 +1416,9 @@ function switchTab(tabId){
   if(btn) btn.classList.add('on');
   const panel=document.getElementById('panel-'+tabId);
   if(panel) panel.classList.add('on');
+  // Refresh quote for this tab
+  const qb=document.getElementById('qb-panel-'+tabId);
+  if(qb) qb.innerHTML=getTabQuote('panel-'+tabId);
 }
 document.querySelectorAll('.tab').forEach(b=>{
   b.addEventListener('click',()=>switchTab(b.dataset.tab));
@@ -1670,28 +1746,56 @@ async function doApprove(type, rowIndex, decision, empName) {
 // ══════════════════════════════════════════════════
 // QUOTES — rotating motivational quotes
 // ══════════════════════════════════════════════════
-const QUOTES = [
-  { q: "The secret of getting ahead is getting started.", a: "Mark Twain" },
-  { q: "Teamwork makes the dream work.", a: "John C. Maxwell" },
-  { q: "Great things are never done by one person — they're done by a team.", a: "Steve Jobs" },
-  { q: "Coming together is a beginning. Keeping together is progress. Working together is success.", a: "Henry Ford" },
-  { q: "Hard work beats talent when talent doesn't work hard.", a: "Tim Notke" },
-  { q: "Success is not final, failure is not fatal — it is the courage to continue that counts.", a: "Winston Churchill" },
-  { q: "Don't watch the clock; do what it does — keep going.", a: "Sam Levenson" },
-  { q: "The only way to do great work is to love what you do.", a: "Steve Jobs" },
-  { q: "Strive not to be a success, but rather to be of value.", a: "Albert Einstein" },
-  { q: "Push yourself, because no one else is going to do it for you.", a: "Unknown" },
-  { q: "Ang tagumpay ay hindi isang aksidente — ito ay resulta ng iyong pagsisikap.", a: "Anonymous" },
-  { q: "Bawat araw ay isang bagong pagkakataon para gumaling.", a: "Filipino Proverb" },
-];
-function getQuote() {
-  const idx = Math.floor(Date.now() / (1000*60*60*6)) % QUOTES.length; // changes every 6 hrs
-  const q = QUOTES[idx];
-  return `"${q.q}" <span>— ${q.a}</span>`;
+// Per-tab quotes — each tab has its own themed set
+const TAB_QUOTES = {
+  'panel-dash': [
+    { q: "Ang tagumpay ay hindi isang aksidente — ito ay resulta ng iyong pagsisikap.", a: "Anonymous" },
+    { q: "Great things are never done by one person. They're done by a team.", a: "Steve Jobs" },
+    { q: "Coming together is a beginning, keeping together is progress, working together is success.", a: "Henry Ford" },
+    { q: "Ang pag-unlad ng bawat isa ay pag-unlad ng lahat.", a: "Filipino Proverb" },
+    { q: "Alone we can do so little; together we can do so much.", a: "Helen Keller" },
+  ],
+  'panel-cal': [
+    { q: "Plan your work and work your plan.", a: "Napoleon Hill" },
+    { q: "A goal without a plan is just a wish.", a: "Antoine de Saint-Exupéry" },
+    { q: "Time is the scarcest resource — unless it is managed, nothing else can be managed.", a: "Peter Drucker" },
+    { q: "Ang oras ay ginto — huwag sayangin.", a: "Filipino Proverb" },
+    { q: "Don't watch the clock; do what it does — keep going.", a: "Sam Levenson" },
+  ],
+  'panel-ann': [
+    { q: "Small daily improvements over time lead to stunning results.", a: "Robin Sharma" },
+    { q: "Track your progress — what gets measured, gets improved.", a: "Peter Drucker" },
+    { q: "Consistency is the true foundation of trust.", a: "Roy T. Bennett" },
+    { q: "Excellence is not a destination but a continuous journey.", a: "Brian Tracy" },
+    { q: "Ang tiyaga ay may tagumpay.", a: "Filipino Proverb" },
+  ],
+  'panel-lv': [
+    { q: "Rest is not idleness — it is essential to doing your best work.", a: "John Lubbock" },
+    { q: "Taking care of yourself is part of taking care of your team.", a: "Unknown" },
+    { q: "You can't pour from an empty cup — take care of yourself first.", a: "Unknown" },
+    { q: "Ang pahinga ay bahagi ng pagiging produktibo.", a: "Filipino Wisdom" },
+    { q: "Recharge so you can come back stronger.", a: "Unknown" },
+  ],
+  'panel-ot': [
+    { q: "Hard work beats talent when talent doesn't work hard.", a: "Tim Notke" },
+    { q: "Push yourself, because no one else is going to do it for you.", a: "Unknown" },
+    { q: "The extra mile is never crowded.", a: "Wayne Dyer" },
+    { q: "Ang pagsisikap ngayon ay tagumpay bukas.", a: "Filipino Proverb" },
+    { q: "Hustle in silence and let your success make the noise.", a: "Unknown" },
+  ],
+};
+let _quoteCounters = {};
+function getTabQuote(panelId) {
+  const pool = TAB_QUOTES[panelId] || TAB_QUOTES['panel-dash'];
+  // Rotate based on time + tab
+  const seed = Math.floor(Date.now() / (1000*60*60*4)); // changes every 4 hrs
+  const idx  = (seed + Object.keys(TAB_QUOTES).indexOf(panelId||'panel-dash')) % pool.length;
+  const q = pool[Math.abs(idx)];
+  return `💬 "${q.q}" <span>— ${q.a}</span>`;
 }
 function injectQuotes() {
-  document.querySelectorAll('.quote-bar').forEach(el => {
-    el.innerHTML = '💬 ' + getQuote();
+  document.querySelectorAll('.quote-bar[id]').forEach(el => {
+    el.innerHTML = getTabQuote(el.id.replace('qb-',''));
   });
 }
 
