@@ -1012,32 +1012,50 @@ function rdDash(){
 function rdCal(){
   if(!DATA) return;
   const{team,leaves,otLog}=DATA;
+  const cal=DATA.calendar||{};
   const yr=2026,mo=curMo,dim=new Date(yr,mo+1,0).getDate();
   document.getElementById('mlb').textContent=MO[mo]+' 2026';
 
   const g={};
   team.forEach(m=>{g[m.name]={}});
-  leaves.forEach(l=>{
-    if(!l.from||!g[l.employee]) return;
-    const from=new Date(l.from+'T00:00:00'),to=l.to?new Date(l.to+'T00:00:00'):from;
-    for(let d=new Date(from);d<=to;d.setDate(d.getDate()+1)){
-      if(d.getFullYear()===yr&&d.getMonth()===mo){
-        let c=(l.type||'VL').toUpperCase()
-          .replace('VACATION LEAVE','VL').replace('SICK LEAVE','SL')
-          .replace('EMERGENCY LEAVE','EL').replace('MATERNITY LEAVE','ML')
-          .replace('VACATION','VL').replace('SICK','SL');
-        g[l.employee][d.getDate()]=c;
+
+  // 1. Use calendar data from monthly sheets if available (most accurate)
+  if(Object.keys(cal).length>0){
+    team.forEach(m=>{
+      const empCal=cal[m.name]||{};
+      Object.entries(empCal).forEach(([ds,code])=>{
+        const d=new Date(ds+'T00:00:00');
+        if(d.getFullYear()===yr&&d.getMonth()===mo&&code){
+          g[m.name][d.getDate()]=code;
+        }
+      });
+    });
+  } else {
+    // Fallback: reconstruct from Leave/OT trackers
+    leaves.forEach(l=>{
+      if(!l.from||!g[l.employee]) return;
+      const from=new Date(l.from+'T00:00:00'),to=l.to?new Date(l.to+'T00:00:00'):from;
+      for(let d=new Date(from);d<=to;d.setDate(d.getDate()+1)){
+        if(d.getFullYear()===yr&&d.getMonth()===mo){
+          let c=(l.type||'VL').toUpperCase()
+            .replace('VACATION LEAVE','VL').replace('SICK LEAVE','SL')
+            .replace('EMERGENCY LEAVE','EL').replace('MATERNITY LEAVE','ML')
+            .replace('VACATION','VL').replace('SICK','SL');
+          g[l.employee][d.getDate()]=c;
+        }
       }
-    }
-  });
-  otLog.forEach(o=>{
-    if(!o.date||!g[o.employee]) return;
-    const d=new Date(o.date+'T00:00:00');
-    if(d.getFullYear()===yr&&d.getMonth()===mo){
-      const ex=g[o.employee][d.getDate()];
-      g[o.employee][d.getDate()]=ex==='P'?'OT+P':'OT';
-    }
-  });
+    });
+    otLog.forEach(o=>{
+      if(!o.date||!g[o.employee]) return;
+      const d=new Date(o.date+'T00:00:00');
+      if(d.getFullYear()===yr&&d.getMonth()===mo){
+        const ex=g[o.employee][d.getDate()];
+        g[o.employee][d.getDate()]=ex==='P'?'OT+P':'OT';
+      }
+    });
+  }
+
+  // 2. Apply local overrides (edits made in dashboard)
   Object.entries(ov).forEach(([emp,days])=>{
     Object.entries(days).forEach(([ds,code])=>{
       const d=new Date(ds+'T00:00:00');
