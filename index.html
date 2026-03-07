@@ -431,13 +431,30 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
 
 /* ── QUOTES ─────────────────────────────────────── */
 .quote-bar {
-  text-align:center; padding:10px 20px; margin-bottom:16px;
-  font-size:12.5px; color:var(--tx3); font-style:italic;
-  background:linear-gradient(135deg,rgba(38,198,160,.07),rgba(171,124,239,.07));
-  border-radius:12px; border:1px solid rgba(38,198,160,.15);
-  font-family:'Nunito',sans-serif; line-height:1.5;
+  text-align:center; padding:14px 28px; margin-bottom:18px;
+  font-size:14px; color:var(--tx); font-style:italic;
+  background:linear-gradient(120deg,rgba(38,198,160,.13) 0%,rgba(171,124,239,.10) 50%,rgba(249,168,37,.10) 100%);
+  border-radius:14px; border:1.5px solid rgba(38,198,160,.22);
+  font-family:'Playfair Display',Georgia,serif; line-height:1.7;
+  letter-spacing:.01em; position:relative; overflow:hidden;
 }
-.quote-bar span { color:var(--tx2); font-weight:600; font-style:normal; }
+.quote-bar::before {
+  content:'"'; position:absolute; left:14px; top:-8px;
+  font-size:72px; color:rgba(38,198,160,.12); font-family:'Playfair Display',serif;
+  line-height:1; pointer-events:none;
+}
+.quote-bar::after {
+  content:'"'; position:absolute; right:14px; bottom:-24px;
+  font-size:72px; color:rgba(171,124,239,.12); font-family:'Playfair Display',serif;
+  line-height:1; pointer-events:none;
+}
+.quote-bar .q-text { font-style:italic; font-size:14px; color:var(--tx); }
+.quote-bar .q-author {
+  display:block; margin-top:5px; font-size:11.5px;
+  font-style:normal; font-weight:600; color:var(--seafoam);
+  font-family:'Nunito',sans-serif; letter-spacing:.5px; text-transform:uppercase;
+}
+.quote-bar .q-icon { margin-right:8px; font-style:normal; }
 
 /* ── DASHBOARD ENHANCEMENTS ──────────────────────── */
 .greeting-bar {
@@ -661,6 +678,21 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
       </div>
     </div>
     <div id="de" style="display:none;background:#fff3e0;border:1.5px solid #ffcc02;border-radius:14px;padding:18px 22px;max-width:500px;margin:36px auto;font-size:12.5px;color:#bf360c;font-family:'JetBrains Mono',monospace"></div>
+  </div>
+
+  <!-- ══ HISTORY ══════════════════════════════════ -->
+  <div class="panel" id="panel-hist"><div class="quote-bar" id="qb-panel-hist"></div>
+    <div class="card">
+      <div class="ch">
+        <div class="ct">📜 Audit Log</div>
+        <div class="cm" id="histCount"></div>
+        <button class="emp-mgmt-btn add" style="padding:4px 12px;font-size:11px" onclick="doSync()">↻ Refresh</button>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>Time</th><th>Action</th><th>By</th><th>Details</th><th>Status</th></tr></thead>
+        <tbody id="histBody"></tbody>
+      </table></div>
+    </div>
   </div>
 
   <!-- ══ CALENDAR ══════════════════════════════════ -->
@@ -981,7 +1013,7 @@ function renderAll(){
   document.getElementById('ld').style.display='none';
   document.getElementById('de').style.display='none';
   document.getElementById('dc').style.display='block';
-  rdDash(); rdCal(); rdAnn(); rdLv(); rdOT();
+  rdDash(); rdCal(); rdAnn(); rdLv(); rdOT(); rdHist();
   populateForms(); injectQuotes();
 }
 
@@ -1298,12 +1330,13 @@ function rdLv(){
     const cfg=CC[l.type];
     const ts=cfg?`background:${cfg.bg};color:${cfg.c};border:1.5px solid ${cfg.bd}`:'background:#f5f5f5;color:#9e9e9e';
     const canAct = st==='PENDING'||st==='FILED';
-    const actBtns = canAct
-      ? `<div class="emp-row-actions">
-          <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10px" onclick="doApprove('leave',${l.rowIndex},'APPROVED','${l.employee.replace(/'/g,"\\'")}')">✅ Approve</button>
-          <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10px" onclick="doApprove('leave',${l.rowIndex},'DENIED','${l.employee.replace(/'/g,"\\'")}')">❌ Deny</button>
-        </div>`
-      : `<span style="font-size:10px;color:var(--tx3)">${st==='APPROVED'?'✅ Done':'❌ Denied'}</span>`;
+    const actBtns = `<div class="emp-row-actions" style="flex-wrap:wrap;gap:4px">
+      ${canAct ? `
+        <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10px" onclick="doApprove('leave',${l.rowIndex},'APPROVED','${l.employee.replace(/'/g,"\\'")}')">✅ Approve</button>
+        <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10px;background:#fce4ec;color:#c62828" onclick="doApprove('leave',${l.rowIndex},'DENIED','${l.employee.replace(/'/g,"\\'")}')">❌ Deny</button>
+      ` : `<span style="font-size:10px;color:var(--tx3)">${st==='APPROVED'?'✅ Done':'❌ Denied'}</span>`}
+      <button class="emp-mgmt-btn del" style="padding:3px 8px;font-size:10px;background:#f5f5f5;color:#9e9e9e;border:1px solid #e0e0e0" onclick="doDeleteEntry('leave',${l.rowIndex},'${l.employee.replace(/'/g,"\\'")}')">🗑</button>
+    </div>`;
     lh+=`<tr>
       <td><div class="en">${l.employee}</div></td>
       <td style="font-size:11px;color:var(--tx2)">${l.dept||'—'}</td>
@@ -1334,12 +1367,13 @@ function rdOT(){
       :ost==='DENIED'?'background:#fce4ec;color:#c62828;border:1px solid #f48fb1'
       :'background:#fff3e0;color:#e65100;border:1px solid #ffcc80';
     const canActOT=ost==='PENDING';
-    const otActBtns=canActOT
-      ?`<div class="emp-row-actions">
-          <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10px" onclick="doApprove('ot',${o.rowIndex},'APPROVED','${o.employee.replace(/'/g,"\\'")}')">✅ Approve</button>
-          <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10px" onclick="doApprove('ot',${o.rowIndex},'DENIED','${o.employee.replace(/'/g,"\\'")}')">❌ Deny</button>
-        </div>`
-      :`<span style="font-size:10px;color:var(--tx3)">${ost==='APPROVED'?'✅ Done':'❌ Denied'}</span>`;
+    const otActBtns=`<div class="emp-row-actions" style="flex-wrap:wrap;gap:4px">
+      ${canActOT ? `
+        <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10px" onclick="doApprove('ot',${o.rowIndex},'APPROVED','${o.employee.replace(/'/g,"\\'")}')">✅ Approve</button>
+        <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10px;background:#fce4ec;color:#c62828" onclick="doApprove('ot',${o.rowIndex},'DENIED','${o.employee.replace(/'/g,"\\'")}')">❌ Deny</button>
+      ` : `<span style="font-size:10px;color:var(--tx3)">${ost==='APPROVED'?'✅ Done':'❌ Denied'}</span>`}
+      <button class="emp-mgmt-btn del" style="padding:3px 8px;font-size:10px;background:#f5f5f5;color:#9e9e9e;border:1px solid #e0e0e0" onclick="doDeleteEntry('ot',${o.rowIndex},'${o.employee.replace(/'/g,"\\'")}')">🗑</button>
+    </div>`;
     oh+=`<tr>
       <td><div class="en">${o.employee}</div></td>
       <td style="font-size:11px;color:var(--tx2)">${o.dept||'—'}</td>
@@ -1783,6 +1817,13 @@ const TAB_QUOTES = {
     { q: "Ang pagsisikap ngayon ay tagumpay bukas.", a: "Filipino Proverb" },
     { q: "Hustle in silence and let your success make the noise.", a: "Unknown" },
   ],
+  'panel-hist': [
+    { q: "Accountability is the glue that ties commitment to results.", a: "Bob Proctor" },
+    { q: "Trust is built with consistency.", a: "Lincoln Chafee" },
+    { q: "Transparency is not about exposing the truth — it's about building it.", a: "Unknown" },
+    { q: "Ang katapatan ay pundasyon ng tiwala.", a: "Filipino Proverb" },
+    { q: "Records of today become the wisdom of tomorrow.", a: "Unknown" },
+  ],
 };
 let _quoteCounters = {};
 function getTabQuote(panelId) {
@@ -1791,7 +1832,7 @@ function getTabQuote(panelId) {
   const seed = Math.floor(Date.now() / (1000*60*60*4)); // changes every 4 hrs
   const idx  = (seed + Object.keys(TAB_QUOTES).indexOf(panelId||'panel-dash')) % pool.length;
   const q = pool[Math.abs(idx)];
-  return `💬 "${q.q}" <span>— ${q.a}</span>`;
+  return `<span class="q-icon">💬</span><span class="q-text">${q.q}</span><span class="q-author">— ${q.a}</span>`;
 }
 function injectQuotes() {
   document.querySelectorAll('.quote-bar[id]').forEach(el => {
@@ -1850,6 +1891,121 @@ function closeEmpDetail() {
 document.getElementById('empDetailMo')?.addEventListener('click', e=>{
   if(e.target===document.getElementById('empDetailMo')) closeEmpDetail();
 });
+
+
+// ══════════════════════════════════════════════════
+// DELETE LEAVE / OT ENTRY
+// ══════════════════════════════════════════════════
+async function doDeleteEntry(type, rowIndex, empName) {
+  const label = type === 'leave' ? 'Leave' : 'OT';
+  if (!confirm('🗑 Delete this ' + label + ' entry for ' + empName + '?\n\nThis cannot be undone.')) return;
+  toast('⟳ Deleting…', 'info');
+  try {
+    const action = type === 'leave' ? 'deleteLeave' : 'deleteOT';
+    const res = await gasCall({ action, rowIndex: String(rowIndex) });
+    if (res.ok) {
+      toast('🗑 ' + label + ' entry deleted', 'ok');
+      // Log to history
+      addLocalHistory('DELETE ' + label.toUpperCase(), empName, 'Row #' + rowIndex + ' removed', '🗑');
+      setTimeout(doSync, 700);
+    } else throw new Error(res.error || 'Failed');
+  } catch(e) {
+    toast('Delete error: ' + e.message, 'er');
+  }
+}
+
+// ══════════════════════════════════════════════════
+// AUDIT LOG / HISTORY
+// ══════════════════════════════════════════════════
+let HIST = []; // local history log
+
+function addLocalHistory(action, by, details, icon) {
+  HIST.unshift({
+    time:    new Date().toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit', second:'2-digit'}),
+    date:    new Date().toLocaleDateString('en-PH', {month:'short', day:'numeric'}),
+    action:  action,
+    by:      by || 'System',
+    details: details || '',
+    icon:    icon || '📝',
+    status:  'OK'
+  });
+  if (HIST.length > 100) HIST.pop(); // keep last 100
+  rdHist();
+}
+
+function rdHist() {
+  const tbody = document.getElementById('histBody');
+  if (!tbody) return;
+
+  // Combine local history with server data events
+  const serverEvents = [];
+  if (DATA) {
+    // Build events from current data state
+    (DATA.leaves||[]).forEach(l => {
+      serverEvents.push({
+        time:    l.from || '',
+        date:    l.from || '',
+        action:  'LEAVE FILED',
+        by:      l.employee,
+        details: `${l.type} · ${l.days||1}d · ${l.from}${l.to&&l.to!==l.from?' → '+l.to:''}${l.reason?' · '+l.reason:''}`,
+        icon:    '🌿',
+        status:  l.status || 'PENDING'
+      });
+    });
+    (DATA.otLog||[]).forEach(o => {
+      serverEvents.push({
+        time:    o.date || '',
+        date:    o.date || '',
+        action:  'OT FILED',
+        by:      o.employee,
+        details: `${o.dayType||''} · ${o.hours||0}h · ${o.timeIn||''}${o.timeOut?'–'+o.timeOut:''} · ${o.reason||''}`,
+        icon:    '⏰',
+        status:  o.status || 'PENDING'
+      });
+    });
+  }
+
+  // Sort server events newest first
+  serverEvents.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+
+  // Combine: local (session actions) first, then server events
+  const all = [...HIST, ...serverEvents];
+  document.getElementById('histCount').textContent = all.length + ' records';
+
+  if (!all.length) {
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--tx3);padding:20px;font-size:12px">📜 No history yet</td></tr>';
+    return;
+  }
+
+  const stColor = s => {
+    s = (s||'').toUpperCase();
+    if (s==='APPROVED') return 'background:#e8f5e9;color:#2e7d32';
+    if (s==='DENIED')   return 'background:#fce4ec;color:#c62828';
+    if (s==='PENDING')  return 'background:#fff3e0;color:#e65100';
+    if (s==='OK')       return 'background:#e3f2fd;color:#0277bd';
+    return 'background:#f5f5f5;color:#9e9e9e';
+  };
+
+  tbody.innerHTML = all.map(h => `<tr>
+    <td style="font-size:10.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace;white-space:nowrap">${h.date||''}<br>${h.time||''}</td>
+    <td style="font-size:11.5px;font-weight:700">${h.icon||'📝'} ${h.action}</td>
+    <td style="font-size:11.5px;color:var(--tx2)">${h.by||'—'}</td>
+    <td style="font-size:11px;color:var(--tx3);max-width:280px">${h.details||'—'}</td>
+    <td><span class="badge" style="${stColor(h.status)};font-size:10px;padding:2px 7px">${h.status||'—'}</span></td>
+  </tr>`).join('');
+}
+
+// Hook into existing actions to log them
+const _origDoApprove = doApprove;
+async function doApprove(type, rowIndex, decision, empName) {
+  await _origDoApprove(type, rowIndex, decision, empName);
+  addLocalHistory(
+    decision + ' ' + type.toUpperCase(),
+    'Chary (You)',
+    empName + ' · Row #' + rowIndex,
+    decision === 'APPROVED' ? '✅' : '❌'
+  );
+}
 
 setInterval(doSync,60000);
 doSync();
