@@ -667,7 +667,7 @@ tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-
     <div class="card">
       <div class="ch"><div class="ct">🌿 Leave Log</div><div class="cm" id="lc"></div></div>
       <div class="tw"><table>
-        <thead><tr><th>Employee</th><th>Dept</th><th>Type</th><th>From</th><th>To</th><th class="c">Days</th><th>Reason</th><th>Status</th><th>Approved By</th></tr></thead>
+        <thead><tr><th>Employee</th><th>Dept</th><th>Type</th><th>From</th><th>To</th><th class="c">Days</th><th>Reason</th><th>Status</th><th>Approved By</th><th>Action</th></tr></thead>
         <tbody id="lb"></tbody>
       </table></div>
     </div>
@@ -1207,6 +1207,13 @@ function rdLv(){
       :'background:#fff3e0;color:#e65100;border:1px solid #ffcc80';
     const cfg=CC[l.type];
     const ts=cfg?`background:${cfg.bg};color:${cfg.c};border:1.5px solid ${cfg.bd}`:'background:#f5f5f5;color:#9e9e9e';
+    const canAct = st==='PENDING'||st==='FILED';
+    const actBtns = canAct
+      ? `<div class="emp-row-actions">
+          <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10px" onclick="doApprove('leave',${l.rowIndex},'APPROVED','${l.employee.replace(/'/g,"\\'")}')">✅ Approve</button>
+          <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10px" onclick="doApprove('leave',${l.rowIndex},'DENIED','${l.employee.replace(/'/g,"\\'")}')">❌ Deny</button>
+        </div>`
+      : `<span style="font-size:10px;color:var(--tx3)">${st==='APPROVED'?'✅ Done':'❌ Denied'}</span>`;
     lh+=`<tr>
       <td><div class="en">${l.employee}</div></td>
       <td style="font-size:11px;color:var(--tx2)">${l.dept||'—'}</td>
@@ -1217,6 +1224,7 @@ function rdLv(){
       <td style="font-size:11.5px;color:var(--tx2);max-width:150px">${l.reason||'—'}</td>
       <td><span class="badge" style="${bs}">${st}</span></td>
       <td style="font-size:11.5px;color:var(--tx2)">${l.approvedBy||'—'}</td>
+      <td>${actBtns}</td>
     </tr>`;
   });
   document.getElementById('lb').innerHTML=lh;
@@ -1231,6 +1239,17 @@ function rdOT(){
   let oh='';
   if(!otLog.length){oh=emp0(7);}
   else [...otLog].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).forEach(o=>{
+    const ost=(o.status||'PENDING').toUpperCase();
+    const obs=ost==='APPROVED'?'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7'
+      :ost==='DENIED'?'background:#fce4ec;color:#c62828;border:1px solid #f48fb1'
+      :'background:#fff3e0;color:#e65100;border:1px solid #ffcc80';
+    const canActOT=ost==='PENDING';
+    const otActBtns=canActOT
+      ?`<div class="emp-row-actions">
+          <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10px" onclick="doApprove('ot',${o.rowIndex},'APPROVED','${o.employee.replace(/'/g,"\\'")}')">✅ Approve</button>
+          <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10px" onclick="doApprove('ot',${o.rowIndex},'DENIED','${o.employee.replace(/'/g,"\\'")}')">❌ Deny</button>
+        </div>`
+      :`<span style="font-size:10px;color:var(--tx3)">${ost==='APPROVED'?'✅ Done':'❌ Denied'}</span>`;
     oh+=`<tr>
       <td><div class="en">${o.employee}</div></td>
       <td style="font-size:11px;color:var(--tx2)">${o.dept||'—'}</td>
@@ -1239,6 +1258,8 @@ function rdOT(){
       <td style="font-size:11px;color:var(--tx2);font-family:'JetBrains Mono',monospace;white-space:nowrap">${o.timeIn&&o.timeOut?o.timeIn+'–'+o.timeOut:o.timeIn||o.timeOut||'—'}</td>
       <td class="c na">${o.hours?o.hours.toFixed(1):'—'}</td>
       <td style="font-size:11.5px;color:var(--tx2);max-width:160px">${o.reason||'—'}</td>
+      <td><span class="badge" style="${obs}">${ost}</span></td>
+      <td>${otActBtns}</td>
     </tr>`;
   });
   document.getElementById('ob').innerHTML=oh;
@@ -1596,6 +1617,31 @@ async function confirmDeleteEmp(name, rowIndex) {
 document.getElementById('empMo')?.addEventListener('click', e=>{
   if(e.target===document.getElementById('empMo')) closeEmpMo();
 });
+
+
+// ══════════════════════════════════════════════════
+// APPROVE / DENY
+// ══════════════════════════════════════════════════
+async function doApprove(type, rowIndex, decision, empName) {
+  const label = type === 'leave' ? 'Leave' : 'OT';
+  const icon  = decision === 'APPROVED' ? '✅' : '❌';
+  if (!confirm(icon + ' ' + decision + ' ' + label + ' request for ' + empName + '?')) return;
+
+  toast('⟳ Processing…', 'info');
+  try {
+    const action = type === 'leave' ? 'approveLeave' : 'approveOT';
+    const res = await gasCall({ action, rowIndex: String(rowIndex), decision });
+    if (res.ok) {
+      toast(icon + ' ' + label + ' ' + decision + ' — email sent to ' + empName.split(' ')[0], 'ok');
+      setTimeout(doSync, 800);
+    } else {
+      throw new Error(res.error || 'Unknown error');
+    }
+  } catch(e) {
+    toast('Error: ' + e.message, 'er');
+    console.error('doApprove error:', e);
+  }
+}
 
 setInterval(doSync,60000);
 doSync();
