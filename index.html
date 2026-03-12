@@ -36,7 +36,6 @@
     overflow-x: hidden;
   }
 
-  /* ── GRID NOISE BACKGROUND ── */
   body::before {
     content:'';
     position:fixed; inset:0; z-index:0;
@@ -47,7 +46,6 @@
     pointer-events:none;
   }
 
-  /* ── HEADER ── */
   header {
     position: relative; z-index:10;
     background: linear-gradient(135deg, #060e1a 0%, #0a1628 100%);
@@ -57,9 +55,7 @@
     height: 64px;
   }
 
-  .logo {
-    display:flex; align-items:center; gap:12px;
-  }
+  .logo { display:flex; align-items:center; gap:12px; }
 
   .logo-icon {
     width:38px; height:38px;
@@ -95,7 +91,7 @@
     box-shadow:0 0 8px var(--accent);
     animation: pulse 2s infinite;
   }
-  .sync-dot.error { background:var(--red); box-shadow:0 0 8px var(--red); animation:none; }
+  .sync-dot.error   { background:var(--red);    box-shadow:0 0 8px var(--red);    animation:none; }
   .sync-dot.loading { background:var(--orange); box-shadow:0 0 8px var(--orange); animation:spin 1s linear infinite; }
 
   @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
@@ -103,7 +99,6 @@
 
   .last-sync { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); }
 
-  /* ── NAV TABS ── */
   nav {
     position:relative; z-index:10;
     background: var(--bg2);
@@ -111,7 +106,6 @@
     display:flex; gap:0; padding:0 28px;
     overflow-x:auto;
   }
-
   nav::-webkit-scrollbar { display:none; }
 
   .tab {
@@ -123,7 +117,6 @@
     transition: all .2s; display:flex; align-items:center; gap:7px;
     text-transform:uppercase;
   }
-
   .tab:hover  { color:var(--text); }
   .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
 
@@ -133,19 +126,16 @@
     color:var(--accent);
     font-size:10px; font-family:'JetBrains Mono',monospace;
   }
-
-  .tab-badge.red   { background:rgba(255,68,68,.15); color:var(--red); }
+  .tab-badge.red   { background:rgba(255,68,68,.15);  color:var(--red); }
   .tab-badge.gold  { background:rgba(240,165,0,.15);  color:var(--gold); }
   .tab-badge.green { background:rgba(0,230,118,.15);  color:var(--green); }
 
-  /* ── MAIN ── */
   main {
     position:relative; z-index:1;
     max-width:1600px; margin:0 auto;
     padding:24px 28px;
   }
 
-  /* ── SECTION TITLE ── */
   .section-title {
     font-size:11px; font-weight:700; letter-spacing:2px;
     color:var(--text3); text-transform:uppercase;
@@ -153,20 +143,17 @@
     border-bottom:1px solid var(--border);
     display:flex; align-items:center; gap:8px;
   }
-
   .section-title::before {
     content:'';
     display:inline-block; width:3px; height:14px;
     background:var(--accent); border-radius:2px;
   }
 
-  /* ── GRID LAYOUTS ── */
-  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
-  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-  .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .grid-4    { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .grid-3    { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .grid-2    { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
   .grid-auto { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
 
-  /* ── KPI CARD ── */
   .kpi {
     background: var(--card);
     border: 1px solid var(--border);
@@ -176,41 +163,31 @@
     transition: border-color .2s, transform .2s;
     cursor:default;
   }
-
   .kpi:hover { border-color:var(--border2); transform:translateY(-1px); }
-
   .kpi::after {
     content:''; position:absolute;
     top:0; left:0; right:0; height:2px;
     background:var(--accent-kpi, var(--accent));
     opacity:.6;
   }
-
   .kpi-label {
     font-size:10px; font-weight:600; letter-spacing:1.5px;
     color:var(--text3); text-transform:uppercase; margin-bottom:10px;
     display:flex; align-items:center; gap:6px;
   }
-
   .kpi-value {
     font-size:28px; font-weight:800;
     color:var(--kpi-color, var(--text));
     font-variant-numeric:tabular-nums;
     line-height:1;
   }
-
-  .kpi-sub {
-    font-size:11px; color:var(--text2); margin-top:6px;
-    font-family:'JetBrains Mono',monospace;
-  }
-
+  .kpi-sub { font-size:11px; color:var(--text2); margin-top:6px; font-family:'JetBrains Mono',monospace; }
   .kpi-glow {
     position:absolute; inset:0; border-radius:10px;
     background:radial-gradient(circle at 20% 50%, var(--kpi-glow,rgba(0,194,255,.05)) 0%, transparent 70%);
     pointer-events:none;
   }
 
-  /* ── ACTION REQUIRED CARDS ── */
   .ar-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
 
   .ar-card {
@@ -220,7 +197,6 @@
     display:flex; align-items:center; gap:14px;
     transition:all .2s; cursor:pointer; position:relative; overflow:hidden;
   }
-
   .ar-card:hover { transform:translateY(-2px); }
   .ar-card::before {
     content:''; position:absolute;
@@ -234,19 +210,16 @@
   .ar-num  { font-size:30px; font-weight:800; color:var(--ar-color,var(--text)); font-variant-numeric:tabular-nums; line-height:1; }
   .ar-lbl  { font-size:10px; color:var(--text2); letter-spacing:.5px; margin-top:3px; }
 
-  /* ── TABLE ── */
   .table-wrap {
     background:var(--card);
     border:1px solid var(--border);
     border-radius:10px; overflow:hidden;
   }
-
   .table-header {
     padding:14px 18px;
     border-bottom:1px solid var(--border);
     display:flex; align-items:center; justify-content:space-between;
   }
-
   .table-title { font-size:12px; font-weight:700; letter-spacing:.8px; color:var(--text); }
 
   .search-box {
@@ -261,7 +234,6 @@
   .search-box:focus { border-color:var(--accent); }
 
   table { width:100%; border-collapse:collapse; }
-
   thead tr { background:var(--bg2); }
   thead th {
     padding:10px 14px;
@@ -270,52 +242,37 @@
     text-align:left; border-bottom:1px solid var(--border);
     white-space:nowrap;
   }
-
-  tbody tr {
-    border-bottom:1px solid rgba(30,45,66,.5);
-    transition:background .15s;
-  }
+  tbody tr { border-bottom:1px solid rgba(30,45,66,.5); transition:background .15s; }
   tbody tr:hover { background:rgba(0,194,255,.03); }
   tbody tr:last-child { border-bottom:none; }
-
-  tbody td {
-    padding:10px 14px;
-    font-size:12px; color:var(--text2);
-    font-family:'JetBrains Mono',monospace;
-  }
-
+  tbody td { padding:10px 14px; font-size:12px; color:var(--text2); font-family:'JetBrains Mono',monospace; }
   tbody td.desc { font-family:'Syne',sans-serif; color:var(--text); font-size:12px; }
 
-  /* ── STATUS BADGES ── */
   .badge {
     display:inline-flex; align-items:center; gap:5px;
     padding:3px 8px; border-radius:4px;
     font-size:10px; font-weight:600; letter-spacing:.5px;
     white-space:nowrap; font-family:'Syne',sans-serif;
   }
-
-  .badge-canvass  { background:rgba(240,165,0,.15);  color:var(--gold); border:1px solid rgba(240,165,0,.2); }
-  .badge-ready    { background:rgba(0,230,118,.12);  color:var(--green); border:1px solid rgba(0,230,118,.2); }
-  .badge-po       { background:rgba(0,194,255,.12);  color:var(--accent); border:1px solid rgba(0,194,255,.2); }
-  .badge-delivered{ background:rgba(0,230,118,.08);  color:#4fc;         border:1px solid rgba(0,255,204,.15); }
-  .badge-wh       { background:rgba(167,139,250,.12);color:var(--purple); border:1px solid rgba(167,139,250,.2); }
-  .badge-partial  { background:rgba(255,140,0,.12);  color:var(--orange); border:1px solid rgba(255,140,0,.2); }
-  .badge-paid     { background:rgba(0,230,118,.12);  color:var(--green); }
-  .badge-unpaid   { background:rgba(255,68,68,.12);  color:var(--red); }
-  .badge-process  { background:rgba(240,165,0,.12);  color:var(--gold); }
-  .badge-ho       { background:rgba(0,194,255,.12);  color:var(--accent); }
-  .badge-overdue  { background:rgba(255,68,68,.18);  color:var(--red); border:1px solid rgba(255,68,68,.3); }
-  .badge-critical { background:rgba(255,68,68,.18);  color:var(--red); border:1px solid rgba(255,68,68,.3); animation:blink 1.5s infinite; }
-  .badge-warning  { background:rgba(255,140,0,.15);  color:var(--orange); border:1px solid rgba(255,140,0,.2); }
+  .badge-canvass   { background:rgba(240,165,0,.15);  color:var(--gold);   border:1px solid rgba(240,165,0,.2); }
+  .badge-ready     { background:rgba(0,230,118,.12);  color:var(--green);  border:1px solid rgba(0,230,118,.2); }
+  .badge-po        { background:rgba(0,194,255,.12);  color:var(--accent); border:1px solid rgba(0,194,255,.2); }
+  .badge-delivered { background:rgba(0,230,118,.08);  color:#4fc;          border:1px solid rgba(0,255,204,.15); }
+  .badge-wh        { background:rgba(167,139,250,.12);color:var(--purple); border:1px solid rgba(167,139,250,.2); }
+  .badge-partial   { background:rgba(255,140,0,.12);  color:var(--orange); border:1px solid rgba(255,140,0,.2); }
+  .badge-paid      { background:rgba(0,230,118,.12);  color:var(--green); }
+  .badge-unpaid    { background:rgba(255,68,68,.12);  color:var(--red); }
+  .badge-process   { background:rgba(240,165,0,.12);  color:var(--gold); }
+  .badge-ho        { background:rgba(0,194,255,.12);  color:var(--accent); }
+  .badge-overdue   { background:rgba(255,68,68,.18);  color:var(--red); border:1px solid rgba(255,68,68,.3); }
+  .badge-critical  { background:rgba(255,68,68,.18);  color:var(--red); border:1px solid rgba(255,68,68,.3); animation:blink 1.5s infinite; }
+  .badge-warning   { background:rgba(255,140,0,.15);  color:var(--orange); border:1px solid rgba(255,140,0,.2); }
 
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.5} }
 
-  /* ── FILTER PILLS ── */
   .filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
-
   .pill {
-    padding:5px 14px;
-    border-radius:20px;
+    padding:5px 14px; border-radius:20px;
     border:1px solid var(--border2);
     background:transparent;
     color:var(--text2); font-family:'Syne',sans-serif;
@@ -325,7 +282,6 @@
   .pill:hover  { border-color:var(--accent); color:var(--accent); }
   .pill.active { background:rgba(0,194,255,.15); border-color:var(--accent); color:var(--accent); }
 
-  /* ── PROJECT CARD ── */
   .proj-card {
     background:var(--card);
     border:1px solid var(--border);
@@ -333,147 +289,67 @@
     transition:all .2s; cursor:pointer;
   }
   .proj-card:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:0 8px 30px rgba(0,0,0,.3); }
-
-  .proj-so   { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--accent); letter-spacing:1px; margin-bottom:6px; }
-  .proj-name { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .proj-so     { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--accent); letter-spacing:1px; margin-bottom:6px; }
+  .proj-name   { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
   .proj-client { font-size:11px; color:var(--text2); margin-bottom:14px; }
-
   .proj-bar-wrap { height:4px; background:var(--bg3); border-radius:2px; overflow:hidden; margin-bottom:10px; }
-  .proj-bar {
-    height:100%; border-radius:2px;
-    background:linear-gradient(90deg, var(--accent), var(--green));
-    transition:width .8s ease;
-  }
-
+  .proj-bar { height:100%; border-radius:2px; background:linear-gradient(90deg, var(--accent), var(--green)); transition:width .8s ease; }
   .proj-stats { display:flex; gap:12px; flex-wrap:wrap; }
   .proj-stat  { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--text3); }
   .proj-stat span { color:var(--text2); }
 
-  /* ── BILLING CARD ── */
-  .bill-card {
-    background:var(--card);
-    border:1px solid var(--border);
-    border-radius:10px; overflow:hidden; margin-bottom:12px;
-  }
-
-  .bill-card-head {
-    padding:14px 18px;
-    display:flex; align-items:center; justify-content:space-between;
-    cursor:pointer; transition:background .15s;
-  }
+  .bill-card { background:var(--card); border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:12px; }
+  .bill-card-head { padding:14px 18px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; transition:background .15s; }
   .bill-card-head:hover { background:rgba(255,255,255,.02); }
-
-  .bill-card-info h4  { font-size:13px; font-weight:700; color:var(--text); }
-  .bill-card-info p   { font-size:11px; color:var(--text2); margin-top:2px; font-family:'JetBrains Mono',monospace; }
-
-  .bill-amounts { text-align:right; }
-  .bill-total   { font-size:16px; font-weight:700; color:var(--text); }
-  .bill-balance { font-size:11px; color:var(--orange); font-family:'JetBrains Mono',monospace; margin-top:2px; }
-  .bill-paid    { color:var(--green); }
-
+  .bill-card-info h4 { font-size:13px; font-weight:700; color:var(--text); }
+  .bill-card-info p  { font-size:11px; color:var(--text2); margin-top:2px; font-family:'JetBrains Mono',monospace; }
+  .bill-amounts  { text-align:right; }
+  .bill-total    { font-size:16px; font-weight:700; color:var(--text); }
+  .bill-balance  { font-size:11px; color:var(--orange); font-family:'JetBrains Mono',monospace; margin-top:2px; }
+  .bill-paid     { color:var(--green); }
   .bill-card-body { padding:0 18px 16px; border-top:1px solid var(--border); display:none; }
   .bill-card-body.open { display:block; }
 
-  /* ── SUPPLIER SCORE ── */
-  .supplier-row {
-    display:flex; align-items:center; gap:16px;
-    padding:12px 0; border-bottom:1px solid rgba(30,45,66,.5);
-  }
+  .supplier-row { display:flex; align-items:center; gap:16px; padding:12px 0; border-bottom:1px solid rgba(30,45,66,.5); }
   .supplier-row:last-child { border-bottom:none; }
-
   .supplier-rank {
     width:26px; height:26px; border-radius:50%;
     background:var(--bg3); border:1px solid var(--border2);
     display:flex; align-items:center; justify-content:center;
-    font-size:11px; font-weight:700; color:var(--text2);
-    flex-shrink:0;
+    font-size:11px; font-weight:700; color:var(--text2); flex-shrink:0;
   }
   .supplier-rank.gold { background:rgba(240,165,0,.15); border-color:rgba(240,165,0,.3); color:var(--gold); }
-
   .supplier-name { flex:1; font-size:13px; font-weight:600; color:var(--text); }
   .supplier-meta { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--text3); margin-top:2px; }
 
-  .score-bar-wrap { width:140px; }
-  .score-bar-track { height:6px; background:var(--bg3); border-radius:3px; overflow:hidden; }
-  .score-bar-fill  { height:100%; border-radius:3px; background:linear-gradient(90deg, var(--accent2), var(--green)); }
-  .score-label     { font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--text2); margin-top:4px; text-align:right; }
-
-  /* ── SHORTAGE ── */
-  .shortage-critical { border-left:3px solid var(--red); }
-  .shortage-warning  { border-left:3px solid var(--orange); }
-  .shortage-ok       { border-left:3px solid var(--green); }
-
-  /* ── LOADING / ERROR STATES ── */
-  .loading-state {
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:60px 20px; gap:16px;
-  }
-
-  .spinner {
-    width:40px; height:40px; border-radius:50%;
-    border:3px solid var(--border);
-    border-top-color:var(--accent);
-    animation:spin 1s linear infinite;
-  }
-
+  .loading-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 20px; gap:16px; }
+  .spinner { width:40px; height:40px; border-radius:50%; border:3px solid var(--border); border-top-color:var(--accent); animation:spin 1s linear infinite; }
   .loading-text { font-size:13px; color:var(--text2); font-family:'JetBrains Mono',monospace; }
-
-  .error-state {
-    padding:40px 20px; text-align:center;
-  }
+  .error-state { padding:40px 20px; text-align:center; }
   .error-icon { font-size:36px; margin-bottom:12px; }
   .error-msg  { font-size:13px; color:var(--red); font-family:'JetBrains Mono',monospace; }
   .error-sub  { font-size:11px; color:var(--text3); margin-top:8px; }
 
-  /* ── AMOUNT ── */
   .amount { font-family:'JetBrains Mono',monospace; color:var(--text); }
   .amount.big { font-size:22px; font-weight:700; color:var(--accent); }
 
-  /* ── TAB PANELS ── */
   .tab-panel { display:none; }
   .tab-panel.active { display:block; }
 
-  /* ── MISC ── */
   .mb16 { margin-bottom:16px; }
   .mb24 { margin-bottom:24px; }
   .mt16 { margin-top:16px; }
 
-  .row-flex { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
-
-  .mini-stat {
-    background:var(--card); border:1px solid var(--border);
-    border-radius:8px; padding:10px 16px;
-    display:flex; align-items:center; gap:10px;
-  }
+  .mini-stat { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:10px 16px; display:flex; align-items:center; gap:10px; }
   .mini-stat-val { font-size:20px; font-weight:700; color:var(--text); }
   .mini-stat-lbl { font-size:10px; color:var(--text3); letter-spacing:.5px; }
 
-  /* ── WEEK CHART ── */
-  .week-chart { display:flex; align-items:flex-end; gap:8px; height:80px; padding:0 4px; }
-  .week-bar-group { flex:1; display:flex; gap:2px; align-items:flex-end; }
-  .week-bar { flex:1; border-radius:3px 3px 0 0; min-height:4px; transition:height .6s ease; }
-  .week-lbl { font-size:9px; color:var(--text3); text-align:center; margin-top:6px; font-family:'JetBrains Mono',monospace; }
-  .week-col { flex:1; }
-
-  /* scroll */
   .scroll-x { overflow-x:auto; }
   .scroll-x::-webkit-scrollbar { height:4px; }
   .scroll-x::-webkit-scrollbar-track { background:var(--bg3); }
   .scroll-x::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
 
-  /* pill counts */
-  .count-pill {
-    display:inline-block;
-    padding:1px 6px; border-radius:10px;
-    font-size:10px; font-family:'JetBrains Mono',monospace;
-    background:var(--bg3); color:var(--text3);
-    margin-left:4px;
-  }
-
-  /* days warning */
-  .days-ok   { color:var(--green); }
-  .days-warn { color:var(--orange); }
-  .days-crit { color:var(--red); font-weight:700; }
+  .count-pill { display:inline-block; padding:1px 6px; border-radius:10px; font-size:10px; font-family:'JetBrains Mono',monospace; background:var(--bg3); color:var(--text3); margin-left:4px; }
 
   @media(max-width:900px){
     .grid-4 { grid-template-columns:repeat(2,1fr); }
@@ -488,7 +364,6 @@
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="logo">
     <div class="logo-icon">⚡</div>
@@ -506,108 +381,64 @@
   </div>
 </header>
 
-<!-- NAV -->
 <nav>
-  <div class="tab active" onclick="showTab('overview')" id="tab-overview">
-    📊 Overview
-  </div>
-  <div class="tab" onclick="showTab('projects')" id="tab-projects">
-    📁 Projects <span class="tab-badge" id="badge-projects">—</span>
-  </div>
-  <div class="tab" onclick="showTab('alerts')" id="tab-alerts">
-    🚨 Alerts <span class="tab-badge red" id="badge-alerts">—</span>
-  </div>
-  <div class="tab" onclick="showTab('billing')" id="tab-billing">
-    💰 Billing <span class="tab-badge gold" id="badge-billing">—</span>
-  </div>
-  <div class="tab" onclick="showTab('items')" id="tab-items">
-    📦 Item History
-  </div>
-  <div class="tab" onclick="showTab('suppliers')" id="tab-suppliers">
-    🏆 Suppliers
-  </div>
-  <div class="tab" onclick="showTab('wh')" id="tab-wh">
-    🏭 WH Incoming
-  </div>
-  <div class="tab" onclick="showTab('po')" id="tab-po">
-    🛒 Purchase Orders
-  </div>
+  <div class="tab active" onclick="showTab('overview')" id="tab-overview">📊 Overview</div>
+  <div class="tab" onclick="showTab('projects')" id="tab-projects">📁 Projects <span class="tab-badge" id="badge-projects">—</span></div>
+  <div class="tab" onclick="showTab('alerts')" id="tab-alerts">🚨 Alerts <span class="tab-badge red" id="badge-alerts">—</span></div>
+  <div class="tab" onclick="showTab('billing')" id="tab-billing">💰 Billing <span class="tab-badge gold" id="badge-billing">—</span></div>
+  <div class="tab" onclick="showTab('items')" id="tab-items">📦 Item History</div>
+  <div class="tab" onclick="showTab('suppliers')" id="tab-suppliers">🏆 Suppliers</div>
+  <div class="tab" onclick="showTab('wh')" id="tab-wh">🏭 WH Incoming</div>
+  <div class="tab" onclick="showTab('po')" id="tab-po">🛒 Purchase Orders</div>
 </nav>
 
-<!-- MAIN -->
 <main>
-
-  <!-- ══════════ OVERVIEW ══════════ -->
   <div class="tab-panel active" id="panel-overview">
     <div id="overviewContent">
-      <div class="loading-state">
-        <div class="spinner"></div>
-        <div class="loading-text">Connecting to Google Sheets...</div>
-      </div>
+      <div class="loading-state"><div class="spinner"></div><div class="loading-text">Connecting to Google Sheets...</div></div>
     </div>
   </div>
-
-  <!-- ══════════ PROJECTS ══════════ -->
   <div class="tab-panel" id="panel-projects">
     <div id="projectsContent">
       <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading projects...</div></div>
     </div>
   </div>
-
-  <!-- ══════════ ALERTS ══════════ -->
   <div class="tab-panel" id="panel-alerts">
     <div id="alertsContent">
       <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading alerts...</div></div>
     </div>
   </div>
-
-  <!-- ══════════ BILLING ══════════ -->
   <div class="tab-panel" id="panel-billing">
     <div id="billingContent">
       <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading billing data...</div></div>
     </div>
   </div>
-
-  <!-- ══════════ ITEM HISTORY ══════════ -->
   <div class="tab-panel" id="panel-items">
     <div id="itemsContent">
       <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading item history...</div></div>
     </div>
   </div>
-
-  <!-- ══════════ SUPPLIERS ══════════ -->
   <div class="tab-panel" id="panel-suppliers">
     <div id="suppliersContent">
       <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading supplier data...</div></div>
     </div>
   </div>
-
-  <!-- ══════════ WH INCOMING ══════════ -->
   <div class="tab-panel" id="panel-wh">
     <div id="whContent">
       <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading WH data...</div></div>
     </div>
   </div>
-
-  <!-- ══════════ PURCHASE ORDERS ══════════ -->
   <div class="tab-panel" id="panel-po">
     <div id="poContent">
       <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading PO data...</div></div>
     </div>
   </div>
-
 </main>
 
 <script>
-// ══════════════════════════════════════════════
-//  CONFIG
-// ══════════════════════════════════════════════
 const PROCUREMENT_URL = 'https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
 const BILLING_URL     = 'https://script.google.com/a/macros/exelon.ph/s/AKfycbzj7KxrwLwEJsn0stbimahmxlx34DXF6XHdehVSJr-pI8AaVZIY1a86mEQ3-G5TnTxz/exec';
 
-// ══════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════
 let procData   = null;
 let billData   = null;
 let activeTab  = 'overview';
@@ -616,24 +447,14 @@ let itemSearch = '';
 let poSearch   = '';
 let whSearch   = '';
 
-// ══════════════════════════════════════════════
-//  INIT
-// ══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
-  syncAll();
-});
+document.addEventListener('DOMContentLoaded', () => { syncAll(); });
 
 async function syncAll() {
   setSyncState('loading');
   try {
-    const [p, b] = await Promise.allSettled([
-      fetchProcurement(),
-      fetchBilling()
-    ]);
-
+    const [p, b] = await Promise.allSettled([fetchProcurement(), fetchBilling()]);
     if (p.status === 'fulfilled') procData = p.value;
     if (b.status === 'fulfilled') billData = b.value;
-
     setSyncState(procData || billData ? 'ok' : 'error');
     renderAll();
     document.getElementById('lastSync').textContent =
@@ -661,13 +482,10 @@ async function fetchBilling() {
 function setSyncState(state) {
   const dot = document.getElementById('syncDot');
   const btn = document.getElementById('syncBtn');
-  dot.className = 'sync-dot ' + (state === 'loading' ? 'loading' : state === 'error' ? 'error' : '');
-  btn.className = 'sync-btn' + (state === 'loading' ? ' loading' : '');
+  dot.className = 'sync-dot ' + (state==='loading' ? 'loading' : state==='error' ? 'error' : '');
+  btn.className = 'sync-btn' + (state==='loading' ? ' loading' : '');
 }
 
-// ══════════════════════════════════════════════
-//  ROUTING
-// ══════════════════════════════════════════════
 function showTab(name) {
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -677,30 +495,24 @@ function showTab(name) {
   renderTab(name);
 }
 
-function renderAll() {
-  renderTab(activeTab);
-  updateBadges();
-}
+function renderAll() { renderTab(activeTab); updateBadges(); }
 
 function renderTab(name) {
   switch(name) {
-    case 'overview':   renderOverview();   break;
-    case 'projects':   renderProjects();   break;
-    case 'alerts':     renderAlerts();     break;
-    case 'billing':    renderBilling();    break;
-    case 'items':      renderItems();      break;
-    case 'suppliers':  renderSuppliers();  break;
-    case 'wh':         renderWH();         break;
-    case 'po':         renderPO();         break;
+    case 'overview':  renderOverview();  break;
+    case 'projects':  renderProjects();  break;
+    case 'alerts':    renderAlerts();    break;
+    case 'billing':   renderBilling();   break;
+    case 'items':     renderItems();     break;
+    case 'suppliers': renderSuppliers(); break;
+    case 'wh':        renderWH();        break;
+    case 'po':        renderPO();        break;
   }
 }
 
-// ══════════════════════════════════════════════
-//  OVERVIEW
-// ══════════════════════════════════════════════
+// ══ OVERVIEW ══
 function renderOverview() {
   const el = document.getElementById('overviewContent');
-
   if (!procData && !billData) {
     el.innerHTML = errorState('Failed to load data from Google Sheets',
       'Check that both Web Apps are deployed and accessible. Make sure "Execute as: Me" and "Access: Anyone".');
@@ -712,11 +524,10 @@ function renderOverview() {
   const wh  = procData?.wh  || [];
   const vp  = procData?.vp  || [];
 
-  // Compute counts
-  const readyForPO   = bom.filter(r => (r.status||'').includes('Ready')).length;
-  const forCanvass   = bom.filter(r => (r.status||'').includes('Canvass')).length;
-  const pendingDel   = wh.filter(r  => !(r.status||'').includes('Complete') && Number(r.balQty||0)>0).length;
-  const partialDel   = wh.filter(r  => (r.status||'').includes('Partial')).length;
+  const readyForPO = bom.filter(r => (r.status||'').includes('Ready')).length;
+  const forCanvass = bom.filter(r => (r.status||'').includes('Canvass')).length;
+  const pendingDel = wh.filter(r  => !(r.status||'').includes('Complete') && Number(r.balQty||0)>0).length;
+  const partialDel = wh.filter(r  => (r.status||'').includes('Partial')).length;
 
   const totalPOVal   = po.reduce((a,r) => a + Number(r.lineTotal||0), 0);
   const totalPaid    = vp.reduce((a,r) => a + Number(r.amtPaid||0), 0);
@@ -725,7 +536,6 @@ function renderOverview() {
   const activeSuppliers = [...new Set(po.map(r=>r.supplier).filter(Boolean))].length;
   const totalPOs        = [...new Set(po.map(r=>r.poNum).filter(Boolean))].length;
 
-  // Billing summary
   let billTotal = 0, billBalance = 0;
   if (billData?.projects) {
     Object.values(billData.projects).forEach(p => {
@@ -734,15 +544,11 @@ function renderOverview() {
     });
   }
 
-  // Suppliers data for mini scoreboard
   const suppliers = procData?.suppliers || [];
   const topSup    = suppliers.slice(0,3);
-
-  // Weekly activity
-  const weekly = procData?.weekly || [];
+  const weekly    = procData?.weekly || [];
 
   el.innerHTML = `
-    <!-- ACTION REQUIRED -->
     <div class="section-title">Action Required</div>
     <div class="ar-grid mb24">
       ${arCard('🟢','Ready for PO',readyForPO,'#00e676','rgba(0,230,118,.05)','alerts','READY')}
@@ -751,7 +557,6 @@ function renderOverview() {
       ${arCard('📦','Partial Delivery',partialDel,'#a78bfa','rgba(167,139,250,.05)','alerts','PARTIAL')}
     </div>
 
-    <!-- KPIs ROW 1 -->
     <div class="section-title">Procurement KPIs</div>
     <div class="grid-4 mb24">
       ${kpiCard('TOTAL PO VALUE','₱'+fmt(totalPOVal),'var(--accent)','var(--accent)',totalPOs+' purchase orders')}
@@ -760,25 +565,20 @@ function renderOverview() {
       ${kpiCard('ACTIVE SUPPLIERS',activeSuppliers,'var(--purple)','rgba(167,139,250,.06)',po.length+' PO line items')}
     </div>
 
-    <!-- KPIs ROW 2 -->
     <div class="grid-4 mb24">
-      ${kpiCard('TOTAL BOM ITEMS',bom.length,'var(--text)','rgba(255,255,255,.02)',procData?.projects?.length||0+' active projects')}
+      ${kpiCard('TOTAL BOM ITEMS',bom.length,'var(--text)','rgba(255,255,255,.02)',(procData?.projects?.length||0)+' active projects')}
       ${kpiCard('WH DELIVERIES DONE',wh.filter(r=>(r.status||'').includes('Complete')).length,'var(--green)','rgba(0,230,118,.04)',wh.length+' total WH rows')}
       ${kpiCard('BILLING PIPELINE','₱'+fmt(billTotal),'var(--gold)','rgba(240,165,0,.05)','₱'+fmt(billBalance)+' outstanding')}
       ${kpiCard('VP UNPAID',vp.filter(r=>!(r.payStatus||'').includes('Paid')).length,'var(--red)','rgba(255,68,68,.05)','vendor payables pending')}
     </div>
 
-    <!-- BOTTOM ROW: Suppliers + Weekly -->
     <div class="grid-2">
-      <!-- Top Suppliers -->
       <div class="table-wrap">
-        <div class="table-header">
-          <span class="table-title">🏆 TOP SUPPLIERS BY PO VALUE</span>
-        </div>
+        <div class="table-header"><span class="table-title">🏆 TOP SUPPLIERS BY PO VALUE</span></div>
         <div style="padding:8px 18px 16px">
           ${topSup.length ? topSup.map((s,i) => `
             <div class="supplier-row">
-              <div class="supplier-rank ${i===0?'gold'':''}">${i===0?'🥇':i+1}</div>
+              <div class="supplier-rank ${i===0 ? 'gold' : ''}">${i===0 ? '🥇' : i+1}</div>
               <div style="flex:1">
                 <div class="supplier-name">${s.name||'Unknown'}</div>
                 <div class="supplier-meta">${s.poCount} POs</div>
@@ -792,11 +592,8 @@ function renderOverview() {
         </div>
       </div>
 
-      <!-- Weekly Activity -->
       <div class="table-wrap">
-        <div class="table-header">
-          <span class="table-title">📅 WEEKLY ACTIVITY (LAST 4 WEEKS)</span>
-        </div>
+        <div class="table-header"><span class="table-title">📅 WEEKLY ACTIVITY (LAST 4 WEEKS)</span></div>
         <div style="padding:16px 18px">
           ${renderWeeklyChart(weekly)}
           ${weekly.map(w => `
@@ -833,26 +630,21 @@ function renderWeeklyChart(weekly) {
   `;
 }
 
-// ══════════════════════════════════════════════
-//  PROJECTS
-// ══════════════════════════════════════════════
+// ══ PROJECTS ══
 function renderProjects() {
   const el = document.getElementById('projectsContent');
   if (!procData) { el.innerHTML = noData(); return; }
-
   const clients = procData.clients || {};
-
   if (!Object.keys(clients).length) {
     el.innerHTML = '<div class="loading-state"><div style="font-size:32px">📁</div><div class="loading-text">No project data found</div></div>';
     return;
   }
-
   el.innerHTML = `
     <div class="section-title">Active Projects by Client</div>
     <div class="grid-auto">
       ${Object.entries(clients).map(([name, c]) => {
-        const total = c.total || 0;
-        const done  = (c.delivered||0) + (c.whStock||0);
+        const total   = c.total || 0;
+        const done    = (c.delivered||0) + (c.whStock||0);
         const pctDone = total ? Math.round(done/total*100) : 0;
         return `
           <div class="proj-card" onclick="showTab('alerts')">
@@ -864,7 +656,7 @@ function renderProjects() {
             <div class="proj-stats">
               <div class="proj-stat">🟡 <span>${c.pending||0}</span> canvass</div>
               <div class="proj-stat">🟢 <span>${c.ready||0}</span> ready</div>
-              <div class="proj-stat">✅ <span>${(c.issued||0)}</span> PO</div>
+              <div class="proj-stat">✅ <span>${c.issued||0}</span> PO</div>
               <div class="proj-stat">📦 <span>${done}</span> done</div>
             </div>
           </div>
@@ -874,9 +666,7 @@ function renderProjects() {
   `;
 }
 
-// ══════════════════════════════════════════════
-//  ALERTS
-// ══════════════════════════════════════════════
+// ══ ALERTS ══
 function renderAlerts(filter) {
   if (filter) itemFilter = filter;
   const el = document.getElementById('alertsContent');
@@ -884,52 +674,36 @@ function renderAlerts(filter) {
 
   const bom = procData.bom || [];
   const wh  = procData.wh  || [];
-  const po  = procData.po  || [];
 
   const ready   = bom.filter(r => (r.status||'').includes('Ready'));
   const canvass = bom.filter(r => (r.status||'').includes('Canvass'));
   const pendDel = wh.filter(r  => !(r.status||'').includes('Complete') && Number(r.balQty||0)>0 && !String(r.status||'').includes('Partial'));
   const partial = wh.filter(r  => (r.status||'').includes('Partial'));
 
-  const filterMap = {
-    'ALL':      [...ready,...canvass,...pendDel,...partial],
-    'READY':    ready,
-    'CANVASS':  canvass,
-    'DELIVERY': pendDel,
-    'PARTIAL':  partial
-  };
-
   el.innerHTML = `
-    <div class="section-title">Action Required — ${filterMap[itemFilter]?.length||0} items</div>
+    <div class="section-title">Action Required</div>
     <div class="filters mb16">
       ${['ALL','READY','CANVASS','DELIVERY','PARTIAL'].map(f =>
-        `<button class="pill ${itemFilter===f?'active':''}" onclick="renderAlerts('${f}')">${
-          f==='ALL'?'All Items':
-          f==='READY'?`🟢 Ready for PO (${ready.length})`:
-          f==='CANVASS'?`🟡 For Canvass (${canvass.length})`:
-          f==='DELIVERY'?`🚚 Pending Delivery (${pendDel.length})`:
-          `📦 Partial (${partial.length})`
+        `<button class="pill ${itemFilter===f ? 'active' : ''}" onclick="renderAlerts('${f}')">${
+          f==='ALL'      ? 'All Items' :
+          f==='READY'    ? '🟢 Ready for PO ('+ready.length+')' :
+          f==='CANVASS'  ? '🟡 For Canvass ('+canvass.length+')' :
+          f==='DELIVERY' ? '🚚 Pending Delivery ('+pendDel.length+')' :
+                           '📦 Partial ('+partial.length+')'
         }</button>`
       ).join('')}
     </div>
-
-    ${renderAlertsTable(itemFilter, {ready, canvass, pendDel, partial, po})}
+    ${renderAlertsTable(itemFilter, {ready, canvass, pendDel, partial})}
   `;
 }
 
-function renderAlertsTable(filter, {ready, canvass, pendDel, partial, po}) {
-  if (filter === 'ALL') {
-    return `
-      ${alertSection('🟢 READY FOR PO', ready, 'ready')}
-      ${alertSection('🟡 FOR CANVASS', canvass, 'canvass')}
-      ${alertSection('🚚 PENDING DELIVERY', pendDel, 'pendDel')}
-      ${alertSection('📦 PARTIAL DELIVERY', partial, 'partial')}
-    `;
-  }
-  if (filter==='READY')    return alertSection('🟢 READY FOR PO', ready, 'ready');
-  if (filter==='CANVASS')  return alertSection('🟡 FOR CANVASS', canvass, 'canvass');
-  if (filter==='DELIVERY') return alertSection('🚚 PENDING DELIVERY', pendDel, 'pendDel');
-  if (filter==='PARTIAL')  return alertSection('📦 PARTIAL DELIVERY', partial, 'partial');
+function renderAlertsTable(filter, {ready, canvass, pendDel, partial}) {
+  if (filter==='ALL')      return alertSection('🟢 READY FOR PO',ready,'ready') + alertSection('🟡 FOR CANVASS',canvass,'canvass') + alertSection('🚚 PENDING DELIVERY',pendDel,'pendDel') + alertSection('📦 PARTIAL DELIVERY',partial,'partial');
+  if (filter==='READY')    return alertSection('🟢 READY FOR PO',ready,'ready');
+  if (filter==='CANVASS')  return alertSection('🟡 FOR CANVASS',canvass,'canvass');
+  if (filter==='DELIVERY') return alertSection('🚚 PENDING DELIVERY',pendDel,'pendDel');
+  if (filter==='PARTIAL')  return alertSection('📦 PARTIAL DELIVERY',partial,'partial');
+  return '';
 }
 
 function alertSection(title, rows, type) {
@@ -939,12 +713,12 @@ function alertSection(title, rows, type) {
       <div style="padding:20px 18px;color:var(--green);font-size:12px;font-family:'JetBrains Mono',monospace">✅ All clear!</div>
     </div>`;
 
-  const headers = type==='pendDel' || type==='partial'
+  const headers = (type==='pendDel' || type==='partial')
     ? ['PO #','PROJECT','PART DESCRIPTION','SUPPLIER','PO QTY','DEL QTY','BAL QTY','STATUS']
     : ['PROJECT','CAT NO','PART DESCRIPTION','QTY','UNIT','VENDOR/PRICE','STATUS'];
 
   const rowsHtml = rows.map(r => {
-    if (type==='pendDel'||type==='partial') {
+    if (type==='pendDel' || type==='partial') {
       return `<tr>
         <td>${r.poNum||'—'}</td>
         <td class="desc">${r.project||'—'}</td>
@@ -962,7 +736,7 @@ function alertSection(title, rows, type) {
       <td class="desc">${r.partDesc||'—'}</td>
       <td>${r.qty||'—'}</td>
       <td>${r.unit||'—'}</td>
-      <td style="color:var(--gold)">${r.vendor ? r.vendor+' ₱'+fmt(r.unitPrice||r.bestPrice||0) : r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
+      <td style="color:var(--gold)">${r.vendor ? r.vendor+' ₱'+fmt(r.unitPrice||r.bestPrice||0) : r.bestPrice ? '₱'+fmt(r.bestPrice) : '—'}</td>
       <td>${statusBadge(r.status)}</td>
     </tr>`;
   }).join('');
@@ -979,24 +753,15 @@ function alertSection(title, rows, type) {
     </div>`;
 }
 
-// ══════════════════════════════════════════════
-//  BILLING
-// ══════════════════════════════════════════════
+// ══ BILLING ══
 function renderBilling() {
   const el = document.getElementById('billingContent');
   if (!billData) { el.innerHTML = noData('Billing data unavailable. Check Billing Monitoring Web App URL.'); return; }
 
   const projects = billData.projects || {};
   const clients  = billData.clients  || {};
-
-  let grandTotal   = 0;
-  let grandBalance = 0;
-
-  Object.values(projects).forEach(p => {
-    grandTotal   += Number(p.totalPO||0);
-    grandBalance += Number(p.balance||0);
-  });
-
+  let grandTotal = 0, grandBalance = 0;
+  Object.values(projects).forEach(p => { grandTotal += Number(p.totalPO||0); grandBalance += Number(p.balance||0); });
   const grandPaid = grandTotal - grandBalance;
 
   el.innerHTML = `
@@ -1007,16 +772,14 @@ function renderBilling() {
       ${kpiCard('OUTSTANDING','₱'+fmt(grandBalance),'var(--orange)','rgba(255,140,0,.06)',pct(grandBalance,grandTotal)+'% remaining')}
       ${kpiCard('CLIENTS',Object.keys(clients).length,'var(--purple)','rgba(167,139,250,.06)','')}
     </div>
-
     <div class="section-title">Project Billing Cards</div>
     ${Object.entries(projects).map(([key, proj]) => {
-      const total   = Number(proj.totalPO||0);
-      const balance = Number(proj.balance||0);
-      const paid    = total - balance;
-      const pctPaid = total ? Math.round(paid/total*100) : 0;
+      const total    = Number(proj.totalPO||0);
+      const balance  = Number(proj.balance||0);
+      const paid     = total - balance;
+      const pctPaid  = total ? Math.round(paid/total*100) : 0;
       const billings = proj.billings || [];
       const items    = proj.items    || [];
-
       return `
         <div class="bill-card">
           <div class="bill-card-head" onclick="toggleBill('${key}')">
@@ -1035,7 +798,7 @@ function renderBilling() {
               </div>
               <div class="bill-amounts">
                 <div class="bill-total">₱${fmt(total)}</div>
-                <div class="bill-balance ${balance===0?'bill-paid':''}">Balance: ₱${fmt(balance)}</div>
+                <div class="bill-balance ${balance===0 ? 'bill-paid' : ''}">Balance: ₱${fmt(balance)}</div>
               </div>
               <div style="color:var(--text3);font-size:18px" id="chevron-${key}">▼</div>
             </div>
@@ -1046,20 +809,12 @@ function renderBilling() {
                 <div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:8px">BILLING SCHEDULE</div>
                 <div class="scroll-x">
                   <table>
-                    <thead><tr>
-                      <th>PO #</th><th>SUPPLIER/SUBCON</th><th>BILLING TYPE</th>
-                      <th>STATUS</th><th>VB REF</th><th>REQ DATE</th><th>SI/BS #</th><th>AMOUNT</th>
-                    </tr></thead>
+                    <thead><tr><th>PO #</th><th>SUPPLIER/SUBCON</th><th>BILLING TYPE</th><th>STATUS</th><th>VB REF</th><th>REQ DATE</th><th>SI/BS #</th><th>AMOUNT</th></tr></thead>
                     <tbody>
                       ${billings.map(b => `<tr>
-                        <td>${b.po||'—'}</td>
-                        <td class="desc">${b.supplier||'—'}</td>
-                        <td>${b.billing||'—'}</td>
-                        <td>${billingStatusBadge(b.status)}</td>
-                        <td>${b.vb||'—'}</td>
-                        <td>${b.reqDate||'—'}</td>
-                        <td>${b.sibs||'—'}</td>
-                        <td class="amount">₱${fmt(b.amount||0)}</td>
+                        <td>${b.po||'—'}</td><td class="desc">${b.supplier||'—'}</td><td>${b.billing||'—'}</td>
+                        <td>${billingStatusBadge(b.status)}</td><td>${b.vb||'—'}</td><td>${b.reqDate||'—'}</td>
+                        <td>${b.sibs||'—'}</td><td class="amount">₱${fmt(b.amount||0)}</td>
                       </tr>`).join('')}
                     </tbody>
                   </table>
@@ -1071,17 +826,12 @@ function renderBilling() {
                 <div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:8px">SUBCON / SCOPE ITEMS</div>
                 <div class="scroll-x">
                   <table>
-                    <thead><tr>
-                      <th>ITEM/SCOPE</th><th>SUPPLIER/SUBCON</th><th>PO #</th>
-                      <th>PO AMOUNT</th><th>BALANCE</th><th>REMARKS</th>
-                    </tr></thead>
+                    <thead><tr><th>ITEM/SCOPE</th><th>SUPPLIER/SUBCON</th><th>PO #</th><th>PO AMOUNT</th><th>BALANCE</th><th>REMARKS</th></tr></thead>
                     <tbody>
                       ${items.map(it => `<tr>
-                        <td class="desc">${it.item||'—'}</td>
-                        <td class="desc">${it.supplier||'—'}</td>
-                        <td>${it.po||'—'}</td>
+                        <td class="desc">${it.item||'—'}</td><td class="desc">${it.supplier||'—'}</td><td>${it.po||'—'}</td>
                         <td class="amount">₱${fmt(it.poAmt||0)}</td>
-                        <td class="amount" style="color:${Number(it.balance||0)>0?'var(--orange)':'var(--green)'}">₱${fmt(it.balance||0)}</td>
+                        <td class="amount" style="color:${Number(it.balance||0)>0 ? 'var(--orange)' : 'var(--green)'}">₱${fmt(it.balance||0)}</td>
                         <td style="font-size:11px;color:var(--text2)">${it.remarks||'—'}</td>
                       </tr>`).join('')}
                     </tbody>
@@ -1104,16 +854,12 @@ function toggleBill(key) {
   chevron.textContent = isOpen ? '▼' : '▲';
 }
 
-// ══════════════════════════════════════════════
-//  ITEM HISTORY
-// ══════════════════════════════════════════════
+// ══ ITEM HISTORY ══
 function renderItems() {
   const el = document.getElementById('itemsContent');
   if (!procData) { el.innerHTML = noData(); return; }
-
   const bom = procData.bom || [];
   const q   = itemSearch.toLowerCase();
-
   const rows = bom.filter(r =>
     !q ||
     (r.catNo||'').toLowerCase().includes(q) ||
@@ -1121,34 +867,24 @@ function renderItems() {
     (r.vendor||'').toLowerCase().includes(q) ||
     (r.project||'').toLowerCase().includes(q)
   );
-
   el.innerHTML = `
     <div class="table-wrap">
       <div class="table-header">
         <span class="table-title">📦 BOM ITEM HISTORY <span class="count-pill">${rows.length}</span></span>
-        <input class="search-box" placeholder="Search by cat no, description, vendor..." value="${itemSearch}"
-          oninput="itemSearch=this.value;renderItems()">
+        <input class="search-box" placeholder="Search by cat no, description, vendor..." value="${itemSearch}" oninput="itemSearch=this.value;renderItems()">
       </div>
       <div class="scroll-x">
         <table>
-          <thead><tr>
-            <th>CAT NO</th><th>DESCRIPTION</th><th>CATEGORY</th>
-            <th>PROJECT</th><th>PO #</th><th>VENDOR</th>
-            <th>UNIT PRICE</th><th>PREV PRICE</th><th>SAVINGS</th><th>STATUS</th>
-          </tr></thead>
+          <thead><tr><th>CAT NO</th><th>DESCRIPTION</th><th>CATEGORY</th><th>PROJECT</th><th>PO #</th><th>VENDOR</th><th>UNIT PRICE</th><th>PREV PRICE</th><th>SAVINGS</th><th>STATUS</th></tr></thead>
           <tbody>
             ${rows.slice(0,200).map(r => {
-              const savings = r.savings ? (Number(r.savings)*100).toFixed(1)+'%' : '—';
-              const savColor = r.savings ? (Number(r.savings)>0?'var(--green)':'var(--red)') : 'var(--text3)';
+              const savings  = r.savings ? (Number(r.savings)*100).toFixed(1)+'%' : '—';
+              const savColor = r.savings ? (Number(r.savings)>0 ? 'var(--green)' : 'var(--red)') : 'var(--text3)';
               return `<tr>
-                <td>${r.catNo||'—'}</td>
-                <td class="desc">${r.partDesc||'—'}</td>
-                <td>${r.category||'—'}</td>
-                <td>${r.project||'—'}</td>
-                <td>${r.poNum||'—'}</td>
-                <td>${r.vendor||'—'}</td>
-                <td class="amount">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>
-                <td class="amount" style="color:var(--text3)">${r.prevPrice?'₱'+fmt(r.prevPrice):'—'}</td>
+                <td>${r.catNo||'—'}</td><td class="desc">${r.partDesc||'—'}</td><td>${r.category||'—'}</td>
+                <td>${r.project||'—'}</td><td>${r.poNum||'—'}</td><td>${r.vendor||'—'}</td>
+                <td class="amount">${r.unitPrice ? '₱'+fmt(r.unitPrice) : '—'}</td>
+                <td class="amount" style="color:var(--text3)">${r.prevPrice ? '₱'+fmt(r.prevPrice) : '—'}</td>
                 <td style="color:${savColor}">${savings}</td>
                 <td>${statusBadge(r.status)}</td>
               </tr>`;
@@ -1156,21 +892,17 @@ function renderItems() {
           </tbody>
         </table>
       </div>
-      ${rows.length>200?`<div style="padding:10px 18px;font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">Showing 200 of ${rows.length} — refine search to narrow down</div>`:''}
+      ${rows.length>200 ? `<div style="padding:10px 18px;font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">Showing 200 of ${rows.length} — refine search to narrow down</div>` : ''}
     </div>
   `;
 }
 
-// ══════════════════════════════════════════════
-//  SUPPLIERS
-// ══════════════════════════════════════════════
+// ══ SUPPLIERS ══
 function renderSuppliers() {
   const el = document.getElementById('suppliersContent');
   if (!procData) { el.innerHTML = noData(); return; }
-
   const suppliers = procData.suppliers || [];
-  const maxVal    = Math.max(...suppliers.map(s=>s.totalPOVal),1);
-
+  const maxVal    = Math.max(...suppliers.map(s=>s.totalPOVal), 1);
   el.innerHTML = `
     <div class="section-title">Supplier Performance</div>
     <div class="grid-2">
@@ -1179,7 +911,7 @@ function renderSuppliers() {
         <div style="padding:8px 18px 16px">
           ${suppliers.map((s,i) => `
             <div class="supplier-row">
-              <div class="supplier-rank ${i===0?'gold':''}">${i+1}</div>
+              <div class="supplier-rank ${i===0 ? 'gold' : ''}">${i+1}</div>
               <div style="flex:1">
                 <div class="supplier-name">${s.name}</div>
                 <div class="supplier-meta">${s.poCount} POs · ₱${fmt(s.totalPaid)} paid</div>
@@ -1205,12 +937,11 @@ function renderSuppliers() {
                 const bal = s.totalPOVal - s.totalPaid;
                 const p   = pct(s.totalPaid, s.totalPOVal);
                 return `<tr>
-                  <td class="desc">${s.name}</td>
-                  <td>${s.poCount}</td>
+                  <td class="desc">${s.name}</td><td>${s.poCount}</td>
                   <td class="amount">₱${fmt(s.totalPOVal)}</td>
                   <td class="amount" style="color:var(--green)">₱${fmt(s.totalPaid)}</td>
-                  <td class="amount" style="color:${bal>0?'var(--orange)':'var(--green)'}">₱${fmt(bal)}</td>
-                  <td style="color:${p>=80?'var(--green)':p>=50?'var(--orange)':'var(--red)'}">${p}%</td>
+                  <td class="amount" style="color:${bal>0 ? 'var(--orange)' : 'var(--green)'}">₱${fmt(bal)}</td>
+                  <td style="color:${p>=80 ? 'var(--green)' : p>=50 ? 'var(--orange)' : 'var(--red)'}">${p}%</td>
                 </tr>`;
               }).join('')}
             </tbody>
@@ -1221,61 +952,47 @@ function renderSuppliers() {
   `;
 }
 
-// ══════════════════════════════════════════════
-//  WH INCOMING
-// ══════════════════════════════════════════════
+// ══ WH INCOMING ══
 function renderWH() {
   const el = document.getElementById('whContent');
   if (!procData) { el.innerHTML = noData(); return; }
-
-  const q   = whSearch.toLowerCase();
-  const wh  = (procData.wh||[]).filter(r =>
+  const q  = whSearch.toLowerCase();
+  const wh = (procData.wh||[]).filter(r =>
     !q ||
     (r.poNum||'').toLowerCase().includes(q) ||
     (r.partDesc||'').toLowerCase().includes(q) ||
     (r.supplier||'').toLowerCase().includes(q) ||
     (r.project||'').toLowerCase().includes(q)
   );
-
   const pending  = wh.filter(r=>(r.status||'').includes('Pending')).length;
   const partial  = wh.filter(r=>(r.status||'').includes('Partial')).length;
   const complete = wh.filter(r=>(r.status||'').includes('Complete')).length;
-
   el.innerHTML = `
     <div class="grid-4 mb24">
-      ${miniStat('⬜ Pending', pending, 'var(--text2)')}
-      ${miniStat('🔄 Partial', partial, 'var(--orange)')}
-      ${miniStat('✅ Complete', complete, 'var(--green)')}
-      ${miniStat('📦 Total Rows', wh.length, 'var(--accent)')}
+      ${miniStat('⬜ Pending',pending,'var(--text2)')}
+      ${miniStat('🔄 Partial',partial,'var(--orange)')}
+      ${miniStat('✅ Complete',complete,'var(--green)')}
+      ${miniStat('📦 Total Rows',wh.length,'var(--accent)')}
     </div>
     <div class="table-wrap">
       <div class="table-header">
         <span class="table-title">🏭 WH INCOMING <span class="count-pill">${wh.length}</span></span>
-        <input class="search-box" placeholder="Search PO#, description, supplier..." value="${whSearch}"
-          oninput="whSearch=this.value;renderWH()">
+        <input class="search-box" placeholder="Search PO#, description, supplier..." value="${whSearch}" oninput="whSearch=this.value;renderWH()">
       </div>
       <div class="scroll-x">
         <table>
-          <thead><tr>
-            <th>PO #</th><th>PROJECT</th><th>PART DESCRIPTION</th><th>SUPPLIER</th>
-            <th>PO QTY</th><th>DEL QTY</th><th>BAL QTY</th>
-            <th>EXPECTED</th><th>ACTUAL</th><th>DAYS VAR</th><th>STATUS</th>
-          </tr></thead>
+          <thead><tr><th>PO #</th><th>PROJECT</th><th>PART DESCRIPTION</th><th>SUPPLIER</th><th>PO QTY</th><th>DEL QTY</th><th>BAL QTY</th><th>EXPECTED</th><th>ACTUAL</th><th>DAYS VAR</th><th>STATUS</th></tr></thead>
           <tbody>
             ${wh.map(r => {
               const dv = Number(r.daysVar||0);
-              const dvColor = dv <= 0 ? 'var(--green)' : dv <= 7 ? 'var(--orange)' : 'var(--red)';
+              const dvColor = dv<=0 ? 'var(--green)' : dv<=7 ? 'var(--orange)' : 'var(--red)';
               return `<tr>
-                <td>${r.poNum||'—'}</td>
-                <td>${r.project||'—'}</td>
-                <td class="desc">${r.partDesc||'—'}</td>
-                <td>${r.supplier||'—'}</td>
-                <td>${r.poQty||'—'}</td>
+                <td>${r.poNum||'—'}</td><td>${r.project||'—'}</td><td class="desc">${r.partDesc||'—'}</td>
+                <td>${r.supplier||'—'}</td><td>${r.poQty||'—'}</td>
                 <td style="color:var(--green)">${r.delQty||'0'}</td>
-                <td style="color:${Number(r.balQty||0)>0?'var(--orange)':'var(--green)'}">${r.balQty||'0'}</td>
-                <td>${r.expectedDate||'—'}</td>
-                <td>${r.actualDate||'—'}</td>
-                <td style="color:${dvColor}">${r.daysVar!==null&&r.daysVar!==''?r.daysVar:' —'}</td>
+                <td style="color:${Number(r.balQty||0)>0 ? 'var(--orange)' : 'var(--green)'}">${r.balQty||'0'}</td>
+                <td>${r.expectedDate||'—'}</td><td>${r.actualDate||'—'}</td>
+                <td style="color:${dvColor}">${r.daysVar!==null && r.daysVar!=='' ? r.daysVar : '—'}</td>
                 <td>${statusBadge(r.status)}</td>
               </tr>`;
             }).join('')}
@@ -1286,13 +1003,10 @@ function renderWH() {
   `;
 }
 
-// ══════════════════════════════════════════════
-//  PURCHASE ORDERS
-// ══════════════════════════════════════════════
+// ══ PURCHASE ORDERS ══
 function renderPO() {
   const el = document.getElementById('poContent');
   if (!procData) { el.innerHTML = noData(); return; }
-
   const q  = poSearch.toLowerCase();
   const po = (procData.po||[]).filter(r =>
     !q ||
@@ -1301,39 +1015,29 @@ function renderPO() {
     (r.supplier||'').toLowerCase().includes(q) ||
     (r.project||'').toLowerCase().includes(q)
   );
-
   const totalVal = po.reduce((a,r)=>a+Number(r.lineTotal||0),0);
-
   el.innerHTML = `
     <div class="grid-4 mb24">
-      ${miniStat('Total POs', [...new Set(po.map(r=>r.poNum))].length, 'var(--accent)')}
-      ${miniStat('Line Items', po.length, 'var(--text2)')}
-      ${miniStat('Total Value', '₱'+fmt(totalVal), 'var(--green)')}
-      ${miniStat('Suppliers', [...new Set(po.map(r=>r.supplier).filter(Boolean))].length, 'var(--purple)')}
+      ${miniStat('Total POs',[...new Set(po.map(r=>r.poNum))].length,'var(--accent)')}
+      ${miniStat('Line Items',po.length,'var(--text2)')}
+      ${miniStat('Total Value','₱'+fmt(totalVal),'var(--green)')}
+      ${miniStat('Suppliers',[...new Set(po.map(r=>r.supplier).filter(Boolean))].length,'var(--purple)')}
     </div>
     <div class="table-wrap">
       <div class="table-header">
         <span class="table-title">🛒 PURCHASE ORDERS <span class="count-pill">${po.length}</span></span>
-        <input class="search-box" placeholder="Search PO#, description, supplier..." value="${poSearch}"
-          oninput="poSearch=this.value;renderPO()">
+        <input class="search-box" placeholder="Search PO#, description, supplier..." value="${poSearch}" oninput="poSearch=this.value;renderPO()">
       </div>
       <div class="scroll-x">
         <table>
-          <thead><tr>
-            <th>PO #</th><th>PROJECT</th><th>PART DESCRIPTION</th><th>SUPPLIER</th>
-            <th>QTY</th><th>UNIT PRICE</th><th>LINE TOTAL</th><th>PO DATE</th><th>STATUS</th>
-          </tr></thead>
+          <thead><tr><th>PO #</th><th>PROJECT</th><th>PART DESCRIPTION</th><th>SUPPLIER</th><th>QTY</th><th>UNIT PRICE</th><th>LINE TOTAL</th><th>PO DATE</th><th>STATUS</th></tr></thead>
           <tbody>
             ${po.map(r => `<tr>
-              <td>${r.poNum||'—'}</td>
-              <td>${r.project||'—'}</td>
-              <td class="desc">${r.partDesc||'—'}</td>
-              <td>${r.supplier||'—'}</td>
-              <td>${r.qty||'—'}</td>
-              <td class="amount">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>
-              <td class="amount" style="color:var(--accent)">${r.lineTotal?'₱'+fmt(r.lineTotal):'—'}</td>
-              <td>${r.poDate||'—'}</td>
-              <td>${statusBadge(r.status)}</td>
+              <td>${r.poNum||'—'}</td><td>${r.project||'—'}</td><td class="desc">${r.partDesc||'—'}</td>
+              <td>${r.supplier||'—'}</td><td>${r.qty||'—'}</td>
+              <td class="amount">${r.unitPrice ? '₱'+fmt(r.unitPrice) : '—'}</td>
+              <td class="amount" style="color:var(--accent)">${r.lineTotal ? '₱'+fmt(r.lineTotal) : '—'}</td>
+              <td>${r.poDate||'—'}</td><td>${statusBadge(r.status)}</td>
             </tr>`).join('')}
           </tbody>
         </table>
@@ -1342,31 +1046,22 @@ function renderPO() {
   `;
 }
 
-// ══════════════════════════════════════════════
-//  BADGES / UPDATES
-// ══════════════════════════════════════════════
+// ══ BADGES ══
 function updateBadges() {
   if (!procData) return;
   const bom = procData.bom || [];
   const wh  = procData.wh  || [];
-  const po  = procData.po  || [];
-
   const alertCount = bom.filter(r=>(r.status||'').includes('Canvass')||(r.status||'').includes('Ready')).length
                    + wh.filter(r=>Number(r.balQty||0)>0).length;
   const projCount  = Object.keys(procData.clients||{}).length;
-
   document.getElementById('badge-alerts').textContent   = alertCount;
   document.getElementById('badge-projects').textContent = projCount;
-
   if (billData?.projects) {
-    const billCount = Object.keys(billData.projects).length;
-    document.getElementById('badge-billing').textContent = billCount;
+    document.getElementById('badge-billing').textContent = Object.keys(billData.projects).length;
   }
 }
 
-// ══════════════════════════════════════════════
-//  HELPERS
-// ══════════════════════════════════════════════
+// ══ HELPERS ══
 function fmt(n) {
   const num = Number(n||0);
   if (num >= 1000000) return (num/1000000).toFixed(2)+'M';
@@ -1381,25 +1076,25 @@ function pct(a,b) {
 
 function statusBadge(status) {
   const s = String(status||'');
-  if (s.includes('Canvass'))        return `<span class="badge badge-canvass">🟡 Canvass</span>`;
-  if (s.includes('Ready'))          return `<span class="badge badge-ready">🟢 Ready</span>`;
-  if (s.includes('PO Issued'))      return `<span class="badge badge-po">✅ PO Issued</span>`;
-  if (s.includes('Delivered'))      return `<span class="badge badge-delivered">📦 Delivered</span>`;
-  if (s.includes('Warehouse'))      return `<span class="badge badge-wh">🏭 WH Stock</span>`;
-  if (s.includes('Partial'))        return `<span class="badge badge-partial">🔄 Partial</span>`;
-  if (s.includes('Complete'))       return `<span class="badge badge-delivered">✅ Complete</span>`;
-  if (s.includes('Pending'))        return `<span class="badge badge-canvass">⬜ Pending</span>`;
+  if (s.includes('Canvass'))    return `<span class="badge badge-canvass">🟡 Canvass</span>`;
+  if (s.includes('Ready'))      return `<span class="badge badge-ready">🟢 Ready</span>`;
+  if (s.includes('PO Issued'))  return `<span class="badge badge-po">✅ PO Issued</span>`;
+  if (s.includes('Delivered'))  return `<span class="badge badge-delivered">📦 Delivered</span>`;
+  if (s.includes('Warehouse'))  return `<span class="badge badge-wh">🏭 WH Stock</span>`;
+  if (s.includes('Partial'))    return `<span class="badge badge-partial">🔄 Partial</span>`;
+  if (s.includes('Complete'))   return `<span class="badge badge-delivered">✅ Complete</span>`;
+  if (s.includes('Pending'))    return `<span class="badge badge-canvass">⬜ Pending</span>`;
   if (s.includes('Cancelled')||s.includes('Cancel')) return `<span class="badge" style="background:rgba(100,100,100,.15);color:#888">⛔ Cancelled</span>`;
   return `<span class="badge" style="background:rgba(100,100,100,.1);color:var(--text3)">${s||'—'}</span>`;
 }
 
 function billingStatusBadge(status) {
   const s = String(status||'').toUpperCase();
-  if (s.includes('PAID'))          return `<span class="badge badge-paid">PAID</span>`;
+  if (s.includes('PAID'))                              return `<span class="badge badge-paid">PAID</span>`;
   if (s.includes('ON-PROCESS')||s.includes('ON PROCESS')) return `<span class="badge badge-process">ON-PROCESS</span>`;
-  if (s.includes('@HO'))           return `<span class="badge badge-ho">@HO</span>`;
-  if (s.includes('AWAIT')||s.includes('FOR BILLING')) return `<span class="badge badge-canvass">AWAITING</span>`;
-  if (s.includes('C/O'))           return `<span class="badge badge-wh">C/O</span>`;
+  if (s.includes('@HO'))                               return `<span class="badge badge-ho">@HO</span>`;
+  if (s.includes('AWAIT')||s.includes('FOR BILLING'))  return `<span class="badge badge-canvass">AWAITING</span>`;
+  if (s.includes('C/O'))                               return `<span class="badge badge-wh">C/O</span>`;
   return `<span class="badge badge-canvass">${status||'—'}</span>`;
 }
 
@@ -1409,7 +1104,7 @@ function kpiCard(label, value, color, glow, sub) {
       <div class="kpi-glow"></div>
       <div class="kpi-label">${label}</div>
       <div class="kpi-value">${value}</div>
-      ${sub?`<div class="kpi-sub">${sub}</div>`:''}
+      ${sub ? `<div class="kpi-sub">${sub}</div>` : ''}
     </div>`;
 }
 
