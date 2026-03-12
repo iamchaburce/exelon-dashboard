@@ -3,2071 +3,1454 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exelon · Team Calendar 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<title>Exelon Procurement Command Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root {
+    --bg:        #080c12;
+    --bg2:       #0d1320;
+    --bg3:       #111827;
+    --border:    #1e2d42;
+    --border2:   #243347;
+    --accent:    #00c2ff;
+    --accent2:   #0077cc;
+    --gold:      #f0a500;
+    --green:     #00e676;
+    --red:       #ff4444;
+    --orange:    #ff8c00;
+    --purple:    #a78bfa;
+    --text:      #e2eaf5;
+    --text2:     #7a97b8;
+    --text3:     #3d5470;
+    --card:      #0f1c2e;
+    --card2:     #132030;
+  }
 
-:root {
-  /* ☀️ Summer palette */
-  --sun:       #f9a825;
-  --sun2:      #ffca28;
-  --coral:     #ff6b6b;
-  --coral2:    #ff8a80;
-  --sky:       #29b6f6;
-  --sky2:      #81d4fa;
-  --seafoam:   #26c6a0;
-  --seafoam2:  #80cbc4;
-  --leaf:      #66bb6a;
-  --leaf2:     #a5d6a7;
-  --lavender:  #ab7cef;
-  --lav2:      #ce93d8;
-  --peach:     #ff8a65;
-  --peach2:    #ffab91;
+  * { margin:0; padding:0; box-sizing:border-box; }
 
-  /* Backgrounds */
-  --bg:        #fef9f0;
-  --bg2:       #ffffff;
-  --bg3:       #fdf5e6;
-  --bg4:       #fff8ee;
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-  /* Nav — tropical teal-to-blue gradient */
-  --nav-from:  #00897b;
-  --nav-to:    #0288d1;
+  /* ── GRID NOISE BACKGROUND ── */
+  body::before {
+    content:'';
+    position:fixed; inset:0; z-index:0;
+    background-image:
+      linear-gradient(rgba(0,194,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,194,255,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events:none;
+  }
 
-  /* Borders & text */
-  --bdr:       rgba(0,0,0,0.07);
-  --bdr2:      rgba(0,0,0,0.12);
-  --tx:        #2d3748;
-  --tx2:       #718096;
-  --tx3:       #a0aec0;
+  /* ── HEADER ── */
+  header {
+    position: relative; z-index:10;
+    background: linear-gradient(135deg, #060e1a 0%, #0a1628 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
 
-  --r: 14px; --r2: 9px;
-  --sh: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
-  --sh2: 0 6px 24px rgba(0,0,0,0.10);
-}
+  .logo {
+    display:flex; align-items:center; gap:12px;
+  }
 
-html { scroll-behavior:smooth }
-body {
-  font-family: 'Nunito', sans-serif;
-  background: var(--bg);
-  color: var(--tx);
-  min-height: 100vh;
-  font-size: 13.5px;
-  overflow-x: hidden;
-}
+  .logo-icon {
+    width:38px; height:38px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius:8px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:18px;
+    box-shadow: 0 0 20px rgba(0,194,255,.3);
+  }
 
-/* ── ANIMATED SKY BACKGROUND ──────────────────────── */
-.sky-bg {
-  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
-  background: linear-gradient(
-    170deg,
-    #e0f7fa 0%,
-    #fff9e6 45%,
-    #fce4ec 100%
-  );
-}
-/* Sun glow in top-right */
-.sky-bg::before {
-  content: '';
-  position: absolute; top: -80px; right: -60px;
-  width: 320px; height: 320px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,202,40,0.30) 0%, rgba(255,202,40,0.08) 50%, transparent 70%);
-  animation: sun-pulse 6s ease-in-out infinite;
-}
-@keyframes sun-pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.07)} }
+  .logo-text { font-size:15px; font-weight:700; letter-spacing:1px; color:var(--text); }
+  .logo-sub  { font-size:10px; font-family:'JetBrains Mono', monospace; color:var(--text2); letter-spacing:2px; }
 
-/* Floating bubbles */
-.bubble {
-  position: absolute; border-radius: 50%;
-  opacity: 0; animation: bubble-rise linear infinite;
-}
-@keyframes bubble-rise {
-  0%   { opacity:0; transform:translateY(0) scale(1); }
-  15%  { opacity:0.55; }
-  85%  { opacity:0.3; }
-  100% { opacity:0; transform:translateY(-110vh) scale(0.7); }
-}
+  .header-right { display:flex; align-items:center; gap:16px; }
 
-/* Floating animals / icons */
-.floater {
-  position: absolute; font-size: 22px;
-  opacity: 0; animation: floater-drift linear infinite;
-  user-select: none; pointer-events: none;
-}
-@keyframes floater-drift {
-  0%   { opacity:0; transform:translateY(0) rotate(0deg); }
-  10%  { opacity:.45; }
-  90%  { opacity:.25; }
-  100% { opacity:0; transform:translateY(-80vh) rotate(20deg); }
-}
+  .sync-btn {
+    display:flex; align-items:center; gap:8px;
+    padding: 8px 18px;
+    background: rgba(0,194,255,.1);
+    border: 1px solid rgba(0,194,255,.3);
+    border-radius: 6px;
+    color: var(--accent);
+    font-family:'Syne',sans-serif; font-size:12px; font-weight:600;
+    cursor:pointer; letter-spacing:.5px;
+    transition: all .2s;
+  }
+  .sync-btn:hover { background:rgba(0,194,255,.2); box-shadow:0 0 15px rgba(0,194,255,.2); }
+  .sync-btn.loading { opacity:.6; pointer-events:none; }
 
-/* ── NAV ──────────────────────────────────────────── */
-.nav {
-  position: sticky; top: 0; z-index: 200;
-  background: linear-gradient(90deg, var(--nav-from), var(--nav-to));
-  height: 58px; display: flex; align-items: center; padding: 0 22px; gap: 14px;
-  box-shadow: 0 3px 20px rgba(0,137,123,0.30);
-}
-.brand {
-  display: flex; align-items: center; gap: 10px;
-  font-weight: 800; font-size: 17px; color: #fff; flex-shrink: 0;
-  letter-spacing: .3px; text-shadow: 0 1px 4px rgba(0,0,0,.15);
-}
-.brand-ico {
-  width: 32px; height: 32px; border-radius: 10px;
-  background: rgba(255,255,255,.22);
-  border: 1.5px solid rgba(255,255,255,.35);
-  display: grid; place-items: center; font-size: 16px;
-}
-.nav-sep { width: 1px; height: 22px; background: rgba(255,255,255,.25); flex-shrink: 0; }
-.tabs { display: flex; gap: 3px; flex: 1; overflow-x: auto; scrollbar-width: none; }
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  padding: 6px 14px; border-radius: 8px;
-  font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,.75);
-  cursor: pointer; border: none; background: transparent;
-  transition: all .16s; white-space: nowrap;
-  font-family: 'Nunito', sans-serif;
-}
-.tab:hover { color: #fff; background: rgba(255,255,255,.15); }
-.tab.on { color: #fff; background: rgba(255,255,255,.22); border: 1px solid rgba(255,255,255,.3); }
-.nr { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-shrink: 0; }
-.si { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: rgba(255,255,255,.7); font-family: 'JetBrains Mono', monospace; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(255,255,255,.3); transition: all .3s; flex-shrink: 0; }
-.dot.live   { background: #b9f6ca; box-shadow: 0 0 7px #69f0ae; animation: pdot 2s infinite; }
-.dot.loading{ background: #fff9c4; animation: blink .7s infinite; }
-.dot.err    { background: #ff8a80; }
-@keyframes pdot  { 0%,100%{opacity:1} 50%{opacity:.4} }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
-.bsync {
-  display: flex; align-items: center; gap: 5px;
-  background: rgba(255,255,255,.18); border: 1.5px solid rgba(255,255,255,.3);
-  color: #fff; padding: 5px 13px; border-radius: 8px;
-  font-size: 12px; font-weight: 700; cursor: pointer;
-  transition: all .16s; font-family: 'Nunito', sans-serif;
-}
-.bsync:hover { background: rgba(255,255,255,.28); }
-.bsync .ic { display: inline-block; }
-.bsync.spin .ic { animation: rot .6s linear infinite; }
-@keyframes rot { to{transform:rotate(360deg)} }
+  .sync-dot {
+    width:8px; height:8px; border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 8px var(--accent);
+    animation: pulse 2s infinite;
+  }
+  .sync-dot.error { background:var(--red); box-shadow:0 0 8px var(--red); animation:none; }
+  .sync-dot.loading { background:var(--orange); box-shadow:0 0 8px var(--orange); animation:spin 1s linear infinite; }
 
-/* ── LAYOUT ──────────────────────────────────────── */
-.wrap { position: relative; z-index: 1; padding: 22px; max-width: 1700px; margin: 0 auto; }
-.panel { display: none; }
-.panel.on { display: block; animation: up .22s ease; }
-@keyframes up { from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+  @keyframes spin  { to{transform:rotate(360deg);} }
 
-/* ── CARD ────────────────────────────────────────── */
-.card {
-  background: var(--bg2); border: 1px solid var(--bdr);
-  border-radius: var(--r); box-shadow: var(--sh);
-  overflow: hidden; margin-bottom: 16px;
-}
-.ch {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 18px; border-bottom: 1px solid var(--bdr);
-  background: var(--bg3);
-}
-.ct { font-size: 13.5px; font-weight: 800; color: var(--tx); }
-.cm { font-size: 10.5px; color: var(--tx3); font-family: 'JetBrains Mono', monospace; }
+  .last-sync { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--text3); }
 
-/* ── KPI ─────────────────────────────────────────── */
-.kpis { display: grid; grid-template-columns: repeat(5,1fr); gap: 13px; margin-bottom: 20px; }
-.kpi {
-  border-radius: var(--r); padding: 18px 18px 14px;
-  box-shadow: var(--sh2); position: relative; overflow: hidden;
-  transition: transform .2s, box-shadow .2s; color: #fff;
-  border: none;
-}
-.kpi:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 10px 30px rgba(0,0,0,.15); }
-.kpi-art {
-  position: absolute; bottom: -6px; right: 4px;
-  font-size: 44px; opacity: .18; line-height: 1;
-  pointer-events: none; transform: rotate(-8deg);
-  user-select: none;
-}
-.kl { font-size: 10px; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; opacity: .85; margin-bottom: 7px; }
-.kv { font-size: 30px; font-weight: 800; line-height: 1; font-family: 'Nunito', sans-serif; }
-.ks { font-size: 10.5px; opacity: .8; margin-top: 4px; }
+  /* ── NAV TABS ── */
+  nav {
+    position:relative; z-index:10;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    display:flex; gap:0; padding:0 28px;
+    overflow-x:auto;
+  }
 
-/* KPI gradient flavors */
-.kpi-0 { background: linear-gradient(135deg, #26c6a0, #00897b); }
-.kpi-1 { background: linear-gradient(135deg, #ab7cef, #7b1fa2); }
-.kpi-2 { background: linear-gradient(135deg, #f9a825, #e65100); }
-.kpi-3 { background: linear-gradient(135deg, #ff6b6b, #c62828); }
-.kpi-4 { background: linear-gradient(135deg, #29b6f6, #0277bd); }
+  nav::-webkit-scrollbar { display:none; }
 
-/* ── TABLE ───────────────────────────────────────── */
-.tw { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
-thead th {
-  padding: 9px 13px; text-align: left;
-  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .7px;
-  color: var(--tx3); border-bottom: 1px solid var(--bdr);
-  background: var(--bg3); white-space: nowrap;
-}
-thead th.c { text-align: center; }
-tbody tr { border-bottom: 1px solid var(--bdr); transition: background .1s; }
-tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: #fffde7; }
-tbody td { padding: 9px 13px; vertical-align: middle; }
-tbody td.c { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
-.en { font-weight: 700; font-size: 13px; color: var(--tx); }
-.ed { font-size: 10.5px; color: var(--tx2); margin-top: 1px; }
+  .tab {
+    padding:14px 20px;
+    font-size:12px; font-weight:600; letter-spacing:.8px;
+    color: var(--text2);
+    cursor:pointer; white-space:nowrap;
+    border-bottom:2px solid transparent;
+    transition: all .2s; display:flex; align-items:center; gap:7px;
+    text-transform:uppercase;
+  }
 
-/* ── CHIPS ───────────────────────────────────────── */
-.chip {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 32px; height: 20px; border-radius: 5px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 9.5px; font-weight: 700; border: 1.5px solid transparent;
-  transition: transform .12s, box-shadow .12s;
-}
-.chip:hover { transform: scale(1.15); box-shadow: 0 2px 8px rgba(0,0,0,.15); cursor: pointer; }
-.ce { color: var(--tx3); font-size: 11px; cursor: pointer; }
-.cfade { opacity: .25; }
+  .tab:hover  { color:var(--text); }
+  .tab.active { color:var(--accent); border-bottom-color:var(--accent); }
 
-/* ── BADGE ───────────────────────────────────────── */
-.badge {
-  display: inline-block; padding: 2px 8px; border-radius: 99px;
-  font-size: 9.5px; font-weight: 800; letter-spacing: .4px;
-  text-transform: uppercase; font-family: 'JetBrains Mono', monospace;
-}
+  .tab-badge {
+    padding:2px 6px; border-radius:10px;
+    background:rgba(0,194,255,.15);
+    color:var(--accent);
+    font-size:10px; font-family:'JetBrains Mono',monospace;
+  }
 
-/* ── BARS ────────────────────────────────────────── */
-.br { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-.bl { font-size: 11px; color: var(--tx3); width: 34px; text-align: right; flex-shrink: 0; font-family: 'JetBrains Mono', monospace; }
-.blw { font-size: 12.5px; font-weight: 700; color: var(--tx); width: 150px; flex-shrink: 0; }
-.bt { flex: 1; height: 7px; background: #f0f4f8; border-radius: 99px; overflow: hidden; border: 1px solid var(--bdr); }
-.bf { height: 100%; border-radius: 99px; transition: width .7s cubic-bezier(.4,0,.2,1); }
-.bv { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--tx3); width: 32px; text-align: right; flex-shrink: 0; }
+  .tab-badge.red   { background:rgba(255,68,68,.15); color:var(--red); }
+  .tab-badge.gold  { background:rgba(240,165,0,.15);  color:var(--gold); }
+  .tab-badge.green { background:rgba(0,230,118,.15);  color:var(--green); }
 
-/* ── GRIDS ───────────────────────────────────────── */
-.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 13px; }
+  /* ── MAIN ── */
+  main {
+    position:relative; z-index:1;
+    max-width:1600px; margin:0 auto;
+    padding:24px 28px;
+  }
 
-/* ── CALENDAR ────────────────────────────────────── */
-.cc { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; flex-wrap: wrap; }
-.mn { display: flex; align-items: center; gap: 7px; }
-.nb {
-  width: 32px; height: 32px; border-radius: 8px;
-  background: var(--bg2); border: 1.5px solid var(--bdr2);
-  color: var(--tx2); display: grid; place-items: center;
-  font-size: 17px; cursor: pointer; transition: all .15s; box-shadow: var(--sh);
-}
-.nb:hover { border-color: var(--sky); color: var(--sky); }
-.mlb { font-size: 14px; font-weight: 800; min-width: 165px; text-align: center; color: var(--tx); }
-.leg { display: flex; gap: 7px; flex-wrap: wrap; }
-.li { display: flex; align-items: center; gap: 4px; font-size: 10.5px; color: var(--tx2); font-weight: 600; }
-.cw { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--bdr); box-shadow: var(--sh); }
-.ct2 { width: 100%; border-collapse: separate; border-spacing: 0; background: var(--bg2); font-size: 11px; }
-.ct2 thead th { background: #f0fdf4; padding: 7px 2px; text-align: center; font-size: 9.5px; text-transform: uppercase; letter-spacing: .5px; color: var(--tx2); font-weight: 800; border-bottom: 1px solid var(--bdr); white-space: nowrap; }
-.ct2 thead th.eth { text-align: left; padding-left: 13px; min-width: 140px; }
-.ct2 thead th.dth { min-width: 95px; text-align: left; padding-left: 7px; }
-.ct2 thead th.wk { color: var(--sky) !important; }
-.ct2 thead th.hh { color: var(--coral) !important; }
-.ct2 thead th.st { background: #fffde7; min-width: 30px; }
-.ct2 tbody tr { border-bottom: 1px solid rgba(0,0,0,.04); }
-.ct2 tbody tr:last-child { border-bottom: none; }
-.ct2 tbody tr:hover td { background: #fffde7; }
-.ct2 tbody td { padding: 6px 2px; text-align: center; vertical-align: middle; border-right: 1px solid rgba(0,0,0,.04); }
-.ct2 tbody td:last-child { border-right: none; }
-.ct2 tbody td.etd { text-align: left; padding-left: 13px; }
-.ct2 tbody td.dtd { font-size: 10.5px; color: var(--tx2); padding-left: 7px; white-space: nowrap; }
-.ct2 tbody td.sdt { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 12px; background: #fffde7; }
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-size:11px; font-weight:700; letter-spacing:2px;
+    color:var(--text3); text-transform:uppercase;
+    margin-bottom:16px; padding-bottom:8px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; gap:8px;
+  }
 
-/* ── MODAL ───────────────────────────────────────── */
-.mo {
-  position: fixed; inset: 0; background: rgba(0,60,70,.3);
-  backdrop-filter: blur(6px); z-index: 500;
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; pointer-events: none; transition: opacity .2s;
-}
-.mo.open { opacity: 1; pointer-events: all; }
-.md {
-  background: var(--bg2); border: 1px solid var(--bdr);
-  border-radius: 18px; padding: 28px; width: 400px; max-width: 93vw;
-  box-shadow: 0 12px 48px rgba(0,0,0,.14);
-  transform: translateY(10px); transition: transform .2s;
-  position: relative; overflow: hidden;
-}
-.mo.open .md { transform: translateY(0); }
-/* Summer watermark */
-.md::after {
-  content: '🌺';
-  position: absolute; bottom: -12px; right: 8px;
-  font-size: 90px; opacity: .05; pointer-events: none; transform: rotate(-15deg);
-}
-.mtt { font-size: 16px; font-weight: 800; margin-bottom: 3px; color: var(--tx); }
-.mst { font-size: 11.5px; color: var(--tx2); margin-bottom: 18px; }
-.fl { margin-bottom: 13px; }
-.fl label { display: block; font-size: 10.5px; font-weight: 800; color: var(--tx2); text-transform: uppercase; letter-spacing: .7px; margin-bottom: 4px; }
-.fl select, .fl input {
-  width: 100%; padding: 9px 12px;
-  background: var(--bg3); border: 1.5px solid var(--bdr2);
-  border-radius: 9px; color: var(--tx); font-size: 13px;
-  font-family: 'Nunito', sans-serif; outline: none; transition: border-color .15s;
-}
-.fl select:focus, .fl input:focus { border-color: var(--sky); }
-.ma { display: flex; gap: 9px; justify-content: flex-end; margin-top: 18px; align-items: center; }
-.btn { padding: 8px 18px; border-radius: 9px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; font-family: 'Nunito', sans-serif; transition: all .15s; }
-.bp { background: linear-gradient(135deg, var(--seafoam), var(--sky)); color: #fff; box-shadow: 0 3px 12px rgba(41,182,246,.3); }
-.bp:hover { filter: brightness(1.08); }
-.bs { background: var(--bg3); border: 1.5px solid var(--bdr2); color: var(--tx2); }
-.bs:hover { border-color: var(--tx2); color: var(--tx); }
-.svi { display: none; font-size: 10.5px; color: var(--seafoam); font-family: 'JetBrains Mono', monospace; }
-.svi.show { display: inline; }
+  .section-title::before {
+    content:'';
+    display:inline-block; width:3px; height:14px;
+    background:var(--accent); border-radius:2px;
+  }
 
-/* ── CREDITS ─────────────────────────────────────── */
-.cg { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; padding: 15px 17px; }
-.cn { font-size: 12px; font-weight: 800; margin-bottom: 7px; color: var(--tx); }
-.cr { display: flex; align-items: center; gap: 7px; margin-bottom: 3px; }
-.cr .tg { font-size: 9.5px; font-weight: 800; width: 18px; color: var(--tx3); font-family: 'JetBrains Mono', monospace; }
+  /* ── GRID LAYOUTS ── */
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .grid-2 { display:grid; grid-template-columns:repeat(2,1fr); gap:14px; }
+  .grid-auto { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; }
 
-/* ── TOAST ───────────────────────────────────────── */
-.toast {
-  position: fixed; bottom: 22px; right: 22px; z-index: 999;
-  background: var(--tx); color: #fff; padding: 11px 18px; border-radius: 12px;
-  font-size: 12.5px; font-weight: 700; box-shadow: 0 4px 20px rgba(0,0,0,.18);
-  transform: translateY(16px); opacity: 0; transition: all .22s; pointer-events: none;
-}
-.toast.show { transform: translateY(0); opacity: 1; }
-.toast.ok   { background: var(--seafoam); }
-.toast.er   { background: var(--coral); }
-.toast.info { background: var(--sky); }
+  /* ── KPI CARD ── */
+  .kpi {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius:10px;
+    padding:18px 20px;
+    position:relative; overflow:hidden;
+    transition: border-color .2s, transform .2s;
+    cursor:default;
+  }
 
-/* ── SCROLLBAR ───────────────────────────────────── */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #c8d8e4; border-radius: 99px; }
+  .kpi:hover { border-color:var(--border2); transform:translateY(-1px); }
 
-/* ── RESPONSIVE ──────────────────────────────────── */
-@media(max-width:1100px){ .kpis{grid-template-columns:repeat(3,1fr)} }
-@media(max-width:780px) { .kpis{grid-template-columns:repeat(2,1fr)} .g2,.g3{grid-template-columns:1fr} .cg{grid-template-columns:1fr 1fr} .wrap{padding:12px} }
-@media(max-width:480px) { .kpis{grid-template-columns:1fr 1fr} }
+  .kpi::after {
+    content:''; position:absolute;
+    top:0; left:0; right:0; height:2px;
+    background:var(--accent-kpi, var(--accent));
+    opacity:.6;
+  }
 
-/* num helpers */
-.nc  { color:#00897b; font-family:'JetBrains Mono',monospace; font-weight:700 }
-.np  { color:#7b1fa2; font-family:'JetBrains Mono',monospace }
-.na  { color:#e65100; font-family:'JetBrains Mono',monospace }
-.nr2 { color:#c62828; font-family:'JetBrains Mono',monospace }
-.nb2 { color:#0277bd; font-family:'JetBrains Mono',monospace }
-.nd  { color:var(--tx3); font-family:'JetBrains Mono',monospace }
-.nv  { color:var(--tx); font-family:'JetBrains Mono',monospace }
+  .kpi-label {
+    font-size:10px; font-weight:600; letter-spacing:1.5px;
+    color:var(--text3); text-transform:uppercase; margin-bottom:10px;
+    display:flex; align-items:center; gap:6px;
+  }
 
-@keyframes float-bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+  .kpi-value {
+    font-size:28px; font-weight:800;
+    color:var(--kpi-color, var(--text));
+    font-variant-numeric:tabular-nums;
+    line-height:1;
+  }
 
-/* ── FORMS ────────────────────────────────────────── */
-.form-card { background: var(--bg2); }
-.form-body  { padding: 16px 18px; }
-.frow { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; flex-wrap: wrap; }
-.fgroup { display: flex; flex-direction: column; flex: 1; min-width: 100px; }
-.fgroup-sm { max-width: 80px; }
-.fgroup label {
-  font-size: 10px; font-weight: 800; text-transform: uppercase;
-  letter-spacing: .7px; color: var(--tx3); margin-bottom: 4px;
-}
-.fgroup input, .fgroup select {
-  padding: 7px 10px; border-radius: 8px;
-  border: 1.5px solid var(--bdr2);
-  background: var(--bg3); color: var(--tx);
-  font-size: 12.5px; font-family: 'Nunito', sans-serif;
-  outline: none; transition: border-color .15s, box-shadow .15s;
-  width: 100%;
-}
-.fgroup input:focus, .fgroup select:focus {
-  border-color: var(--seafoam);
-  box-shadow: 0 0 0 3px rgba(38,198,160,.12);
-}
-.fbtn {
-  padding: 8px 18px; border-radius: 9px; border: none;
-  font-size: 12.5px; font-weight: 800; cursor: pointer;
-  font-family: 'Nunito', sans-serif; transition: all .16s;
-  white-space: nowrap;
-}
-.fbtn-green {
-  background: linear-gradient(135deg, #26c6a0, #00897b);
-  color: #fff; box-shadow: 0 3px 12px rgba(38,198,160,.30);
-}
-.fbtn-green:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.fbtn-orange {
-  background: linear-gradient(135deg, #f9a825, #e65100);
-  color: #fff; box-shadow: 0 3px 12px rgba(249,168,37,.30);
-}
-.fbtn-orange:hover { filter: brightness(1.08); transform: translateY(-1px); }
-.fbtn:disabled { opacity: .6; cursor: not-allowed; transform: none !important; }
-.form-status {
-  font-size: 11px; font-family: 'JetBrains Mono', monospace;
-  padding: 2px 8px; border-radius: 6px; font-weight: 600;
-}
-.form-status.ok  { background: #e8f5e9; color: #2e7d32; }
-.form-status.err { background: #fce4ec; color: #c62828; }
-.form-status.loading { background: #fff3e0; color: #e65100; }
+  .kpi-sub {
+    font-size:11px; color:var(--text2); margin-top:6px;
+    font-family:'JetBrains Mono',monospace;
+  }
 
-/* ── EMPLOYEE MGMT ───────────────────────────────── */
-.emp-mgmt-btn {
-  display:inline-flex;align-items:center;gap:5px;
-  padding:5px 12px;border-radius:7px;border:none;
-  font-size:11.5px;font-weight:700;cursor:pointer;
-  font-family:'Nunito',sans-serif;transition:all .15s;
-}
-.emp-mgmt-btn.add { background:linear-gradient(135deg,#26c6a0,#00897b);color:#fff; box-shadow:0 2px 8px rgba(38,198,160,.3); }
-.emp-mgmt-btn.del { background:#fce4ec;color:#c62828;border:1px solid #f48fb1; }
-.emp-mgmt-btn.add:hover { filter:brightness(1.08); }
-.emp-mgmt-btn.del:hover { background:#c62828;color:#fff; }
-.emp-row-actions { display:flex;gap:6px;align-items:center; }
-/* KPI hover ring */
-.kpi[onclick]:hover::after {
-  content:'';position:absolute;inset:0;border-radius:inherit;
-  border:2px solid rgba(255,255,255,.5);pointer-events:none;
-  border-radius:var(--r);
-}
-/* Summary card clickable */
-.card.clickable { cursor:pointer;transition:transform .18s,box-shadow .18s; }
-.card.clickable:hover { transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.13); }
-.card.clickable .ch::after { content:'→';margin-left:auto;font-size:13px;color:var(--tx3);transition:transform .15s; }
-.card.clickable:hover .ch::after { transform:translateX(3px); }
+  .kpi-glow {
+    position:absolute; inset:0; border-radius:10px;
+    background:radial-gradient(circle at 20% 50%, var(--kpi-glow,rgba(0,194,255,.05)) 0%, transparent 70%);
+    pointer-events:none;
+  }
 
-/* ── QUOTES ─────────────────────────────────────── */
-.quote-bar {
-  text-align:center; padding:14px 28px; margin-bottom:18px;
-  font-size:14px; color:var(--tx); font-style:italic;
-  background:linear-gradient(120deg,rgba(38,198,160,.13) 0%,rgba(171,124,239,.10) 50%,rgba(249,168,37,.10) 100%);
-  border-radius:14px; border:1.5px solid rgba(38,198,160,.22);
-  font-family:'Playfair Display',Georgia,serif; line-height:1.7;
-  letter-spacing:.01em; position:relative; overflow:hidden;
-}
-.quote-bar::before {
-  content:'"'; position:absolute; left:14px; top:-8px;
-  font-size:72px; color:rgba(38,198,160,.12); font-family:'Playfair Display',serif;
-  line-height:1; pointer-events:none;
-}
-.quote-bar::after {
-  content:'"'; position:absolute; right:14px; bottom:-24px;
-  font-size:72px; color:rgba(171,124,239,.12); font-family:'Playfair Display',serif;
-  line-height:1; pointer-events:none;
-}
-.quote-bar .q-text { font-style:italic; font-size:14px; color:var(--tx); }
-.quote-bar .q-author {
-  display:block; margin-top:5px; font-size:11.5px;
-  font-style:normal; font-weight:600; color:var(--seafoam);
-  font-family:'Nunito',sans-serif; letter-spacing:.5px; text-transform:uppercase;
-}
-.quote-bar .q-icon { margin-right:8px; font-style:normal; }
+  /* ── ACTION REQUIRED CARDS ── */
+  .ar-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:24px; }
 
-/* ── DASHBOARD ENHANCEMENTS ──────────────────────── */
-.greeting-bar {
-  display:flex; align-items:center; gap:14px;
-  background:linear-gradient(135deg,#00897b,#0288d1);
-  border-radius:16px; padding:16px 22px; margin-bottom:20px;
-  color:#fff; position:relative; overflow:hidden;
-}
-.greeting-bar::after {
-  content:'🌿'; position:absolute; right:20px; top:50%;
-  transform:translateY(-50%); font-size:48px; opacity:.15;
-}
-.greeting-title { font-size:18px; font-weight:900; margin-bottom:2px; }
-.greeting-sub   { font-size:12px; opacity:.85; }
-.greeting-time  { font-family:'JetBrains Mono',monospace; font-size:13px;
-  background:rgba(255,255,255,.15); padding:3px 10px; border-radius:7px; margin-left:auto; }
+  .ar-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px; padding:16px 18px;
+    display:flex; align-items:center; gap:14px;
+    transition:all .2s; cursor:pointer; position:relative; overflow:hidden;
+  }
 
-/* today snapshot */
-.today-snap {
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
-  gap:10px; margin-bottom:18px;
-}
-.snap-card {
-  background:var(--bg2); border:1.5px solid var(--bdr);
-  border-radius:12px; padding:12px 14px; text-align:center;
-  transition:all .18s;
-}
-.snap-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
-.snap-name { font-size:11px; font-weight:700; color:var(--tx2); margin-bottom:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.snap-code { font-size:15px; font-weight:900; }
+  .ar-card:hover { transform:translateY(-2px); }
+  .ar-card::before {
+    content:''; position:absolute;
+    inset:0; border-radius:10px;
+    background:var(--ar-glow,transparent);
+    opacity:0; transition:opacity .2s;
+  }
+  .ar-card:hover::before { opacity:1; }
 
-/* kpi pulse on pending */
-.kpi.has-pending { animation: kpi-pulse 2.5s ease-in-out infinite; }
-@keyframes kpi-pulse {
-  0%,100% { box-shadow: 0 4px 18px rgba(249,168,37,.3); }
-  50%      { box-shadow: 0 4px 28px rgba(249,168,37,.7); }
-}
-/* card hover */
-.card { transition: box-shadow .2s; }
-.card:hover { box-shadow: 0 6px 24px rgba(0,0,0,.09); }
+  .ar-icon { font-size:24px; flex-shrink:0; }
+  .ar-num  { font-size:30px; font-weight:800; color:var(--ar-color,var(--text)); font-variant-numeric:tabular-nums; line-height:1; }
+  .ar-lbl  { font-size:10px; color:var(--text2); letter-spacing:.5px; margin-top:3px; }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px; overflow:hidden;
+  }
+
+  .table-header {
+    padding:14px 18px;
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+
+  .table-title { font-size:12px; font-weight:700; letter-spacing:.8px; color:var(--text); }
+
+  .search-box {
+    padding:6px 12px;
+    background:var(--bg3);
+    border:1px solid var(--border2);
+    border-radius:6px;
+    color:var(--text); font-family:'Syne',sans-serif; font-size:12px;
+    outline:none; width:200px;
+    transition:border-color .2s;
+  }
+  .search-box:focus { border-color:var(--accent); }
+
+  table { width:100%; border-collapse:collapse; }
+
+  thead tr { background:var(--bg2); }
+  thead th {
+    padding:10px 14px;
+    font-size:10px; font-weight:700; letter-spacing:1.2px;
+    color:var(--text3); text-transform:uppercase;
+    text-align:left; border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+
+  tbody tr {
+    border-bottom:1px solid rgba(30,45,66,.5);
+    transition:background .15s;
+  }
+  tbody tr:hover { background:rgba(0,194,255,.03); }
+  tbody tr:last-child { border-bottom:none; }
+
+  tbody td {
+    padding:10px 14px;
+    font-size:12px; color:var(--text2);
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  tbody td.desc { font-family:'Syne',sans-serif; color:var(--text); font-size:12px; }
+
+  /* ── STATUS BADGES ── */
+  .badge {
+    display:inline-flex; align-items:center; gap:5px;
+    padding:3px 8px; border-radius:4px;
+    font-size:10px; font-weight:600; letter-spacing:.5px;
+    white-space:nowrap; font-family:'Syne',sans-serif;
+  }
+
+  .badge-canvass  { background:rgba(240,165,0,.15);  color:var(--gold); border:1px solid rgba(240,165,0,.2); }
+  .badge-ready    { background:rgba(0,230,118,.12);  color:var(--green); border:1px solid rgba(0,230,118,.2); }
+  .badge-po       { background:rgba(0,194,255,.12);  color:var(--accent); border:1px solid rgba(0,194,255,.2); }
+  .badge-delivered{ background:rgba(0,230,118,.08);  color:#4fc;         border:1px solid rgba(0,255,204,.15); }
+  .badge-wh       { background:rgba(167,139,250,.12);color:var(--purple); border:1px solid rgba(167,139,250,.2); }
+  .badge-partial  { background:rgba(255,140,0,.12);  color:var(--orange); border:1px solid rgba(255,140,0,.2); }
+  .badge-paid     { background:rgba(0,230,118,.12);  color:var(--green); }
+  .badge-unpaid   { background:rgba(255,68,68,.12);  color:var(--red); }
+  .badge-process  { background:rgba(240,165,0,.12);  color:var(--gold); }
+  .badge-ho       { background:rgba(0,194,255,.12);  color:var(--accent); }
+  .badge-overdue  { background:rgba(255,68,68,.18);  color:var(--red); border:1px solid rgba(255,68,68,.3); }
+  .badge-critical { background:rgba(255,68,68,.18);  color:var(--red); border:1px solid rgba(255,68,68,.3); animation:blink 1.5s infinite; }
+  .badge-warning  { background:rgba(255,140,0,.15);  color:var(--orange); border:1px solid rgba(255,140,0,.2); }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+  /* ── FILTER PILLS ── */
+  .filters { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+
+  .pill {
+    padding:5px 14px;
+    border-radius:20px;
+    border:1px solid var(--border2);
+    background:transparent;
+    color:var(--text2); font-family:'Syne',sans-serif;
+    font-size:11px; font-weight:600; letter-spacing:.5px;
+    cursor:pointer; transition:all .2s;
+  }
+  .pill:hover  { border-color:var(--accent); color:var(--accent); }
+  .pill.active { background:rgba(0,194,255,.15); border-color:var(--accent); color:var(--accent); }
+
+  /* ── PROJECT CARD ── */
+  .proj-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px; padding:16px 18px;
+    transition:all .2s; cursor:pointer;
+  }
+  .proj-card:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:0 8px 30px rgba(0,0,0,.3); }
+
+  .proj-so   { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--accent); letter-spacing:1px; margin-bottom:6px; }
+  .proj-name { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+  .proj-client { font-size:11px; color:var(--text2); margin-bottom:14px; }
+
+  .proj-bar-wrap { height:4px; background:var(--bg3); border-radius:2px; overflow:hidden; margin-bottom:10px; }
+  .proj-bar {
+    height:100%; border-radius:2px;
+    background:linear-gradient(90deg, var(--accent), var(--green));
+    transition:width .8s ease;
+  }
+
+  .proj-stats { display:flex; gap:12px; flex-wrap:wrap; }
+  .proj-stat  { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--text3); }
+  .proj-stat span { color:var(--text2); }
+
+  /* ── BILLING CARD ── */
+  .bill-card {
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:10px; overflow:hidden; margin-bottom:12px;
+  }
+
+  .bill-card-head {
+    padding:14px 18px;
+    display:flex; align-items:center; justify-content:space-between;
+    cursor:pointer; transition:background .15s;
+  }
+  .bill-card-head:hover { background:rgba(255,255,255,.02); }
+
+  .bill-card-info h4  { font-size:13px; font-weight:700; color:var(--text); }
+  .bill-card-info p   { font-size:11px; color:var(--text2); margin-top:2px; font-family:'JetBrains Mono',monospace; }
+
+  .bill-amounts { text-align:right; }
+  .bill-total   { font-size:16px; font-weight:700; color:var(--text); }
+  .bill-balance { font-size:11px; color:var(--orange); font-family:'JetBrains Mono',monospace; margin-top:2px; }
+  .bill-paid    { color:var(--green); }
+
+  .bill-card-body { padding:0 18px 16px; border-top:1px solid var(--border); display:none; }
+  .bill-card-body.open { display:block; }
+
+  /* ── SUPPLIER SCORE ── */
+  .supplier-row {
+    display:flex; align-items:center; gap:16px;
+    padding:12px 0; border-bottom:1px solid rgba(30,45,66,.5);
+  }
+  .supplier-row:last-child { border-bottom:none; }
+
+  .supplier-rank {
+    width:26px; height:26px; border-radius:50%;
+    background:var(--bg3); border:1px solid var(--border2);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; color:var(--text2);
+    flex-shrink:0;
+  }
+  .supplier-rank.gold { background:rgba(240,165,0,.15); border-color:rgba(240,165,0,.3); color:var(--gold); }
+
+  .supplier-name { flex:1; font-size:13px; font-weight:600; color:var(--text); }
+  .supplier-meta { font-size:10px; font-family:'JetBrains Mono',monospace; color:var(--text3); margin-top:2px; }
+
+  .score-bar-wrap { width:140px; }
+  .score-bar-track { height:6px; background:var(--bg3); border-radius:3px; overflow:hidden; }
+  .score-bar-fill  { height:100%; border-radius:3px; background:linear-gradient(90deg, var(--accent2), var(--green)); }
+  .score-label     { font-size:11px; font-family:'JetBrains Mono',monospace; color:var(--text2); margin-top:4px; text-align:right; }
+
+  /* ── SHORTAGE ── */
+  .shortage-critical { border-left:3px solid var(--red); }
+  .shortage-warning  { border-left:3px solid var(--orange); }
+  .shortage-ok       { border-left:3px solid var(--green); }
+
+  /* ── LOADING / ERROR STATES ── */
+  .loading-state {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:60px 20px; gap:16px;
+  }
+
+  .spinner {
+    width:40px; height:40px; border-radius:50%;
+    border:3px solid var(--border);
+    border-top-color:var(--accent);
+    animation:spin 1s linear infinite;
+  }
+
+  .loading-text { font-size:13px; color:var(--text2); font-family:'JetBrains Mono',monospace; }
+
+  .error-state {
+    padding:40px 20px; text-align:center;
+  }
+  .error-icon { font-size:36px; margin-bottom:12px; }
+  .error-msg  { font-size:13px; color:var(--red); font-family:'JetBrains Mono',monospace; }
+  .error-sub  { font-size:11px; color:var(--text3); margin-top:8px; }
+
+  /* ── AMOUNT ── */
+  .amount { font-family:'JetBrains Mono',monospace; color:var(--text); }
+  .amount.big { font-size:22px; font-weight:700; color:var(--accent); }
+
+  /* ── TAB PANELS ── */
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+
+  /* ── MISC ── */
+  .mb16 { margin-bottom:16px; }
+  .mb24 { margin-bottom:24px; }
+  .mt16 { margin-top:16px; }
+
+  .row-flex { display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:20px; }
+
+  .mini-stat {
+    background:var(--card); border:1px solid var(--border);
+    border-radius:8px; padding:10px 16px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .mini-stat-val { font-size:20px; font-weight:700; color:var(--text); }
+  .mini-stat-lbl { font-size:10px; color:var(--text3); letter-spacing:.5px; }
+
+  /* ── WEEK CHART ── */
+  .week-chart { display:flex; align-items:flex-end; gap:8px; height:80px; padding:0 4px; }
+  .week-bar-group { flex:1; display:flex; gap:2px; align-items:flex-end; }
+  .week-bar { flex:1; border-radius:3px 3px 0 0; min-height:4px; transition:height .6s ease; }
+  .week-lbl { font-size:9px; color:var(--text3); text-align:center; margin-top:6px; font-family:'JetBrains Mono',monospace; }
+  .week-col { flex:1; }
+
+  /* scroll */
+  .scroll-x { overflow-x:auto; }
+  .scroll-x::-webkit-scrollbar { height:4px; }
+  .scroll-x::-webkit-scrollbar-track { background:var(--bg3); }
+  .scroll-x::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+  /* pill counts */
+  .count-pill {
+    display:inline-block;
+    padding:1px 6px; border-radius:10px;
+    font-size:10px; font-family:'JetBrains Mono',monospace;
+    background:var(--bg3); color:var(--text3);
+    margin-left:4px;
+  }
+
+  /* days warning */
+  .days-ok   { color:var(--green); }
+  .days-warn { color:var(--orange); }
+  .days-crit { color:var(--red); font-weight:700; }
+
+  @media(max-width:900px){
+    .grid-4 { grid-template-columns:repeat(2,1fr); }
+    .ar-grid { grid-template-columns:repeat(2,1fr); }
+    .grid-3  { grid-template-columns:1fr; }
+  }
+  @media(max-width:600px){
+    .grid-4 { grid-template-columns:1fr 1fr; }
+    main { padding:16px; }
+  }
 </style>
 </head>
 <body>
 
-<!-- ANIMATED BACKGROUND -->
-<div class="sky-bg" id="skyBg"></div>
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <div>
+      <div class="logo-text">EXELON POWER SOLUTIONS</div>
+      <div class="logo-sub">PROCUREMENT COMMAND CENTER</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="last-sync" id="lastSync">—</div>
+    <button class="sync-btn" id="syncBtn" onclick="syncAll()">
+      <div class="sync-dot" id="syncDot"></div>
+      SYNC NOW
+    </button>
+  </div>
+</header>
 
 <!-- NAV -->
-<nav class="nav">
-  <div class="brand">
-    <div class="brand-ico">🌺</div>
-    Exelon
+<nav>
+  <div class="tab active" onclick="showTab('overview')" id="tab-overview">
+    📊 Overview
   </div>
-  <div class="nav-sep"></div>
-  <div class="tabs">
-    <button class="tab on" data-tab="dash">🏡 Overview</button>
-    <button class="tab" data-tab="cal">🌸 Calendar</button>
-    <button class="tab" data-tab="ann">🦋 Annual</button>
-    <button class="tab" data-tab="lv">🌿 Leaves</button>
-    <button class="tab" data-tab="ot">🌤 Overtime</button>
-    <button class="tab" data-tab="hist">📜 History</button>
+  <div class="tab" onclick="showTab('projects')" id="tab-projects">
+    📁 Projects <span class="tab-badge" id="badge-projects">—</span>
   </div>
-  <div class="nr">
-    <div class="si"><div class="dot" id="dot"></div><span id="sl">Connecting…</span></div>
-    <button class="bsync" id="bsync" onclick="doSync()"><span class="ic">↻</span> Sync</button>
+  <div class="tab" onclick="showTab('alerts')" id="tab-alerts">
+    🚨 Alerts <span class="tab-badge red" id="badge-alerts">—</span>
+  </div>
+  <div class="tab" onclick="showTab('billing')" id="tab-billing">
+    💰 Billing <span class="tab-badge gold" id="badge-billing">—</span>
+  </div>
+  <div class="tab" onclick="showTab('items')" id="tab-items">
+    📦 Item History
+  </div>
+  <div class="tab" onclick="showTab('suppliers')" id="tab-suppliers">
+    🏆 Suppliers
+  </div>
+  <div class="tab" onclick="showTab('wh')" id="tab-wh">
+    🏭 WH Incoming
+  </div>
+  <div class="tab" onclick="showTab('po')" id="tab-po">
+    🛒 Purchase Orders
   </div>
 </nav>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+<!-- MAIN -->
+<main>
 
-<!-- MODAL -->
-<div class="mo" id="mo">
-  <div class="md">
-    <div class="mtt" id="mtt">Edit Attendance</div>
-    <div class="mst" id="mst"></div>
-    <div class="fl">
-      <label>Status Code</label>
-      <select id="mcode">
-        <option value="">— clear —</option>
-        <option value="P">P — Present</option>
-        <option value="VL">VL — Vacation Leave</option>
-        <option value="SL">SL — Sick Leave</option>
-        <option value="EL">EL — Emergency Leave</option>
-        <option value="ML">ML — Maternity Leave</option>
-        <option value="OT">OT — Overtime</option>
-        <option value="OT+P">OT+P — OT + Present</option>
-        <option value="WFH">WFH — Work From Home</option>
-        <option value="HOL">HOL — Holiday</option>
-        <option value="REST">REST — Rest Day</option>
-        <option value="SAT">SAT — Saturday</option>
-        <option value="TR-P">TR-P — Trainee Procurement</option>
-        <option value="TR-W">TR-W — Trainee Warehouse</option>
-        <optgroup label="─── Half Day ───">
-        <option value="HD-AM">HD-AM — Half Day (Morning)</option>
-        <option value="HD-PM">HD-PM — Half Day (Afternoon)</option>
-        <option value="HD-VL">HD-VL — Half Day Vacation Leave</option>
-        <option value="HD-SL">HD-SL — Half Day Sick Leave</option>
-        </optgroup>
-      </select>
-    </div>
-    <div class="ma">
-      <span class="svi" id="svi">⟳ Saving…</span>
-      <button class="btn bs" onclick="closeMo()">Cancel</button>
-      <button class="btn bp" onclick="saveMo()">☀️ Save</button>
-    </div>
-  </div>
-</div>
-
-<div class="wrap">
-
-  <!-- ══ DASHBOARD ══════════════════════════════════ -->
-  <div class="panel on" id="panel-dash"><div class="quote-bar" id="qb-panel-dash"></div>
-    <div id="ld" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:55vh;gap:18px">
-      <div style="font-size:60px;animation:float-bounce 2s ease-in-out infinite">🌻</div>
-      <div style="font-size:13px;color:var(--tx2);font-family:'JetBrains Mono',monospace;letter-spacing:1px">loading team data…</div>
-    </div>
-    <div id="dc" style="display:none">
-      <div class="greeting-bar" id="greetBar"></div>
-      <div style="margin-bottom:16px">
-        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:8px">📍 Today's Attendance</div>
-        <div class="today-snap" id="todaySnap"></div>
+  <!-- ══════════ OVERVIEW ══════════ -->
+  <div class="tab-panel active" id="panel-overview">
+    <div id="overviewContent">
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <div class="loading-text">Connecting to Google Sheets...</div>
       </div>
-      <div class="kpis" id="kpis"></div>
-      <!-- QUICK ADD FORMS -->
-      <div class="g2" style="margin-bottom:16px">
-        <!-- ADD LEAVE -->
-        <div class="card form-card">
-          <div class="ch">
-            <div class="ct">🌿 Add Leave</div>
-            <div class="form-status" id="lvFormStatus"></div>
-          </div>
-          <div class="form-body">
-            <div class="frow">
-              <div class="fgroup"><label>Employee</label><select id="fLvEmp"></select></div>
-              <div class="fgroup"><label>Leave Type</label>
-                <select id="fLvType">
-                  <option value="VL">VL — Vacation</option>
-                  <option value="SL">SL — Sick</option>
-                  <option value="EL">EL — Emergency</option>
-                  <option value="ML">ML — Maternity</option>
-                </select>
-              </div>
-              <div class="fgroup"><label>Status</label>
-                <select id="fLvStatus">
-                  <option value="PENDING">Pending</option>
-                  <option value="APPROVED">Approved</option>
-                  <option value="FILED">Filed</option>
-                  <option value="DENIED">Denied</option>
-                </select>
-              </div>
-            </div>
-            <div class="frow">
-              <div class="fgroup"><label>Date From</label><input type="date" id="fLvFrom"></div>
-              <div class="fgroup"><label>Date To</label><input type="date" id="fLvTo"></div>
-              <div class="fgroup fgroup-sm"><label>Days</label><input type="number" id="fLvDays" min="1" placeholder="auto"></div>
-            </div>
-            <div class="frow">
-              <div class="fgroup" style="flex:2"><label>Reason</label><input type="text" id="fLvReason" placeholder="Optional…"></div>
-              <div class="fgroup"><label>Approved By</label><input type="text" id="fLvApproved" placeholder="Name or blank"></div>
-              <div class="fgroup" style="justify-content:flex-end;align-items:flex-end">
-                <button class="fbtn fbtn-green" id="lvSubmitBtn" onclick="submitLeave()">🌱 Submit Leave</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- ADD OT -->
-        <div class="card form-card">
-          <div class="ch">
-            <div class="ct">⏰ Add Overtime</div>
-            <div class="form-status" id="otFormStatus"></div>
-          </div>
-          <div class="form-body">
-            <div class="frow">
-              <div class="fgroup"><label>Employee</label><select id="fOtEmp"></select></div>
-              <div class="fgroup"><label>OT Date</label><input type="date" id="fOtDate"></div>
-              <div class="fgroup"><label>Day Type</label>
-                <select id="fOtDayType">
-                  <option value="Regular">Regular (×1.25)</option>
-                  <option value="Rest Day">Rest Day (×1.30)</option>
-                  <option value="Holiday">Holiday (×2.00)</option>
-                  <option value="Special Holiday">Special Holiday</option>
-                </select>
-              </div>
-            </div>
-            <div class="frow">
-              <div class="fgroup"><label>Time In</label><input type="time" id="fOtIn"></div>
-              <div class="fgroup"><label>Time Out</label><input type="time" id="fOtOut"></div>
-              <div class="fgroup fgroup-sm"><label>Hours</label><input type="number" id="fOtHours" min="0.5" step="0.5" placeholder="auto"></div>
-            </div>
-            <div class="frow">
-              <div class="fgroup" style="flex:2"><label>Reason / Task</label><input type="text" id="fOtReason" placeholder="What was done during OT…"></div>
-              <div class="fgroup" style="justify-content:flex-end;align-items:flex-end">
-                <button class="fbtn fbtn-orange" id="otSubmitBtn" onclick="submitOT()">☀️ Submit OT</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div><!-- /quick add -->
-      <div class="g2">
-        <div class="card">
-          <div class="ch" style="cursor:pointer" onclick="switchTab('lv')"><div class="ct">🌿 Leave Summary</div><div class="cm" id="lm"></div><span style="font-size:12px;color:var(--tx3);margin-left:8px">→</span></div>
-          <div class="tw"><table>
-            <thead><tr><th>Employee</th><th>Dept</th><th class="c">VL</th><th class="c">SL</th><th class="c">EL</th><th class="c">ML</th><th class="c">Total</th></tr></thead>
-            <tbody id="dlb"></tbody>
-          </table></div>
-        </div>
-        <div class="card">
-          <div class="ch" style="cursor:pointer" onclick="switchTab('ot')"><div class="ct">🌤 OT Summary</div><div class="cm" id="om"></div><span style="font-size:12px;color:var(--tx3);margin-left:8px">→</span></div>
-          <div class="tw"><table>
-            <thead><tr><th>Employee</th><th class="c">Entries</th><th class="c">Hours</th><th>Last OT</th><th>Day Type</th></tr></thead>
-            <tbody id="dob"></tbody>
-          </table></div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="ch"><div class="ct">🌴 Team Roster</div><div class="cm" id="tm"></div><button class="emp-mgmt-btn add" onclick="openAddEmp()">＋ Add Employee</button></div>
-        <div class="tw"><table>
-          <thead><tr><th>Name</th><th>Department</th><th>Schedule</th><th>Work Days</th><th>Notes</th><th>Actions</th></tr></thead>
-          <tbody id="dtb"></tbody>
-        </table></div>
-      </div>
-    </div>
-    <div id="de" style="display:none;background:#fff3e0;border:1.5px solid #ffcc02;border-radius:14px;padding:18px 22px;max-width:500px;margin:36px auto;font-size:12.5px;color:#bf360c;font-family:'JetBrains Mono',monospace"></div>
-  </div>
-
-  <!-- ══ HISTORY ══════════════════════════════════ -->
-  <div class="panel" id="panel-hist"><div class="quote-bar" id="qb-panel-hist"></div>
-    <div class="card">
-      <div class="ch">
-        <div class="ct">📜 Audit Log</div>
-        <div class="cm" id="histCount"></div>
-        <button class="emp-mgmt-btn add" style="padding:4px 12px;font-size:11px" onclick="doSync()">↻ Refresh</button>
-      </div>
-      <div class="tw"><table>
-        <thead><tr><th>Time</th><th>Action</th><th>By</th><th>Details</th><th>Status</th></tr></thead>
-        <tbody id="histBody"></tbody>
-      </table></div>
     </div>
   </div>
 
-  <!-- ══ CALENDAR ══════════════════════════════════ -->
-  <div class="panel" id="panel-cal"><div class="quote-bar" id="qb-panel-cal"></div>
-    <div class="cc">
-      <div class="mn">
-        <button class="nb" onclick="pm()">‹</button>
-        <div class="mlb" id="mlb">— 2026</div>
-        <button class="nb" onclick="nm()">›</button>
-      </div>
-      <div class="leg">
-        <div class="li"><span class="chip" style="background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7">P</span> Present</div>
-        <div class="li"><span class="chip" style="background:#f3e5f5;color:#7b1fa2;border-color:#ce93d8">VL</span> Vacation</div>
-        <div class="li"><span class="chip" style="background:#fff3e0;color:#e65100;border-color:#ffcc80">SL</span> Sick</div>
-        <div class="li"><span class="chip" style="background:#fce4ec;color:#c62828;border-color:#f48fb1">OT</span> OT</div>
-        <div class="li"><span class="chip" style="background:#e3f2fd;color:#0277bd;border-color:#90caf9">WFH</span> WFH</div>
-        <div class="li"><span class="chip" style="background:#fce4ec;color:#880e4f;border-color:#f48fb1">HOL</span> Holiday</div>
-        <div class="li"><span class="chip" style="background:#f5f5f5;color:#9e9e9e;border-color:#e0e0e0">REST</span> Rest</div>
-      </div>
-      <div style="margin-left:auto;font-size:10.5px;color:var(--tx3);display:flex;align-items:center;gap:5px;font-weight:600">✏️ Click any cell to edit</div>
-    </div>
-    <div class="cw">
-      <table class="ct2"><thead id="ch"></thead><tbody id="cb"></tbody></table>
-    </div>
-    <div id="cn" style="margin-top:9px;font-size:10.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace;padding:0 2px"></div>
-  </div>
-
-  <!-- ══ ANNUAL ════════════════════════════════════ -->
-  <div class="panel" id="panel-ann"><div class="quote-bar" id="qb-panel-ann"></div>
-    <div class="g2">
-      <div class="card">
-        <div class="ch"><div class="ct">🦋 Monthly Activity</div><div class="cm">2026 · leaves & OT</div></div>
-        <div class="tw"><table>
-          <thead><tr><th>Employee</th><th>Dept</th>
-            <th class="c">Jan</th><th class="c">Feb</th><th class="c">Mar</th><th class="c">Apr</th>
-            <th class="c">May</th><th class="c">Jun</th><th class="c">Jul</th><th class="c">Aug</th>
-            <th class="c">Sep</th><th class="c">Oct</th><th class="c">Nov</th><th class="c">Dec</th>
-          </tr></thead>
-          <tbody id="ab"></tbody>
-        </table></div>
-      </div>
-      <div class="card">
-        <div class="ch"><div class="ct">🌾 OT Entries by Month</div></div>
-        <div style="padding:14px 17px" id="omb"></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ch"><div class="ct">🏆 OT Hours — Leaderboard</div></div>
-      <div style="padding:14px 17px" id="olb"></div>
+  <!-- ══════════ PROJECTS ══════════ -->
+  <div class="tab-panel" id="panel-projects">
+    <div id="projectsContent">
+      <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading projects...</div></div>
     </div>
   </div>
 
-  <!-- ══ LEAVE ════════════════════════════════════ -->
-  <div class="panel" id="panel-lv"><div class="quote-bar" id="qb-panel-lv"></div>
-    <div class="card" style="margin-bottom:16px">
-      <div class="ch"><div class="ct">🌱 Leave Credits Remaining</div><div class="cm">VL: 15 days/yr · SL: 5 days/yr</div></div>
-      <div class="cg" id="lcr"></div>
-    </div>
-    <div class="card">
-      <div class="ch"><div class="ct">🌿 Leave Log</div><div class="cm" id="lc"></div></div>
-      <div class="tw"><table>
-        <thead><tr><th>Employee</th><th>Dept</th><th>Type</th><th>From</th><th>To</th><th class="c">Days</th><th>Reason</th><th>Status</th><th>Approved By</th><th>Action</th></tr></thead>
-        <tbody id="lb"></tbody>
-      </table></div>
+  <!-- ══════════ ALERTS ══════════ -->
+  <div class="tab-panel" id="panel-alerts">
+    <div id="alertsContent">
+      <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading alerts...</div></div>
     </div>
   </div>
 
-  <!-- ══ OT ════════════════════════════════════════ -->
-  <div class="panel" id="panel-ot"><div class="quote-bar" id="qb-panel-ot"></div>
-    <div class="card" style="margin-bottom:16px">
-      <div class="ch"><div class="ct">⏰ Overtime Log</div><div class="cm">DOLE: Regular ×1.25 · Rest Day ×1.30 · Holiday ×2.00</div></div>
-      <div class="tw"><table>
-        <thead><tr><th>Employee</th><th>Dept</th><th>Date</th><th>Day Type</th><th>Time</th><th class="c">Hrs</th><th>Reason</th></tr></thead>
-        <tbody id="ob"></tbody>
-      </table></div>
-    </div>
-    <div class="g2">
-      <div class="card"><div class="ch"><div class="ct">🌻 By Employee</div></div><div style="padding:14px 17px" id="oeb"></div></div>
-      <div class="card"><div class="ch"><div class="ct">🌊 By Month</div></div><div style="padding:14px 17px" id="omob"></div></div>
+  <!-- ══════════ BILLING ══════════ -->
+  <div class="tab-panel" id="panel-billing">
+    <div id="billingContent">
+      <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading billing data...</div></div>
     </div>
   </div>
 
-</div>
+  <!-- ══════════ ITEM HISTORY ══════════ -->
+  <div class="tab-panel" id="panel-items">
+    <div id="itemsContent">
+      <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading item history...</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ SUPPLIERS ══════════ -->
+  <div class="tab-panel" id="panel-suppliers">
+    <div id="suppliersContent">
+      <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading supplier data...</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ WH INCOMING ══════════ -->
+  <div class="tab-panel" id="panel-wh">
+    <div id="whContent">
+      <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading WH data...</div></div>
+    </div>
+  </div>
+
+  <!-- ══════════ PURCHASE ORDERS ══════════ -->
+  <div class="tab-panel" id="panel-po">
+    <div id="poContent">
+      <div class="loading-state"><div class="spinner"></div><div class="loading-text">Loading PO data...</div></div>
+    </div>
+  </div>
+
+</main>
 
 <script>
-// ══════════════════════════════════════════════════
-// ANIMATED BACKGROUND — bubbles + floating animals
-// ══════════════════════════════════════════════════
-(function(){
-  const sky = document.getElementById('skyBg');
-  // Pastel bubbles
-  const bubbleColors = [
-    'rgba(255,202,40,.35)','rgba(41,182,246,.25)',
-    'rgba(38,198,160,.25)','rgba(255,107,107,.20)',
-    'rgba(171,124,239,.20)'
-  ];
-  for(let i=0;i<18;i++){
-    const b=document.createElement('div');
-    b.className='bubble';
-    const sz=Math.random()*18+6;
-    b.style.cssText=`width:${sz}px;height:${sz}px;
-      left:${Math.random()*100}%;bottom:${Math.random()*20}%;
-      background:${bubbleColors[Math.floor(Math.random()*bubbleColors.length)]};
-      border-radius:50%;
-      animation-duration:${Math.random()*14+10}s;
-      animation-delay:${Math.random()*12}s;
-      filter:blur(${Math.random()>.5?'1px':'0'})`;
-    sky.appendChild(b);
-  }
-  // Floating summer emojis
-  const icons=['🦋','🐝','🌸','🌺','🍃','🐦','🌼','🦜','🌻','🐠','🌿','🦚'];
-  for(let i=0;i<10;i++){
-    const f=document.createElement('div');
-    f.className='floater';
-    f.textContent=icons[Math.floor(Math.random()*icons.length)];
-    f.style.cssText=`
-      font-size:${Math.random()*12+14}px;
-      left:${Math.random()*100}%;
-      bottom:${Math.random()*15}%;
-      animation-duration:${Math.random()*18+14}s;
-      animation-delay:${Math.random()*14}s;`;
-    sky.appendChild(f);
-  }
-})();
+// ══════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════
+const PROCUREMENT_URL = 'https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
+const BILLING_URL     = 'https://script.google.com/a/macros/exelon.ph/s/AKfycbzj7KxrwLwEJsn0stbimahmxlx34DXF6XHdehVSJr-pI8AaVZIY1a86mEQ3-G5TnTxz/exec';
 
-// ══════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════
-const SURL='https://script.google.com/macros/s/AKfycbxqKyyWrLVIF-t-4q7zoMC_01VVF0-TTon5RXVSsX2QC5jPRWJ5Xj-mC5kVm1_YlCQ0/exec';
-const MO=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const MS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-const DS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let procData   = null;
+let billData   = null;
+let activeTab  = 'overview';
+let itemFilter = 'ALL';
+let itemSearch = '';
+let poSearch   = '';
+let whSearch   = '';
 
-const HOL={
-  '2026-01-01':"New Year's Day",'2026-02-25':"EDSA Revolution",
-  '2026-04-02':"Maundy Thursday",'2026-04-03':"Good Friday",
-  '2026-04-04':"Black Saturday",'2026-04-09':"Araw ng Kagitingan",
-  '2026-05-01':"Labor Day",'2026-06-12':"Independence Day",
-  '2026-08-21':"Ninoy Aquino Day",'2026-08-31':"National Heroes Day",
-  '2026-11-01':"All Saints Day",'2026-11-02':"All Souls Day",
-  '2026-11-30':"Bonifacio Day",'2026-12-08':"Immaculate Conception",
-  '2026-12-24':"Christmas Eve",'2026-12-25':"Christmas Day",
-  '2026-12-30':"Rizal Day",'2026-12-31':"New Year's Eve"
-};
-
-// Chip config — bright summer colors
-const DEPT_COLORS={
-  'Procurement':'background:#e8f5e9;color:#2e7d32',
-  'Warehouse':'background:#e3f2fd;color:#1565c0',
-  'Trainee':'background:#fff3e0;color:#e65100',
-  'Admin':'background:#f3e5f5;color:#7b1fa2',
-  'Operations':'background:#fce4ec;color:#c62828',
-};
-const CC={
-  'P':    {bg:'#e8f5e9',c:'#2e7d32',bd:'#a5d6a7'},
-  'VL':   {bg:'#f3e5f5',c:'#7b1fa2',bd:'#ce93d8'},
-  'SL':   {bg:'#fff3e0',c:'#e65100',bd:'#ffcc80'},
-  'EL':   {bg:'#fce4ec',c:'#c62828',bd:'#f48fb1'},
-  'OT':   {bg:'#fce4ec',c:'#ad1457',bd:'#f06292'},
-  'OT+P': {bg:'#fce4ec',c:'#880e4f',bd:'#f48fb1'},
-  'WFH':  {bg:'#e3f2fd',c:'#0277bd',bd:'#90caf9'},
-  'ML':   {bg:'#fce4ec',c:'#880e4f',bd:'#f48fb1'},
-  'HOL':  {bg:'#fce4ec',c:'#880e4f',bd:'#f48fb1'},
-  'REST': {bg:'#f5f5f5',c:'#9e9e9e',bd:'#e0e0e0'},
-  'SAT':  {bg:'#e3f2fd',c:'#1565c0',bd:'#90caf9'},
-  'TR-P':  {bg:'#e8f5e9',c:'#2e7d32',bd:'#a5d6a7'},
-  'TR-W':  {bg:'#e8f5e9',c:'#2e7d32',bd:'#a5d6a7'},
-  'HD-AM': {bg:'#fff9c4',c:'#f57f17',bd:'#fff176'},
-  'HD-PM': {bg:'#fff9c4',c:'#f57f17',bd:'#fff176'},
-  'HD-VL': {bg:'#f3e5f5',c:'#6a1b9a',bd:'#ce93d8'},
-  'HD-SL': {bg:'#fff3e0',c:'#bf360c',bd:'#ffcc80'},
-};
-
-const KPI_DATA=[
-  {art:'🌴',cls:'kpi-0'},{art:'🦋',cls:'kpi-1'},
-  {art:'☀️',cls:'kpi-2'},{art:'🌺',cls:'kpi-3'},
-  {art:'🌊',cls:'kpi-4'}
-];
-
-// ══════════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════════
-let DATA=null, curMo=new Date().getMonth(), ov={}, mCtx=null, validSet=new Set();
-
-// ══════════════════════════════════════════════════
-// DATE FIX
-// ══════════════════════════════════════════════════
-function fixDate(r){
-  if(r==null||r==='') return '';
-  const s=String(r).trim();
-  if(!s||s==='NaN'||s==='Invalid Date') return '';
-  if(/^\d{4,5}$/.test(s)){
-    const n=parseInt(s);
-    if(n>1000&&n<99999){
-      const dt=new Date(new Date(1899,11,30).getTime()+n*86400000);
-      const y=dt.getFullYear();
-      if(y<2000||y>2100) return '';
-      return `${y}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
-    }
-    return '';
-  }
-  try{
-    const dm=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
-    if(dm) return `${dm[3]}-${dm[2].padStart(2,'0')}-${dm[1].padStart(2,'0')}`;
-    const dt=new Date(s);
-    if(isNaN(dt.getTime())) return '';
-    const y=dt.getFullYear();
-    if(y<2000||y>2100) return '';
-    return `${y}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;
-  } catch(e) {return '';}
-}
-
-function fmtD(ds){
-  if(!ds) return '—';
-  try{
-    const d=new Date(ds+'T00:00:00');
-    return d.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
-  } catch(e) {return ds;}
-}
-
-// ══════════════════════════════════════════════════
-// JUNK FILTER
-// ══════════════════════════════════════════════════
-const JUNK=[
-  /TEAM CONFIGURATION/i,/DEPARTMENT COLOR/i,/Saturday is REGULAR/i,
-  /TIP:/i,/DASHBOARD/i,/^📌/,/^💡/,/^📋/,/^🔴/,/^🟡/,
-  /DOLE OT RATES/i,/POLICY REMINDER/i,/LEAVE SUMMARY/i,
-  /OT SUMMARY/i,/^#$/,/All Employees/i,/ANNUAL SUMMARY/i,
-  /MONTHLY OT/i,/^EMPLOYEE$/i,/^NaN$/,/procurement & warehouse/i
-];
-function okName(n){
-  if(!n||typeof n!=='string') return false;
-  const t=n.trim();
-  if(!t||t.length<3||t.length>60) return false;
-  for(const p of JUNK) if(p.test(t)) return false;
-  return /^[A-Za-zÀ-ÿ\s().'\-]{3,60}$/.test(t);
-}
-function cleanTeam(t){return(t||[]).filter(m=>okName(m.name));}
-function cleanLeaves(ls){
-  return(ls||[]).filter(l=>{
-    if(!okName(l.employee)) return false;
-    if(validSet.size&&!validSet.has(l.employee)) return false;
-    l.from=fixDate(l.from); l.to=fixDate(l.to);
-    return !!l.from;
-  });
-}
-function cleanOT(ot){
-  return(ot||[]).filter(o=>{
-    if(!okName(o.employee)) return false;
-    if(validSet.size&&!validSet.has(o.employee)) return false;
-    o.date=fixDate(o.date);
-    return !!o.date;
-  });
-}
-
-// ══════════════════════════════════════════════════
-// FETCH
-// ══════════════════════════════════════════════════
-async function doSync(){
-  setDot('loading','Syncing…');
-  const b=document.getElementById('bsync');
-  b.classList.add('spin');
-  try{
-    // 15s timeout — GAS can be slow on cold start
-    const controller = new AbortController();
-    const timer = setTimeout(()=>controller.abort(), 15000);
-    const r = await fetch(SURL+'?t='+Date.now(), {
-      redirect: 'follow',
-      signal: controller.signal
-    });
-    clearTimeout(timer);
-    if(!r.ok) throw new Error('HTTP '+r.status+' — check Apps Script deployment');
-    const txt = await r.text();
-    let j;
-    try { j = JSON.parse(txt); } catch(e) { throw new Error('Server returned non-JSON. Raw: '+txt.slice(0,120)); }
-    if(j.error) throw new Error(j.error);
-    j.team=cleanTeam(j.team||[]);
-    validSet=new Set(j.team.map(m=>m.name));
-    j.leaves=cleanLeaves(j.leaves||[]);
-    j.otLog=cleanOT(j.otLog||[]);
-    DATA=j;
-    const t=new Date(DATA.updated);
-    setDot('live',t.toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'}));
-    renderAll();
-  }catch(e){
-    setDot('err','Error');
-    const msg = e.name==='AbortError'
-      ? 'Connection timed out (15s). Apps Script may need redeployment.'
-      : e.message;
-    showErr(msg);
-    console.error('doSync error:', e);
-  }
-  b.classList.remove('spin');
-}
-
-// ── GAS call — GET params (POST body is dropped on GAS redirect, GET works reliably)
-async function gasCall(params) {
-  const qs  = Object.entries(params)
-    .filter(function(e){ return e[1] !== undefined && e[1] !== null; })
-    .map(function(e){ return encodeURIComponent(e[0]) + '=' + encodeURIComponent(e[1]); })
-    .join('&');
-  const url = SURL + '?' + qs + '&_t=' + Date.now();
-  const r   = await fetch(url, { redirect: 'follow' });
-  const txt = await r.text();
-  let res;
-  try { res = JSON.parse(txt); } catch(e) { throw new Error('Bad response from server: ' + txt.slice(0, 120)); }
-  if (!res.ok && res.error) throw new Error(res.error);
-  return res;
-}
-async function writeBack(emp, date, code) {
-  return gasCall({ action: 'updateCell', employee: emp, date, code });
-}
-
-// ══════════════════════════════════════════════════
-// RENDER ALL
-// ══════════════════════════════════════════════════
-function renderAll(){
-  document.getElementById('ld').style.display='none';
-  document.getElementById('de').style.display='none';
-  document.getElementById('dc').style.display='block';
-  rdDash(); rdCal(); rdAnn(); rdLv(); rdOT(); rdHist();
-  populateForms(); injectQuotes();
-}
-
-function mkChip(code,isSun,emp,ds){
-  // Half day — show with ½ indicator
-  if(code&&code.startsWith('HD-')){
-    const cfg=CC[code]||{bg:'#fff9c4',c:'#f57f17',bd:'#fff176'};
-    const label=code.replace('HD-','');
-    return `<span onclick="openMo('${emp}','${ds}')" style="display:inline-flex;align-items:center;gap:1px;padding:2px 4px;border-radius:5px;font-size:9px;font-weight:800;cursor:pointer;background:${cfg.bg};color:${cfg.c};border:1px solid ${cfg.bd}" title="${code}">½${label}</span>`;
-  }
-  const cfg=CC[code];
-  const fade=isSun?';opacity:.25':'';
-  const click=`onclick="openMo('${emp}','${ds}','${code||''}')"`;
-  if(!code) return `<span class="ce" ${click}>·</span>`;
-  const st=cfg
-    ?`background:${cfg.bg};color:${cfg.c};border-color:${cfg.bd}${fade}`
-    :`background:#f5f5f5;color:#9e9e9e${fade}`;
-  return `<span class="chip" style="${st};cursor:pointer" ${click}>${code}</span>`;
-}
-function nTd(v,cls){
-  if(!v||v===0) return `<td class="c nd">—</td>`;
-  return `<td class="c ${cls}">${v}</td>`;
-}
-function mkBar(lbl,val,max,color,wide){
-  const pct=max>0?Math.round((val/max)*100):0;
-  const L=wide?`<div class="blw">${lbl}</div>`:`<div class="bl">${lbl}</div>`;
-  return `<div class="br">${L}<div class="bt"><div class="bf" style="width:${pct}%;background:${color}"></div></div><div class="bv">${val}</div></div>`;
-}
-function lvSum(lv,emp,type){return lv.filter(l=>l.employee===emp&&(l.type||'').toUpperCase().includes(type)).reduce((s,l)=>s+(l.days||0),0);}
-function otEmp(ot,emp){const r=ot.filter(o=>o.employee===emp);return{n:r.length,h:r.reduce((s,o)=>s+(o.hours||0),0)};}
-function emp0(cols,msg='No records yet'){return`<tr><td colspan="${cols}" style="text-align:center;padding:22px;color:var(--tx3);font-size:12px">${msg}</td></tr>`;}
-
-// ══════════════════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════════════════
-function rdDash(){
-  const{team,leaves,otLog,calendar}=DATA;
-  const today=new Date().toISOString().split('T')[0];
-  const now=new Date();
-  const hleft=Object.keys(HOL).filter(d=>d>=today).length;
-  const totLv=leaves.length, pendLv=leaves.filter(l=>(l.status||'').toUpperCase()==='PENDING').length;
-  const pendOT=otLog.filter(o=>(o.status||'').toUpperCase()==='PENDING').length;
-  const totOTh=otLog.reduce((s,o)=>s+(o.hours||0),0);
-
-  // Greeting
-  const hr=now.getHours();
-  const greet=hr<12?'🌅 Good Morning':'🌞 Good Afternoon';
-  const dayStr=now.toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
-  const timeStr=now.toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
-  const gb=document.getElementById('greetBar');
-  if(gb) gb.innerHTML=`
-    <div>
-      <div class="greeting-title">${greet}, Chary! 👋</div>
-      <div class="greeting-sub">${dayStr} · ${pendLv+pendOT} pending approval${pendLv+pendOT!==1?'s':''}</div>
-    </div>
-    <div class="greeting-time">${timeStr}</div>`;
-
-  // Today snapshot — show each member's attendance today
-  const cal=calendar||{};
-  const snaps=team.map(m=>{
-    const code=(cal[m.name]||{})[today]||'';
-    const cfg=CC[code];
-    const chip=code
-      ? `<div class="snap-code" style="color:${cfg?cfg.c:'#9e9e9e'}">${code}</div>`
-      : `<div class="snap-code" style="color:#bbb;font-size:11px">—</div>`;
-    return `<div class="snap-card">${chip}<div class="snap-name">${m.name.replace(' (You)','').split(' ')[0]}</div></div>`;
-  }).join('');
-  const sb=document.getElementById('todaySnap');
-  if(sb) sb.innerHTML=snaps;
-
-  const kpis=[
-    {l:'Team Members',   v:team.length,    s:'Procurement & Warehouse'},
-    {l:'Leaves Filed',   v:totLv,          s:`${pendLv} pending approval`},
-    {l:'OT Entries',     v:otLog.length,   s:`${totOTh.toFixed(1)} total hours`},
-    {l:'Holidays Left',  v:hleft,          s:'Remaining in 2026'},
-    {l:'Last Sync', v:new Date(DATA.updated).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'}),
-     s:new Date(DATA.updated).toLocaleDateString('en-PH',{month:'short',day:'numeric'}), small:true},
-  ];
-  const kpiLinks=['','lv','ann','','cal'];
-  document.getElementById('kpis').innerHTML=kpis.map((k,i)=>`
-    <div class="kpi ${KPI_DATA[i].cls}${i===1&&pendLv>0?' has-pending':''}" ${kpiLinks[i]?`onclick="switchTab('${kpiLinks[i]}')" style="cursor:pointer"`:''} title="${kpiLinks[i]?'Click to open '+k.l:''}">
-      <div class="kpi-art">${KPI_DATA[i].art}</div>
-      <div class="kl">${k.l}</div>
-      <div class="kv" ${k.small?'style="font-size:20px"':''}>${k.v}${i===1&&pendLv>0?`<sup style="font-size:10px;background:rgba(255,255,255,.3);padding:1px 5px;border-radius:5px;margin-left:4px">${pendLv}⏳</sup>`:''}</div>
-      <div class="ks">${k.s}</div>
-    </div>`).join('');
-
-  document.getElementById('lm').textContent=totLv+' records';
-  let lh='';
-  team.forEach(m=>{
-    const vl=lvSum(leaves,m.name,'VL'),sl=lvSum(leaves,m.name,'SL'),
-          el=lvSum(leaves,m.name,'EL'),ml=lvSum(leaves,m.name,'ML'),tt=vl+sl+el+ml;
-    lh+=`<tr><td><div class="en">${m.name}</div></td>
-      <td style="font-size:11px;color:var(--tx2)">${m.dept||'—'}</td>
-      ${nTd(vl,'np')}${nTd(sl,'na')}${nTd(el,'nr2')}${nTd(ml,'nc')}${nTd(tt,'nv')}</tr>`;
-  });
-  document.getElementById('dlb').innerHTML=lh||emp0(7);
-
-  document.getElementById('om').textContent=otLog.length+' entries';
-  let oh='';
-  team.forEach(m=>{
-    const{n,h}=otEmp(otLog,m.name);
-    const last=otLog.filter(o=>o.employee===m.name).slice(-1)[0];
-    oh+=`<tr><td><div class="en">${m.name}</div></td>
-      ${nTd(n,'na')}${nTd(h>0?h.toFixed(1):0,'na')}
-      <td style="font-size:11.5px;color:var(--tx2)">${last?fmtD(last.date):'—'}</td>
-      <td style="font-size:11.5px;color:var(--tx2)">${last?last.dayType||'—':'—'}</td></tr>`;
-  });
-  document.getElementById('dob').innerHTML=oh||emp0(5);
-
-  document.getElementById('tm').textContent=team.length+' members';
-  let th='';
-  team.forEach(m=>{
-    const deptColor=m.dept&&m.dept.toLowerCase().includes('proc')
-      ?'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7'
-      :'background:#e3f2fd;color:#0277bd;border:1px solid #90caf9';
-    th+=`<tr>
-      <td><div class="en">${m.name}</div></td>
-      <td><span style="font-size:10.5px;${deptColor};padding:2px 8px;border-radius:6px;font-weight:700">${m.dept||'—'}</span></td>
-      <td style="font-size:11.5px;color:var(--tx2);font-family:'JetBrains Mono',monospace">${m.hours||'—'}</td>
-      <td style="font-size:11.5px;color:var(--tx2)">${m.workDays||'—'}</td>
-      <td style="font-size:11.5px;color:var(--tx3)">${m.notes||'—'}</td>
-      <td><div class="emp-row-actions">
-        <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10.5px" onclick="openEditEmpByIdx(${m.rowIndex||0})">✏️</button>
-        <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10.5px" onclick="confirmDeleteEmp('${m.name.replace(/'/g,String.fromCharCode(39))}',${m.rowIndex||0})">🗑</button>
-      </div></td></tr>`;
-  });
-  document.getElementById('dtb').innerHTML=th;
-}
-
-// ══════════════════════════════════════════════════
-// CALENDAR
-// ══════════════════════════════════════════════════
-function rdCal(){
-  if(!DATA) return;
-  const{team,leaves,otLog}=DATA;
-  const cal=DATA.calendar||{};
-  const yr=2026,mo=curMo,dim=new Date(yr,mo+1,0).getDate();
-  document.getElementById('mlb').textContent=MO[mo]+' 2026';
-
-  const g={};
-  team.forEach(m=>{g[m.name]={}});
-
-  // 1. Use calendar data from monthly sheets if available (most accurate)
-  if(Object.keys(cal).length>0){
-    team.forEach(m=>{
-      const empCal=cal[m.name]||{};
-      Object.entries(empCal).forEach(([ds,code])=>{
-        const d=new Date(ds+'T00:00:00');
-        if(d.getFullYear()===yr&&d.getMonth()===mo&&code){
-          g[m.name][d.getDate()]=code;
-        }
-      });
-    });
-  } else {
-    // Fallback: reconstruct from Leave/OT trackers
-    leaves.forEach(l=>{
-      if(!l.from||!g[l.employee]) return;
-      const from=new Date(l.from+'T00:00:00'),to=l.to?new Date(l.to+'T00:00:00'):from;
-      for(let d=new Date(from);d<=to;d.setDate(d.getDate()+1)){
-        if(d.getFullYear()===yr&&d.getMonth()===mo){
-          let c=(l.type||'VL').toUpperCase()
-            .replace('VACATION LEAVE','VL').replace('SICK LEAVE','SL')
-            .replace('EMERGENCY LEAVE','EL').replace('MATERNITY LEAVE','ML')
-            .replace('VACATION','VL').replace('SICK','SL');
-          g[l.employee][d.getDate()]=c;
-        }
-      }
-    });
-    otLog.forEach(o=>{
-      if(!o.date||!g[o.employee]) return;
-      const d=new Date(o.date+'T00:00:00');
-      if(d.getFullYear()===yr&&d.getMonth()===mo){
-        const ex=g[o.employee][d.getDate()];
-        g[o.employee][d.getDate()]=ex==='P'?'OT+P':'OT';
-      }
-    });
-  }
-
-  // 2. Apply local overrides (edits made in dashboard)
-  Object.entries(ov).forEach(([emp,days])=>{
-    Object.entries(days).forEach(([ds,code])=>{
-      const d=new Date(ds+'T00:00:00');
-      if(d.getFullYear()===yr&&d.getMonth()===mo&&g[emp])
-        g[emp][d.getDate()]=code||'';
-    });
-  });
-
-  let hh='<tr><th class="eth">Employee</th><th class="dth">Dept</th>';
-  const hols=[];
-  for(let d=1;d<=dim;d++){
-    const dt=new Date(yr,mo,d),dow=dt.getDay();
-    const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const ih=!!HOL[ds],iw=dow===0||dow===6;
-    let cl=''; if(iw) cl+=' wk'; if(ih){cl+=' hh';hols.push(`${d}: ${HOL[ds]}`);}
-    hh+=`<th class="${cl}" style="min-width:28px" title="${ih?HOL[ds]:DS[dow]}">${d}<br><span style="font-size:8px;opacity:.5">${DS[dow].slice(0,2)}</span></th>`;
-  }
-  hh+='<th class="st">P</th><th class="st">Lv</th><th class="st">OT</th></tr>';
-  document.getElementById('ch').innerHTML=hh;
-
-  let bh='';
-  team.forEach(m=>{
-    let pc=0,lc=0,oc=0;
-    let row=`<tr><td class="etd"><div class="en" style="font-size:12px">${m.name}</div></td>
-      <td class="dtd">${m.dept||'—'} · ${m.hours||''}</td>`;
-    for(let d=1;d<=dim;d++){
-      const dt=new Date(yr,mo,d),dow=dt.getDay();
-      const ds=`${yr}-${String(mo+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const ih=!!HOL[ds],iSun=dow===0,iSat=dow===6;
-      let code=g[m.name][d]||'';
-      if(!code){if(ih) code='HOL'; else if(iSun) code='REST'; else if(iSat) code='SAT';}
-      if(code==='P'||code==='OT+P') pc++;
-      else if(code==='HD-AM'||code==='HD-PM') pc+=0.5;
-      else if(code==='HD-VL'||code==='HD-SL') { pc+=0.5; lc+=0.5; }
-      if(['VL','SL','EL','ML'].includes(code)) lc++;
-      if(code==='OT'||code==='OT+P') oc++;
-      row+=`<td>${mkChip(code,iSun,m.name,ds)}</td>`;
-    }
-    const ps=pc?`<span class="nc">${pc}</span>`:`<span class="nd">—</span>`;
-    const ls=lc?`<span class="np">${lc}</span>`:`<span class="nd">—</span>`;
-    const os=oc?`<span class="na">${oc}</span>`:`<span class="nd">—</span>`;
-    row+=`<td class="sdt">${ps}</td><td class="sdt">${ls}</td><td class="sdt">${os}</td></tr>`;
-    bh+=row;
-  });
-  document.getElementById('cb').innerHTML=bh;
-  document.getElementById('cn').textContent=hols.length
-    ?'🌸 '+hols.join(' · '):'🌿 No public holidays this month.';
-}
-
-// ══════════════════════════════════════════════════
-// ANNUAL
-// ══════════════════════════════════════════════════
-function rdAnn(){
-  if(!DATA) return;
-  const{team,leaves,otLog}=DATA;
-  const otMo=Array(12).fill(0),otEmpM={};
-  team.forEach(m=>{otEmpM[m.name]={n:0,h:0}});
-  otLog.forEach(o=>{
-    if(!o.date) return;
-    const d=new Date(o.date+'T00:00:00');
-    if(d.getFullYear()!==2026) return;
-    otMo[d.getMonth()]++;
-    if(otEmpM[o.employee]){otEmpM[o.employee].n++;otEmpM[o.employee].h+=(o.hours||0);}
-  });
-  let ah='';
-  team.forEach(m=>{
-    const lvm=Array(12).fill(0),otm=Array(12).fill(0);
-    leaves.filter(l=>l.employee===m.name&&l.from).forEach(l=>{
-      const d=new Date(l.from+'T00:00:00');
-      if(d.getFullYear()===2026) lvm[d.getMonth()]+=(l.days||1);
-    });
-    otLog.filter(o=>o.employee===m.name&&o.date).forEach(o=>{
-      const d=new Date(o.date+'T00:00:00');
-      if(d.getFullYear()===2026) otm[d.getMonth()]++;
-    });
-    ah+=`<tr><td><div class="en">${m.name}</div></td><td style="font-size:11px;color:var(--tx2)">${m.dept}</td>`;
-    for(let i=0;i<12;i++){
-      const lv=lvm[i],ot=otm[i];
-      if(lv>0) ah+=`<td class="c np">${lv}d</td>`;
-      else if(ot>0) ah+=`<td class="c na">${ot}ot</td>`;
-      else ah+=`<td class="c nd">—</td>`;
-    }
-    ah+='</tr>';
-  });
-  document.getElementById('ab').innerHTML=ah;
-
-  const mx=Math.max(...otMo,1);
-  document.getElementById('omb').innerHTML=MS.map((mo,mi)=>
-    mkBar(mo,otMo[mi],mx,'linear-gradient(90deg,#f9a825,#ff6b6b)',false)
-  ).join('');
-
-  const sorted=Object.entries(otEmpM).sort((a,b)=>b[1].h-a[1].h);
-  const mxh=sorted[0]?.[1].h||1;
-  const meds=['🥇','🥈','🥉'];
-  const lh=sorted.filter(function(x){return x[1].h>0;}).map(function(x,i){
-    var n=x[0],v=x[1];
-    return '<div class="br"><div class="blw">'+(meds[i]||'')+' '+n.replace(' (You)','')+
-      '</div><div class="bt"><div class="bf" style="width:'+Math.round(v.h/mxh*100)+'%;background:linear-gradient(90deg,#f9a825,#ff6b6b)"></div></div>'+
-      '<div class="bv" style="color:#e65100;width:40px">'+v.h.toFixed(1)+'h</div></div>';
-  }).join('');
-  document.getElementById('olb').innerHTML=lh||'<div style="color:var(--tx3);font-size:12px;padding:4px">☀️ No OT recorded yet.</div>';
-}
-
-// ══════════════════════════════════════════════════
-// LEAVE
-// ══════════════════════════════════════════════════
-function rdLv(){
-  if(!DATA) return;
-  const{team,leaves}=DATA;
-  const VL=15,SL=5;
-  let ch='';
-  team.forEach(m=>{
-    const vl=lvSum(leaves,m.name,'VL'),sl=lvSum(leaves,m.name,'SL');
-    ch+=`<div><div class="cn">${m.name.replace(' (You)','')}</div>
-      <div class="cr"><span class="tg">VL</span>
-        <div class="bt" style="flex:1"><div class="bf" style="width:${(vl/VL)*100}%;background:linear-gradient(90deg,#ab7cef,#ce93d8)"></div></div>
-        <span style="font-size:9.5px;color:#7b1fa2;font-family:'JetBrains Mono',monospace">${VL-vl}/${VL}</span></div>
-      <div class="cr"><span class="tg">SL</span>
-        <div class="bt" style="flex:1"><div class="bf" style="width:${(sl/SL)*100}%;background:linear-gradient(90deg,#f9a825,#ff8a65)"></div></div>
-        <span style="font-size:9.5px;color:#e65100;font-family:'JetBrains Mono',monospace">${SL-sl}/${SL}</span></div>
-    </div>`;
-  });
-  document.getElementById('lcr').innerHTML=ch;
-  document.getElementById('lc').textContent=leaves.length+' records';
-
-  let lh='';
-  if(!leaves.length){lh=emp0(9);}
-  else leaves.forEach(l=>{
-    const st=(l.status||'PENDING').toUpperCase();
-    const bs=st==='APPROVED'?'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7'
-      :st==='DENIED'?'background:#fce4ec;color:#c62828;border:1px solid #f48fb1'
-      :st==='FILED'?'background:#e3f2fd;color:#0277bd;border:1px solid #90caf9'
-      :'background:#fff3e0;color:#e65100;border:1px solid #ffcc80';
-    const cfg=CC[l.type];
-    const ts=cfg?`background:${cfg.bg};color:${cfg.c};border:1.5px solid ${cfg.bd}`:'background:#f5f5f5;color:#9e9e9e';
-    const canAct = st==='PENDING'||st==='FILED';
-    const actBtns = `<div class="emp-row-actions" style="flex-wrap:wrap;gap:4px">
-      ${canAct ? `
-        <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10px" onclick="doApprove('leave',${l.rowIndex},'APPROVED','${l.employee.replace(/'/g,"\\'")}')">✅ Approve</button>
-        <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10px;background:#fce4ec;color:#c62828" onclick="doApprove('leave',${l.rowIndex},'DENIED','${l.employee.replace(/'/g,"\\'")}')">❌ Deny</button>
-      ` : `<span style="font-size:10px;color:var(--tx3)">${st==='APPROVED'?'✅ Done':'❌ Denied'}</span>`}
-      <button class="emp-mgmt-btn del" style="padding:3px 8px;font-size:10px;background:#f5f5f5;color:#9e9e9e;border:1px solid #e0e0e0" onclick="doDeleteEntry('leave',${l.rowIndex},'${l.employee.replace(/'/g,"\\'")}')">🗑</button>
-    </div>`;
-    lh+=`<tr>
-      <td><div class="en">${l.employee}</div></td>
-      <td style="font-size:11px;color:var(--tx2)">${l.dept||'—'}</td>
-      <td><span class="chip" style="${ts}">${l.type||'—'}</span></td>
-      <td style="font-size:11.5px;color:var(--tx2);font-family:'JetBrains Mono',monospace">${fmtD(l.from)}</td>
-      <td style="font-size:11.5px;color:var(--tx2);font-family:'JetBrains Mono',monospace">${fmtD(l.to)}</td>
-      <td class="c np">${l.days||'—'}</td>
-      <td style="font-size:11.5px;color:var(--tx2);max-width:150px">${l.reason||'—'}</td>
-      <td><span class="badge" style="${bs}">${st}</span></td>
-      <td style="font-size:11.5px;color:var(--tx2)">${l.approvedBy||'—'}</td>
-      <td>${actBtns}</td>
-    </tr>`;
-  });
-  document.getElementById('lb').innerHTML=lh;
-}
-
-// ══════════════════════════════════════════════════
-// OT
-// ══════════════════════════════════════════════════
-function rdOT(){
-  if(!DATA) return;
-  const{team,otLog}=DATA;
-  let oh='';
-  if(!otLog.length){oh=emp0(7);}
-  else [...otLog].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).forEach(o=>{
-    const ost=(o.status||'PENDING').toUpperCase();
-    const obs=ost==='APPROVED'?'background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7'
-      :ost==='DENIED'?'background:#fce4ec;color:#c62828;border:1px solid #f48fb1'
-      :'background:#fff3e0;color:#e65100;border:1px solid #ffcc80';
-    const canActOT=ost==='PENDING';
-    const otActBtns=`<div class="emp-row-actions" style="flex-wrap:wrap;gap:4px">
-      ${canActOT ? `
-        <button class="emp-mgmt-btn add" style="padding:3px 9px;font-size:10px" onclick="doApprove('ot',${o.rowIndex},'APPROVED','${o.employee.replace(/'/g,"\\'")}')">✅ Approve</button>
-        <button class="emp-mgmt-btn del" style="padding:3px 9px;font-size:10px;background:#fce4ec;color:#c62828" onclick="doApprove('ot',${o.rowIndex},'DENIED','${o.employee.replace(/'/g,"\\'")}')">❌ Deny</button>
-      ` : `<span style="font-size:10px;color:var(--tx3)">${ost==='APPROVED'?'✅ Done':'❌ Denied'}</span>`}
-      <button class="emp-mgmt-btn del" style="padding:3px 8px;font-size:10px;background:#f5f5f5;color:#9e9e9e;border:1px solid #e0e0e0" onclick="doDeleteEntry('ot',${o.rowIndex},'${o.employee.replace(/'/g,"\\'")}')">🗑</button>
-    </div>`;
-    oh+=`<tr>
-      <td><div class="en">${o.employee}</div></td>
-      <td style="font-size:11px;color:var(--tx2)">${o.dept||'—'}</td>
-      <td style="font-size:11.5px;color:var(--tx2);font-family:'JetBrains Mono',monospace">${fmtD(o.date)}</td>
-      <td style="font-size:11.5px;color:var(--tx2)">${o.dayType||'—'}</td>
-      <td style="font-size:11px;color:var(--tx2);font-family:'JetBrains Mono',monospace;white-space:nowrap">${o.timeIn&&o.timeOut?o.timeIn+'–'+o.timeOut:o.timeIn||o.timeOut||'—'}</td>
-      <td class="c na">${o.hours?o.hours.toFixed(1):'—'}</td>
-      <td style="font-size:11.5px;color:var(--tx2);max-width:160px">${o.reason||'—'}</td>
-      <td><span class="badge" style="${obs}">${ost}</span></td>
-      <td>${otActBtns}</td>
-    </tr>`;
-  });
-  document.getElementById('ob').innerHTML=oh;
-
-  const be={},bm=Array(12).fill(0);
-  team.forEach(m=>{be[m.name]={h:0}});
-  otLog.forEach(o=>{
-    if(be[o.employee]) be[o.employee].h+=(o.hours||0);
-    if(o.date){const d=new Date(o.date+'T00:00:00');if(d.getFullYear()===2026)bm[d.getMonth()]+=(o.hours||0);}
-  });
-  const me=Math.max(...Object.values(be).map(v=>v.h),1);
-  const mm=Math.max(...bm,1);
-  document.getElementById('oeb').innerHTML=Object.entries(be).sort((a,b)=>b[1].h-a[1].h)
-    .map(([n,v])=>mkBar(n.split(' ')[0],v.h>0?v.h.toFixed(1):0,me,'linear-gradient(90deg,#f9a825,#ff6b6b)',false)).join('');
-  document.getElementById('omob').innerHTML=MS.map((mo,mi)=>
-    mkBar(mo,bm[mi]>0?bm[mi].toFixed(1):0,mm,'linear-gradient(90deg,#29b6f6,#26c6a0)',false)
-  ).join('');
-}
-
-// ══════════════════════════════════════════════════
-// MODAL
-// ══════════════════════════════════════════════════
-function openMo(emp,ds,code){
-  mCtx={emp,ds,code};
-  const d=new Date(ds+'T00:00:00');
-  document.getElementById('mtt').textContent='Edit Attendance';
-  document.getElementById('mst').textContent=`${emp.replace(' (You)','')} · ${d.toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}`;
-  document.getElementById('mcode').value=code||'';
-  document.getElementById('svi').classList.remove('show');
-  document.getElementById('mo').classList.add('open');
-}
-function closeMo(){document.getElementById('mo').classList.remove('open');mCtx=null;}
-async function saveMo(){
-  if(!mCtx) return;
-  const code=document.getElementById('mcode').value;
-  const{emp,ds}=mCtx;
-  if(!ov[emp]) ov[emp]={};
-  ov[emp][ds]=code;
-  rdCal(); closeMo();
-  document.getElementById('svi').classList.add('show');
-  try{
-    await writeBack(emp,ds,code);
-    toast(`☀️ Saved — ${emp.split(' ')[0]} on ${fmtD(ds)}`,'ok');
-    setTimeout(doSync,1600);
-  }catch(e){
-    toast(`🌤 Saved locally. Update Apps Script for full sync.`,'info');
-    console.warn('Write-back:',e.message);
-  }
-}
-
-// ══════════════════════════════════════════════════
-// TOAST + NAV + UTILS
-// ══════════════════════════════════════════════════
-let tT;
-function toast(msg,type='info'){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast '+type+' show';
-  clearTimeout(tT); tT=setTimeout(()=>t.classList.remove('show'),3500);
-}
-function switchTab(tabId){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
-  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
-  const btn=document.querySelector(`.tab[data-tab="${tabId}"]`);
-  if(btn) btn.classList.add('on');
-  const panel=document.getElementById('panel-'+tabId);
-  if(panel) panel.classList.add('on');
-  // Refresh quote for this tab
-  const qb=document.getElementById('qb-panel-'+tabId);
-  if(qb) qb.innerHTML=getTabQuote('panel-'+tabId);
-}
-document.querySelectorAll('.tab').forEach(b=>{
-  b.addEventListener('click',()=>switchTab(b.dataset.tab));
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  syncAll();
 });
-function pm(){if(curMo>0){curMo--;if(DATA)rdCal();}}
-function nm(){if(curMo<11){curMo++;if(DATA)rdCal();}}
-document.getElementById('mo').addEventListener('click',e=>{if(e.target===document.getElementById('mo'))closeMo();});
-function setDot(s,l){
-  document.getElementById('dot').className='dot '+(s==='live'?'live':s==='loading'?'loading':'err');
-  document.getElementById('sl').textContent=l;
+
+async function syncAll() {
+  setSyncState('loading');
+  try {
+    const [p, b] = await Promise.allSettled([
+      fetchProcurement(),
+      fetchBilling()
+    ]);
+
+    if (p.status === 'fulfilled') procData = p.value;
+    if (b.status === 'fulfilled') billData = b.value;
+
+    setSyncState(procData || billData ? 'ok' : 'error');
+    renderAll();
+    document.getElementById('lastSync').textContent =
+      'Last sync: ' + new Date().toLocaleTimeString('en-PH', {hour:'2-digit',minute:'2-digit'});
+  } catch(e) {
+    setSyncState('error');
+    renderAll();
+  }
 }
-function showErr(msg){
-  document.getElementById('ld').style.display='none';
-  document.getElementById('dc').style.display='none';
-  const el=document.getElementById('de');
-  el.style.cssText='display:block;background:#fff3e0;border:2px solid #f9a825;border-radius:14px;padding:22px 24px;max-width:620px;margin:30px auto;font-size:12.5px;color:#bf360c;font-family:\'Nunito\',sans-serif;line-height:1.7';
-  el.innerHTML=`
-    <div style="font-size:22px;margin-bottom:10px">⚠️ Cannot connect to Google Sheets</div>
-    <div style="background:#fff8e1;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#555;word-break:break-all">
-      <b>Error:</b> ${msg}
+
+async function fetchProcurement() {
+  const r = await fetch(PROCUREMENT_URL + '?action=load', {redirect:'follow'});
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const d = await r.json();
+  if (!d.ok) throw new Error(d.error || 'Unknown error');
+  return d;
+}
+
+async function fetchBilling() {
+  const r = await fetch(BILLING_URL, {redirect:'follow'});
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return await r.json();
+}
+
+function setSyncState(state) {
+  const dot = document.getElementById('syncDot');
+  const btn = document.getElementById('syncBtn');
+  dot.className = 'sync-dot ' + (state === 'loading' ? 'loading' : state === 'error' ? 'error' : '');
+  btn.className = 'sync-btn' + (state === 'loading' ? ' loading' : '');
+}
+
+// ══════════════════════════════════════════════
+//  ROUTING
+// ══════════════════════════════════════════════
+function showTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  activeTab = name;
+  renderTab(name);
+}
+
+function renderAll() {
+  renderTab(activeTab);
+  updateBadges();
+}
+
+function renderTab(name) {
+  switch(name) {
+    case 'overview':   renderOverview();   break;
+    case 'projects':   renderProjects();   break;
+    case 'alerts':     renderAlerts();     break;
+    case 'billing':    renderBilling();    break;
+    case 'items':      renderItems();      break;
+    case 'suppliers':  renderSuppliers();  break;
+    case 'wh':         renderWH();         break;
+    case 'po':         renderPO();         break;
+  }
+}
+
+// ══════════════════════════════════════════════
+//  OVERVIEW
+// ══════════════════════════════════════════════
+function renderOverview() {
+  const el = document.getElementById('overviewContent');
+
+  if (!procData && !billData) {
+    el.innerHTML = errorState('Failed to load data from Google Sheets',
+      'Check that both Web Apps are deployed and accessible. Make sure "Execute as: Me" and "Access: Anyone".');
+    return;
+  }
+
+  const bom = procData?.bom || [];
+  const po  = procData?.po  || [];
+  const wh  = procData?.wh  || [];
+  const vp  = procData?.vp  || [];
+
+  // Compute counts
+  const readyForPO   = bom.filter(r => (r.status||'').includes('Ready')).length;
+  const forCanvass   = bom.filter(r => (r.status||'').includes('Canvass')).length;
+  const pendingDel   = wh.filter(r  => !(r.status||'').includes('Complete') && Number(r.balQty||0)>0).length;
+  const partialDel   = wh.filter(r  => (r.status||'').includes('Partial')).length;
+
+  const totalPOVal   = po.reduce((a,r) => a + Number(r.lineTotal||0), 0);
+  const totalPaid    = vp.reduce((a,r) => a + Number(r.amtPaid||0), 0);
+  const totalBalance = vp.reduce((a,r) => a + Number(r.balance||0), 0);
+
+  const activeSuppliers = [...new Set(po.map(r=>r.supplier).filter(Boolean))].length;
+  const totalPOs        = [...new Set(po.map(r=>r.poNum).filter(Boolean))].length;
+
+  // Billing summary
+  let billTotal = 0, billBalance = 0;
+  if (billData?.projects) {
+    Object.values(billData.projects).forEach(p => {
+      billTotal   += Number(p.totalPO||0);
+      billBalance += Number(p.balance||0);
+    });
+  }
+
+  // Suppliers data for mini scoreboard
+  const suppliers = procData?.suppliers || [];
+  const topSup    = suppliers.slice(0,3);
+
+  // Weekly activity
+  const weekly = procData?.weekly || [];
+
+  el.innerHTML = `
+    <!-- ACTION REQUIRED -->
+    <div class="section-title">Action Required</div>
+    <div class="ar-grid mb24">
+      ${arCard('🟢','Ready for PO',readyForPO,'#00e676','rgba(0,230,118,.05)','alerts','READY')}
+      ${arCard('🟡','For Canvass',forCanvass,'#f0a500','rgba(240,165,0,.05)','alerts','CANVASS')}
+      ${arCard('🚚','Pending Delivery',pendingDel,'#00c2ff','rgba(0,194,255,.05)','alerts','DELIVERY')}
+      ${arCard('📦','Partial Delivery',partialDel,'#a78bfa','rgba(167,139,250,.05)','alerts','PARTIAL')}
     </div>
-    <b>Checklist — please verify:</b>
-    <ol style="margin:8px 0 0 18px;line-height:2">
-      <li>Open <a href="${SURL}" target="_blank" style="color:#0277bd">this Apps Script URL</a> in a new tab — dapat may JSON data</li>
-      <li>Apps Script → Deploy → <b>Manage Deployments</b> → Edit → version: <b>New version</b> → Deploy</li>
-      <li>Make sure: <b>Execute as: Me</b> and <b>Who has access: Anyone</b></li>
-      <li>After redeploying, click <b>↻ Sync</b> button above</li>
-    </ol>
+
+    <!-- KPIs ROW 1 -->
+    <div class="section-title">Procurement KPIs</div>
+    <div class="grid-4 mb24">
+      ${kpiCard('TOTAL PO VALUE','₱'+fmt(totalPOVal),'var(--accent)','var(--accent)',totalPOs+' purchase orders')}
+      ${kpiCard('AMOUNT PAID','₱'+fmt(totalPaid),'var(--green)','rgba(0,230,118,.06)',pct(totalPaid,totalPOVal)+'% of total PO value')}
+      ${kpiCard('OUTSTANDING BALANCE','₱'+fmt(totalBalance),'var(--orange)','rgba(255,140,0,.06)',vp.filter(r=>(r.payStatus||'').includes('Overdue')).length+' overdue payables')}
+      ${kpiCard('ACTIVE SUPPLIERS',activeSuppliers,'var(--purple)','rgba(167,139,250,.06)',po.length+' PO line items')}
+    </div>
+
+    <!-- KPIs ROW 2 -->
+    <div class="grid-4 mb24">
+      ${kpiCard('TOTAL BOM ITEMS',bom.length,'var(--text)','rgba(255,255,255,.02)',procData?.projects?.length||0+' active projects')}
+      ${kpiCard('WH DELIVERIES DONE',wh.filter(r=>(r.status||'').includes('Complete')).length,'var(--green)','rgba(0,230,118,.04)',wh.length+' total WH rows')}
+      ${kpiCard('BILLING PIPELINE','₱'+fmt(billTotal),'var(--gold)','rgba(240,165,0,.05)','₱'+fmt(billBalance)+' outstanding')}
+      ${kpiCard('VP UNPAID',vp.filter(r=>!(r.payStatus||'').includes('Paid')).length,'var(--red)','rgba(255,68,68,.05)','vendor payables pending')}
+    </div>
+
+    <!-- BOTTOM ROW: Suppliers + Weekly -->
+    <div class="grid-2">
+      <!-- Top Suppliers -->
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">🏆 TOP SUPPLIERS BY PO VALUE</span>
+        </div>
+        <div style="padding:8px 18px 16px">
+          ${topSup.length ? topSup.map((s,i) => `
+            <div class="supplier-row">
+              <div class="supplier-rank ${i===0?'gold'':''}">${i===0?'🥇':i+1}</div>
+              <div style="flex:1">
+                <div class="supplier-name">${s.name||'Unknown'}</div>
+                <div class="supplier-meta">${s.poCount} POs</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:13px;font-weight:700;color:var(--text);font-family:'JetBrains Mono',monospace">₱${fmt(s.totalPOVal)}</div>
+                <div style="font-size:10px;color:var(--green);font-family:'JetBrains Mono',monospace">₱${fmt(s.totalPaid)} paid</div>
+              </div>
+            </div>
+          `).join('') : '<div style="color:var(--text3);font-size:12px;padding:16px 0">No supplier data yet</div>'}
+        </div>
+      </div>
+
+      <!-- Weekly Activity -->
+      <div class="table-wrap">
+        <div class="table-header">
+          <span class="table-title">📅 WEEKLY ACTIVITY (LAST 4 WEEKS)</span>
+        </div>
+        <div style="padding:16px 18px">
+          ${renderWeeklyChart(weekly)}
+          ${weekly.map(w => `
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,45,66,.4);font-size:11px;">
+              <span style="color:var(--text3);font-family:'JetBrains Mono',monospace">${w.week}</span>
+              <span style="color:var(--text2)">Ordered: <b style="color:var(--accent)">${w.ordered}</b></span>
+              <span style="color:var(--text2)">Delivered: <b style="color:var(--green)">${w.delivered}</b></span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
   `;
 }
 
-
-// ══════════════════════════════════════════════════
-// FORM HELPERS — populate employee dropdowns
-// ══════════════════════════════════════════════════
-function populateForms() {
-  if (!DATA || !DATA.team) return;
-  const opts = DATA.team.map(m => `<option value="${m.name}" data-dept="${m.dept}">${m.name}</option>`).join('');
-  ['fLvEmp','fOtEmp'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.innerHTML = opts;
-  });
-  // Set today's date as default
-  const today = new Date().toISOString().split('T')[0];
-  ['fLvFrom','fLvTo','fOtDate'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el && !el.value) el.value = today;
-  });
+function renderWeeklyChart(weekly) {
+  if (!weekly.length) return '';
+  const max = Math.max(...weekly.flatMap(w => [w.ordered, w.delivered]), 1);
+  return `
+    <div style="display:flex;gap:8px;align-items:flex-end;height:70px;margin-bottom:12px;">
+      ${weekly.map(w => {
+        const oh = Math.round((w.ordered/max)*60);
+        const dh = Math.round((w.delivered/max)*60);
+        return `<div style="flex:1;display:flex;gap:2px;align-items:flex-end;">
+          <div style="flex:1;height:${oh}px;background:rgba(0,194,255,.4);border-radius:2px 2px 0 0;" title="Ordered: ${w.ordered}"></div>
+          <div style="flex:1;height:${dh}px;background:rgba(0,230,118,.4);border-radius:2px 2px 0 0;" title="Delivered: ${w.delivered}"></div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="display:flex;gap:16px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;background:rgba(0,194,255,.4);border-radius:2px"></div>Ordered</div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text3)"><div style="width:10px;height:10px;background:rgba(0,230,118,.4);border-radius:2px"></div>Delivered</div>
+    </div>
+  `;
 }
 
-// Auto-sync To date with From date for leave
-document.addEventListener('DOMContentLoaded', () => {
-  const fromEl = document.getElementById('fLvFrom');
-  if (fromEl) fromEl.addEventListener('change', () => {
-    const toEl = document.getElementById('fLvTo');
-    if (toEl && (!toEl.value || toEl.value < fromEl.value)) toEl.value = fromEl.value;
-  });
-  // Auto-calc hours from time fields
-  ['fOtIn','fOtOut'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('change', autoCalcHours);
-  });
-});
+// ══════════════════════════════════════════════
+//  PROJECTS
+// ══════════════════════════════════════════════
+function renderProjects() {
+  const el = document.getElementById('projectsContent');
+  if (!procData) { el.innerHTML = noData(); return; }
 
-function autoCalcHours() {
-  const inV  = document.getElementById('fOtIn')?.value;
-  const outV = document.getElementById('fOtOut')?.value;
-  const hrsEl = document.getElementById('fOtHours');
-  if (!inV || !outV || !hrsEl || hrsEl.value) return;
-  const [h1,m1] = inV.split(':').map(Number);
-  const [h2,m2] = outV.split(':').map(Number);
-  let hrs = ((h2*60+m2) - (h1*60+m1)) / 60;
-  if (hrs < 0) hrs += 24;
-  hrsEl.value = Math.round(hrs * 100) / 100;
-}
+  const clients = procData.clients || {};
 
-function setFormStatus(id, msg, type) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.textContent = msg;
-  el.className = 'form-status ' + (type||'');
-  if (type === 'ok') setTimeout(() => { el.textContent=''; el.className='form-status'; }, 3000);
-}
-
-// ══════════════════════════════════════════════════
-// SUBMIT LEAVE
-// ══════════════════════════════════════════════════
-async function submitLeave() {
-  const empEl  = document.getElementById('fLvEmp');
-  const emp    = empEl?.value;
-  const dept   = empEl?.options[empEl.selectedIndex]?.dataset?.dept || '';
-  const type   = document.getElementById('fLvType')?.value;
-  const from   = document.getElementById('fLvFrom')?.value;
-  const to     = document.getElementById('fLvTo')?.value || from;
-  const days   = document.getElementById('fLvDays')?.value;
-  const reason = document.getElementById('fLvReason')?.value;
-  const status = document.getElementById('fLvStatus')?.value;
-  const approved = document.getElementById('fLvApproved')?.value;
-
-  if (!emp || !from) {
-    setFormStatus('lvFormStatus','⚠ Employee and date required','err');
-    return;
-  }
-  if (to < from) {
-    setFormStatus('lvFormStatus','⚠ "To" must be ≥ "From"','err');
+  if (!Object.keys(clients).length) {
+    el.innerHTML = '<div class="loading-state"><div style="font-size:32px">📁</div><div class="loading-text">No project data found</div></div>';
     return;
   }
 
-  const btn = document.getElementById('lvSubmitBtn');
-  btn.disabled = true;
-  setFormStatus('lvFormStatus','⟳ Saving…','loading');
-
-  try {
-    const res = await gasCall({
-      action:'addLeave', employee:emp, dept, type,
-      from, to, days:days||'', reason:reason||'',
-      status:status||'PENDING', approvedBy:approved||''
-    });
-
-    if (res.ok) {
-      setFormStatus('lvFormStatus','✓ Leave added!','ok');
-      toast(`🌿 Leave added for ${emp.split(' ')[0]}`, 'ok');
-      // Clear fields
-      document.getElementById('fLvReason').value   = '';
-      document.getElementById('fLvDays').value     = '';
-      document.getElementById('fLvApproved').value = '';
-      document.getElementById('fLvStatus').value   = 'PENDING';
-      // Re-sync data
-      setTimeout(doSync, 800);
-    } else {
-      throw new Error(res.error || 'Unknown error');
-    }
-  } catch(e) {
-    setFormStatus('lvFormStatus','✗ '+e.message,'err');
-    toast('Error adding leave: '+e.message,'er');
-    console.error(e);
-  }
-  btn.disabled = false;
+  el.innerHTML = `
+    <div class="section-title">Active Projects by Client</div>
+    <div class="grid-auto">
+      ${Object.entries(clients).map(([name, c]) => {
+        const total = c.total || 0;
+        const done  = (c.delivered||0) + (c.whStock||0);
+        const pctDone = total ? Math.round(done/total*100) : 0;
+        return `
+          <div class="proj-card" onclick="showTab('alerts')">
+            <div class="proj-so">CLIENT</div>
+            <div class="proj-name">${name}</div>
+            <div class="proj-client">${(c.projects||[]).join(', ') || '—'}</div>
+            <div class="proj-bar-wrap"><div class="proj-bar" style="width:${pctDone}%"></div></div>
+            <div style="font-size:10px;color:var(--text3);margin-bottom:12px;font-family:'JetBrains Mono',monospace">${pctDone}% complete · ${total} items</div>
+            <div class="proj-stats">
+              <div class="proj-stat">🟡 <span>${c.pending||0}</span> canvass</div>
+              <div class="proj-stat">🟢 <span>${c.ready||0}</span> ready</div>
+              <div class="proj-stat">✅ <span>${(c.issued||0)}</span> PO</div>
+              <div class="proj-stat">📦 <span>${done}</span> done</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
 }
 
-// ══════════════════════════════════════════════════
-// SUBMIT OT
-// ══════════════════════════════════════════════════
-async function submitOT() {
-  const empEl   = document.getElementById('fOtEmp');
-  const emp     = empEl?.value;
-  const dept    = empEl?.options[empEl?.selectedIndex]?.dataset?.dept || '';
-  const date    = document.getElementById('fOtDate')?.value;
-  const dayType = document.getElementById('fOtDayType')?.value;
-  const timeIn  = document.getElementById('fOtIn')?.value || '';
-  const timeOut = document.getElementById('fOtOut')?.value || '';
-  const reason  = document.getElementById('fOtReason')?.value || '';
+// ══════════════════════════════════════════════
+//  ALERTS
+// ══════════════════════════════════════════════
+function renderAlerts(filter) {
+  if (filter) itemFilter = filter;
+  const el = document.getElementById('alertsContent');
+  if (!procData) { el.innerHTML = noData(); return; }
 
-  // Auto-calc hours from time fields
-  let hours = parseFloat(document.getElementById('fOtHours')?.value) || 0;
-  if (!hours && timeIn && timeOut) {
-    const [h1,m1] = timeIn.split(':').map(Number);
-    const [h2,m2] = timeOut.split(':').map(Number);
-    hours = ((h2*60+m2)-(h1*60+m1))/60;
-    if (hours < 0) hours += 24;
-    hours = Math.round(hours*100)/100;
-  }
+  const bom = procData.bom || [];
+  const wh  = procData.wh  || [];
+  const po  = procData.po  || [];
 
-  if (!emp)  { setFormStatus('otFormStatus','⚠ Select an employee','err'); return; }
-  if (!date) { setFormStatus('otFormStatus','⚠ OT date is required','err'); return; }
-  if (!hours){ setFormStatus('otFormStatus','⚠ Enter Time In/Out or Hours','err'); return; }
+  const ready   = bom.filter(r => (r.status||'').includes('Ready'));
+  const canvass = bom.filter(r => (r.status||'').includes('Canvass'));
+  const pendDel = wh.filter(r  => !(r.status||'').includes('Complete') && Number(r.balQty||0)>0 && !String(r.status||'').includes('Partial'));
+  const partial = wh.filter(r  => (r.status||'').includes('Partial'));
 
-  const btn = document.getElementById('otSubmitBtn');
-  btn.disabled = true;
-  setFormStatus('otFormStatus','⟳ Saving to Google Sheet…','loading');
-
-  try {
-    const res = await gasCall({
-      action:'addOT', employee:emp, dept, date, dayType,
-      timeIn, timeOut, hours:String(hours), reason
-    });
-
-    if (res.ok) {
-      setFormStatus('otFormStatus','✓ OT added! ('+res.hours+'h)','ok');
-      toast('☀️ OT logged — '+emp.split(' ')[0]+' · '+res.hours+'h','ok');
-      document.getElementById('fOtIn').value     = '';
-      document.getElementById('fOtOut').value    = '';
-      document.getElementById('fOtHours').value  = '';
-      document.getElementById('fOtReason').value = '';
-      setTimeout(doSync, 900);
-    } else {
-      throw new Error(res.error || 'Apps Script returned error');
-    }
-  } catch(e) {
-    setFormStatus('otFormStatus','✗ '+e.message,'err');
-    toast('OT error: '+e.message,'er');
-    console.error('OT submit error:', e);
-  }
-  btn.disabled = false;
-}
-
-
-// ══════════════════════════════════════════════════
-// EMPLOYEE MANAGEMENT
-// ══════════════════════════════════════════════════
-function openAddEmp() {
-  document.getElementById('empMoTitle').textContent = 'Add Employee';
-  document.getElementById('empMoSub').textContent   = 'New team member details';
-  document.getElementById('empMoMode').value        = 'add';
-  document.getElementById('empMoRowIndex').value    = '';
-  document.getElementById('empName').value          = '';
-  document.getElementById('empDept').value          = 'Procurement';
-  document.getElementById('empHours').value         = '';
-  document.getElementById('empWorkDays').value      = 'Mon-Fri';
-  document.getElementById('empNotes').value         = '';
-  document.getElementById('empFormStatus').textContent = '';
-  document.getElementById('empFormStatus').className  = 'form-status';
-  document.getElementById('empMo').classList.add('open');
-}
-
-function openEditEmpByIdx(rowIndex) {
-  if (!DATA || !DATA.team) return;
-  const m = DATA.team.find(t => t.rowIndex === rowIndex);
-  if (!m) { toast('Employee not found','er'); return; }
-  openEditEmp(m);
-}
-function openEditEmp(m) {
-  document.getElementById('empMoTitle').textContent  = 'Edit Employee';
-  document.getElementById('empMoSub').textContent    = m.name;
-  document.getElementById('empMoMode').value         = 'edit';
-  document.getElementById('empMoRowIndex').value     = m.rowIndex || '';
-  document.getElementById('empName').value           = m.name || '';
-  document.getElementById('empDept').value           = m.dept || 'Procurement';
-  document.getElementById('empHours').value          = m.hours || '';
-  document.getElementById('empWorkDays').value       = m.workDays || '';
-  document.getElementById('empNotes').value          = m.notes || '';
-  document.getElementById('empFormStatus').textContent = '';
-  document.getElementById('empFormStatus').className   = 'form-status';
-  document.getElementById('empMo').classList.add('open');
-}
-
-function closeEmpMo() {
-  document.getElementById('empMo').classList.remove('open');
-}
-
-async function saveEmployee() {
-  const name     = document.getElementById('empName').value.trim();
-  const dept     = document.getElementById('empDept').value;
-  const hours    = document.getElementById('empHours').value.trim();
-  const workDays = document.getElementById('empWorkDays').value.trim();
-  const notes    = document.getElementById('empNotes').value.trim();
-  const mode     = document.getElementById('empMoMode').value;
-  const rowIndex = document.getElementById('empMoRowIndex').value;
-
-  if (!name) { setFormStatus('empFormStatus','⚠ Name is required','err'); return; }
-
-  const btn = document.getElementById('empSaveBtn');
-  btn.disabled = true;
-  setFormStatus('empFormStatus','⟳ Saving…','loading');
-
-  try {
-    const res = await gasCall({
-      action: mode === 'edit' ? 'editEmployee' : 'addEmployee',
-      name, dept, hours, workDays, notes, rowIndex
-    });
-
-    if (res.ok) {
-      setFormStatus('empFormStatus','✓ Saved!','ok');
-      toast('🌴 Employee '+(mode==='edit'?'updated':'added')+': '+name,'ok');
-      closeEmpMo();
-      setTimeout(doSync, 800);
-    } else {
-      throw new Error(res.error || 'Unknown error');
-    }
-  } catch(e) {
-    setFormStatus('empFormStatus','✗ '+e.message,'err');
-    toast('Employee save error: '+e.message,'er');
-    console.error(e);
-  }
-  btn.disabled = false;
-}
-
-async function confirmDeleteEmp(name, rowIndex) {
-  if (!confirm('Delete employee "'+name+'" from Team Config?\n\nThis cannot be undone.')) return;
-  try {
-    const res = await gasCall({ action:'deleteEmployee', name, rowIndex:String(rowIndex) });
-    if (res.ok) {
-      toast('🗑 Employee removed: '+name,'ok');
-      setTimeout(doSync, 800);
-    } else {
-      throw new Error(res.error||'Error');
-    }
-  } catch(e) {
-    toast('Delete error: '+e.message,'er');
-    console.error(e);
-  }
-}
-
-// Close employee modal on bg click
-document.getElementById('empMo')?.addEventListener('click', e=>{
-  if(e.target===document.getElementById('empMo')) closeEmpMo();
-});
-
-
-// ══════════════════════════════════════════════════
-// APPROVE / DENY
-// ══════════════════════════════════════════════════
-async function doApprove(type, rowIndex, decision, empName) {
-  const label = type === 'leave' ? 'Leave' : 'OT';
-  const icon  = decision === 'APPROVED' ? '✅' : '❌';
-  if (!confirm(icon + ' ' + decision + ' ' + label + ' request for ' + empName + '?')) return;
-
-  toast('⟳ Processing…', 'info');
-  try {
-    const action = type === 'leave' ? 'approveLeave' : 'approveOT';
-    const res = await gasCall({ action, rowIndex: String(rowIndex), decision });
-    if (res.ok) {
-      toast(icon + ' ' + label + ' ' + decision + ' — email sent to ' + empName.split(' ')[0], 'ok');
-      setTimeout(doSync, 800);
-    } else {
-      throw new Error(res.error || 'Unknown error');
-    }
-  } catch(e) {
-    toast('Error: ' + e.message, 'er');
-    console.error('doApprove error:', e);
-  }
-}
-
-
-// ══════════════════════════════════════════════════
-// QUOTES — rotating motivational quotes
-// ══════════════════════════════════════════════════
-// Per-tab quotes — each tab has its own themed set
-const TAB_QUOTES = {
-  'panel-dash': [
-    { q: "Ang tagumpay ay hindi isang aksidente — ito ay resulta ng iyong pagsisikap.", a: "Anonymous" },
-    { q: "Great things are never done by one person. They're done by a team.", a: "Steve Jobs" },
-    { q: "Coming together is a beginning, keeping together is progress, working together is success.", a: "Henry Ford" },
-    { q: "Ang pag-unlad ng bawat isa ay pag-unlad ng lahat.", a: "Filipino Proverb" },
-    { q: "Alone we can do so little; together we can do so much.", a: "Helen Keller" },
-  ],
-  'panel-cal': [
-    { q: "Plan your work and work your plan.", a: "Napoleon Hill" },
-    { q: "A goal without a plan is just a wish.", a: "Antoine de Saint-Exupéry" },
-    { q: "Time is the scarcest resource — unless it is managed, nothing else can be managed.", a: "Peter Drucker" },
-    { q: "Ang oras ay ginto — huwag sayangin.", a: "Filipino Proverb" },
-    { q: "Don't watch the clock; do what it does — keep going.", a: "Sam Levenson" },
-  ],
-  'panel-ann': [
-    { q: "Small daily improvements over time lead to stunning results.", a: "Robin Sharma" },
-    { q: "Track your progress — what gets measured, gets improved.", a: "Peter Drucker" },
-    { q: "Consistency is the true foundation of trust.", a: "Roy T. Bennett" },
-    { q: "Excellence is not a destination but a continuous journey.", a: "Brian Tracy" },
-    { q: "Ang tiyaga ay may tagumpay.", a: "Filipino Proverb" },
-  ],
-  'panel-lv': [
-    { q: "Rest is not idleness — it is essential to doing your best work.", a: "John Lubbock" },
-    { q: "Taking care of yourself is part of taking care of your team.", a: "Unknown" },
-    { q: "You can't pour from an empty cup — take care of yourself first.", a: "Unknown" },
-    { q: "Ang pahinga ay bahagi ng pagiging produktibo.", a: "Filipino Wisdom" },
-    { q: "Recharge so you can come back stronger.", a: "Unknown" },
-  ],
-  'panel-ot': [
-    { q: "Hard work beats talent when talent doesn't work hard.", a: "Tim Notke" },
-    { q: "Push yourself, because no one else is going to do it for you.", a: "Unknown" },
-    { q: "The extra mile is never crowded.", a: "Wayne Dyer" },
-    { q: "Ang pagsisikap ngayon ay tagumpay bukas.", a: "Filipino Proverb" },
-    { q: "Hustle in silence and let your success make the noise.", a: "Unknown" },
-  ],
-  'panel-hist': [
-    { q: "Accountability is the glue that ties commitment to results.", a: "Bob Proctor" },
-    { q: "Trust is built with consistency.", a: "Lincoln Chafee" },
-    { q: "Transparency is not about exposing the truth — it's about building it.", a: "Unknown" },
-    { q: "Ang katapatan ay pundasyon ng tiwala.", a: "Filipino Proverb" },
-    { q: "Records of today become the wisdom of tomorrow.", a: "Unknown" },
-  ],
-};
-let _quoteCounters = {};
-function getTabQuote(panelId) {
-  const pool = TAB_QUOTES[panelId] || TAB_QUOTES['panel-dash'];
-  // Rotate based on time + tab
-  const seed = Math.floor(Date.now() / (1000*60*60*4)); // changes every 4 hrs
-  const idx  = (seed + Object.keys(TAB_QUOTES).indexOf(panelId||'panel-dash')) % pool.length;
-  const q = pool[Math.abs(idx)];
-  return `<span class="q-icon">💬</span><span class="q-text">${q.q}</span><span class="q-author">— ${q.a}</span>`;
-}
-function injectQuotes() {
-  document.querySelectorAll('.quote-bar[id]').forEach(el => {
-    el.innerHTML = getTabQuote(el.id.replace('qb-',''));
-  });
-}
-
-// ══════════════════════════════════════════════════
-// EMPLOYEE DETAIL MODAL
-// ══════════════════════════════════════════════════
-function showEmpDetail(name) {
-  if (!DATA) return;
-  const leaves = (DATA.leaves||[]).filter(l=>l.employee===name);
-  const ot     = (DATA.otLog||[]).filter(o=>o.employee===name);
-  const member = (DATA.team||[]).find(m=>m.name===name);
-
-  const totalOT  = ot.reduce((s,o)=>s+(o.hours||0),0);
-  const vlDays   = leaves.filter(l=>l.type==='VL').reduce((s,l)=>s+(l.days||0),0);
-  const slDays   = leaves.filter(l=>l.type==='SL').reduce((s,l)=>s+(l.days||0),0);
-  const elDays   = leaves.filter(l=>l.type==='EL').reduce((s,l)=>s+(l.days||0),0);
-
-  let lvRows = leaves.length ? leaves.map(l=>{
-    const st=l.status||'PENDING';
-    const bs=st==='APPROVED'?'color:#2e7d32':st==='DENIED'?'color:#c62828':'color:#e65100';
-    return `<tr>
-      <td style="font-size:11px;font-family:'JetBrains Mono',monospace">${fmtD(l.from)}${l.to&&l.to!==l.from?' → '+fmtD(l.to):''}</td>
-      <td><span class="chip" style="background:${(CC[l.type]||{bg:'#f5f5f5'}).bg};color:${(CC[l.type]||{c:'#666'}).c}">${l.type}</span></td>
-      <td style="font-size:11px;text-align:center">${l.days||1}d</td>
-      <td style="font-size:11px;${bs};font-weight:700">${st}</td>
-      <td style="font-size:10.5px;color:var(--tx3)">${l.reason||'—'}</td>
-    </tr>`;
-  }).join('') : '<tr><td colspan="5" style="color:var(--tx3);text-align:center;font-size:11px;padding:12px">No leave records</td></tr>';
-
-  let otRows = ot.length ? [...ot].sort((a,b)=>b.date.localeCompare(a.date)).map(o=>`<tr>
-    <td style="font-size:11px;font-family:'JetBrains Mono',monospace">${fmtD(o.date)}</td>
-    <td style="font-size:11px;color:var(--tx2)">${o.dayType||'—'}</td>
-    <td style="font-size:11px;font-family:'JetBrains Mono',monospace">${o.timeIn&&o.timeOut?o.timeIn+'–'+o.timeOut:'—'}</td>
-    <td style="font-size:12px;font-weight:800;color:#e65100;font-family:'JetBrains Mono',monospace;text-align:center">${o.hours?o.hours.toFixed(1):'—'}h</td>
-    <td style="font-size:10.5px;color:var(--tx3)">${o.reason||'—'}</td>
-  </tr>`).join('') : '<tr><td colspan="5" style="color:var(--tx3);text-align:center;font-size:11px;padding:12px">No OT records</td></tr>';
-
-  const dept = member ? member.dept : '';
-  const deptColor = DEPT_COLORS[dept] || 'background:#e3f2fd;color:#1565c0';
-
-  document.getElementById('empDetailTitle').textContent = name.replace(' (You)','');
-  document.getElementById('empDetailSub').innerHTML =
-    `<span style="font-size:10.5px;${deptColor};padding:2px 9px;border-radius:6px;font-weight:700">${dept||'—'}</span>
-     &nbsp;·&nbsp; VL: <b>${vlDays}</b>d &nbsp;·&nbsp; SL: <b>${slDays}</b>d &nbsp;·&nbsp; EL: <b>${elDays}</b>d &nbsp;·&nbsp; OT: <b>${totalOT.toFixed(1)}</b>h`;
-  document.getElementById('empDetailLv').innerHTML = lvRows;
-  document.getElementById('empDetailOT').innerHTML = otRows;
-  document.getElementById('empDetailMo').classList.add('open');
-}
-function closeEmpDetail() {
-  document.getElementById('empDetailMo').classList.remove('open');
-}
-document.getElementById('empDetailMo')?.addEventListener('click', e=>{
-  if(e.target===document.getElementById('empDetailMo')) closeEmpDetail();
-});
-
-
-// ══════════════════════════════════════════════════
-// DELETE LEAVE / OT ENTRY
-// ══════════════════════════════════════════════════
-async function doDeleteEntry(type, rowIndex, empName) {
-  const label = type === 'leave' ? 'Leave' : 'OT';
-  if (!confirm('🗑 Delete this ' + label + ' entry for ' + empName + '?\n\nThis cannot be undone.')) return;
-  toast('⟳ Deleting…', 'info');
-  try {
-    const action = type === 'leave' ? 'deleteLeave' : 'deleteOT';
-    const res = await gasCall({ action, rowIndex: String(rowIndex) });
-    if (res.ok) {
-      toast('🗑 ' + label + ' entry deleted', 'ok');
-      // Log to history
-      addLocalHistory('DELETE ' + label.toUpperCase(), empName, 'Row #' + rowIndex + ' removed', '🗑');
-      setTimeout(doSync, 700);
-    } else throw new Error(res.error || 'Failed');
-  } catch(e) {
-    toast('Delete error: ' + e.message, 'er');
-  }
-}
-
-// ══════════════════════════════════════════════════
-// AUDIT LOG / HISTORY
-// ══════════════════════════════════════════════════
-let HIST = []; // local history log
-
-function addLocalHistory(action, by, details, icon) {
-  HIST.unshift({
-    time:    new Date().toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit', second:'2-digit'}),
-    date:    new Date().toLocaleDateString('en-PH', {month:'short', day:'numeric'}),
-    action:  action,
-    by:      by || 'System',
-    details: details || '',
-    icon:    icon || '📝',
-    status:  'OK'
-  });
-  if (HIST.length > 100) HIST.pop(); // keep last 100
-  rdHist();
-}
-
-function rdHist() {
-  const tbody = document.getElementById('histBody');
-  if (!tbody) return;
-
-  // Combine local history with server data events
-  const serverEvents = [];
-  if (DATA) {
-    // Build events from current data state
-    (DATA.leaves||[]).forEach(l => {
-      serverEvents.push({
-        time:    l.from || '',
-        date:    l.from || '',
-        action:  'LEAVE FILED',
-        by:      l.employee,
-        details: `${l.type} · ${l.days||1}d · ${l.from}${l.to&&l.to!==l.from?' → '+l.to:''}${l.reason?' · '+l.reason:''}`,
-        icon:    '🌿',
-        status:  l.status || 'PENDING'
-      });
-    });
-    (DATA.otLog||[]).forEach(o => {
-      serverEvents.push({
-        time:    o.date || '',
-        date:    o.date || '',
-        action:  'OT FILED',
-        by:      o.employee,
-        details: `${o.dayType||''} · ${o.hours||0}h · ${o.timeIn||''}${o.timeOut?'–'+o.timeOut:''} · ${o.reason||''}`,
-        icon:    '⏰',
-        status:  o.status || 'PENDING'
-      });
-    });
-  }
-
-  // Sort server events newest first
-  serverEvents.sort((a,b) => (b.date||'').localeCompare(a.date||''));
-
-  // Combine: local (session actions) first, then server events
-  const all = [...HIST, ...serverEvents];
-  document.getElementById('histCount').textContent = all.length + ' records';
-
-  if (!all.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--tx3);padding:20px;font-size:12px">📜 No history yet</td></tr>';
-    return;
-  }
-
-  const stColor = s => {
-    s = (s||'').toUpperCase();
-    if (s==='APPROVED') return 'background:#e8f5e9;color:#2e7d32';
-    if (s==='DENIED')   return 'background:#fce4ec;color:#c62828';
-    if (s==='PENDING')  return 'background:#fff3e0;color:#e65100';
-    if (s==='OK')       return 'background:#e3f2fd;color:#0277bd';
-    return 'background:#f5f5f5;color:#9e9e9e';
+  const filterMap = {
+    'ALL':      [...ready,...canvass,...pendDel,...partial],
+    'READY':    ready,
+    'CANVASS':  canvass,
+    'DELIVERY': pendDel,
+    'PARTIAL':  partial
   };
 
-  tbody.innerHTML = all.map(h => `<tr>
-    <td style="font-size:10.5px;color:var(--tx3);font-family:'JetBrains Mono',monospace;white-space:nowrap">${h.date||''}<br>${h.time||''}</td>
-    <td style="font-size:11.5px;font-weight:700">${h.icon||'📝'} ${h.action}</td>
-    <td style="font-size:11.5px;color:var(--tx2)">${h.by||'—'}</td>
-    <td style="font-size:11px;color:var(--tx3);max-width:280px">${h.details||'—'}</td>
-    <td><span class="badge" style="${stColor(h.status)};font-size:10px;padding:2px 7px">${h.status||'—'}</span></td>
-  </tr>`).join('');
+  el.innerHTML = `
+    <div class="section-title">Action Required — ${filterMap[itemFilter]?.length||0} items</div>
+    <div class="filters mb16">
+      ${['ALL','READY','CANVASS','DELIVERY','PARTIAL'].map(f =>
+        `<button class="pill ${itemFilter===f?'active':''}" onclick="renderAlerts('${f}')">${
+          f==='ALL'?'All Items':
+          f==='READY'?`🟢 Ready for PO (${ready.length})`:
+          f==='CANVASS'?`🟡 For Canvass (${canvass.length})`:
+          f==='DELIVERY'?`🚚 Pending Delivery (${pendDel.length})`:
+          `📦 Partial (${partial.length})`
+        }</button>`
+      ).join('')}
+    </div>
+
+    ${renderAlertsTable(itemFilter, {ready, canvass, pendDel, partial, po})}
+  `;
 }
 
-// Hook into existing actions to log them
-const _origDoApprove = doApprove;
-async function doApprove(type, rowIndex, decision, empName) {
-  await _origDoApprove(type, rowIndex, decision, empName);
-  addLocalHistory(
-    decision + ' ' + type.toUpperCase(),
-    'Chary (You)',
-    empName + ' · Row #' + rowIndex,
-    decision === 'APPROVED' ? '✅' : '❌'
+function renderAlertsTable(filter, {ready, canvass, pendDel, partial, po}) {
+  if (filter === 'ALL') {
+    return `
+      ${alertSection('🟢 READY FOR PO', ready, 'ready')}
+      ${alertSection('🟡 FOR CANVASS', canvass, 'canvass')}
+      ${alertSection('🚚 PENDING DELIVERY', pendDel, 'pendDel')}
+      ${alertSection('📦 PARTIAL DELIVERY', partial, 'partial')}
+    `;
+  }
+  if (filter==='READY')    return alertSection('🟢 READY FOR PO', ready, 'ready');
+  if (filter==='CANVASS')  return alertSection('🟡 FOR CANVASS', canvass, 'canvass');
+  if (filter==='DELIVERY') return alertSection('🚚 PENDING DELIVERY', pendDel, 'pendDel');
+  if (filter==='PARTIAL')  return alertSection('📦 PARTIAL DELIVERY', partial, 'partial');
+}
+
+function alertSection(title, rows, type) {
+  if (!rows.length) return `
+    <div class="table-wrap mb16">
+      <div class="table-header"><span class="table-title">${title} (0)</span></div>
+      <div style="padding:20px 18px;color:var(--green);font-size:12px;font-family:'JetBrains Mono',monospace">✅ All clear!</div>
+    </div>`;
+
+  const headers = type==='pendDel' || type==='partial'
+    ? ['PO #','PROJECT','PART DESCRIPTION','SUPPLIER','PO QTY','DEL QTY','BAL QTY','STATUS']
+    : ['PROJECT','CAT NO','PART DESCRIPTION','QTY','UNIT','VENDOR/PRICE','STATUS'];
+
+  const rowsHtml = rows.map(r => {
+    if (type==='pendDel'||type==='partial') {
+      return `<tr>
+        <td>${r.poNum||'—'}</td>
+        <td class="desc">${r.project||'—'}</td>
+        <td class="desc">${r.partDesc||'—'}</td>
+        <td>${r.supplier||'—'}</td>
+        <td>${r.poQty||'—'}</td>
+        <td>${r.delQty||'0'}</td>
+        <td style="color:var(--orange)">${r.balQty||'—'}</td>
+        <td>${statusBadge(r.status)}</td>
+      </tr>`;
+    }
+    return `<tr>
+      <td>${r.project||'—'}</td>
+      <td>${r.catNo||'—'}</td>
+      <td class="desc">${r.partDesc||'—'}</td>
+      <td>${r.qty||'—'}</td>
+      <td>${r.unit||'—'}</td>
+      <td style="color:var(--gold)">${r.vendor ? r.vendor+' ₱'+fmt(r.unitPrice||r.bestPrice||0) : r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
+      <td>${statusBadge(r.status)}</td>
+    </tr>`;
+  }).join('');
+
+  return `
+    <div class="table-wrap mb16">
+      <div class="table-header"><span class="table-title">${title} (${rows.length})</span></div>
+      <div class="scroll-x">
+        <table>
+          <thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead>
+          <tbody>${rowsHtml}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+//  BILLING
+// ══════════════════════════════════════════════
+function renderBilling() {
+  const el = document.getElementById('billingContent');
+  if (!billData) { el.innerHTML = noData('Billing data unavailable. Check Billing Monitoring Web App URL.'); return; }
+
+  const projects = billData.projects || {};
+  const clients  = billData.clients  || {};
+
+  let grandTotal   = 0;
+  let grandBalance = 0;
+
+  Object.values(projects).forEach(p => {
+    grandTotal   += Number(p.totalPO||0);
+    grandBalance += Number(p.balance||0);
+  });
+
+  const grandPaid = grandTotal - grandBalance;
+
+  el.innerHTML = `
+    <div class="section-title">Billing Overview</div>
+    <div class="grid-4 mb24">
+      ${kpiCard('TOTAL PIPELINE','₱'+fmt(grandTotal),'var(--accent)','var(--accent)',Object.keys(projects).length+' active projects')}
+      ${kpiCard('TOTAL BILLED','₱'+fmt(grandPaid),'var(--green)','rgba(0,230,118,.06)',pct(grandPaid,grandTotal)+'% collected')}
+      ${kpiCard('OUTSTANDING','₱'+fmt(grandBalance),'var(--orange)','rgba(255,140,0,.06)',pct(grandBalance,grandTotal)+'% remaining')}
+      ${kpiCard('CLIENTS',Object.keys(clients).length,'var(--purple)','rgba(167,139,250,.06)','')}
+    </div>
+
+    <div class="section-title">Project Billing Cards</div>
+    ${Object.entries(projects).map(([key, proj]) => {
+      const total   = Number(proj.totalPO||0);
+      const balance = Number(proj.balance||0);
+      const paid    = total - balance;
+      const pctPaid = total ? Math.round(paid/total*100) : 0;
+      const billings = proj.billings || [];
+      const items    = proj.items    || [];
+
+      return `
+        <div class="bill-card">
+          <div class="bill-card-head" onclick="toggleBill('${key}')">
+            <div class="bill-card-info">
+              <h4>${proj.label||proj.short||key}</h4>
+              <p>${key} · ${billings.length} billing entries · ${items.length} items/subcons</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:20px">
+              <div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                  <div style="width:120px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden">
+                    <div style="height:100%;width:${pctPaid}%;background:linear-gradient(90deg,var(--accent2),var(--green));border-radius:2px;transition:width .8s"></div>
+                  </div>
+                  <span style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${pctPaid}%</span>
+                </div>
+              </div>
+              <div class="bill-amounts">
+                <div class="bill-total">₱${fmt(total)}</div>
+                <div class="bill-balance ${balance===0?'bill-paid':''}">Balance: ₱${fmt(balance)}</div>
+              </div>
+              <div style="color:var(--text3);font-size:18px" id="chevron-${key}">▼</div>
+            </div>
+          </div>
+          <div class="bill-card-body" id="body-${key}">
+            ${billings.length ? `
+              <div style="margin-top:14px">
+                <div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:8px">BILLING SCHEDULE</div>
+                <div class="scroll-x">
+                  <table>
+                    <thead><tr>
+                      <th>PO #</th><th>SUPPLIER/SUBCON</th><th>BILLING TYPE</th>
+                      <th>STATUS</th><th>VB REF</th><th>REQ DATE</th><th>SI/BS #</th><th>AMOUNT</th>
+                    </tr></thead>
+                    <tbody>
+                      ${billings.map(b => `<tr>
+                        <td>${b.po||'—'}</td>
+                        <td class="desc">${b.supplier||'—'}</td>
+                        <td>${b.billing||'—'}</td>
+                        <td>${billingStatusBadge(b.status)}</td>
+                        <td>${b.vb||'—'}</td>
+                        <td>${b.reqDate||'—'}</td>
+                        <td>${b.sibs||'—'}</td>
+                        <td class="amount">₱${fmt(b.amount||0)}</td>
+                      </tr>`).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ` : ''}
+            ${items.length ? `
+              <div style="margin-top:16px">
+                <div style="font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:8px">SUBCON / SCOPE ITEMS</div>
+                <div class="scroll-x">
+                  <table>
+                    <thead><tr>
+                      <th>ITEM/SCOPE</th><th>SUPPLIER/SUBCON</th><th>PO #</th>
+                      <th>PO AMOUNT</th><th>BALANCE</th><th>REMARKS</th>
+                    </tr></thead>
+                    <tbody>
+                      ${items.map(it => `<tr>
+                        <td class="desc">${it.item||'—'}</td>
+                        <td class="desc">${it.supplier||'—'}</td>
+                        <td>${it.po||'—'}</td>
+                        <td class="amount">₱${fmt(it.poAmt||0)}</td>
+                        <td class="amount" style="color:${Number(it.balance||0)>0?'var(--orange)':'var(--green)'}">₱${fmt(it.balance||0)}</td>
+                        <td style="font-size:11px;color:var(--text2)">${it.remarks||'—'}</td>
+                      </tr>`).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }).join('')}
+  `;
+}
+
+function toggleBill(key) {
+  const body    = document.getElementById('body-' + key);
+  const chevron = document.getElementById('chevron-' + key);
+  const isOpen  = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.textContent = isOpen ? '▼' : '▲';
+}
+
+// ══════════════════════════════════════════════
+//  ITEM HISTORY
+// ══════════════════════════════════════════════
+function renderItems() {
+  const el = document.getElementById('itemsContent');
+  if (!procData) { el.innerHTML = noData(); return; }
+
+  const bom = procData.bom || [];
+  const q   = itemSearch.toLowerCase();
+
+  const rows = bom.filter(r =>
+    !q ||
+    (r.catNo||'').toLowerCase().includes(q) ||
+    (r.partDesc||'').toLowerCase().includes(q) ||
+    (r.vendor||'').toLowerCase().includes(q) ||
+    (r.project||'').toLowerCase().includes(q)
   );
+
+  el.innerHTML = `
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title">📦 BOM ITEM HISTORY <span class="count-pill">${rows.length}</span></span>
+        <input class="search-box" placeholder="Search by cat no, description, vendor..." value="${itemSearch}"
+          oninput="itemSearch=this.value;renderItems()">
+      </div>
+      <div class="scroll-x">
+        <table>
+          <thead><tr>
+            <th>CAT NO</th><th>DESCRIPTION</th><th>CATEGORY</th>
+            <th>PROJECT</th><th>PO #</th><th>VENDOR</th>
+            <th>UNIT PRICE</th><th>PREV PRICE</th><th>SAVINGS</th><th>STATUS</th>
+          </tr></thead>
+          <tbody>
+            ${rows.slice(0,200).map(r => {
+              const savings = r.savings ? (Number(r.savings)*100).toFixed(1)+'%' : '—';
+              const savColor = r.savings ? (Number(r.savings)>0?'var(--green)':'var(--red)') : 'var(--text3)';
+              return `<tr>
+                <td>${r.catNo||'—'}</td>
+                <td class="desc">${r.partDesc||'—'}</td>
+                <td>${r.category||'—'}</td>
+                <td>${r.project||'—'}</td>
+                <td>${r.poNum||'—'}</td>
+                <td>${r.vendor||'—'}</td>
+                <td class="amount">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>
+                <td class="amount" style="color:var(--text3)">${r.prevPrice?'₱'+fmt(r.prevPrice):'—'}</td>
+                <td style="color:${savColor}">${savings}</td>
+                <td>${statusBadge(r.status)}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+      ${rows.length>200?`<div style="padding:10px 18px;font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace">Showing 200 of ${rows.length} — refine search to narrow down</div>`:''}
+    </div>
+  `;
 }
 
-setInterval(doSync,60000);
-doSync();
+// ══════════════════════════════════════════════
+//  SUPPLIERS
+// ══════════════════════════════════════════════
+function renderSuppliers() {
+  const el = document.getElementById('suppliersContent');
+  if (!procData) { el.innerHTML = noData(); return; }
+
+  const suppliers = procData.suppliers || [];
+  const maxVal    = Math.max(...suppliers.map(s=>s.totalPOVal),1);
+
+  el.innerHTML = `
+    <div class="section-title">Supplier Performance</div>
+    <div class="grid-2">
+      <div class="table-wrap">
+        <div class="table-header"><span class="table-title">PO VALUE RANKING</span></div>
+        <div style="padding:8px 18px 16px">
+          ${suppliers.map((s,i) => `
+            <div class="supplier-row">
+              <div class="supplier-rank ${i===0?'gold':''}">${i+1}</div>
+              <div style="flex:1">
+                <div class="supplier-name">${s.name}</div>
+                <div class="supplier-meta">${s.poCount} POs · ₱${fmt(s.totalPaid)} paid</div>
+                <div style="margin-top:6px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;width:160px">
+                  <div style="height:100%;width:${Math.round(s.totalPOVal/maxVal*100)}%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:2px"></div>
+                </div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-size:14px;font-weight:700;color:var(--accent);font-family:'JetBrains Mono',monospace">₱${fmt(s.totalPOVal)}</div>
+                <div style="font-size:10px;color:var(--text3)">${pct(s.totalPaid,s.totalPOVal)}% paid</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-header"><span class="table-title">PAYMENT STATUS BY SUPPLIER</span></div>
+        <div class="scroll-x">
+          <table>
+            <thead><tr><th>SUPPLIER</th><th>PO COUNT</th><th>TOTAL VALUE</th><th>PAID</th><th>BALANCE</th><th>%</th></tr></thead>
+            <tbody>
+              ${suppliers.map(s => {
+                const bal = s.totalPOVal - s.totalPaid;
+                const p   = pct(s.totalPaid, s.totalPOVal);
+                return `<tr>
+                  <td class="desc">${s.name}</td>
+                  <td>${s.poCount}</td>
+                  <td class="amount">₱${fmt(s.totalPOVal)}</td>
+                  <td class="amount" style="color:var(--green)">₱${fmt(s.totalPaid)}</td>
+                  <td class="amount" style="color:${bal>0?'var(--orange)':'var(--green)'}">₱${fmt(bal)}</td>
+                  <td style="color:${p>=80?'var(--green)':p>=50?'var(--orange)':'var(--red)'}">${p}%</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════
+//  WH INCOMING
+// ══════════════════════════════════════════════
+function renderWH() {
+  const el = document.getElementById('whContent');
+  if (!procData) { el.innerHTML = noData(); return; }
+
+  const q   = whSearch.toLowerCase();
+  const wh  = (procData.wh||[]).filter(r =>
+    !q ||
+    (r.poNum||'').toLowerCase().includes(q) ||
+    (r.partDesc||'').toLowerCase().includes(q) ||
+    (r.supplier||'').toLowerCase().includes(q) ||
+    (r.project||'').toLowerCase().includes(q)
+  );
+
+  const pending  = wh.filter(r=>(r.status||'').includes('Pending')).length;
+  const partial  = wh.filter(r=>(r.status||'').includes('Partial')).length;
+  const complete = wh.filter(r=>(r.status||'').includes('Complete')).length;
+
+  el.innerHTML = `
+    <div class="grid-4 mb24">
+      ${miniStat('⬜ Pending', pending, 'var(--text2)')}
+      ${miniStat('🔄 Partial', partial, 'var(--orange)')}
+      ${miniStat('✅ Complete', complete, 'var(--green)')}
+      ${miniStat('📦 Total Rows', wh.length, 'var(--accent)')}
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title">🏭 WH INCOMING <span class="count-pill">${wh.length}</span></span>
+        <input class="search-box" placeholder="Search PO#, description, supplier..." value="${whSearch}"
+          oninput="whSearch=this.value;renderWH()">
+      </div>
+      <div class="scroll-x">
+        <table>
+          <thead><tr>
+            <th>PO #</th><th>PROJECT</th><th>PART DESCRIPTION</th><th>SUPPLIER</th>
+            <th>PO QTY</th><th>DEL QTY</th><th>BAL QTY</th>
+            <th>EXPECTED</th><th>ACTUAL</th><th>DAYS VAR</th><th>STATUS</th>
+          </tr></thead>
+          <tbody>
+            ${wh.map(r => {
+              const dv = Number(r.daysVar||0);
+              const dvColor = dv <= 0 ? 'var(--green)' : dv <= 7 ? 'var(--orange)' : 'var(--red)';
+              return `<tr>
+                <td>${r.poNum||'—'}</td>
+                <td>${r.project||'—'}</td>
+                <td class="desc">${r.partDesc||'—'}</td>
+                <td>${r.supplier||'—'}</td>
+                <td>${r.poQty||'—'}</td>
+                <td style="color:var(--green)">${r.delQty||'0'}</td>
+                <td style="color:${Number(r.balQty||0)>0?'var(--orange)':'var(--green)'}">${r.balQty||'0'}</td>
+                <td>${r.expectedDate||'—'}</td>
+                <td>${r.actualDate||'—'}</td>
+                <td style="color:${dvColor}">${r.daysVar!==null&&r.daysVar!==''?r.daysVar:' —'}</td>
+                <td>${statusBadge(r.status)}</td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════
+//  PURCHASE ORDERS
+// ══════════════════════════════════════════════
+function renderPO() {
+  const el = document.getElementById('poContent');
+  if (!procData) { el.innerHTML = noData(); return; }
+
+  const q  = poSearch.toLowerCase();
+  const po = (procData.po||[]).filter(r =>
+    !q ||
+    (r.poNum||'').toLowerCase().includes(q) ||
+    (r.partDesc||'').toLowerCase().includes(q) ||
+    (r.supplier||'').toLowerCase().includes(q) ||
+    (r.project||'').toLowerCase().includes(q)
+  );
+
+  const totalVal = po.reduce((a,r)=>a+Number(r.lineTotal||0),0);
+
+  el.innerHTML = `
+    <div class="grid-4 mb24">
+      ${miniStat('Total POs', [...new Set(po.map(r=>r.poNum))].length, 'var(--accent)')}
+      ${miniStat('Line Items', po.length, 'var(--text2)')}
+      ${miniStat('Total Value', '₱'+fmt(totalVal), 'var(--green)')}
+      ${miniStat('Suppliers', [...new Set(po.map(r=>r.supplier).filter(Boolean))].length, 'var(--purple)')}
+    </div>
+    <div class="table-wrap">
+      <div class="table-header">
+        <span class="table-title">🛒 PURCHASE ORDERS <span class="count-pill">${po.length}</span></span>
+        <input class="search-box" placeholder="Search PO#, description, supplier..." value="${poSearch}"
+          oninput="poSearch=this.value;renderPO()">
+      </div>
+      <div class="scroll-x">
+        <table>
+          <thead><tr>
+            <th>PO #</th><th>PROJECT</th><th>PART DESCRIPTION</th><th>SUPPLIER</th>
+            <th>QTY</th><th>UNIT PRICE</th><th>LINE TOTAL</th><th>PO DATE</th><th>STATUS</th>
+          </tr></thead>
+          <tbody>
+            ${po.map(r => `<tr>
+              <td>${r.poNum||'—'}</td>
+              <td>${r.project||'—'}</td>
+              <td class="desc">${r.partDesc||'—'}</td>
+              <td>${r.supplier||'—'}</td>
+              <td>${r.qty||'—'}</td>
+              <td class="amount">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>
+              <td class="amount" style="color:var(--accent)">${r.lineTotal?'₱'+fmt(r.lineTotal):'—'}</td>
+              <td>${r.poDate||'—'}</td>
+              <td>${statusBadge(r.status)}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════
+//  BADGES / UPDATES
+// ══════════════════════════════════════════════
+function updateBadges() {
+  if (!procData) return;
+  const bom = procData.bom || [];
+  const wh  = procData.wh  || [];
+  const po  = procData.po  || [];
+
+  const alertCount = bom.filter(r=>(r.status||'').includes('Canvass')||(r.status||'').includes('Ready')).length
+                   + wh.filter(r=>Number(r.balQty||0)>0).length;
+  const projCount  = Object.keys(procData.clients||{}).length;
+
+  document.getElementById('badge-alerts').textContent   = alertCount;
+  document.getElementById('badge-projects').textContent = projCount;
+
+  if (billData?.projects) {
+    const billCount = Object.keys(billData.projects).length;
+    document.getElementById('badge-billing').textContent = billCount;
+  }
+}
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function fmt(n) {
+  const num = Number(n||0);
+  if (num >= 1000000) return (num/1000000).toFixed(2)+'M';
+  if (num >= 1000)    return num.toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});
+  return num.toFixed(2);
+}
+
+function pct(a,b) {
+  if (!b || b===0) return 0;
+  return Math.round(Number(a)/Number(b)*100);
+}
+
+function statusBadge(status) {
+  const s = String(status||'');
+  if (s.includes('Canvass'))        return `<span class="badge badge-canvass">🟡 Canvass</span>`;
+  if (s.includes('Ready'))          return `<span class="badge badge-ready">🟢 Ready</span>`;
+  if (s.includes('PO Issued'))      return `<span class="badge badge-po">✅ PO Issued</span>`;
+  if (s.includes('Delivered'))      return `<span class="badge badge-delivered">📦 Delivered</span>`;
+  if (s.includes('Warehouse'))      return `<span class="badge badge-wh">🏭 WH Stock</span>`;
+  if (s.includes('Partial'))        return `<span class="badge badge-partial">🔄 Partial</span>`;
+  if (s.includes('Complete'))       return `<span class="badge badge-delivered">✅ Complete</span>`;
+  if (s.includes('Pending'))        return `<span class="badge badge-canvass">⬜ Pending</span>`;
+  if (s.includes('Cancelled')||s.includes('Cancel')) return `<span class="badge" style="background:rgba(100,100,100,.15);color:#888">⛔ Cancelled</span>`;
+  return `<span class="badge" style="background:rgba(100,100,100,.1);color:var(--text3)">${s||'—'}</span>`;
+}
+
+function billingStatusBadge(status) {
+  const s = String(status||'').toUpperCase();
+  if (s.includes('PAID'))          return `<span class="badge badge-paid">PAID</span>`;
+  if (s.includes('ON-PROCESS')||s.includes('ON PROCESS')) return `<span class="badge badge-process">ON-PROCESS</span>`;
+  if (s.includes('@HO'))           return `<span class="badge badge-ho">@HO</span>`;
+  if (s.includes('AWAIT')||s.includes('FOR BILLING')) return `<span class="badge badge-canvass">AWAITING</span>`;
+  if (s.includes('C/O'))           return `<span class="badge badge-wh">C/O</span>`;
+  return `<span class="badge badge-canvass">${status||'—'}</span>`;
+}
+
+function kpiCard(label, value, color, glow, sub) {
+  return `
+    <div class="kpi" style="--accent-kpi:${color};--kpi-color:${color};--kpi-glow:${glow}">
+      <div class="kpi-glow"></div>
+      <div class="kpi-label">${label}</div>
+      <div class="kpi-value">${value}</div>
+      ${sub?`<div class="kpi-sub">${sub}</div>`:''}
+    </div>`;
+}
+
+function arCard(icon, label, num, color, glow, tab, filter) {
+  return `
+    <div class="ar-card" style="--ar-color:${color};--ar-glow:radial-gradient(circle at 50% 50%,${glow},transparent 70%)"
+      onclick="showTab('${tab}');renderAlerts('${filter}')">
+      <div class="ar-icon">${icon}</div>
+      <div>
+        <div class="ar-num" style="color:${color}">${num}</div>
+        <div class="ar-lbl">${label}</div>
+      </div>
+    </div>`;
+}
+
+function miniStat(label, value, color) {
+  return `
+    <div class="mini-stat">
+      <div>
+        <div class="mini-stat-val" style="color:${color}">${value}</div>
+        <div class="mini-stat-lbl">${label}</div>
+      </div>
+    </div>`;
+}
+
+function noData(msg) {
+  return `<div class="loading-state">
+    <div style="font-size:32px">📡</div>
+    <div class="loading-text">${msg||'Waiting for data...'}</div>
+    <button class="sync-btn" onclick="syncAll()" style="margin-top:8px">↻ RETRY SYNC</button>
+  </div>`;
+}
+
+function errorState(msg, sub) {
+  return `<div class="error-state">
+    <div class="error-icon">⚠️</div>
+    <div class="error-msg">${msg}</div>
+    <div class="error-sub">${sub||''}</div>
+    <button class="sync-btn" onclick="syncAll()" style="margin-top:16px">↻ RETRY</button>
+  </div>`;
+}
 </script>
-
-<!-- EMPLOYEE MODAL -->
-<div class="mo" id="empMo">
-  <div class="md" style="width:460px;max-width:95vw">
-    <div class="mtt" id="empMoTitle">Add Employee</div>
-    <div class="mst" id="empMoSub">Fill in employee details</div>
-    <input type="hidden" id="empMoMode" value="add">
-    <input type="hidden" id="empMoRowIndex" value="">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-      <div class="fl" style="margin:0"><label>Full Name *</label>
-        <input type="text" id="empName" placeholder="e.g. Juan dela Cruz"></div>
-      <div class="fl" style="margin:0"><label>Department *</label>
-        <select id="empDept">
-          <option value="Procurement">Procurement</option>
-          <option value="Warehouse">Warehouse</option>
-          <option value="Trainee">Trainee</option>
-          <option value="Admin">Admin</option>
-          <option value="Operations">Operations</option>
-        </select></div>
-      <div class="fl" style="margin:0"><label>Schedule / Hours</label>
-        <input type="text" id="empHours" placeholder="e.g. 8:00-17:00"></div>
-      <div class="fl" style="margin:0"><label>Work Days</label>
-        <input type="text" id="empWorkDays" placeholder="e.g. Mon-Fri"></div>
-      <div class="fl" style="margin:0;grid-column:1/-1"><label>Notes</label>
-        <input type="text" id="empNotes" placeholder="Optional notes..."></div>
-    </div>
-    <div class="ma" style="margin-top:18px">
-      <div class="form-status" id="empFormStatus" style="margin-right:auto"></div>
-      <button class="btn bs" onclick="closeEmpMo()">Cancel</button>
-      <button class="btn bp" id="empSaveBtn" onclick="saveEmployee()">Save Employee</button>
-    </div>
-  </div>
-</div>
-
-<!-- EMPLOYEE DETAIL MODAL -->
-<div class="mo" id="empDetailMo">
-  <div class="md" style="width:680px;max-width:96vw;max-height:85vh;overflow-y:auto">
-    <div class="mtt" id="empDetailTitle">Employee</div>
-    <div class="mst" id="empDetailSub"></div>
-    <div style="margin-top:16px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:8px">🌿 Leave History</div>
-      <div class="tw"><table>
-        <thead><tr><th>Date</th><th>Type</th><th class="c">Days</th><th>Status</th><th>Reason</th></tr></thead>
-        <tbody id="empDetailLv"></tbody>
-      </table></div>
-    </div>
-    <div style="margin-top:16px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;color:var(--tx3);margin-bottom:8px">⏰ OT History</div>
-      <div class="tw"><table>
-        <thead><tr><th>Date</th><th>Day Type</th><th>Time</th><th class="c">Hours</th><th>Reason</th></tr></thead>
-        <tbody id="empDetailOT"></tbody>
-      </table></div>
-    </div>
-    <div class="ma" style="margin-top:18px">
-      <button class="btn bp" onclick="closeEmpDetail()">Close</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
