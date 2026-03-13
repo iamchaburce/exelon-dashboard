@@ -952,65 +952,90 @@ function renderItems(){
   const ih=procData.itemHistory||[];
   const cats=[...new Set(ih.map(r=>r.category).filter(Boolean))].sort();
   const sups=[...new Set(ih.map(r=>r.vendor).filter(Boolean))].sort();
+
+  // First call — build the static toolbar shell (only once, or if toolbar missing)
+  if(!document.getElementById('item-search-inp')){
+    el.innerHTML=`
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh)">
+        <div style="flex:1;min-width:260px">
+          <input id="item-search-inp" class="search-inp" style="width:100%"
+            placeholder="🔍 Search item, supplier, PO#, cat no…"
+            onkeydown="event.stopPropagation()"
+            oninput="clearTimeout(_itemDebounce);_itemDebounce=setTimeout(function(){itemQ=document.getElementById('item-search-inp').value;renderItemResults()},300)">
+        </div>
+        <select id="item-cat-sel" class="filter-sel" onchange="itemCat=this.value;renderItemResults()">
+          <option value="ALL">All Categories</option>
+          ${cats.map(c=>`<option value="${esc(c)}">${c}</option>`).join('')}
+        </select>
+        <select id="item-sup-sel" class="filter-sel" style="max-width:200px" onchange="itemSup=this.value;renderItemResults()">
+          <option value="ALL">All Suppliers</option>
+          ${sups.map(s=>`<option value="${esc(s)}">${s}</option>`).join('')}
+        </select>
+        <button class="btn" id="item-clear-btn" style="display:none" onclick="itemQ='';itemSup='ALL';itemCat='ALL';document.getElementById('item-search-inp').value='';document.getElementById('item-cat-sel').value='ALL';document.getElementById('item-sup-sel').value='ALL';renderItemResults()">✕ Clear</button>
+        <span id="item-count-lbl" style="font-size:11px;color:var(--t3);white-space:nowrap;margin-left:auto"></span>
+      </div>
+      <div id="item-results"></div>`;
+  }
+  renderItemResults();
+}
+
+function renderItemResults(){
+  const ih=procData?.itemHistory||[];
+  const sups=[...new Set(ih.map(r=>r.vendor).filter(Boolean))].sort();
   const q=itemQ.toLowerCase().trim();
 
+  // Sync toolbar state (dropdowns may exist already)
+  const catSel=document.getElementById('item-cat-sel');
+  const supSel=document.getElementById('item-sup-sel');
+  const clearBtn=document.getElementById('item-clear-btn');
+  const countLbl=document.getElementById('item-count-lbl');
+  const resultsEl=document.getElementById('item-results');
+  if(!resultsEl)return;
+  if(catSel&&catSel.value!==itemCat)catSel.value=itemCat;
+  if(supSel&&supSel.value!==itemSup)supSel.value=itemSup;
+  if(clearBtn)clearBtn.style.display=(itemSup!=='ALL'||q)?'':'none';
+
+  // Filter rows — SIMPLE: search matches ANY field
   const rows=ih.filter(r=>{
-    const mC=itemCat==='ALL'||(r.category||'')===itemCat;
-    if(!mC)return false;
-    if(itemSup!=='ALL')return(r.vendor||'')===itemSup;
+    if(itemCat!=='ALL'&&(r.category||'')!==itemCat)return false;
+    if(itemSup!=='ALL')return(r.vendor||'')=== itemSup;
     if(!q)return true;
     return(r.catNo||'').toLowerCase().includes(q)
       ||(r.partDesc||'').toLowerCase().includes(q)
       ||(r.vendor||'').toLowerCase().includes(q)
       ||(r.project||'').toLowerCase().includes(q)
-      ||(r.poNum||'').toLowerCase().includes(q);
+      ||(r.poNum||'').toLowerCase().includes(q)
+      ||(r.source||'').toLowerCase().includes(q);
   });
 
-  // Smart grouping
+  // Grouping — always group by project unless supplier filter active
   let groupKey=r=>r.project||'General';
   let groupLabel='project';
-  if(itemSup!=='ALL'){groupKey=r=>r.vendor||'—';groupLabel='supplier';}
-  else if(q){
+  if(itemSup!=='ALL'){
+    groupKey=r=>r.vendor||'—';groupLabel='supplier';
+  } else if(q){
+    // If typed text exactly matches a supplier → group by supplier
     const exactSup=sups.find(s=>s.toLowerCase()===q);
     if(exactSup){groupKey=r=>r.vendor||'—';groupLabel='supplier';}
-    else if(ih.some(r=>(r.catNo||'').toLowerCase()===q)){groupKey=r=>r.catNo||'—';groupLabel='product';}
   }
+  // Otherwise always group by project — show all projects that have matching items
 
   const groups={};
   rows.forEach(r=>{
     const k=groupKey(r);
-    if(!groups[k])groups[k]={key:k,items:[],total:0,sups:new Set(),orders:new Set(),cats:new Set(),projects:new Set()};
+    if(!groups[k])groups[k]={key:k,items:[],total:0,sups:new Set(),orders:new Set()};
     groups[k].items.push(r);
     groups[k].total+=Number(r.unitPrice||0);
     if(r.vendor)groups[k].sups.add(r.vendor);
     if(r.poNum)groups[k].orders.add(r.poNum);
-    if(r.category)groups[k].cats.add(r.category);
-    if(r.project)groups[k].projects.add(r.project);
   });
-  const totalSpend=rows.reduce((a,r)=>a+Number(r.unitPrice||0),0);
 
-  el.innerHTML=`
-    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh)">
-      <div style="flex:1;min-width:260px;position:relative">
-        <input id="item-search-inp" class="search-inp" style="width:100%"
-          placeholder="🔍 Search item, supplier, PO#, cat no…"
-          value="${esc(itemQ)}"
-          onkeydown="event.stopPropagation()"
-          oninput="clearTimeout(_itemDebounce);_itemDebounce=setTimeout(function(){itemQ=document.getElementById('item-search-inp').value;renderItems()},300)">
-      </div>
-      <select class="filter-sel" onchange="itemCat=this.value;renderItems()">
-        <option value="ALL">All Categories</option>
-        ${cats.map(c=>`<option value="${esc(c)}" ${itemCat===c?'selected':''}>${c}</option>`).join('')}
-      </select>
-      <select class="filter-sel" style="max-width:200px" onchange="itemSup=this.value;renderItems()">
-        <option value="ALL">All Suppliers</option>
-        ${sups.map(s=>`<option value="${esc(s)}" ${itemSup===s?'selected':''}>${s}</option>`).join('')}
-      </select>
-      ${itemSup!=='ALL'||q?`<button class="btn" onclick="itemQ='';itemSup='ALL';itemCat='ALL';document.getElementById('item-search-inp').value='';renderItems()">✕ Clear</button>`:''}
-      <span style="font-size:11px;color:var(--t3);white-space:nowrap;margin-left:auto">${rows.length} items · ${Object.keys(groups).length} ${groupLabel}(s) · ₱${fmt(totalSpend)}</span>
-    </div>
-    ${Object.keys(groups).length===0?`<div style="padding:48px;text-align:center;color:var(--t3);background:var(--card);border-radius:var(--r);border:1px solid var(--border)"><div style="font-size:32px;margin-bottom:8px">🔍</div><div>No results — try another search or clear filter</div></div>`:
-    `<div style="display:flex;flex-direction:column;gap:12px">${Object.entries(groups).map(([key,g])=>renderItemGroup(key,g,groupLabel)).join('')}</div>`}`;
+  const totalSpend=rows.reduce((a,r)=>a+Number(r.unitPrice||0),0);
+  if(countLbl)countLbl.textContent=`${rows.length} items · ${Object.keys(groups).length} ${groupLabel}(s) · ₱${fmt(totalSpend)}`;
+
+  resultsEl.innerHTML=Object.keys(groups).length===0
+    ?`<div style="padding:48px;text-align:center;color:var(--t3);background:var(--card);border-radius:var(--r);border:1px solid var(--border)"><div style="font-size:32px;margin-bottom:8px">🔍</div><div>Walang results — subukan ng ibang search o i-clear ang filter</div></div>`
+    :`<div style="display:flex;flex-direction:column;gap:12px">${Object.entries(groups).map(([key,g])=>renderItemGroup(key,g,groupLabel)).join('')}</div>`;
 }
 function renderItemGroup(key,g,groupLabel){
   const gid='ig_'+key.replace(/\W/g,'_');
