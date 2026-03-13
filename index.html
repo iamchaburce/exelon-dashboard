@@ -716,15 +716,20 @@ function renderOverview(){
             </tr></thead>
             <tbody>
               ${projectActions.length===0?`<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:20px">✅ All clear! No pending actions.</td></tr>`:
-                projectActions.map(p=>`<tr>
-                  <td><div style="font-weight:500;font-size:12px">${p.project}</div><div style="font-size:10px;color:var(--t3)">${p.client}</div></td>
-                  <td style="text-align:center">${p.canvass>0?`<span class="badge bp ar-clickable" onclick="openActionModal('${escQ(p.project)}','CANVASS')">${p.canvass}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.ready>0?`<span class="badge bg ar-clickable" onclick="openActionModal('${escQ(p.project)}','READY')">${p.ready}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.pending>0?`<span class="badge bb ar-clickable" onclick="openActionModal('${escQ(p.project)}','DELIVERY')">${p.pending}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.partial>0?`<span class="badge by ar-clickable" onclick="openActionModal('${escQ(p.project)}','PARTIAL')">${p.partial}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.whStock>0?`<span class="badge" style="background:#e0f2fe;color:#0891b2;cursor:pointer" onclick="openActionModal('${escQ(p.project)}','WHSTOCK')">${p.whStock}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center;font-weight:600;cursor:pointer;color:${p.total>0?'var(--red)':'var(--green)'}" onclick="openActionModal('${escQ(p.project)}','ALL')">${p.total||'✓'}</td>
-                </tr>`).join('')}
+                projectActions.map(p=>{
+                  const jj=JSON.stringify(JSON.stringify({name:p.project,clientName:p.client}));
+                  return`<tr>
+                  <td style="cursor:pointer" onclick="openProjectDetailModal(${jj},'ALL')">
+                    <div style="font-weight:500;font-size:12px">${p.project}</div>
+                    <div style="font-size:10px;color:var(--t3)">${p.client}</div>
+                  </td>
+                  <td style="text-align:center">${p.canvass>0?`<span class="badge bp ar-clickable" onclick="openProjectDetailModal(${jj},'CANVASS')">${p.canvass}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center">${p.ready>0?`<span class="badge bg ar-clickable" onclick="openProjectDetailModal(${jj},'READY')">${p.ready}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center">${p.pending>0?`<span class="badge bb ar-clickable" onclick="openProjectDetailModal(${jj},'DELIVERY')">${p.pending}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center">${p.partial>0?`<span class="badge by ar-clickable" onclick="openProjectDetailModal(${jj},'PARTIAL')">${p.partial}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center">${p.whStock>0?`<span class="badge" style="background:#e0f2fe;color:#0891b2;cursor:pointer" onclick="openProjectDetailModal(${jj},'WHSTOCK')">${p.whStock}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center;font-weight:600;cursor:pointer;color:${p.total>0?'var(--red)':'var(--green)'}" onclick="openProjectDetailModal(${jj},'ALL')">${p.total||'✓'}</td>
+                </tr>`;}).join('')}
             </tbody>
           </table>
         </div>
@@ -1540,15 +1545,16 @@ function renderClientCard(c){
 }
 
 function renderProjectRow(p, clientName){
+  const jj=JSON.stringify(JSON.stringify({name:p.name,clientName}));
   return`<div class="project-row">
-    <div class="project-row-hdr" onclick="openProjectDetailModal(${JSON.stringify(JSON.stringify({name:p.name,clientName}))})">
+    <div class="project-row-hdr" onclick="openProjectDetailModal(${jj},'ALL')">
       <div style="flex:1;min-width:0">
         <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</div>
         <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
-          ${p.canvass?`<span class="badge by" style="font-size:9px">🔍 ${p.canvass} canvass</span>`:''}
-          ${p.ready?`<span class="badge bp" style="font-size:9px">🟢 ${p.ready} ready</span>`:''}
-          ${p.issued?`<span class="badge bb" style="font-size:9px">🛒 ${p.issued} PO</span>`:''}
-          ${p.pendDel?`<span class="badge by" style="font-size:9px">🚚 ${p.pendDel} pending</span>`:''}
+          ${p.canvass?`<span class="badge by" style="font-size:9px" onclick="event.stopPropagation();openProjectDetailModal(${jj},'CANVASS')">🔍 ${p.canvass} canvass</span>`:''}
+          ${p.ready?`<span class="badge bp" style="font-size:9px" onclick="event.stopPropagation();openProjectDetailModal(${jj},'READY')">🟢 ${p.ready} ready</span>`:''}
+          ${p.issued?`<span class="badge bb" style="font-size:9px" onclick="event.stopPropagation();openProjectDetailModal(${jj},'ISSUED')">🛒 ${p.issued} PO</span>`:''}
+          ${p.pendDel?`<span class="badge by" style="font-size:9px" onclick="event.stopPropagation();openProjectDetailModal(${jj},'DELIVERY')">🚚 ${p.pendDel} pending</span>`:''}
           ${p.done?`<span class="badge bg" style="font-size:9px">✅ ${p.done} done</span>`:''}
         </div>
       </div>
@@ -1568,7 +1574,7 @@ function renderProjectRow(p, clientName){
   </div>`;
 }
 
-function openProjectDetailModal(jsonStr){
+function openProjectDetailModal(jsonStr, autoTab){
   const {name:projName, clientName} = JSON.parse(jsonStr);
   // Find the project object
   const bom=procData?.bom||[];
@@ -1730,6 +1736,15 @@ function openProjectDetailModal(jsonStr){
 
     </div>`;
   openModalEl('modal-xl');
+  // Auto-switch to requested tab after render
+  if(autoTab && autoTab!=='ALL'){
+    const tabMap={CANVASS:'canvass',READY:'ready',ISSUED:'issued',DELIVERY:'delivery',PARTIAL:'delivery',WHSTOCK:'bom'};
+    const tabId=tabMap[autoTab]||'bom';
+    // Find the matching tab button by its text content / onclick
+    const btns=[...document.querySelectorAll('#pmod_tabs .proj-tab')];
+    const btn=btns.find(b=>b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+tabId+"'"));
+    if(btn) switchModalTab(tabId,btn);
+  }
 }
 
 function switchModalTab(tabId, btn){
@@ -1738,7 +1753,7 @@ function switchModalTab(tabId, btn){
     if(el)el.style.display=id===tabId?'block':'none';
   });
   document.querySelectorAll('#pmod_tabs .proj-tab').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  if(btn)btn.classList.add('active');
 }
 function toggleBOMCol(btn){
   const col=btn.dataset.col;
