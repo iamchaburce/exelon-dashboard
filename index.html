@@ -184,6 +184,7 @@ tr:hover td{background:rgba(0,0,0,.015);}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--card);border-radius:12px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:mIn .18s ease;}
 .modal.modal-xl{max-width:100vw;width:100vw;max-height:100vh;border-radius:0;margin:0;}
+.modal.modal-lg{max-width:1200px;width:96vw;max-height:92vh;border-radius:12px;}
 .modal.modal-wide{max-width:920px;}
 @keyframes mIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .modal::-webkit-scrollbar{width:4px;}
@@ -1220,58 +1221,106 @@ function openPOModal(rowKey){
   const status=ov('po_status_'+rk,r.status||'');
   document.getElementById('modalTitle').textContent=r.poNum||'PO Detail';
   document.getElementById('modalSub').textContent=(supplier||'—')+' · '+(r.poDate||'—');
+  // Gather ALL PO lines with same PO number
+  const allPOLines=(procData?.po||[]).filter(x=>x.poNum===r.poNum);
+  const whRows=(procData?.wh||[]).filter(x=>x.poNum===r.poNum);
+  const totalVal=allPOLines.reduce((a,x)=>a+Number(x.lineTotal||0),0);
+  const totalQty=allPOLines.reduce((a,x)=>a+Number(x.qty||0),0);
+  const totalDel=whRows.reduce((a,x)=>a+Number(x.delQty||0),0);
+  const totalBal=whRows.reduce((a,x)=>a+Number(x.balQty||0),0);
   document.getElementById('modalKpis').innerHTML=`
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Line Total</div><div class="modal-kpi-val">${r.lineTotal?'₱'+fmt(r.lineTotal):'—'}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Qty</div><div class="modal-kpi-val">${r.qty||'—'}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Unit Price</div><div class="modal-kpi-val">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</div></div>`;
-  document.getElementById('modalBody').innerHTML=`
-    <div class="po-grid">
-      <div class="po-field">
-        <div class="po-label">PO Number</div>
-        <div class="po-val td-mono" style="color:var(--blue)">${r.poNum||'—'}</div>
-      </div>
-      <div class="po-field">
-        <div class="po-label">Project</div>
-        <div class="po-val">${r.project||'—'}</div>
-      </div>
-    </div>
-    <div class="po-field">
-      <div class="po-label">Description</div>
-      <div class="po-val">${r.partDesc||'—'}</div>
-    </div>
-    <div class="po-field">
-      <div class="po-label">Supplier / Vendor <span style="font-size:9px;color:var(--t3)">(editable)</span></div>
-      <input class="po-input" id="modal-supplier" value="${esc(supplier)}" placeholder="Enter supplier name"
-        onchange="recordChange('po_supplier_${rk}','PO',${r.num||0},${PO_COL.SUPPLIER},this.value,'Supplier: ${esc(r.poNum||'')}','${esc(r.supplier||'')}');document.getElementById('modalSub').textContent=this.value+' · ${esc(r.poDate||'')}'">
-    </div>
-    <div class="po-grid">
-      <div class="po-field">
-        <div class="po-label">PO Date</div>
-        <div class="po-val">${r.poDate||'—'}</div>
-      </div>
-      <div class="po-field">
-        <div class="po-label">Actual Delivery Date <span style="font-size:9px;color:var(--t3)">(editable)</span></div>
-        <input type="date" class="po-input" id="modal-actdate" value="${actualDate}"
-          onchange="recordChange('po_actualdate_${rk}','PO',${r.num||0},${PO_COL.STATUS},this.value,'Actual Del: ${esc(r.poNum||'')}','${esc(r.actualDeliveryDate||'')}')">
-      </div>
-    </div>
-    <div class="po-field">
-      <div class="po-label">PO Status <span style="font-size:9px;color:var(--t3)">(editable)</span></div>
-      <select class="po-select" id="modal-status"
-        onchange="recordChange('po_status_${rk}','PO',${r.num||0},${PO_COL.STATUS},this.value,'PO Status: ${esc(r.poNum||'')}','${esc(r.status||'')}')">
-        ${['⬜ Pending','✅ Delivered','🔄 Partial','⛔ Cancelled','✅ Complete'].map(s=>`<option value="${s}" ${status===s?'selected':''}>${s}</option>`).join('')}
-      </select>
-    </div>
-    <div class="po-field">
-      <div class="po-label">Notes / Remarks <span style="font-size:9px;color:var(--t3)">(editable)</span></div>
-      <textarea class="po-textarea" id="modal-notes" placeholder="Add notes, follow-ups, remarks…"
-        onchange="recordChange('po_notes_${rk}','PO',${r.num||0},${PO_COL.REMARKS},this.value,'Notes: ${esc(r.poNum||'')}','${esc(r.remarks||'')}')">${esc(notes)}</textarea>
-    </div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">PO Total Value</div><div class="modal-kpi-val" style="color:var(--blue)">${totalVal?'₱'+fmt(totalVal):'—'}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">Line Items</div><div class="modal-kpi-val">${allPOLines.length}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">Total Qty</div><div class="modal-kpi-val">${totalQty}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">Delivered</div><div class="modal-kpi-val" style="color:var(--green)">${totalDel}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">Balance</div><div class="modal-kpi-val" style="color:${totalBal>0?'var(--orange)':'var(--green)'}">${totalBal}</div></div>`;
+  // Header info row
+  const headerHTML=`
+    <div class="po-grid" style="margin-bottom:14px">
+      <div class="po-field"><div class="po-label">PO Number</div><div class="po-val td-mono" style="color:var(--blue);font-size:16px;font-weight:700">${r.poNum||'—'}</div></div>
+      <div class="po-field"><div class="po-label">Project</div><div class="po-val">${r.project||'—'}</div></div>
+      <div class="po-field"><div class="po-label">Supplier</div><div class="po-val">${supplier||'—'}</div></div>
+      <div class="po-field"><div class="po-label">PO Date</div><div class="po-val">${r.poDate||'—'}</div></div>
+      <div class="po-field"><div class="po-label">Pay Terms</div><div class="po-val">${r.payTerms||'—'}</div></div>
+      <div class="po-field"><div class="po-label">Approved By</div><div class="po-val">${r.approved1||r.approved2||'—'}</div></div>
+    </div>`;
+
+  // All line items table — editable status per line
+  const linesHTML=`
+    <div class="modal-section">📋 PO Line Items — ${allPOLines.length} items</div>
+    <div class="scroll-x"><table style="min-width:700px">
+      <thead><tr>
+        <th>#</th>
+        <th style="min-width:200px">Description</th>
+        <th>Cat No</th>
+        <th style="text-align:right">Qty</th>
+        <th>Unit</th>
+        <th style="text-align:right">Unit Price</th>
+        <th style="text-align:right">Line Total</th>
+        <th style="min-width:150px">Status (editable)</th>
+        <th style="min-width:140px">Remarks (editable)</th>
+      </tr></thead>
+      <tbody>${allPOLines.map((line,i)=>{
+        const lrk=line._row||line.poNum+'_'+line.partDesc+'_'+i;
+        const lStatus=ov('po_status_'+lrk,line.status||'');
+        const lNotes=ov('po_notes_'+lrk,line.remarks||'');
+        return\`<tr>
+          <td style="color:var(--t3)">\${i+1}</td>
+          <td class="wrap" style="font-size:11px">\${line.partDesc||'—'}</td>
+          <td class="td-mono" style="font-size:10px">\${line.catNo||'—'}</td>
+          <td style="text-align:right">\${line.qty||'—'}</td>
+          <td style="color:var(--t3)">\${line.unit||'—'}</td>
+          <td class="td-mono td-r" style="color:var(--blue)">\${line.unitPrice?'₱'+fmt(line.unitPrice):'—'}</td>
+          <td class="td-mono td-r" style="font-weight:600">\${line.lineTotal?'₱'+fmt(line.lineTotal):'—'}</td>
+          <td><select class="inline-sel"
+            onchange="recordChange('po_status_\${lrk}','PO',\${line.num||0},\${PO_COL.STATUS},this.value,'PO Status: \${esc(line.poNum||'')}','')">
+            \${['⬜ Pending','✅ Delivered','🔄 Partial','⛔ Cancelled'].map(s=>\`<option value="\${s}" \${lStatus===s?'selected':''}>\${s}</option>\`).join('')}
+          </select></td>
+          <td><input class="inline-input" value="\${esc(lNotes)}" placeholder="Remarks…" style="min-width:130px"
+            onkeydown="event.stopPropagation()"
+            onchange="recordChange('po_notes_\${lrk}','PO',\${line.num||0},\${PO_COL.REMARKS},this.value,'PO Notes','')"></td>
+        </tr>\`;}).join('')}
+      </tbody>
+    </table></div>`;
+
+  // WH delivery rows for this PO
+  const whHTML=whRows.length?`
+    <div class="modal-section">🏭 Delivery Tracking — ${whRows.length} rows</div>
+    <div class="scroll-x"><table style="min-width:600px">
+      <thead><tr>
+        <th style="min-width:180px">Description</th>
+        <th>PO Qty</th><th style="color:var(--green)">Del Qty</th>
+        <th style="color:var(--orange)">Bal Qty</th>
+        <th>Expected</th>
+        <th style="min-width:115px">Actual (editable)</th>
+        <th style="min-width:130px">Status (editable)</th>
+      </tr></thead>
+      <tbody>${whRows.map(wr=>{
+        const wrk=wr.rowIndex||wr.poNum+'_'+wr.partDesc;
+        const ws=ov('wh_status_'+wrk,wr.status||'');
+        const wa=ov('wh_actual_'+wrk,wr.actualDate||'');
+        return\`<tr>
+          <td class="wrap" style="font-size:11px">\${wr.partDesc||'—'}</td>
+          <td style="text-align:center">\${wr.poQty||'—'}</td>
+          <td style="text-align:center;color:var(--green)">\${wr.delQty||'0'}</td>
+          <td style="text-align:center;color:var(--orange);font-weight:600">\${wr.balQty||'—'}</td>
+          <td style="font-size:10px;color:var(--t3)">\${wr.expectedDate||'—'}</td>
+          <td><input type="date" class="inline-input" value="\${wa}"
+            onchange="recordChange('wh_actual_\${wrk}','WH',\${wr.rowIndex||0},\${WH_COL.ACTUAL_DATE},this.value,'WH Actual','')"></td>
+          <td><select class="inline-sel"
+            onchange="recordChange('wh_status_\${wrk}','WH',\${wr.rowIndex||0},\${WH_COL.STATUS},this.value,'WH Status','')">
+            \${WH_STATUSES.map(s=>\`<option value="\${s}" \${ws===s?'selected':''}>\${s}</option>\`).join('')}
+          </select></td>
+        </tr>\`;}).join('')}
+      </tbody>
+    </table></div>`:'';
+
+  document.getElementById('modalBody').innerHTML=headerHTML+linesHTML+whHTML+`
     <div class="modal-btns">
-      <button class="btn btn-green" onclick="pushChanges();closeModalNow()">↑ Push to Sheets</button>
+      <button class="btn btn-green" onclick="pushChanges();toast('Pushed','success')">↑ Push to Sheets</button>
       <button class="btn" onclick="closeModalNow()">Close</button>
     </div>`;
-  openModalEl();
+  openModalEl('modal-wide');
 }
 
 // ══════════════════════════════════════════════
@@ -1319,8 +1368,9 @@ function renderAlerts(f){
                 const wNotes=ov('wh_notes_'+rk,r.notes||'');
                 const hasPend=pendingChanges['wh_status_'+rk]||pendingChanges['wh_notes_'+rk];
                 return`<tr>
-                  <td class="td-mono">${r.poNum||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
-                  <td>${r.project||'—'}</td><td class="td-clip">${r.partDesc||'—'}</td>
+                  <td class="td-mono td-link" onclick="openPOModal('${escQ(r.poNum||'')}')" style="cursor:pointer">${r.poNum||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
+                  <td style="cursor:pointer" onclick="openPOModal('${escQ(r.poNum||'')}')">${r.project||'—'}</td>
+                  <td class="td-clip">${r.partDesc||'—'}</td>
                   <td>${r.supplier||'—'}</td>
                   <td>${r.poQty||'—'}</td>
                   <td style="color:${Number(r.balQty||0)>0?'var(--orange)':'var(--green)'}">${r.balQty||'0'}</td>
@@ -1337,8 +1387,9 @@ function renderAlerts(f){
                 const bomStatus=ov('bom_status_'+rk,r.status||'');
                 const bomNotes=ov('bom_notes_'+rk,r.notes||'');
                 const hasPend=pendingChanges['bom_status_'+rk]||pendingChanges['bom_notes_'+rk];
+                const jj=JSON.stringify(JSON.stringify({name:r.project||'General',clientName:r.project||'General'}));
                 return`<tr>
-                  <td>${r.project||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
+                  <td style="cursor:pointer;color:var(--blue)" onclick="openProjectDetailModal(${jj},'ALL')">${r.project||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
                   <td class="td-mono" style="white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis">${r.catNo||'—'}</td>
                   <td class="wrap" style="max-width:240px;word-break:break-word">${r.partDesc||'—'}</td>
                   <td>${r.qty||'—'}</td>
@@ -1393,12 +1444,12 @@ function renderWH(){
               const dv=Number(r.daysVar||0);
               const dvc=dv<=0?'var(--green)':dv<=7?'var(--orange)':'var(--red)';
               return`<tr>
-                <td class="td-mono">${r.poNum||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
+                <td class="td-mono td-link" style="cursor:pointer" onclick="openPOModal('${escQ(r.poNum||'')}')">${r.poNum||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
                 <td>${r.project||'—'}</td>
                 <td class="td-clip">${r.partDesc||'—'}</td>
                 <td>${r.supplier||'—'}</td>
                 <td>${r.poQty||'—'}</td>
-                <td style="color:var(--green)">${r.delQty||'0'}</td>
+                <td class="td-link" style="color:var(--green);cursor:pointer" onclick="openPOModal('${escQ(r.poNum||'')}')"><b>${r.delQty||'0'}</b></td>
                 <td style="color:${Number(r.balQty||0)>0?'var(--orange)':'var(--green)'}">${r.balQty||'0'}</td>
                 <td style="color:var(--t3);white-space:nowrap">${r.expectedDate||'—'}</td>
                 <td>
@@ -1735,7 +1786,7 @@ function openProjectDetailModal(jsonStr, autoTab){
       <button class="btn" onclick="closeModalNow()">Close</button>
 
     </div>`;
-  openModalEl('modal-xl');
+  openModalEl('modal-lg');
   // Auto-switch to requested tab after render
   if(autoTab && autoTab!=='ALL'){
     const tabMap={CANVASS:'canvass',READY:'ready',ISSUED:'issued',DELIVERY:'delivery',PARTIAL:'delivery',WHSTOCK:'bom'};
