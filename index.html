@@ -103,6 +103,8 @@ html,body{height:100%;font-family:'Inter',sans-serif;font-size:13px;background:v
 .ar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;box-shadow:var(--sh);}
 .ar-card:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
 .ar-card.active-filter{outline:2px solid currentColor;outline-offset:1px;}
+.ar-clickable{cursor:pointer;transition:transform .1s,box-shadow .1s;}
+.ar-clickable:hover{transform:scale(1.12);box-shadow:0 2px 8px rgba(0,0,0,.15);}
 .ar-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
 .ar-num{font-size:24px;font-weight:700;line-height:1;}
 .ar-lbl{font-size:11px;color:var(--t2);margin-top:2px;}
@@ -179,6 +181,8 @@ tr:hover td{background:rgba(0,0,0,.015);}
 .modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);align-items:center;justify-content:center;padding:20px;}
 .modal-overlay.open{display:flex;}
 .modal{background:var(--card);border-radius:12px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:mIn .18s ease;}
+.modal.modal-xl{max-width:98vw;width:98vw;max-height:96vh;}
+.modal.modal-wide{max-width:920px;}
 @keyframes mIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .modal::-webkit-scrollbar{width:4px;}
 .modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
@@ -424,7 +428,7 @@ let localOverrides={};   // { key: value } — what the user edited locally
 let sortState={col:null,dir:1,panel:null};
 
 // Filters
-let itemQ='',itemCat='ALL',itemSup='ALL';
+// item search state moved to item history section
 let poQ='',poSort=null,poSortDir=1;
 let whQ='',alertFilter='ALL';
 let bomSortCol=null,bomSortDir=1;
@@ -692,27 +696,29 @@ function renderOverview(){
       <div class="table-wrap">
         <div class="table-head">
           <span class="table-title">⚡ Action Required by Project</span>
-          <span style="font-size:10px;color:var(--t3)">Click row → go to alerts</span>
+          <span style="font-size:10px;color:var(--t3)">Click any badge → view & edit items</span>
         </div>
         <div class="scroll-x">
           <table>
             <thead><tr>
               <th>Project / Client</th>
-              <th style="text-align:center;background:#7c3aed">🔍 Canvass</th>
-              <th style="text-align:center;background:#16a34a">🟢 Ready PO</th>
-              <th style="text-align:center;background:#2563eb">🚚 Pending</th>
-              <th style="text-align:center;background:#d97706">📦 Partial</th>
+              <th style="text-align:center;color:#7c3aed">🔍 Canvass</th>
+              <th style="text-align:center;color:#16a34a">🟢 Ready PO</th>
+              <th style="text-align:center;color:#2563eb">🚚 Pending</th>
+              <th style="text-align:center;color:#d97706">📦 Partial</th>
+              <th style="text-align:center;color:#0891b2">🏭 WH Stock</th>
               <th style="text-align:center">Total</th>
             </tr></thead>
             <tbody>
-              ${projectActions.length===0?`<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:20px">✅ All clear! No pending actions.</td></tr>`:
-                projectActions.map(p=>`<tr style="cursor:pointer" onclick="navTo('alerts',document.getElementById('nav-alerts'))">
+              ${projectActions.length===0?`<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:20px">✅ All clear! No pending actions.</td></tr>`:
+                projectActions.map(p=>`<tr>
                   <td><div style="font-weight:500;font-size:12px">${p.project}</div><div style="font-size:10px;color:var(--t3)">${p.client}</div></td>
-                  <td style="text-align:center">${p.canvass>0?`<span class="badge bp">${p.canvass}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.ready>0?`<span class="badge bg">${p.ready}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.pending>0?`<span class="badge bb">${p.pending}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.partial>0?`<span class="badge by">${p.partial}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center;font-weight:600;color:${p.total>0?'var(--red)':'var(--green)'}">${p.total||'✓'}</td>
+                  <td style="text-align:center">${p.canvass>0?`<span class="badge bp ar-clickable" onclick="openActionModal('${escQ(p.project)}','CANVASS')">${p.canvass}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center">${p.ready>0?`<span class="badge bg ar-clickable" onclick="openActionModal('${escQ(p.project)}','READY')">${p.ready}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center">${p.pending>0?`<span class="badge bb ar-clickable" onclick="openActionModal('${escQ(p.project)}','DELIVERY')">${p.pending}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center">${p.partial>0?`<span class="badge by ar-clickable" onclick="openActionModal('${escQ(p.project)}','PARTIAL')">${p.partial}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center">${p.whStock>0?`<span class="badge" style="background:#e0f2fe;color:#0891b2;cursor:pointer" onclick="openActionModal('${escQ(p.project)}','WHSTOCK')">${p.whStock}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+                  <td style="text-align:center;font-weight:600;cursor:pointer;color:${p.total>0?'var(--red)':'var(--green)'}" onclick="openActionModal('${escQ(p.project)}','ALL')">${p.total||'✓'}</td>
                 </tr>`).join('')}
             </tbody>
           </table>
@@ -728,35 +734,169 @@ function renderOverview(){
 }
 
 function buildProjectActionSummary(bom,wh,clients){
-  // Build sheet→client lookup from ALL bom rows (covers new sheets not in hardcoded map)
   const sheetToClient={};
   Object.entries(clients||{}).forEach(([cName,cv])=>{
     (cv.sheets||[]).forEach(sh=>{sheetToClient[sh]=cName;});
   });
-  // Group BOM items by project
   const map={};
   bom.forEach(r=>{
     const proj=r.project||r.sheet||'General';
     const client=sheetToClient[r.sheet]||(r.sheet||'').replace(/^📦\s*/,'').trim()||'—';
-    if(!map[proj])map[proj]={project:proj,client,canvass:0,ready:0,pending:0,partial:0};
+    if(!map[proj])map[proj]={project:proj,client,canvass:0,ready:0,pending:0,partial:0,whStock:0,items:[]};
     const st=ov('bom_status_'+(r._row||r.catNo),r.status||'');
     if(st.includes('Canvass'))map[proj].canvass++;
     if(st.includes('Ready'))map[proj].ready++;
+    if(st.includes('Warehouse')||st.includes('WH Stock'))map[proj].whStock++;
+    map[proj].items.push(r);
   });
   wh.forEach(r=>{
     const proj=r.project||'General';
-    if(!map[proj])map[proj]={project:proj,client:'—',canvass:0,ready:0,pending:0,partial:0};
+    if(!map[proj])map[proj]={project:proj,client:'—',canvass:0,ready:0,pending:0,partial:0,whStock:0,items:[]};
     const st=ov('wh_status_'+(r.rowIndex||r.poNum+'_'+r.partDesc),r.status||'');
     if(Number(r.balQty||0)>0&&!st.includes('Complete'))map[proj].pending++;
     if(st.includes('Partial'))map[proj].partial++;
   });
   return Object.values(map)
     .map(p=>({...p,total:p.canvass+p.ready+p.pending+p.partial}))
-    .filter(p=>p.total>0)
+    .filter(p=>p.total>0||p.whStock>0)
     .sort((a,b)=>b.total-a.total);
 }
 
-function weeklyProjectBars(weekly,bom,wh){
+function openActionModal(proj, filterType){
+  const bom=procData?.bom||[];
+  const wh=procData?.wh||[];
+  const po=procData?.po||[];
+
+  // Get all BOM items for this project
+  const projBOM=bom.filter(r=>(r.project||r.sheet||'General')===proj);
+  // Get WH rows for this project
+  const poNums=new Set(projBOM.map(r=>r.poNum).filter(Boolean));
+  const projWH=wh.filter(r=>r.project===proj||poNums.has(r.poNum));
+
+  const filterLabels={
+    ALL:'All Items',CANVASS:'🔍 For Canvass',READY:'🟢 Ready for PO',
+    DELIVERY:'🚚 Pending Delivery',PARTIAL:'📦 Partial Delivery',WHSTOCK:'🏭 WH Stock'
+  };
+
+  // Filter items based on type
+  let bomItems=projBOM, whItems=projWH, showBOM=true, showWH=false;
+  if(filterType==='CANVASS'){bomItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Canvass'));showBOM=true;showWH=false;}
+  else if(filterType==='READY'){bomItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Ready'));showBOM=true;showWH=false;}
+  else if(filterType==='WHSTOCK'){bomItems=projBOM.filter(r=>{const s=ov('bom_status_'+(r._row||r.catNo),r.status||'');return s.includes('Warehouse')||s.includes('WH Stock');});showBOM=true;showWH=false;}
+  else if(filterType==='DELIVERY'){bomItems=[];whItems=projWH.filter(r=>Number(r.balQty||0)>0);showBOM=false;showWH=true;}
+  else if(filterType==='PARTIAL'){bomItems=[];whItems=projWH.filter(r=>(ov('wh_status_'+(r.rowIndex||r.poNum+'_'+r.partDesc),r.status||'')).includes('Partial'));showBOM=false;showWH=true;}
+  else{showBOM=true;showWH=true;}  // ALL
+
+  const totalItems=bomItems.length+whItems.length;
+  document.getElementById('modalTitle').textContent=proj;
+  document.getElementById('modalSub').textContent=filterLabels[filterType]||filterType;
+  document.getElementById('modalKpis').innerHTML=`
+    <div class="modal-kpi"><div class="modal-kpi-lbl">Total Items</div><div class="modal-kpi-val">${totalItems}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">BOM Items</div><div class="modal-kpi-val">${bomItems.length}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">WH Rows</div><div class="modal-kpi-val">${whItems.length}</div></div>`;
+
+  let bodyHTML='';
+
+  // BOM section
+  if(showBOM&&bomItems.length){
+    bodyHTML+=`
+    <div class="modal-section">📋 BOM Items — ${bomItems.length} rows</div>
+    <div class="scroll-x"><table>
+      <thead><tr>
+        <th>Cat No</th><th style="min-width:180px">Description</th>
+        <th>Qty</th><th>Unit</th>
+        <th style="min-width:120px">Vendor (editable)</th>
+        <th style="min-width:90px">Unit Price (editable)</th>
+        <th style="min-width:90px">PO # (editable)</th>
+        <th style="min-width:120px">Status (editable)</th>
+        <th>Prev Price</th>
+        <th style="min-width:90px">Best Price</th>
+      </tr></thead>
+      <tbody>${bomItems.map(r=>{
+        const rk=r._row||r.catNo||r.partDesc;
+        const curStatus=ov('bom_status_'+rk,r.status||'');
+        const curVendor=ov('bom_vendor_'+rk,r.vendor||'');
+        const curPrice=ov('bom_price_'+rk,r.unitPrice||'');
+        const curPO=ov('bom_ponum_'+rk,r.poNum||'');
+        return`<tr>
+          <td class="td-mono" style="font-size:10px">${r.catNo||'—'}</td>
+          <td style="font-size:11px">${r.partDesc||'—'}</td>
+          <td>${r.qty||'—'}</td><td style="color:var(--t3)">${r.unit||'—'}</td>
+          <td><input class="inline-input" value="${esc(curVendor)}" style="min-width:110px"
+            onkeydown="event.stopPropagation()"
+            onchange="recordChange('bom_vendor_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.VENDOR},this.value,'Vendor: ${esc(r.catNo||'')}','${esc(r.vendor||'')}')"></td>
+          <td><input class="inline-input td-mono" type="number" value="${curPrice}" style="min-width:80px"
+            onkeydown="event.stopPropagation()"
+            onchange="recordChange('bom_price_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.UNIT_PRICE},this.value,'Unit Price: ${esc(r.catNo||'')}','${esc(String(r.unitPrice||''))}')"></td>
+          <td><input class="inline-input td-mono" value="${esc(curPO)}" style="min-width:80px"
+            onkeydown="event.stopPropagation()"
+            onchange="recordChange('bom_ponum_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.PO_NUM},this.value,'PO#: ${esc(r.catNo||'')}','${esc(r.poNum||'')}')"></td>
+          <td><select class="inline-sel" style="font-size:10px"
+            onchange="recordChange('bom_status_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.STATUS},this.value,'Status: ${esc(r.catNo||'')}','${esc(r.status||'')}')">
+            ${BOM_STATUSES.map(s=>`<option value="${s}" ${curStatus===s?'selected':''}>${s}</option>`).join('')}
+          </select></td>
+          <td class="td-mono td-r" style="color:var(--t3);font-size:10px">${r.prevPrice?'₱'+fmt(r.prevPrice):'—'}</td>
+          <td class="td-mono td-r" style="color:var(--green);font-size:10px">${r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
+        </tr>`;}).join('')}
+      </tbody>
+    </table></div>`;
+  }
+
+  // WH section
+  if(showWH&&whItems.length){
+    bodyHTML+=`
+    <div class="modal-section">🏭 Warehouse / Delivery — ${whItems.length} rows</div>
+    <div class="scroll-x"><table>
+      <thead><tr>
+        <th>PO #</th><th style="min-width:180px">Description</th>
+        <th>Supplier</th><th>PO Qty</th><th>Del Qty</th>
+        <th style="color:var(--orange)">Bal Qty</th>
+        <th>Expected</th>
+        <th style="min-width:115px">Actual Date (editable)</th>
+        <th style="min-width:130px">Status (editable)</th>
+        <th style="min-width:140px">Remarks (editable)</th>
+      </tr></thead>
+      <tbody>${whItems.map(r=>{
+        const rk=r.rowIndex||r.poNum+'_'+r.partDesc;
+        const wStatus=ov('wh_status_'+rk,r.status||'');
+        const wActual=ov('wh_actual_'+rk,r.actualDate||'');
+        const wNotes=ov('wh_notes_'+rk,r.remarks||'');
+        return`<tr>
+          <td class="td-mono" style="color:var(--blue)">${r.poNum||'—'}</td>
+          <td style="font-size:11px">${r.partDesc||'—'}</td>
+          <td style="font-size:10px">${r.supplier||'—'}</td>
+          <td style="text-align:center">${r.poQty||'—'}</td>
+          <td style="text-align:center;color:var(--green)">${r.delQty||'0'}</td>
+          <td style="text-align:center;color:var(--orange);font-weight:600">${r.balQty||'—'}</td>
+          <td style="font-size:10px;color:var(--t3)">${r.expectedDate||'—'}</td>
+          <td><input type="date" class="inline-input" value="${wActual}" style="min-width:110px"
+            onchange="recordChange('wh_actual_${rk}','WH',${r.rowIndex||0},${WH_COL.ACTUAL_DATE},this.value,'WH Actual: ${esc(r.poNum||'')}','${esc(r.actualDate||'')}')"></td>
+          <td><select class="inline-sel" style="font-size:10px"
+            onchange="recordChange('wh_status_${rk}','WH',${r.rowIndex||0},${WH_COL.STATUS},this.value,'WH Status: ${esc(r.poNum||'')}','${esc(r.status||'')}')">
+            ${WH_STATUSES.map(s=>`<option value="${s}" ${wStatus===s?'selected':''}>${s}</option>`).join('')}
+          </select></td>
+          <td><input class="inline-input" value="${esc(wNotes)}" placeholder="Remarks…" style="min-width:130px"
+            onkeydown="event.stopPropagation()"
+            onchange="recordChange('wh_notes_${rk}','WH',${r.rowIndex||0},${WH_COL.REMARKS},this.value,'WH Notes: ${esc(r.poNum||'')}','${esc(r.remarks||'')}')"></td>
+        </tr>`;}).join('')}
+      </tbody>
+    </table></div>`;
+  }
+
+  if(!bodyHTML){
+    bodyHTML=`<div style="padding:24px;text-align:center;color:var(--t3)">✅ No items in this category for <b>${esc(proj)}</b></div>`;
+  }
+
+  bodyHTML+=`<div class="modal-btns">
+    <button class="btn btn-green" onclick="pushChanges();toast('Changes pushed','success')">↑ Push to Sheets</button>
+    <button class="btn" onclick="closeModalNow()">Close</button>
+  </div>`;
+
+  document.getElementById('modalBody').innerHTML=bodyHTML;
+  openModalEl('modal-xl');
+}
+
+
   if(!weekly.length&&!bom.length)return'<div style="color:var(--t3);font-size:11px;text-align:center;padding:20px">No weekly data</div>';
   // Build project-level breakdown of current status
   const projMap={};
@@ -797,98 +937,141 @@ function weeklyProjectBars(weekly,bom,wh){
 
 
 // ══════════════════════════════════════════════
-// ITEM HISTORY — card grid + modal
+// ITEM HISTORY — full table + debounced search
 // ══════════════════════════════════════════════
+let itemQ='',itemCat='ALL',itemSup='ALL',_itemDebounce=null;
+
 function renderItems(){
   const el=document.getElementById('panel-items');
   if(!procData){el.innerHTML=noData();return;}
   const ih=procData.itemHistory||[];
   const cats=[...new Set(ih.map(r=>r.category).filter(Boolean))].sort();
   const sups=[...new Set(ih.map(r=>r.vendor).filter(Boolean))].sort();
-  const q=itemQ.toLowerCase();
+  const q=itemQ.toLowerCase().trim();
+
   const rows=ih.filter(r=>{
-    const mQ=!q||(r.catNo||'').toLowerCase().includes(q)||(r.partDesc||'').toLowerCase().includes(q)||(r.vendor||'').toLowerCase().includes(q)||(r.project||'').toLowerCase().includes(q)||(r.poNum||'').toLowerCase().includes(q);
     const mC=itemCat==='ALL'||(r.category||'')===itemCat;
-    const mS=itemSup==='ALL'||(r.vendor||'')===itemSup;
-    return mQ&&mC&&mS;
+    if(!mC)return false;
+    if(itemSup!=='ALL')return(r.vendor||'')===itemSup;
+    if(!q)return true;
+    return(r.catNo||'').toLowerCase().includes(q)
+      ||(r.partDesc||'').toLowerCase().includes(q)
+      ||(r.vendor||'').toLowerCase().includes(q)
+      ||(r.project||'').toLowerCase().includes(q)
+      ||(r.poNum||'').toLowerCase().includes(q);
   });
-  // Group by project
+
+  // Smart grouping
+  let groupKey=r=>r.project||'General';
+  let groupLabel='project';
+  if(itemSup!=='ALL'){groupKey=r=>r.vendor||'—';groupLabel='supplier';}
+  else if(q){
+    const exactSup=sups.find(s=>s.toLowerCase()===q);
+    if(exactSup){groupKey=r=>r.vendor||'—';groupLabel='supplier';}
+    else if(ih.some(r=>(r.catNo||'').toLowerCase()===q)){groupKey=r=>r.catNo||'—';groupLabel='product';}
+  }
+
   const groups={};
   rows.forEach(r=>{
-    const k=r.project||'General';
-    if(!groups[k])groups[k]={items:[],total:0,sups:new Set(),orders:new Set(),cats:new Set()};
+    const k=groupKey(r);
+    if(!groups[k])groups[k]={key:k,items:[],total:0,sups:new Set(),orders:new Set(),cats:new Set(),projects:new Set()};
     groups[k].items.push(r);
     groups[k].total+=Number(r.unitPrice||0);
     if(r.vendor)groups[k].sups.add(r.vendor);
     if(r.poNum)groups[k].orders.add(r.poNum);
     if(r.category)groups[k].cats.add(r.category);
+    if(r.project)groups[k].projects.add(r.project);
   });
+  const totalSpend=rows.reduce((a,r)=>a+Number(r.unitPrice||0),0);
+
   el.innerHTML=`
-    <div class="filter-bar">
-      <input class="search-inp" placeholder="🔍 Search items, PO#, supplier…" value="${esc(itemQ)}" oninput="itemQ=this.value;renderItems()">
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh)">
+      <div style="flex:1;min-width:260px;position:relative">
+        <input id="item-search-inp" class="search-inp" style="width:100%"
+          placeholder="🔍 Search item, supplier, PO#, cat no…"
+          value="${esc(itemQ)}"
+          onkeydown="event.stopPropagation()"
+          oninput="clearTimeout(_itemDebounce);_itemDebounce=setTimeout(function(){itemQ=document.getElementById('item-search-inp').value;renderItems()},300)">
+      </div>
       <select class="filter-sel" onchange="itemCat=this.value;renderItems()">
         <option value="ALL">All Categories</option>
         ${cats.map(c=>`<option value="${esc(c)}" ${itemCat===c?'selected':''}>${c}</option>`).join('')}
       </select>
-      <select class="filter-sel" onchange="itemSup=this.value;renderItems()">
+      <select class="filter-sel" style="max-width:200px" onchange="itemSup=this.value;renderItems()">
         <option value="ALL">All Suppliers</option>
         ${sups.map(s=>`<option value="${esc(s)}" ${itemSup===s?'selected':''}>${s}</option>`).join('')}
       </select>
-      <span style="font-size:11px;color:var(--t3);white-space:nowrap">${rows.length} items · ${Object.keys(groups).length} projects</span>
+      ${itemSup!=='ALL'||q?`<button class="btn" onclick="itemQ='';itemSup='ALL';itemCat='ALL';document.getElementById('item-search-inp').value='';renderItems()">✕ Clear</button>`:''}
+      <span style="font-size:11px;color:var(--t3);white-space:nowrap;margin-left:auto">${rows.length} items · ${Object.keys(groups).length} ${groupLabel}(s) · ₱${fmt(totalSpend)}</span>
     </div>
-    <div class="card-grid">
-      ${Object.entries(groups).map(([proj,g])=>`
-        <div class="item-card" onclick="openItemModal('${escQ(proj)}')">
-          <div class="ic-title">${proj}</div>
-          <div class="ic-sub">${[...g.cats].join(', ')||'—'}</div>
-          ${[...g.cats].slice(0,1).map(c=>`<span class="ic-tag">${c}</span>`).join('')}
-          <div class="ic-foot">
-            <span class="ic-total">₱${fmt(g.total)}</span>
-            <span>Orders: ${g.orders.size}x</span>
-            <span>Suppliers: ${g.sups.size}</span>
-          </div>
-        </div>`).join('')}
-      ${Object.keys(groups).length===0?`<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--t3)">No items found.</div>`:''}
-    </div>`;
+    ${Object.keys(groups).length===0?`<div style="padding:48px;text-align:center;color:var(--t3);background:var(--card);border-radius:var(--r);border:1px solid var(--border)"><div style="font-size:32px;margin-bottom:8px">🔍</div><div>No results — try another search or clear filter</div></div>`:
+    `<div style="display:flex;flex-direction:column;gap:12px">${Object.entries(groups).map(([key,g])=>renderItemGroup(key,g,groupLabel)).join('')}</div>`}`;
 }
-function openItemModal(proj){
-  const ih=procData?.itemHistory||[];
-  const items=ih.filter(r=>(r.project||'General')===proj);
-  if(!items.length)return;
-  const total=items.reduce((a,r)=>a+Number(r.unitPrice||0),0);
-  const orders=[...new Set(items.map(r=>r.poNum).filter(Boolean))];
-  const sups=[...new Set(items.map(r=>r.vendor).filter(Boolean))];
-  document.getElementById('modalTitle').textContent=proj;
-  document.getElementById('modalSub').textContent=(items[0]?.category||'')+(total?` · ₱${fmt(total)}`:'');
-  document.getElementById('modalKpis').innerHTML=`
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Total</div><div class="modal-kpi-val">₱${fmt(total)}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Orders</div><div class="modal-kpi-val">${orders.length}x</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Suppliers</div><div class="modal-kpi-val">${sups.length}</div></div>`;
-  document.getElementById('modalBody').innerHTML=`
-    <div style="font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:10px">Purchase Detail</div>
-    <div class="scroll-x">
-      <table>
-        <thead><tr><th>PO #</th><th>Date</th><th>Supplier</th><th>Description</th><th>Category</th><th>Unit Price</th><th>Prev Price</th><th>% Chg</th><th>Source</th></tr></thead>
+function renderItemGroup(key,g,groupLabel){
+  const gid='ig_'+key.replace(/\W/g,'_');
+  return`<div class="table-wrap">
+    <div class="table-head" style="cursor:pointer" onclick="toggleIG('${gid}')">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="table-title">${key}</span>
+        <span class="pill">${g.items.length}</span>
+        ${groupLabel==='project'?`<span style="font-size:10px;color:var(--t3)">${[...g.sups].slice(0,3).join(', ')}${g.sups.size>3?' +more':''}</span>`:''}
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span style="font-size:12px;font-weight:600;color:var(--blue);font-family:'JetBrains Mono',monospace">₱${fmt(g.total)}</span>
+        <span style="font-size:10px;color:var(--t3)">${g.orders.size} PO(s)</span>
+        <span id="${gid}_arr" style="color:var(--t3);font-size:11px;transition:transform .2s">▼</span>
+      </div>
+    </div>
+    <div id="${gid}" class="scroll-x">
+      <table style="min-width:900px">
+        <thead><tr>
+          <th style="min-width:90px">Cat No</th>
+          <th style="min-width:220px">Description</th>
+          <th style="min-width:110px">Project</th>
+          <th style="min-width:80px">PO #</th>
+          <th style="min-width:85px">Date</th>
+          <th style="min-width:170px">Supplier</th>
+          <th>Qty</th><th>Unit</th>
+          <th style="text-align:right;min-width:90px">Unit Price</th>
+          <th style="text-align:right;min-width:90px">Prev Price</th>
+          <th style="text-align:center">% Chg</th>
+          <th style="min-width:100px">Category</th>
+          <th>Source</th>
+          <th style="min-width:130px">Remarks</th>
+        </tr></thead>
         <tbody>
-          ${items.map(r=>{
+          ${g.items.map(r=>{
             const pc=Number(r.pctChange||0);
             const pcS=pc!==0?(pc>0?'+':'')+(pc*100).toFixed(1)+'%':'—';
             const pcC=pc<0?'var(--green)':pc>0?'var(--red)':'var(--t3)';
             return`<tr>
-              <td class="td-mono td-link" onclick="openPOModal('${escQ(r.poNum||'')}')">${r.poNum||'—'}</td>
-              <td style="color:var(--t3);white-space:nowrap">${r.poDate||'—'}</td>
-              <td>${r.vendor||'—'}</td>
-              <td class="td-clip">${r.partDesc||'—'}</td>
-              <td>${r.category||'—'}</td>
-              <td class="td-mono td-r">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>
+              <td class="td-mono" style="font-size:10px">${r.catNo||'—'}</td>
+              <td style="font-size:11px">${r.partDesc||'—'}</td>
+              <td style="font-size:10px;color:var(--t3)">${r.project||'—'}</td>
+              <td class="td-mono td-link" style="font-size:10px" onclick="openPOModal('${escQ(r.poNum||'')}')">${r.poNum||'—'}</td>
+              <td style="color:var(--t3);font-size:10px;white-space:nowrap">${r.poDate||'—'}</td>
+              <td style="font-size:11px">${r.vendor||'—'}</td>
+              <td style="text-align:center">${r.qty||'—'}</td>
+              <td style="color:var(--t3)">${r.unit||'—'}</td>
+              <td class="td-mono td-r" style="color:var(--blue)">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>
               <td class="td-mono td-r" style="color:var(--t3)">${r.prevPrice?'₱'+fmt(r.prevPrice):'—'}</td>
-              <td class="td-mono" style="color:${pcC}">${pcS}</td>
+              <td style="text-align:center;color:${pcC}">${pcS}</td>
+              <td style="font-size:10px;color:var(--t3)">${r.category||'—'}</td>
               <td>${statusBadge(r.source||'')}</td>
+              <td style="font-size:10px;color:var(--t3)">${r.remarks||'—'}</td>
             </tr>`;}).join('')}
         </tbody>
       </table>
-    </div>`;
-  openModalEl();
+    </div>
+  </div>`;
+}
+function toggleIG(gid){
+  const el=document.getElementById(gid);
+  const arr=document.getElementById(gid+'_arr');
+  if(!el)return;
+  const isOpen=el.style.display!=='none'&&el.style.display!=='';
+  el.style.display=isOpen?'none':'';
+  if(arr)arr.style.transform=isOpen?'rotate(-90deg)':'';
 }
 
 // ══════════════════════════════════════════════
@@ -1327,39 +1510,195 @@ function renderClientCard(c){
 }
 
 function renderProjectRow(p, clientName){
-  const pid='proj_'+clientName.replace(/\W/g,'_')+'_'+p.name.replace(/\W/g,'_');
   return`<div class="project-row">
-    <div class="project-row-hdr" onclick="toggleProjectDetail('${pid}')">
+    <div class="project-row-hdr" onclick="openProjectDetailModal(${JSON.stringify(JSON.stringify({name:p.name,clientName}))})">
       <div style="flex:1;min-width:0">
         <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</div>
         <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
-          ${p.canvass?`<span class="badge by" style="font-size:9px">🔍 ${p.canvass}</span>`:''}
-          ${p.ready?`<span class="badge bp" style="font-size:9px">🟢 ${p.ready}</span>`:''}
-          ${p.issued?`<span class="badge bb" style="font-size:9px">🛒 ${p.issued}</span>`:''}
-          ${p.pendDel?`<span class="badge by" style="font-size:9px">🚚 ${p.pendDel}</span>`:''}
-          ${p.done?`<span class="badge bg" style="font-size:9px">✅ ${p.done}</span>`:''}
+          ${p.canvass?`<span class="badge by" style="font-size:9px">🔍 ${p.canvass} canvass</span>`:''}
+          ${p.ready?`<span class="badge bp" style="font-size:9px">🟢 ${p.ready} ready</span>`:''}
+          ${p.issued?`<span class="badge bb" style="font-size:9px">🛒 ${p.issued} PO</span>`:''}
+          ${p.pendDel?`<span class="badge by" style="font-size:9px">🚚 ${p.pendDel} pending</span>`:''}
+          ${p.done?`<span class="badge bg" style="font-size:9px">✅ ${p.done} done</span>`:''}
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
         <div style="text-align:right">
-          <div style="font-size:12px;font-weight:600;color:var(--blue)">${p.progress}%</div>
+          <div style="font-size:13px;font-weight:600;color:var(--blue)">${p.progress}%</div>
           <div style="font-size:9px;color:var(--t3)">${p.total} items</div>
         </div>
-        <span style="color:var(--t3);font-size:12px;transition:transform .2s" id="${pid}_arr">▼</span>
+        <div style="height:32px;width:32px;background:var(--bg);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3)">▶</div>
       </div>
     </div>
-    <!-- Progress mini bar -->
     <div style="padding:0 14px 8px">
       <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden">
         <div style="height:100%;width:${p.progress}%;background:var(--green);border-radius:2px;transition:width .4s"></div>
       </div>
     </div>
-    <!-- Tab detail (hidden by default) -->
-    <div class="project-detail" id="${pid}" style="display:none">
-      ${renderProjectTabs(p, pid)}
-    </div>
   </div>`;
 }
+
+function openProjectDetailModal(jsonStr){
+  const {name:projName, clientName} = JSON.parse(jsonStr);
+  // Find the project object
+  const bom=procData?.bom||[];
+  const po=procData?.po||[];
+  const wh=procData?.wh||[];
+  const projBOM=bom.filter(r=>(r.project||r.sheet||'General')===projName);
+  const poNums=new Set(projBOM.map(r=>r.poNum).filter(Boolean));
+  const projWH=wh.filter(r=>r.project===projName||poNums.has(r.poNum));
+  const projPO=po.filter(r=>r.project===projName||poNums.has(r.poNum));
+
+  const total=projBOM.length;
+  const canvass=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Canvass')).length;
+  const ready=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Ready')).length;
+  const issued=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('PO Issued')).length;
+  const delivered=projBOM.filter(r=>{const s=ov('bom_status_'+(r._row||r.catNo),r.status||'');return s.includes('Delivered')||s.includes('Warehouse');}).length;
+  const pendDel=projWH.filter(r=>Number(r.balQty||0)>0).length;
+  const prog=total?Math.round(delivered/total*100):0;
+
+  const poTotalVal=projPO.reduce((a,r)=>a+Number(r.lineTotal||0),0);
+
+  document.getElementById('modalTitle').textContent=projName;
+  document.getElementById('modalSub').textContent=`${clientName} · ${total} BOM items`;
+  document.getElementById('modalKpis').innerHTML=`
+    <div class="modal-kpi"><div class="modal-kpi-lbl">Total Items</div><div class="modal-kpi-val">${total}</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">Progress</div><div class="modal-kpi-val">${prog}%</div></div>
+    <div class="modal-kpi"><div class="modal-kpi-lbl">PO Value</div><div class="modal-kpi-val" style="font-size:14px">₱${fmt(poTotalVal)}</div></div>`;
+
+  // Tab IDs for this modal
+  const tabs=[
+    {id:'bom',label:'📋 BOM',count:total},
+    {id:'canvass',label:'🔍 Canvass',count:canvass},
+    {id:'ready',label:'🟢 Ready PO',count:ready},
+    {id:'issued',label:'🛒 PO Issued',count:issued},
+    {id:'delivery',label:'🚚 Delivery',count:pendDel},
+  ].filter(t=>t.count>0||t.id==='bom');
+
+  const tabNav=tabs.map((t,i)=>`<button class="proj-tab ${i===0?'active':''}" onclick="switchModalTab('${t.id}',this)">${t.label} <span class="pill" style="font-size:9px">${t.count}</span></button>`).join('');
+
+  // Build content for each tab
+  function bomTable(items,mode){
+    if(!items.length)return`<div style="padding:20px;text-align:center;color:var(--t3)">✅ No items in this category</div>`;
+    const showV=mode==='ready';
+    const showPO=mode==='issued';
+    return`<div class="scroll-x"><table style="min-width:800px">
+      <thead><tr>
+        <th>Cat No</th><th style="min-width:200px">Description</th>
+        <th>Qty</th><th>Unit</th>
+        <th style="min-width:130px">Vendor (editable)</th>
+        <th style="min-width:90px">Unit Price (editable)</th>
+        ${showPO?'<th>PO #</th>':''}
+        ${showV?'<th style="text-align:right">V1</th><th style="text-align:right">V2</th><th style="text-align:right">V3</th><th style="color:var(--green);text-align:right">Best</th>':''}
+        <th style="min-width:130px">Status (editable)</th>
+      </tr></thead>
+      <tbody>${items.map(r=>{
+        const rk=r._row||r.catNo||r.partDesc;
+        const cSt=ov('bom_status_'+rk,r.status||'');
+        const cVen=ov('bom_vendor_'+rk,r.vendor||'');
+        const cPr=ov('bom_price_'+rk,r.unitPrice||'');
+        return`<tr>
+          <td class="td-mono" style="font-size:10px">${r.catNo||'—'}</td>
+          <td style="font-size:11px">${r.partDesc||'—'}</td>
+          <td>${r.qty||'—'}</td>
+          <td style="color:var(--t3)">${r.unit||'—'}</td>
+          <td><input class="inline-input" value="${esc(cVen)}" style="min-width:120px"
+            onkeydown="event.stopPropagation()"
+            onchange="recordChange('bom_vendor_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.VENDOR},this.value,'Vendor','${esc(r.vendor||'')}')"></td>
+          <td><input class="inline-input td-mono" type="number" value="${cPr}" style="min-width:80px"
+            onkeydown="event.stopPropagation()"
+            onchange="recordChange('bom_price_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.UNIT_PRICE},this.value,'Price','${esc(String(r.unitPrice||''))}')"></td>
+          ${showPO?`<td class="td-mono" style="color:var(--blue)">${r.poNum||'—'}</td>`:''}
+          ${showV?`<td class="td-mono td-r" style="font-size:10px">${r.v1?'₱'+fmt(r.v1):'—'}</td><td class="td-mono td-r" style="font-size:10px">${r.v2?'₱'+fmt(r.v2):'—'}</td><td class="td-mono td-r" style="font-size:10px">${r.v3?'₱'+fmt(r.v3):'—'}</td><td class="td-mono td-r" style="color:var(--green);font-size:10px">${r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>`:''}
+          <td><select class="inline-sel" style="font-size:10px"
+            onchange="recordChange('bom_status_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.STATUS},this.value,'Status','${esc(r.status||'')}')">
+            ${BOM_STATUSES.map(s=>`<option value="${s}" ${cSt===s?'selected':''}>${s}</option>`).join('')}
+          </select></td>
+        </tr>`;}).join('')}
+      </tbody>
+    </table></div>`;
+  }
+
+  function whTable(items){
+    if(!items.length)return`<div style="padding:20px;text-align:center;color:var(--t3)">✅ No pending deliveries</div>`;
+    return`<div class="scroll-x"><table style="min-width:800px">
+      <thead><tr>
+        <th>PO #</th><th style="min-width:190px">Description</th>
+        <th>Supplier</th><th>PO Qty</th><th style="color:var(--green)">Del Qty</th>
+        <th style="color:var(--orange)">Bal Qty</th><th>Expected</th>
+        <th style="min-width:115px">Actual (editable)</th>
+        <th style="min-width:130px">Status (editable)</th>
+        <th style="min-width:140px">Remarks (editable)</th>
+      </tr></thead>
+      <tbody>${items.map(r=>{
+        const rk=r.rowIndex||r.poNum+'_'+r.partDesc;
+        const ws=ov('wh_status_'+rk,r.status||'');
+        const wa=ov('wh_actual_'+rk,r.actualDate||'');
+        const wn=ov('wh_notes_'+rk,r.remarks||'');
+        return`<tr>
+          <td class="td-mono" style="color:var(--blue)">${r.poNum||'—'}</td>
+          <td style="font-size:11px">${r.partDesc||'—'}</td>
+          <td style="font-size:10px">${r.supplier||'—'}</td>
+          <td style="text-align:center">${r.poQty||'—'}</td>
+          <td style="text-align:center;color:var(--green)">${r.delQty||'0'}</td>
+          <td style="text-align:center;color:var(--orange);font-weight:600">${r.balQty||'—'}</td>
+          <td style="font-size:10px;color:var(--t3)">${r.expectedDate||'—'}</td>
+          <td><input type="date" class="inline-input" value="${wa}" style="min-width:110px"
+            onchange="recordChange('wh_actual_${rk}','WH',${r.rowIndex||0},${WH_COL.ACTUAL_DATE},this.value,'Actual Date','${esc(r.actualDate||'')}')"></td>
+          <td><select class="inline-sel" style="font-size:10px"
+            onchange="recordChange('wh_status_${rk}','WH',${r.rowIndex||0},${WH_COL.STATUS},this.value,'WH Status','${esc(r.status||'')}')">
+            ${WH_STATUSES.map(s=>`<option value="${s}" ${ws===s?'selected':''}>${s}</option>`).join('')}
+          </select></td>
+          <td><input class="inline-input" value="${esc(wn)}" placeholder="Remarks…"
+            onkeydown="event.stopPropagation()"
+            onchange="recordChange('wh_notes_${rk}','WH',${r.rowIndex||0},${WH_COL.REMARKS},this.value,'WH Notes','${esc(r.remarks||'')}')"></td>
+        </tr>`;}).join('')}
+      </tbody>
+    </table></div>`;
+  }
+
+  const canvassItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Canvass'));
+  const readyItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Ready'));
+  const issuedItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('PO Issued'));
+  const pendItems=projWH.filter(r=>Number(r.balQty||0)>0);
+
+  document.getElementById('modalBody').innerHTML=`
+    <div style="margin-bottom:10px">
+      <div style="height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:10px">
+        <div style="height:100%;width:${prog}%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:3px;transition:width .5s"></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px">
+        ${canvass?`<span class="badge by">🔍 ${canvass} canvass</span>`:''}
+        ${ready?`<span class="badge bp">🟢 ${ready} ready</span>`:''}
+        ${issued?`<span class="badge bb">🛒 ${issued} PO issued</span>`:''}
+        ${pendDel?`<span class="badge by">🚚 ${pendDel} pending</span>`:''}
+        ${delivered?`<span class="badge bg">✅ ${delivered} done</span>`:''}
+      </div>
+    </div>
+    <div class="proj-tabs-wrap">
+      <div class="proj-tabs" id="pmod_tabs">${tabNav}</div>
+      <div id="pmod_bom">${bomTable(projBOM,'bom')}</div>
+      <div id="pmod_canvass" style="display:none">${bomTable(canvassItems,'canvass')}</div>
+      <div id="pmod_ready" style="display:none">${bomTable(readyItems,'ready')}</div>
+      <div id="pmod_issued" style="display:none">${bomTable(issuedItems,'issued')}</div>
+      <div id="pmod_delivery" style="display:none">${whTable(pendItems)}</div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-green" onclick="pushChanges();toast('Changes pushed','success')">↑ Push to Sheets</button>
+      <button class="btn" onclick="closeModalNow()">Close</button>
+    </div>`;
+  openModalEl('modal-xl');
+}
+
+function switchModalTab(tabId, btn){
+  ['bom','canvass','ready','issued','delivery'].forEach(id=>{
+    const el=document.getElementById('pmod_'+id);
+    if(el)el.style.display=id===tabId?'block':'none';
+  });
+  document.querySelectorAll('#pmod_tabs .proj-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
 
 function renderProjectTabs(p, pid){
   const tabs=[
@@ -1998,7 +2337,9 @@ function renderPipeline(){
 // ══════════════════════════════════════════════
 // MODAL HELPERS
 // ══════════════════════════════════════════════
-function openModalEl(){document.getElementById('modalOverlay').classList.add('open');}
+function openModalEl(size){
+  const box=document.getElementById('modalBox');
+  box.className='modal'+(size?' '+size:'');document.getElementById('modalOverlay').classList.add('open');}
 function closeModal(e){if(e.target===document.getElementById('modalOverlay'))closeModalNow();}
 function closeModalNow(){document.getElementById('modalOverlay').classList.remove('open');}
 
