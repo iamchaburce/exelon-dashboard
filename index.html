@@ -240,6 +240,25 @@ tr:hover td{background:rgba(0,0,0,.015);}
 .proj-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
 .proj-stat{font-size:11px;color:var(--t2);}
 .proj-stat b{color:var(--text);}
+/* Client card */
+.client-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
+.client-card-hdr{display:flex;align-items:flex-start;gap:12px;padding:14px 16px 8px;cursor:pointer;user-select:none;}
+.client-card-hdr:hover{background:var(--hover);}
+.client-projects{border-top:1px solid var(--border);}
+/* Project row inside client card */
+.project-row{border-bottom:1px solid var(--border);}
+.project-row:last-child{border-bottom:none;}
+.project-row-hdr{display:flex;align-items:flex-start;gap:10px;padding:10px 14px 4px;cursor:pointer;user-select:none;transition:background .1s;}
+.project-row-hdr:hover{background:var(--hover);}
+.project-detail{border-top:1px solid var(--border);background:var(--bg);}
+/* Project tabs */
+.proj-tabs-wrap{padding:0;}
+.proj-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto;background:var(--card);}
+.proj-tabs::-webkit-scrollbar{height:0;}
+.proj-tab{padding:7px 13px;font-size:11px;font-weight:500;border:none;background:transparent;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;}
+.proj-tab:hover{color:var(--text);background:var(--hover);}
+.proj-tab.active{color:var(--blue);border-bottom-color:var(--blue);background:transparent;}
+.proj-tab-content{overflow:auto;}
 
 /* GRID-2 */
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
@@ -285,7 +304,7 @@ tr:hover td{background:rgba(0,0,0,.015);}
   <div class="sb-item" onclick="navTo('alerts',this)" id="nav-alerts"><span class="sb-ico">⚠</span><span>Alerts</span><span class="sb-badge red" id="sbb-alerts">—</span></div>
   <div class="sb-sec">Operations</div>
   <div class="sb-item" onclick="navTo('wh',this)" id="nav-wh"><span class="sb-ico">🏭</span><span>WH Incoming</span></div>
-  <div class="sb-item" onclick="navTo('projects',this)" id="nav-projects"><span class="sb-ico">📁</span><span>Project Summary</span><span class="sb-badge blue" id="sbb-projects">—</span></div>
+  <div class="sb-item" onclick="navTo('projects',document.getElementById('nav-projects'))" id="nav-projects"><span class="sb-ico">📁</span><span>Project Summary</span><span class="sb-badge blue" id="sbb-projects">—</span></div>
   <div class="sb-item" onclick="navTo('suppliers',this)" id="nav-suppliers"><span class="sb-ico">🏆</span><span>Suppliers</span></div>
   <div class="sb-item" onclick="navTo('pipeline',this)" id="nav-pipeline"><span class="sb-ico">🔄</span><span>Pipeline</span></div>
   <div class="sb-sec">Finance</div>
@@ -709,11 +728,16 @@ function renderOverview(){
 }
 
 function buildProjectActionSummary(bom,wh,clients){
+  // Build sheet→client lookup from ALL bom rows (covers new sheets not in hardcoded map)
+  const sheetToClient={};
+  Object.entries(clients||{}).forEach(([cName,cv])=>{
+    (cv.sheets||[]).forEach(sh=>{sheetToClient[sh]=cName;});
+  });
   // Group BOM items by project
   const map={};
   bom.forEach(r=>{
-    const proj=r.project||'General';
-    const client=Object.entries(clients).find(([c,v])=>(v.projects||[]).includes(proj))?.[0]||'—';
+    const proj=r.project||r.sheet||'General';
+    const client=sheetToClient[r.sheet]||(r.sheet||'').replace(/^📦\s*/,'').trim()||'—';
     if(!map[proj])map[proj]={project:proj,client,canvass:0,ready:0,pending:0,partial:0};
     const st=ov('bom_status_'+(r._row||r.catNo),r.status||'');
     if(st.includes('Canvass'))map[proj].canvass++;
@@ -1181,68 +1205,301 @@ function renderWH(){
 }
 
 // ══════════════════════════════════════════════
-// PROJECTS
+// PROJECTS — Client cards with per-project breakdown
 // ══════════════════════════════════════════════
+// Build full client→project map from ALL bom rows (not just hardcoded map)
+function buildClientsFromBOM(bom, po, wh){
+  // Group BOM rows by sheet → client name from sheet
+  const sheetClient={};
+  // Use server-sent clients map first (exact matches)
+  const serverClients=procData?.clients||{};
+  Object.entries(serverClients).forEach(([cName,cv])=>{
+    (cv.sheets||[]).forEach(sh=>{ sheetClient[sh]=cName; });
+  });
+  // Fallback: derive client from sheet name for any unregistered sheets
+  (bom||[]).forEach(r=>{
+    if(!sheetClient[r.sheet]){
+      const derived=(r.sheet||'').replace(/^📦\s*/,'').trim()||'Other';
+      sheetClient[r.sheet]=derived;
+    }
+  });
+
+  // Build client map: clientName → { sheets[], projectMap: { projName → {items,poRows,whRows} } }
+  const clientMap={};
+  (bom||[]).forEach(r=>{
+    const cName=sheetClient[r.sheet]||r.sheet||'Other';
+    if(!clientMap[cName])clientMap[cName]={name:cName,sheets:new Set(),projectMap:{}};
+    clientMap[cName].sheets.add(r.sheet);
+    const proj=r.project||r.sheet||'General';
+    if(!clientMap[cName].projectMap[proj])
+      clientMap[cName].projectMap[proj]={name:proj,items:[],poNums:new Set()};
+    clientMap[cName].projectMap[proj].items.push(r);
+    if(r.poNum&&String(r.poNum).startsWith('P'))
+      clientMap[cName].projectMap[proj].poNums.add(r.poNum);
+  });
+
+  // Cross-reference PO rows
+  const poByNum={};(po||[]).forEach(r=>{ if(r.poNum)poByNum[r.poNum]=r; });
+  const whByPO={};(wh||[]).forEach(r=>{ if(r.poNum)whByPO[r.poNum]=(whByPO[r.poNum]||[]).concat(r); });
+
+  // Finalize: convert sets and attach PO/WH data
+  return Object.values(clientMap).map(c=>({
+    name:c.name,
+    sheets:[...c.sheets],
+    projects:Object.values(c.projectMap).map(p=>{
+      const items=p.items;
+      const poNums=[...p.poNums];
+      const poRows=poNums.map(n=>poByNum[n]).filter(Boolean);
+      const whRows=poNums.flatMap(n=>whByPO[n]||[]);
+      const total=items.length;
+      const canvass=items.filter(r=>(r.status||'').includes('Canvass')).length;
+      const ready=items.filter(r=>(r.status||'').includes('Ready')).length;
+      const issued=items.filter(r=>(r.status||'').includes('PO Issued')).length;
+      const delivered=items.filter(r=>(r.status||'').includes('Delivered')).length;
+      const whStock=items.filter(r=>(r.status||'').includes('Warehouse')).length;
+      const done=delivered+whStock;
+      const pendDel=whRows.filter(r=>Number(r.balQty||0)>0&&!(r.status||'').includes('Complete')).length;
+      const progress=total?Math.round(done/total*100):0;
+      return{name:p.name,items,poNums,poRows,whRows,total,canvass,ready,issued,delivered,whStock,done,pendDel,progress};
+    }).sort((a,b)=>b.total-a.total),
+  })).sort((a,b)=>a.name.localeCompare(b.name));
+}
+
 function renderProjects(){
   const el=document.getElementById('panel-projects');
   if(!procData){el.innerHTML=noData();return;}
-  const clients=procData.clients||{};
-  if(!Object.keys(clients).length){
-    el.innerHTML='<div class="loading-state"><div style="font-size:32px">📁</div><div class="load-txt">No project data</div></div>';
+  const bom=procData.bom||[],po=procData.po||[],wh=procData.wh||[];
+  if(!bom.length){
+    el.innerHTML='<div class="loading-state"><div style="font-size:32px">📁</div><div class="load-txt">No project data loaded yet</div></div>';
     return;
   }
-  el.innerHTML=`<div class="card-grid">
-    ${Object.entries(clients).map(([name,c])=>{
-      const total=c.total||0,done=(c.delivered||0)+(c.whStock||0),p=total?Math.round(done/total*100):0;
-      return`<div class="proj-card" onclick="openProjectModal('${escQ(name)}')">
-        <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:3px">Client</div>
-        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:2px">${name}</div>
-        <div style="font-size:11px;color:var(--t3);margin-bottom:8px">${(c.projects||[]).join(', ')||'—'}</div>
-        <div class="proj-bar-bg"><div class="proj-bar-fill" style="width:${p}%"></div></div>
-        <div style="font-size:10px;color:var(--t3);margin-bottom:10px;font-family:'JetBrains Mono',monospace">${p}% complete · ${total} items</div>
-        <div class="proj-stats">
-          <span class="proj-stat">🔍 <b>${c.pending||0}</b> canvass</span>
-          <span class="proj-stat">✅ <b>${c.ready||0}</b> ready</span>
-          <span class="proj-stat">🛒 <b>${c.issued||0}</b> PO</span>
-          <span class="proj-stat">📦 <b>${done}</b> done</span>
-        </div>
-      </div>`;}).join('')}
+  const clients=buildClientsFromBOM(bom,po,wh);
+
+  // Update sidebar badge
+  document.getElementById('sbb-projects').textContent=clients.length||'—';
+
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px">
+      ${clients.map(c=>renderClientCard(c)).join('')}
+    </div>`;
+}
+
+function renderClientCard(c){
+  const totalItems=c.projects.reduce((a,p)=>a+p.total,0);
+  const totalDone=c.projects.reduce((a,p)=>a+p.done,0);
+  const totalCanvass=c.projects.reduce((a,p)=>a+p.canvass,0);
+  const totalReady=c.projects.reduce((a,p)=>a+p.ready,0);
+  const totalPO=c.projects.reduce((a,p)=>a+p.issued,0);
+  const totalPendDel=c.projects.reduce((a,p)=>a+p.pendDel,0);
+  const overallProg=totalItems?Math.round(totalDone/totalItems*100):0;
+  const cid='client_'+c.name.replace(/\W/g,'_');
+
+  return`<div class="client-card">
+    <!-- Client header -->
+    <div class="client-card-hdr" onclick="toggleClientCard('${cid}')">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:2px">Client</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:2px">${c.projects.length} project${c.projects.length!==1?'s':''} · ${totalItems} BOM items</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:20px;font-weight:700;color:var(--blue);font-family:'JetBrains Mono',monospace">${overallProg}%</div>
+        <div style="font-size:9px;color:var(--t3)">complete</div>
+      </div>
+    </div>
+    <!-- Overall progress bar -->
+    <div style="padding:0 16px 10px">
+      <div class="proj-bar-bg"><div class="proj-bar-fill" style="width:${overallProg}%"></div></div>
+    </div>
+    <!-- Client-level summary chips -->
+    <div style="padding:0 16px 12px;display:flex;gap:6px;flex-wrap:wrap">
+      ${totalCanvass?`<span class="badge by" onclick="navTo('alerts',document.getElementById('nav-alerts'));renderAlerts('CANVASS')" style="cursor:pointer">🔍 ${totalCanvass} canvass</span>`:''}
+      ${totalReady?`<span class="badge bg" onclick="navTo('alerts',document.getElementById('nav-alerts'));renderAlerts('READY')" style="cursor:pointer">🟢 ${totalReady} ready PO</span>`:''}
+      ${totalPO?`<span class="badge bb">🛒 ${totalPO} PO issued</span>`:''}
+      ${totalPendDel?`<span class="badge by" onclick="navTo('alerts',document.getElementById('nav-alerts'));renderAlerts('DELIVERY')" style="cursor:pointer">🚚 ${totalPendDel} pending delivery</span>`:''}
+      ${totalDone?`<span class="badge" style="background:var(--green-bg);color:var(--green)">✅ ${totalDone} done</span>`:''}
+    </div>
+    <!-- Per-project rows (expandable) -->
+    <div class="client-projects" id="${cid}">
+      ${c.projects.map(p=>renderProjectRow(p,c.name)).join('')}
+    </div>
   </div>`;
 }
-function openProjectModal(name){
-  const clients=procData?.clients||{};
-  const c=clients[name];if(!c)return;
-  const bom=(procData.bom||[]).filter(r=>r.client===name||r.project===(c.projects||[])[0]);
-  const total=c.total||0,done=(c.delivered||0)+(c.whStock||0),p=total?Math.round(done/total*100):0;
-  document.getElementById('modalTitle').textContent=name;
-  document.getElementById('modalSub').textContent=(c.projects||[]).join(', ')||'';
-  document.getElementById('modalKpis').innerHTML=`
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Total Items</div><div class="modal-kpi-val">${total}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Done</div><div class="modal-kpi-val">${done}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Progress</div><div class="modal-kpi-val">${p}%</div></div>`;
-  document.getElementById('modalBody').innerHTML=`
-    <div style="margin-bottom:14px">
-      <div class="proj-bar-bg"><div class="proj-bar-fill" style="width:${p}%"></div></div>
+
+function renderProjectRow(p, clientName){
+  const pid='proj_'+clientName.replace(/\W/g,'_')+'_'+p.name.replace(/\W/g,'_');
+  return`<div class="project-row">
+    <div class="project-row-hdr" onclick="toggleProjectDetail('${pid}')">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</div>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
+          ${p.canvass?`<span class="badge by" style="font-size:9px">🔍 ${p.canvass}</span>`:''}
+          ${p.ready?`<span class="badge bp" style="font-size:9px">🟢 ${p.ready}</span>`:''}
+          ${p.issued?`<span class="badge bb" style="font-size:9px">🛒 ${p.issued}</span>`:''}
+          ${p.pendDel?`<span class="badge by" style="font-size:9px">🚚 ${p.pendDel}</span>`:''}
+          ${p.done?`<span class="badge bg" style="font-size:9px">✅ ${p.done}</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <div style="text-align:right">
+          <div style="font-size:12px;font-weight:600;color:var(--blue)">${p.progress}%</div>
+          <div style="font-size:9px;color:var(--t3)">${p.total} items</div>
+        </div>
+        <span style="color:var(--t3);font-size:12px;transition:transform .2s" id="${pid}_arr">▼</span>
+      </div>
     </div>
-    <div class="proj-stats" style="margin-bottom:16px">
-      <span class="proj-stat">🔍 <b>${c.pending||0}</b> for canvass</span>
-      <span class="proj-stat">✅ <b>${c.ready||0}</b> ready for PO</span>
-      <span class="proj-stat">🛒 <b>${c.issued||0}</b> PO issued</span>
-      <span class="proj-stat">🚚 <b>${c.delivered||0}</b> delivered</span>
-      <span class="proj-stat">📦 <b>${c.whStock||0}</b> WH stock</span>
+    <!-- Progress mini bar -->
+    <div style="padding:0 14px 8px">
+      <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden">
+        <div style="height:100%;width:${p.progress}%;background:var(--green);border-radius:2px;transition:width .4s"></div>
+      </div>
     </div>
-    ${bom.length?`<div class="scroll-x"><table>
-      <thead><tr><th>Cat No</th><th>Description</th><th>Qty</th><th>Unit</th><th>Vendor</th><th>Status</th></tr></thead>
-      <tbody>${bom.map(r=>`<tr>
-        <td class="td-mono">${r.catNo||'—'}</td>
-        <td class="td-clip">${r.partDesc||'—'}</td>
-        <td>${r.qty||'—'}</td><td>${r.unit||'—'}</td>
-        <td>${r.vendor||'—'}</td>
-        <td>${statusBadge(ov('bom_status_'+(r._row||r.catNo),r.status||''))}</td>
-      </tr>`).join('')}</tbody>
-    </table></div>`:''}`;
-  openModalEl();
+    <!-- Tab detail (hidden by default) -->
+    <div class="project-detail" id="${pid}" style="display:none">
+      ${renderProjectTabs(p, pid)}
+    </div>
+  </div>`;
 }
+
+function renderProjectTabs(p, pid){
+  const tabs=[
+    {id:'bom',label:'📋 BOM',count:p.total},
+    {id:'canvass',label:'🔍 Canvass',count:p.canvass},
+    {id:'ready',label:'🟢 Ready PO',count:p.ready},
+    {id:'po',label:'🛒 PO Issued',count:p.issued},
+    {id:'delivery',label:'🚚 Delivery',count:p.pendDel},
+  ];
+  return`<div class="proj-tabs-wrap">
+    <div class="proj-tabs" id="${pid}_tabs">
+      ${tabs.map((t,i)=>t.count>0||t.id==='bom'?`<button class="proj-tab ${i===0?'active':''}" onclick="switchProjTab('${pid}','${t.id}',this)">${t.label} <span class="pill" style="font-size:9px">${t.count}</span></button>`:'').join('')}
+    </div>
+    <div class="proj-tab-content" id="${pid}_tab_bom" style="display:block">
+      ${renderBOMTab(p)}
+    </div>
+    <div class="proj-tab-content" id="${pid}_tab_canvass" style="display:none">
+      ${renderStatusTab(p.items.filter(r=>(r.status||'').includes('Canvass')),'canvass')}
+    </div>
+    <div class="proj-tab-content" id="${pid}_tab_ready" style="display:none">
+      ${renderStatusTab(p.items.filter(r=>(r.status||'').includes('Ready')),'ready')}
+    </div>
+    <div class="proj-tab-content" id="${pid}_tab_po" style="display:none">
+      ${renderStatusTab(p.items.filter(r=>(r.status||'').includes('PO Issued')),'po')}
+    </div>
+    <div class="proj-tab-content" id="${pid}_tab_delivery" style="display:none">
+      ${renderDeliveryTab(p)}
+    </div>
+  </div>`;
+}
+
+function switchProjTab(pid, tabId, btn){
+  // Hide all tab contents
+  document.querySelectorAll(`#${pid} .proj-tab-content`).forEach(el=>el.style.display='none');
+  document.querySelectorAll(`#${pid}_tabs .proj-tab`).forEach(el=>el.classList.remove('active'));
+  document.getElementById(pid+'_tab_'+tabId).style.display='block';
+  btn.classList.add('active');
+}
+function toggleProjectDetail(pid){
+  const el=document.getElementById(pid);
+  const arr=document.getElementById(pid+'_arr');
+  if(!el)return;
+  const isOpen=el.style.display!=='none';
+  el.style.display=isOpen?'none':'block';
+  if(arr)arr.style.transform=isOpen?'':'rotate(180deg)';
+}
+function toggleClientCard(cid){
+  const el=document.getElementById(cid);
+  if(!el)return;
+  el.style.display=el.style.display==='none'?'block':'none';
+}
+
+function renderBOMTab(p){
+  if(!p.items.length)return`<div style="padding:12px;color:var(--t3);font-size:11px;text-align:center">No BOM items</div>`;
+  return`<div class="scroll-x"><table>
+    <thead><tr><th>Cat No</th><th>Description</th><th>Qty</th><th>Unit</th><th>Vendor</th><th>Unit Price</th><th>Status (editable)</th></tr></thead>
+    <tbody>${p.items.map(r=>{
+      const rk=r._row||r.catNo||r.partDesc;
+      const st=ov('bom_status_'+rk,r.status||'');
+      return`<tr>
+        <td class="td-mono" style="font-size:10px">${r.catNo||'—'}</td>
+        <td class="td-clip" style="font-size:11px;max-width:180px">${r.partDesc||'—'}</td>
+        <td style="text-align:center">${r.qty||'—'}</td>
+        <td style="color:var(--t3)">${r.unit||'—'}</td>
+        <td style="font-size:10px">${r.vendor||'—'}</td>
+        <td class="td-mono td-r" style="font-size:10px">${r.unitPrice?'₱'+fmt(r.unitPrice):r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
+        <td>
+          <select class="inline-sel" style="font-size:10px" onchange="recordChange('bom_status_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.STATUS},this.value,'Status: ${esc(r.catNo||'')}','${esc(r.status||'')}');renderProjects()">
+            ${BOM_STATUSES.map(s=>`<option value="${s}" ${st===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </td>
+      </tr>`;}).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+function renderStatusTab(items, type){
+  if(!items.length)return`<div style="padding:16px;color:var(--t3);font-size:11px;text-align:center">✅ None in this category</div>`;
+  const isCanvass=type==='canvass';
+  const isReady=type==='ready';
+  return`<div class="scroll-x"><table>
+    <thead><tr>
+      <th>Cat No</th><th>Description</th><th>Qty</th>
+      ${isCanvass?'<th>Prev Price</th><th>Category</th>':''}
+      ${isReady?'<th>Vendor</th><th>Best Price</th><th>V1</th><th>V2</th><th>V3</th>':''}
+      ${type==='po'?'<th>PO #</th><th>Vendor</th><th>Unit Price</th>':''}
+      <th>Status</th>
+    </tr></thead>
+    <tbody>${items.map(r=>{
+      const rk=r._row||r.catNo||r.partDesc;
+      const st=ov('bom_status_'+rk,r.status||'');
+      return`<tr>
+        <td class="td-mono" style="font-size:10px">${r.catNo||'—'}</td>
+        <td class="td-clip" style="font-size:11px;max-width:160px">${r.partDesc||'—'}</td>
+        <td>${r.qty||'—'}</td>
+        ${isCanvass?`<td class="td-mono td-r">${r.prevPrice?'₱'+fmt(r.prevPrice):'—'}</td><td style="font-size:10px;color:var(--t3)">${r.category||'—'}</td>`:''}
+        ${isReady?`<td style="font-size:10px">${r.vendor||r.bestVendor||'—'}</td>
+          <td class="td-mono td-r" style="color:var(--green)">${r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
+          <td class="td-mono td-r" style="font-size:10px">${r.v1?'₱'+fmt(r.v1):'—'}</td>
+          <td class="td-mono td-r" style="font-size:10px">${r.v2?'₱'+fmt(r.v2):'—'}</td>
+          <td class="td-mono td-r" style="font-size:10px">${r.v3?'₱'+fmt(r.v3):'—'}</td>`:''}
+        ${type==='po'?`<td class="td-mono" style="color:var(--blue)">${r.poNum||'—'}</td>
+          <td style="font-size:10px">${r.vendor||'—'}</td>
+          <td class="td-mono td-r">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>`:''}
+        <td>
+          <select class="inline-sel" style="font-size:10px" onchange="recordChange('bom_status_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.STATUS},this.value,'Status: ${esc(r.catNo||'')}','${esc(r.status||'')}');renderProjects()">
+            ${BOM_STATUSES.map(s=>`<option value="${s}" ${st===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </td>
+      </tr>`;}).join('')}
+    </tbody>
+  </table></div>`;
+}
+
+function renderDeliveryTab(p){
+  const whRows=p.whRows.filter(r=>Number(r.balQty||0)>0);
+  if(!whRows.length)return`<div style="padding:16px;color:var(--t3);font-size:11px;text-align:center">✅ No pending deliveries</div>`;
+  return`<div class="scroll-x"><table>
+    <thead><tr><th>PO #</th><th>Description</th><th>Supplier</th><th>PO Qty</th><th>Del Qty</th><th>Balance</th><th>Expected</th><th>Status (editable)</th></tr></thead>
+    <tbody>${whRows.map(r=>{
+      const rk=r.rowIndex||r.poNum+'_'+r.partDesc;
+      const st=ov('wh_status_'+rk,r.status||'');
+      return`<tr>
+        <td class="td-mono" style="color:var(--blue)">${r.poNum||'—'}</td>
+        <td class="td-clip" style="font-size:11px">${r.partDesc||'—'}</td>
+        <td style="font-size:10px">${r.supplier||'—'}</td>
+        <td style="text-align:center">${r.poQty||'—'}</td>
+        <td style="text-align:center;color:var(--green)">${r.delQty||'0'}</td>
+        <td style="text-align:center;color:var(--orange);font-weight:600">${r.balQty||'—'}</td>
+        <td style="font-size:10px;color:var(--t3)">${r.expectedDate||'—'}</td>
+        <td>
+          <select class="inline-sel" style="font-size:10px" onchange="recordChange('wh_status_${rk}','WH',${r.rowIndex||0},${WH_COL.STATUS},this.value,'WH Status: ${esc(r.poNum||'')}','${esc(r.status||'')}');renderProjects()">
+            ${WH_STATUSES.map(s=>`<option value="${s}" ${st===s?'selected':''}>${s}</option>`).join('')}
+          </select>
+        </td>
+      </tr>`;}).join('')}
+    </tbody>
+  </table></div>`;
+}
+
 
 // ══════════════════════════════════════════════
 // SUPPLIERS
@@ -1754,7 +2011,7 @@ function updateBadges(){
   const ac=bom.filter(r=>ov('bom_status_'+(r._row||r.catNo),r.status||'').match(/Canvass|Ready/)).length
            +wh.filter(r=>Number(ov('wh_balqty_'+(r._row||r.poNum+'_'+r.partDesc),r.balQty)||r.balQty||0)>0).length;
   document.getElementById('sbb-alerts').textContent=ac||'—';
-  document.getElementById('sbb-projects').textContent=Object.keys(procData.clients||{}).length||'—';
+  document.getElementById('sbb-projects').textContent=(procData.bom||[]).map(r=>r.sheet).filter((v,i,a)=>a.indexOf(v)===i).length||'—';
   if(billData?.projects)document.getElementById('sbb-billing').textContent=Object.keys(billData.projects).length||'—';
 }
 function setSyncState(s){document.getElementById('syncDot').className='sync-dot'+(s==='loading'?' loading':s==='error'?' error':'');}
