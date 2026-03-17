@@ -2,2553 +2,490 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Exelon Power Solutions Inc. — Procurement Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EPSI Procurement Dashboard</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  /* Sidebar — deep slate navy, enterprise feel */
-  --sb:#1e2640;--sb2:#26304f;--sba:#313d61;--gold:#c9a84c;
-  /* Surface */
-  --bg:#f0f2f7;--card:#ffffff;--border:#dde1ec;
-  /* Text */
-  --text:#1a1f3c;--t2:#5a6480;--t3:#98a0b8;
-  /* Brand accent — deep purple */
-  --blue:#7c3aed;--blue-bg:#f3f0ff;
-  /* Status colors */
-  --green:#059669;--green-bg:#ecfdf5;
-  --red:#e11d48;--red-bg:#fff1f2;
-  --orange:#d97706;--orange-bg:#fffbeb;
-  --purple:#7c3aed;--purple-bg:#f3f0ff;
-  --teal:#0284c7;--teal-bg:#e0f2fe;
-  /* Shadows — crisper, more corporate */
-  --sh:0 1px 2px rgba(30,38,64,.06),0 3px 10px rgba(30,38,64,.08);
-  --sh2:0 4px 24px rgba(30,38,64,.14);--r:8px;
-}
-[data-theme="dark"]{
-  --sb:#141928;--sb2:#1b2236;--sba:#232c47;
-  --bg:#0f1320;--card:#1a2035;--border:#252f4a;
-  --text:#e8ecf7;--t2:#8892b0;--t3:#3d4d6e;
-  --blue:#a78bfa;--blue-bg:#1e1445;
-  --green:#34d399;--green-bg:#0a2e22;
-  --red:#fb7185;--red-bg:#2d0a16;
-  --orange:#fbbf24;--orange-bg:#2d1a00;
-  --purple:#a78bfa;--purple-bg:#1e1445;
-  --teal:#38bdf8;--teal-bg:#0a2033;
-  --sh:0 1px 4px rgba(0,0,0,.4);--sh2:0 4px 28px rgba(0,0,0,.6);
-}
-html,body{height:100%;font-family:'Inter',sans-serif;font-size:13px;background:var(--bg);color:var(--text);}
-.app{display:flex;height:100vh;overflow:hidden;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;overflow:hidden;height:100vh}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:#f1f5f9}
+::-webkit-scrollbar-thumb{background:#c4b5fd;border-radius:3px}
+.app{display:flex;height:100vh;overflow:hidden}
 
-/* SIDEBAR */
-.sidebar{width:220px;min-width:220px;background:var(--sb);display:flex;flex-direction:column;overflow-y:auto;transition:width .2s;border-right:1px solid rgba(255,255,255,.04);}
-.sidebar::-webkit-scrollbar{width:0;}
-.sb-brand{padding:14px 18px 14px 16px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:10px;}
-.sb-icon-box{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;flex-shrink:0;box-shadow:0 2px 8px rgba(124,58,237,.4);}
-.sb-name{font-size:12px;font-weight:700;color:#fff;line-height:1.2;letter-spacing:.2px;}
-.sb-sub{font-size:9px;color:rgba(255,255,255,.38);letter-spacing:.4px;text-transform:uppercase;margin-top:1px;}
-.sb-sec{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,.28);padding:14px 20px 5px;}
-.sb-item{display:flex;align-items:center;gap:10px;padding:8px 12px;margin:1px 8px;border-radius:7px;cursor:pointer;font-size:12px;color:rgba(255,255,255,.5);transition:all .15s;}
-.sb-item:hover{background:var(--sb2);color:rgba(255,255,255,.85);}
-.sb-item.active{background:var(--sba);color:#fff;font-weight:500;border-left:2px solid #7c3aed;}
-.sb-ico{font-size:14px;width:20px;text-align:center;opacity:.65;flex-shrink:0;font-style:normal;font-weight:400;}
-.sb-item.active .sb-ico{opacity:1;}
-.sb-badge{font-size:9px;font-weight:600;padding:1px 7px;border-radius:10px;margin-left:auto;background:rgba(124,58,237,.25);color:#c4b5fd;}
-.sb-badge.red{background:#ef4444;color:#fff;}
-.sb-badge.blue{background:#3b82f6;color:#fff;}
-.sb-bottom{margin-top:auto;padding:12px 10px;border-top:1px solid rgba(255,255,255,.06);}
+/* Sidebar */
+.sidebar{width:192px;min-width:192px;background:#1e1b4b;display:flex;flex-direction:column;height:100vh;overflow-y:auto;flex-shrink:0}
+.sb-logo{padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-icon{width:32px;height:32px;background:#7c3aed;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;margin-bottom:6px}
+.sb-name{font-size:12px;font-weight:700;color:#fff}
+.sb-sub{font-size:9.5px;color:#7c3aed;margin-top:1px}
+.sb-section{padding:10px 12px 3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#6d5bae}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:11.5px;color:#a78bfa;cursor:pointer;border-radius:6px;margin:1px 5px;transition:all .12s}
+.sb-item:hover{background:rgba(139,92,246,.12);color:#c4b5fd}
+.sb-item.active{background:rgba(139,92,246,.22);color:#fff;font-weight:600}
 
-/* TOPBAR */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-.topbar{background:var(--card);border-bottom:2px solid var(--border);border-top:3px solid #7c3aed;padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;box-shadow:var(--sh);}
-.page-title{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.2px;}
-.page-sub{font-size:11px;color:var(--t3);margin-top:1px;}
-.topbar-right{display:flex;align-items:center;gap:8px;}
-.sync-dot{width:7px;height:7px;border-radius:50%;background:#16a34a;flex-shrink:0;}
-.sync-dot.loading{background:#d97706;animation:pulse 1s infinite;}
-.sync-dot.error{background:#dc2626;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.sync-time{font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace;}
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:48px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0}
+.topbar-left{min-width:0}
+.topbar-title{font-size:14px;font-weight:600;color:#1e293b}
+.topbar-sub{font-size:10px;color:#94a3b8;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#10b981;flex-shrink:0}
+.sync-dot.loading{background:#f59e0b;animation:pulse 1s infinite}
+.sync-dot.error{background:#ef4444}
+.sync-time{font-size:10px;color:#94a3b8;white-space:nowrap}
+.btn-sync{padding:5px 12px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:11px;color:#64748b;cursor:pointer;font-weight:500;white-space:nowrap}
+.btn-sync:hover{background:#f8fafc}
+.btn-push{padding:5px 14px;border:none;border-radius:6px;background:#7c3aed;color:#fff;font-size:11px;cursor:pointer;font-weight:600}
 
-/* BUTTONS */
-.btn{padding:6px 13px;border-radius:7px;font-size:11px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--card);color:var(--t2);font-family:'Inter',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
-.btn:hover{background:var(--bg);}
-.btn-dark{background:var(--sb);color:#fff;border-color:var(--sb);}
-.btn-dark:hover{background:var(--sba);}
-.btn-green{background:var(--green);color:#fff;border-color:var(--green);}
-.btn-purple{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border-color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,.3);}
-.btn-green:hover{opacity:.9;}
-.btn-orange{background:var(--orange);color:#fff;border-color:var(--orange);}
-.btn-orange:hover{opacity:.9;}
-/* PUSH BUTTON — prominent */
-.push-btn{padding:6px 14px;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-family:'Inter',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(124,58,237,.35);}
-.push-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(22,163,74,.45);}
-.push-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
-.push-btn.has-changes{animation:glow 2s infinite;}
-@keyframes glow{0%,100%{box-shadow:0 2px 8px rgba(22,163,74,.35)}50%{box-shadow:0 2px 18px rgba(22,163,74,.65)}}
+/* Tab bar */
+.tabbar{border-bottom:1px solid #e2e8f0;background:#f8fafc;flex-shrink:0}
+.tab-search-row{padding:5px 10px 0;display:flex;align-items:center;gap:6px}
+.tab-search{width:130px;padding:3px 8px;font-size:10.5px;border:1px solid #e2e8f0;border-radius:5px;outline:none;color:#1e293b;background:#fff}
+.tab-search:focus{border-color:#7c3aed}
+.tabs-scroll{display:flex;overflow-x:auto;padding:0 6px;gap:0;scrollbar-width:none}
+.tabs-scroll::-webkit-scrollbar{display:none}
+.tab-btn{padding:8px 13px;border:none;background:transparent;cursor:pointer;white-space:nowrap;font-size:11.5px;font-weight:500;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;flex-shrink:0}
+.tab-btn:hover{color:#7c3aed;background:rgba(124,58,237,.05)}
+.tab-btn.active{color:#7c3aed;font-weight:700;border-bottom-color:#7c3aed;background:#fff}
+.tab-count{font-size:9px;color:inherit;opacity:.7;margin-left:3px}
 
-/* CONTENT */
-.content{flex:1;overflow-y:auto;padding:20px 24px;}
-.content::-webkit-scrollbar{width:5px;}
-.content::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
-.panel{display:none;}.panel.active{display:block;}
+/* Content */
+.content{flex:1;overflow-y:auto;padding:16px 20px;min-height:0}
 
-/* KPI CARDS */
-.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
-.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px 17px;box-shadow:var(--sh);cursor:pointer;transition:all .15s;border-top:3px solid var(--ac,var(--blue));}
-.kpi-card:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.15);}
-.kpi-card.active-filter{outline:2px solid var(--ac,var(--blue));outline-offset:1px;}
-.kpi-lbl{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:7px;}
-.kpi-val{font-size:22px;font-weight:700;color:var(--text);line-height:1;font-variant-numeric:tabular-nums;font-family:'JetBrains Mono',monospace;}
-.kpi-sub{font-size:11px;color:var(--t3);margin-top:4px;}
-
-/* AR CARDS */
-.ar-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
-.ar-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:15px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;box-shadow:var(--sh);}
-.ar-card:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,58,237,.15);}
-.ar-card.active-filter{outline:2px solid currentColor;outline-offset:1px;}
-.ar-clickable{cursor:pointer;transition:transform .1s,box-shadow .1s;}
-.ar-clickable:hover{transform:scale(1.12);box-shadow:0 2px 8px rgba(0,0,0,.15);}
-.ar-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-.ar-num{font-size:24px;font-weight:700;line-height:1;}
-.ar-lbl{font-size:11px;color:var(--t2);margin-top:2px;}
-
-/* MINI STATS */
-.mini-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;}
-.mini-s{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;box-shadow:var(--sh);}
-.mini-val{font-size:19px;font-weight:600;}
-.mini-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;}
-
-/* SECTION HEADER */
-.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.sec-title{font-size:14px;font-weight:600;color:var(--text);}
-
-/* FILTER BAR */
-.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
-.search-inp{flex:1;min-width:180px;padding:7px 12px;border:1px solid var(--border);border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;background:var(--card);color:var(--text);outline:none;transition:border-color .15s;}
-.search-inp:focus{border-color:#93c5fd;}
-.filter-sel{padding:7px 11px;border:1px solid var(--border);border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;background:var(--card);color:var(--text);outline:none;cursor:pointer;}
-.filter-chip{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--t2);font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'Inter',sans-serif;}
-.filter-chip.active{background:#7c3aed;color:#fff;border-color:#7c3aed;}
-.filter-chip:hover:not(.active){background:var(--bg);}
-
-/* CARD GRID — Item History */
-.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;}
-.item-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;cursor:pointer;transition:all .15s;box-shadow:var(--sh);}
-.item-card:hover{box-shadow:var(--sh2);transform:translateY(-1px);}
-.ic-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:3px;}
-.ic-sub{font-size:11px;color:var(--t3);margin-bottom:8px;}
-.ic-tag{display:inline-block;padding:2px 9px;border-radius:5px;font-size:10px;font-weight:500;background:var(--bg);color:var(--t2);border:1px solid var(--border);margin-bottom:10px;}
-.ic-foot{display:flex;align-items:center;gap:12px;font-size:11px;color:var(--t2);border-top:1px solid var(--border);padding-top:10px;}
-.ic-total{font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace;}
-
-/* TABLE */
-.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);}
-.table-head{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;border-bottom:1px solid var(--border);border-left:3px solid #7c3aed;}
-.table-title{font-size:12px;font-weight:700;color:var(--text);letter-spacing:-.1px;}
-.scroll-x{overflow-x:auto;}
-table{width:100%;border-collapse:collapse;}
-th{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:rgba(255,255,255,.75);padding:9px 13px;text-align:left;background:var(--sb);border-bottom:2px solid rgba(124,58,237,.4);white-space:nowrap;cursor:pointer;user-select:none;}
-th:hover{background:var(--sba);}
-th.sort-asc::after{content:' ↑';}th.sort-desc::after{content:' ↓';}
-td{padding:9px 13px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text);vertical-align:middle;white-space:nowrap;}
-td.wrap{white-space:normal;}
-
-tr:last-child td{border-bottom:none;}
-tr:hover td{background:rgba(0,0,0,.015);}
-[data-theme="dark"] tr:hover td{background:rgba(255,255,255,.02);}
-.td-mono{font-family:'JetBrains Mono',monospace;font-size:11px;}
-.td-link{color:#7c3aed;cursor:pointer;text-decoration:none;}
-.td-link:hover{text-decoration:underline;}
-.td-r{text-align:right;}
-.td-clip{max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-
-/* INLINE EDIT ELEMENTS */
-.inline-sel{background:transparent;border:none;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;cursor:pointer;outline:none;padding:2px 4px;border-radius:5px;width:100%;}
-.inline-sel:hover,.inline-sel:focus{background:var(--bg);border:1px solid var(--border);}
-.inline-input{background:transparent;border:none;color:var(--text);font-size:12px;font-family:'Inter',sans-serif;outline:none;padding:2px 6px;border-radius:5px;width:100%;min-width:80px;}
-.inline-input:hover,.inline-input:focus{background:var(--bg);border:1px solid var(--border);}
-.edit-indicator{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--orange);margin-left:5px;vertical-align:middle;}
-
-/* BADGES */
-.badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:6px;font-size:10px;font-weight:500;white-space:nowrap;}
-.bg{background:var(--green-bg);color:var(--green);}
-.by{background:var(--orange-bg);color:var(--orange);}
-.br{background:var(--red-bg);color:var(--red);}
-.bb{background:var(--blue-bg);color:var(--blue);}
-.bp{background:var(--purple-bg);color:var(--purple);}
-.bt{background:var(--teal-bg);color:var(--teal);}
-.bx{background:var(--bg);color:var(--t2);border:1px solid var(--border);}
-
-/* PILL */
-.pill{display:inline-flex;align-items:center;justify-content:center;background:rgba(124,58,237,.15);color:#7c3aed;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;min-width:20px;}
-
-/* MODAL */
-.modal-overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);align-items:center;justify-content:center;padding:20px;}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--card);border-radius:12px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:mIn .18s ease;}
-.modal.modal-xl{max-width:100vw;width:100vw;max-height:100vh;border-radius:0;margin:0;}
-.modal.modal-lg{max-width:1200px;width:96vw;max-height:92vh;border-radius:12px;}
-.modal.modal-wide{max-width:920px;}
-@keyframes mIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.modal::-webkit-scrollbar{width:4px;}
-.modal::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.modal-hdr{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;position:sticky;top:0;background:var(--card);z-index:1;;border-top:3px solid #7c3aed;}
-.modal-title{font-size:15px;font-weight:700;color:var(--text);}
-.modal-sub{font-size:11px;color:var(--t3);margin-top:3px;}
-.modal-close{width:28px;height:28px;border-radius:6px;background:var(--bg);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t2);flex-shrink:0;transition:all .15s;}
-.modal-close:hover{background:var(--red-bg);color:var(--red);}
-.modal-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);}
-.modal-kpi{background:var(--card);padding:15px 20px;}
-.modal-kpi-lbl{font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);margin-bottom:5px;}
-.modal-kpi-val{font-size:20px;font-weight:600;color:var(--text);font-family:'JetBrains Mono',monospace;}
-.modal-body{padding:18px 22px;}
-.po-field{margin-bottom:14px;}
-.po-label{font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:5px;}
-.po-val{font-size:13px;font-weight:500;color:var(--text);}
-.po-input{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;background:var(--card);color:var(--text);outline:none;transition:border-color .15s;}
-.po-input:focus{border-color:var(--blue);}
-.po-select{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:12px;background:var(--card);color:var(--text);outline:none;cursor:pointer;}
-.po-select:focus{border-color:var(--blue);}
-.po-textarea{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:'Inter',sans-serif;font-size:12px;background:var(--card);color:var(--text);outline:none;resize:vertical;min-height:70px;transition:border-color .15s;}
-.po-textarea:focus{border-color:var(--blue);}
-.po-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.modal-section{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7c3aed;padding:14px 0 8px;border-bottom:1px solid var(--border);margin-bottom:10px;}
-.modal-btns{display:flex;gap:8px;margin-top:18px;padding-top:14px;border-top:1px solid var(--border);}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
-.toast-item{background:var(--sb);color:#fff;padding:10px 18px;border-radius:9px;font-size:12px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,.2);animation:toastIn .25s ease;display:flex;align-items:center;gap:8px;}
-.toast-item.success{background:#166534;}
-.toast-item.error{background:#991b1b;}
-.toast-item.warning{background:#92400e;}
-@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-
-/* CHANGES INDICATOR */
-.changes-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:#f3f0ff;border-bottom:2px solid #7c3aed;font-size:12px;color:#5b21b6;gap:10px;flex-shrink:0;}
-.changes-bar.hidden{display:none;}
-
-/* SUPPLIER */
-.sup-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
-.sup-row:last-child{border-bottom:none;}
-.sup-rank{width:24px;height:24px;border-radius:50%;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--t2);flex-shrink:0;}
-.sup-rank.gold{background:#fef3c7;color:#d97706;}
-.sup-bar-wrap{height:3px;background:var(--bg);border-radius:2px;overflow:hidden;margin-top:4px;}
-.sup-bar{height:100%;background:linear-gradient(90deg,#3b82f6,#0891b2);border-radius:2px;}
-
-/* BILLING */
-.bill-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;box-shadow:var(--sh);overflow:hidden;}
-.bill-head{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .12s;}
-.bill-head:hover{background:var(--bg);}
-.bill-body{display:none;padding:0 18px 14px;border-top:1px solid var(--border);}
-.bill-body.open{display:block;}
-
-/* PROJ */
-.proj-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--sh);cursor:pointer;transition:all .15s;}
-.proj-card:hover{box-shadow:var(--sh2);transform:translateY(-1px);}
-.proj-bar-bg{background:var(--bg);border-radius:4px;height:5px;overflow:hidden;margin:10px 0 5px;}
-.proj-bar-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a855f7);border-radius:4px;transition:width .5s ease;}
-.proj-stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
-.proj-stat{font-size:11px;color:var(--t2);}
-.proj-stat b{color:var(--text);}
-/* Client card */
-.client-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden;}
-.client-card-hdr{display:flex;align-items:flex-start;gap:12px;padding:14px 16px 8px;cursor:pointer;user-select:none;}
-.client-card-hdr:hover{background:var(--hover);}
-.client-projects{border-top:1px solid var(--border);}
-/* Project row inside client card */
-.project-row{border-bottom:1px solid var(--border);}
-.project-row:last-child{border-bottom:none;}
-.project-row-hdr{display:flex;align-items:flex-start;gap:10px;padding:10px 14px 4px;cursor:pointer;user-select:none;transition:background .1s;}
-.project-row-hdr:hover{background:var(--hover);}
-.project-detail{border-top:1px solid var(--border);background:var(--bg);}
-/* Project tabs */
-.proj-tabs-wrap{padding:0;}
-.proj-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);overflow-x:auto;background:var(--card);}
-.proj-tabs::-webkit-scrollbar{height:0;}
-.proj-tab{padding:7px 13px;font-size:11px;font-weight:500;border:none;background:transparent;color:var(--t3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .15s;}
-.proj-tab:hover{color:var(--text);background:var(--hover);}
-.proj-tab.active{color:#7c3aed;border-bottom-color:#7c3aed;background:transparent;font-weight:600;}
-.col-toggle{padding:3px 8px;font-size:9px;font-weight:500;border:1px solid var(--border);border-radius:4px;background:var(--bg);color:var(--t3);cursor:pointer;transition:all .15s;white-space:nowrap;}
-.col-toggle.active{background:var(--blue);border-color:var(--blue);color:#fff;}
-.col-toggle:hover{border-color:var(--blue);color:var(--blue);}
-.proj-tab-content{overflow:auto;}
-
-/* GRID-2 */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-
-/* LOADING */
-.loading-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:12px;}
-.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:#7c3aed;border-radius:50%;animation:spin .7s linear infinite;}
+/* Loading / Error */
+.loading-screen,.error-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;color:#64748b}
+.spinner{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:#7c3aed;border-radius:50%;animation:spin 0.8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.load-txt{font-size:12px;color:var(--t3);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* PIPELINE */
-.flow-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;box-shadow:var(--sh);}
-.flow-box{background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:11px 16px;text-align:center;min-width:110px;cursor:pointer;transition:all .15s;}
-.flow-box:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
+/* Mini dashboard KPIs */
+.dash-header{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+.dash-bar{width:3px;height:15px;background:#7c3aed;border-radius:2px}
+.dash-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7c3aed}
+.dash-meta{font-size:10px;color:#94a3b8}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr) repeat(3,1.2fr);gap:8px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;border-left-width:3px}
+.kpi-label{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.kpi-val{font-size:22px;font-weight:700;line-height:1.1}
 
-/* RESPONSIVE */
-@media(max-width:900px){
-  .sidebar{width:52px;min-width:52px;}
-  .sb-name,.sb-sub,.sb-item span:not(.sb-ico),.sb-sec,.sb-badge{display:none;}
-  .sb-item{justify-content:center;}
-  .kpi-row,.ar-row,.mini-row{grid-template-columns:1fr 1fr;}
-  .grid-2{grid-template-columns:1fr;}
-}
-@media(max-width:600px){
-  .kpi-row,.ar-row,.mini-row{grid-template-columns:1fr;}
-  .topbar,.content{padding-left:14px;padding-right:14px;}
-}
+/* Project search */
+.proj-search-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.proj-search{flex:1;padding:8px 12px;font-size:12.5px;border:1px solid #cbd5e1;border-radius:8px;outline:none;color:#1e293b;background:#fff}
+.proj-search:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.1)}
+.proj-count{font-size:10.5px;color:#94a3b8;white-space:nowrap}
+.btn-clear{padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:11px;color:#7c3aed;cursor:pointer}
+.btn-clear:hover{background:#f5f3ff}
+
+/* Project cards */
+.proj-card{border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:7px;transition:border-color .15s}
+.proj-card.open{border-color:#c4b5fd}
+.proj-hdr{width:100%;display:flex;align-items:center;gap:9px;padding:10px 13px;background:#f8fafc;border:none;cursor:pointer;text-align:left;transition:background .12s}
+.proj-card.open .proj-hdr{background:#f5f3ff}
+.proj-hdr:hover{background:#eff0fe}
+.proj-arrow{font-size:10px;color:#94a3b8;min-width:10px;transition:transform .15s}
+.proj-card.open .proj-arrow{transform:rotate(90deg);color:#7c3aed}
+.proj-name{font-size:12.5px;font-weight:600;color:#1e293b;flex:1;text-align:left}
+.proj-card.open .proj-name{color:#7c3aed}
+.proj-pills{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.pill{font-size:9.5px;padding:2px 7px;border-radius:999px;font-weight:600;white-space:nowrap}
+
+/* Item table */
+.proj-body{display:none;background:#fff}
+.proj-card.open .proj-body{display:block}
+.item-search-row{padding:7px 12px;border-top:1px solid #f1f5f9}
+.item-search{width:100%;padding:5px 10px;font-size:11.5px;border:1px solid #e2e8f0;border-radius:6px;outline:none;color:#1e293b;background:#fff}
+.item-search:focus{border-color:#7c3aed}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:11px}
+th{padding:6px 10px;background:#f8fafc;color:#64748b;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e2e8f0;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:2}
+td{padding:6px 10px;border-bottom:1px solid #f8fafc;color:#334155;vertical-align:middle}
+tr:hover td{background:#fafafe}
+tr:last-child td{border-bottom:none}
+.td-muted{color:#94a3b8}
+.td-po{color:#7c3aed;font-weight:600}
+.td-right{text-align:right}
+.td-clip{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-clip2{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:600;white-space:nowrap}
+.no-results{padding:18px;text-align:center;color:#94a3b8;font-size:12px}
 </style>
 </head>
 <body>
 <div class="app">
 
 <!-- SIDEBAR -->
-<div class="sidebar">
-  <div class="sb-brand">
-    <div class="sb-icon-box">E</div>
-    <div><div class="sb-name">Exelon Power</div><div class="sb-sub">Solutions Inc.</div></div>
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-icon">E</div>
+    <div class="sb-name">Exelon Power</div>
+    <div class="sb-sub">SOLUTIONS INC.</div>
   </div>
-  <div class="sb-sec">Procurement</div>
-  <div class="sb-item active" onclick="navTo('overview',this)" id="nav-overview"><span class="sb-ico">◈</span><span>Overview</span></div>
-  <div class="sb-item" onclick="navTo('items',this)" id="nav-items"><span class="sb-ico">≡</span><span>Item History</span></div>
-  <div class="sb-item" onclick="navTo('po',this)" id="nav-po"><span class="sb-ico">◻</span><span>Purchase Orders</span></div>
-  <div class="sb-item" onclick="navTo('alerts',this)" id="nav-alerts"><span class="sb-ico">△</span><span>Alerts</span><span class="sb-badge red" id="sbb-alerts">—</span></div>
-  <div class="sb-sec">Operations</div>
-  <div class="sb-item" onclick="navTo('wh',this)" id="nav-wh"><span class="sb-ico">⬡</span><span>WH Incoming</span></div>
-  <div class="sb-item" onclick="navTo('projects',document.getElementById('nav-projects'))" id="nav-projects"><span class="sb-ico">⊟</span><span>Project Summary</span><span class="sb-badge blue" id="sbb-projects">—</span></div>
-  <div class="sb-item" onclick="navTo('suppliers',this)" id="nav-suppliers"><span class="sb-ico">◎</span><span>Suppliers</span></div>
-  <div class="sb-item" onclick="navTo('pipeline',this)" id="nav-pipeline"><span class="sb-ico">⇒</span><span>Pipeline</span></div>
-  <div class="sb-sec">Finance</div>
-  <div class="sb-item" onclick="navTo('billing',document.getElementById('nav-billing'))" id="nav-billing"><span class="sb-ico">$</span><span>Billing</span><span class="sb-badge" id="sbb-billing">—</span></div>
-  <div class="sb-sec">Operations</div>
-  <div class="sb-item" onclick="navTo('equipment',document.getElementById('nav-equipment'))" id="nav-equipment"><span class="sb-ico">⊕</span><span>Equipment Monitor</span></div>
-  <div class="sb-bottom">
-    <div class="sb-item" onclick="toggleTheme()" style="margin:0"><span class="sb-ico" id="themeIco">☀</span><span id="themeLbl">Light Mode</span></div>
-  </div>
-</div>
+  <div class="sb-section">Procurement</div>
+  <div class="sb-item">◈ Overview</div>
+  <div class="sb-item active">👤 Client View</div>
+  <div class="sb-item">≡ Item History</div>
+  <div class="sb-item">◻ Purchase Orders</div>
+  <div class="sb-item">△ Alerts</div>
+  <div class="sb-section">Operations</div>
+  <div class="sb-item">⬡ WH Incoming</div>
+  <div class="sb-item">⊟ Project Summary</div>
+  <div class="sb-item">◎ Suppliers</div>
+  <div class="sb-section">Finance</div>
+  <div class="sb-item">$ Billing</div>
+  <div class="sb-section">Equipment</div>
+  <div class="sb-item">⊕ Equipment Monitor</div>
+</nav>
 
 <!-- MAIN -->
 <div class="main">
-
-  <!-- TOPBAR -->
   <div class="topbar">
-    <div><div class="page-title" id="pageTitle">Overview</div><div class="page-sub" id="pageSub">Procurement dashboard summary</div></div>
+    <div class="topbar-left">
+      <div class="topbar-title">Client View</div>
+      <div class="topbar-sub" id="topbarSub">Loading from Google Sheets…</div>
+    </div>
     <div class="topbar-right">
-      <span class="sync-dot" id="syncDot"></span>
-      <span class="sync-time" id="lastSync">—</span>
-      <button class="btn" onclick="syncAll()">↻ Sync</button>
-      <button class="push-btn" id="pushBtn" onclick="pushChanges()" disabled>
-        <span id="pushIco">↑</span> <span id="pushLbl">Push to Sheets</span>
-        <span id="pushCount" style="background:rgba(255,255,255,.25);border-radius:10px;padding:1px 7px;font-size:10px;display:none">0</span>
-      </button>
+      <div class="sync-dot loading" id="syncDot"></div>
+      <span class="sync-time" id="syncTime">Connecting…</span>
+      <button class="btn-sync" onclick="loadData()">↻ Refresh</button>
     </div>
   </div>
 
-  <!-- PENDING CHANGES BAR -->
-  <div class="changes-bar hidden" id="changesBar">
-    <span id="changesMsg">⬤ &nbsp;0 unsaved changes</span>
-    <div style="display:flex;gap:8px">
-      <button class="btn" onclick="discardChanges()">✕ Discard</button>
-      <button class="btn btn-green" onclick="pushChanges()">↑ Push to Sheets</button>
+  <div class="tabbar" id="tabbar" style="display:none">
+    <div class="tab-search-row">
+      <input class="tab-search" type="text" placeholder="Find client…" id="tabSearch" oninput="filterTabs()">
+    </div>
+    <div class="tabs-scroll" id="tabsBar"></div>
+  </div>
+
+  <div class="content" id="mainContent">
+    <div class="loading-screen">
+      <div class="spinner"></div>
+      <div>Fetching live data from Google Sheets…</div>
     </div>
   </div>
-
-  <!-- CONTENT -->
-  <div class="content">
-    <div class="panel active" id="panel-overview"><div class="loading-state"><div class="spinner"></div><div class="load-txt">Connecting to Google Sheets…</div></div></div>
-    <div class="panel" id="panel-items"><div class="loading-state"><div class="spinner"></div><div class="load-txt">Loading item history…</div></div></div>
-    <div class="panel" id="panel-po"><div class="loading-state"><div class="spinner"></div><div class="load-txt">Loading purchase orders…</div></div></div>
-    <div class="panel" id="panel-alerts"><div class="loading-state"><div class="spinner"></div><div class="load-txt">Loading alerts…</div></div></div>
-    <div class="panel" id="panel-wh"><div class="loading-state"><div class="spinner"></div><div class="load-txt">Loading WH data…</div></div></div>
-    <div class="panel" id="panel-projects"><div class="loading-state"><div class="spinner"></div><div class="load-txt">Loading projects…</div></div></div>
-    <div class="panel" id="panel-suppliers"><div class="loading-state"><div class="spinner"></div><div class="load-txt">Loading supplier data…</div></div></div>
-    <div class="panel" id="panel-pipeline"></div>
-    <div class="panel" id="panel-billing"><div class="loading-state"><div class="spinner"></div><div class="load-txt">Loading billing data…</div></div></div>
-    <div class="panel" id="panel-equipment"></div>
-  </div>
 </div>
 </div>
-
-<!-- MODAL -->
-<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
-  <div class="modal" id="modalBox">
-    <div class="modal-hdr">
-      <div><div class="modal-title" id="modalTitle">—</div><div class="modal-sub" id="modalSub">—</div></div>
-      <div class="modal-close" onclick="closeModalNow()">✕</div>
-    </div>
-    <div class="modal-kpis" id="modalKpis"></div>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
-</div>
-
-<!-- TOAST CONTAINER -->
-<div class="toast" id="toastContainer"></div>
 
 <script>
-// ══════════════════════════════════════════════
-// CONSTANTS
-// ══════════════════════════════════════════════
-const PROC_URL='https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
-const BILL_URL='https://script.google.com/a/macros/exelon.ph/s/AKfycbzj7KxrwLwEJsn0stbimahmxlx34DXF6XHdehVSJr-pI8AaVZIY1a86mEQ3-G5TnTxz/exec';
-const STORAGE_KEY='epsi_changes_v2';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
 
-// Exact status values used in Apps Script (with emoji)
-const BOM_STATUSES=['🟡 For Canvass','🟢 Ready for PO','✅ PO Issued','✅ Delivered','🏭 Warehouse Stock','⬛ Cancelled'];
-const WH_STATUSES=['⬜ Pending','🔄 Partial','✅ Complete','⛔ Cancelled'];
+// ── State ───────────────────────────────────────────────────────
+let DATA = null;         // raw API payload
+let CLIENTS = [];        // ordered list of clean client names
+let CLIENT_MAP = {};     // cleanName → { projects: { projName: [items] } }
+let activeClient = '';
+let openProjects = {};
+let projSearches = {};
+let itemSearches = {};
 
-// ── EXACT COLUMN MAPS (from Apps Script v5) ──
-// BOM sheet: data starts row 5, 27 columns (A=1 to AA=27)
-const BOM_COL={
-  NUM:1,DATE:2,PROJECT:3,MRF:4,CATEGORY:5,PART_DESC:6,
-  CAT_NO:7,COUNTER:8,QTY:9,UNIT:10,PREV_PRICE:11,
-  WH_STOCK:12,REPLENISH:13,STATUS:14,PO_NUM:15,VENDOR:16,
-  UNIT_PRICE:17,PO_DATE:18,V1:19,V2:20,V3:21,BEST_PRICE:22,
-  BEST_VENDOR:23,SAVINGS:24,BEST_SHOWN:25,WH_STATUS:26,PAY_STATUS:27
+// ── Status badges ───────────────────────────────────────────────
+const SB = {
+  '🟡 For Canvass':     ['#fef3c7','#d97706'],
+  '🟢 Ready for PO':    ['#d1fae5','#065f46'],
+  '✅ PO Issued':        ['#ede9fe','#6d28d9'],
+  '🏭 Warehouse Stock': ['#dbeafe','#1d4ed8'],
+  '✅ Delivered':        ['#d1fae5','#065f46'],
+  '⬜ Pending':          ['#f1f5f9','#64748b'],
+  '🟡 Partial':         ['#ffedd5','#c2410c'],
+  '✅ Complete':         ['#d1fae5','#065f46'],
+  '⬜ Unpaid':           ['#fee2e2','#b91c1c'],
+  '✅ Paid':             ['#d1fae5','#065f46'],
 };
-// PO sheet: data starts row 6, 16 columns
-const PO_COL={
-  NUM:1,PO_NUM:2,PROJECT:3,PART_DESC:4,CAT_NO:5,SUPPLIER:6,
-  UNIT:7,QTY:8,UNIT_PRICE:9,LINE_TOTAL:10,PO_DATE:11,
-  STATUS:12,PAY_TERMS:13,APPROVED1:14,APPROVED2:15,REMARKS:16
-};
-// WH sheet: data starts row 4, 15 columns
-const WH_COL={
-  PO_NUM:1,PROJECT:2,PART_DESC:3,CAT_NO:4,SUPPLIER:5,
-  UNIT:6,PO_QTY:7,DEL_QTY:8,CANCEL_QTY:9,BAL_QTY:10,
-  ACTUAL_DATE:11,EXPECTED_DATE:12,DAYS_VAR:13,STATUS:14,REMARKS:15
-};
-// VP sheet: data starts row 5
-const VP_COL={
-  NUM:1,PO_NUM:2,PROJECT:3,SUPPLIER:4,PART_DESC:5,CAT_NO:6,
-  DEL_QTY:7,PO_QTY:8,BAL_QTY:9,
-  UNIT_PRICE:10,AMOUNT:11,BILLING_DATE:12,INVOICE:13,
-  PAY_TERMS:14,DUE_DATE:15,PAY_STATUS:16,AMT_PAID:17,
-  BALANCE:18,OR_NUM:19,DATE_PAID:20,APPROVAL_DATE:21,HO_DATE:22,REMARKS:23
-};
-
-// ══════════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════════
-let procData=null, billData=null, activePanel='overview';
-let pendingChanges={};   // { key: {sheet,row,col,value,label,oldValue} }
-let localOverrides={};   // { key: value } — what the user edited locally
-let sortState={col:null,dir:1,panel:null};
-
-// Filters
-// item search state moved to item history section
-let poQ='',poSort=null,poSortDir=1;
-let whQ='',alertFilter='ALL';
-let bomSortCol=null,bomSortDir=1;
-
-const pageMeta={
-  overview:{title:'Overview',sub:'Procurement dashboard summary'},
-  items:{title:'Item Purchase History',sub:'Item purchase breakdown · click any card to drill down'},
-  po:{title:'Purchase Orders',sub:'All PO line items · click row to edit'},
-  alerts:{title:'Alerts & Actions',sub:'Items requiring attention · edit status inline'},
-  wh:{title:'WH Incoming',sub:'Warehouse delivery tracking · update status & dates'},
-  projects:{title:'Project Summary',sub:'Projects by client'},
-  suppliers:{title:'Suppliers',sub:'Supplier performance & payment status'},
-  pipeline:{title:'Pipeline',sub:'Supply chain flow overview'},
-  billing:{title:'Billing',sub:'Billing & payment monitoring'},
-  equipment:{title:'Machine & Test Equipment',sub:'Preventive maintenance · utilization · downtime logs'},
-};
-
-// ══════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════
-document.addEventListener('DOMContentLoaded',()=>{
-  loadLocalChanges();
-  syncAll();
-});
-
-// ══════════════════════════════════════════════
-// SYNC — READ FROM SHEETS
-// ══════════════════════════════════════════════
-async function syncAll(){
-  setSyncState('loading');
-  try{
-    const[p,b]=await Promise.allSettled([fetchProc(),fetchBill()]);
-    if(p.status==='fulfilled')procData=p.value;
-    if(b.status==='fulfilled')billData=b.value;
-    setSyncState(procData||billData?'ok':'error');
-    renderAll();
-    updateBadges();
-    document.getElementById('lastSync').textContent=new Date().toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
-    toast('Data synced ✓','success');
-  }catch(e){
-    setSyncState('error');
-    toast('Sync failed — check connection','error');
-  }
+function badge(v) {
+  if (!v) v = '—';
+  const s = SB[v] || ['#f1f5f9','#64748b'];
+  return `<span class="badge" style="background:${s[0]};color:${s[1]}">${v}</span>`;
 }
-function fetchProc(){
-  return new Promise((res,rej)=>{
-    const cb='_proc'+Date.now(),s=document.createElement('script');
-    const t=setTimeout(()=>{cleanup();rej(new Error('Timeout'));},30000);
-    function cleanup(){clearTimeout(t);delete window[cb];s.parentNode&&s.parentNode.removeChild(s);}
-    window[cb]=d=>{cleanup();d?.ok?res(d):rej(new Error(d?.error||'Error'));};
-    s.src=PROC_URL+'?action=load&callback='+cb;
-    s.onerror=()=>{cleanup();rej(new Error('Script error'));};
-    document.head.appendChild(s);
-  });
+function pill(txt, bg, col) {
+  return `<span class="pill" style="background:${bg};color:${col}">${txt}</span>`;
 }
-function fetchBill(){
-  return new Promise((res,rej)=>{
-    const cb='_bill'+Date.now(),s=document.createElement('script');
-    const t=setTimeout(()=>{cleanup();rej(new Error('Timeout'));},30000);
-    function cleanup(){clearTimeout(t);delete window[cb];s.parentNode&&s.parentNode.removeChild(s);}
-    window[cb]=d=>{cleanup();res(d);};
-    s.src=BILL_URL+'?callback='+cb;
-    s.onerror=()=>{cleanup();rej(new Error('Script error'));};
-    document.head.appendChild(s);
-  });
+function fmt₱(v) {
+  if (v === '' || v == null) return '—';
+  const n = parseFloat(v);
+  if (isNaN(n)) return '—';
+  return '₱' + n.toLocaleString('en-PH', {minimumFractionDigits:0, maximumFractionDigits:0});
+}
+function fmtDate(v) {
+  if (!v) return '—';
+  try {
+    const d = new Date(v);
+    if (isNaN(d)) return v;
+    return d.toLocaleDateString('en-PH', {month:'short', day:'numeric', year:'numeric'});
+  } catch { return v; }
 }
 
-// ══════════════════════════════════════════════
-// 2-WAY SYNC — WRITE BACK TO SHEETS
-// ══════════════════════════════════════════════
-function recordChange(key,sheet,row,col,value,label,oldValue){
-  pendingChanges[key]={sheet,row,col,value,label,oldValue,ts:Date.now()};
-  localOverrides[key]=value;
-  saveLocalChanges();
-  updateChangesUI();
-  // Live update local procData so re-renders reflect change
-  applyOverrideToData(sheet,row,col,value);
+// ── Stats helper ────────────────────────────────────────────────
+function stats(items) {
+  return {
+    total:   items.length,
+    canvass: items.filter(i => i.status === '🟡 For Canvass').length,
+    ready:   items.filter(i => i.status === '🟢 Ready for PO').length,
+    issued:  items.filter(i => i.status === '✅ PO Issued').length,
+    whStock: items.filter(i => i.status === '🏭 Warehouse Stock').length,
+    done:    items.filter(i => i.whStatus === '✅ Complete').length,
+    unpaid:  items.filter(i => i.payStatus === '⬜ Unpaid').length,
+    paid:    items.filter(i => i.payStatus === '✅ Paid').length,
+  };
 }
-function applyOverrideToData(sheet,row,col,value){
-  // Maps sheet+row+col back to procData arrays
-  // Called so that live re-render shows the edited value without full sync
-  // (actual row/col mapping done in Apps Script; locally we just track by key)
+
+// ── Clean client name (strip 📦 prefix) ─────────────────────────
+function cleanClient(sheet) {
+  return sheet.replace(/^📦\s*/, '').trim();
 }
-function updateChangesUI(){
-  const n=Object.keys(pendingChanges).length;
-  const btn=document.getElementById('pushBtn');
-  const bar=document.getElementById('changesBar');
-  const cnt=document.getElementById('pushCount');
-  const msg=document.getElementById('changesMsg');
-  if(n>0){
-    btn.disabled=false;
-    btn.classList.add('has-changes');
-    cnt.textContent=n;cnt.style.display='';
-    bar.classList.remove('hidden');
-    msg.innerHTML=`⬤ &nbsp;<b>${n}</b> unsaved change${n>1?'s':''} — not yet pushed to Google Sheets`;
-  } else {
-    btn.disabled=true;
-    btn.classList.remove('has-changes');
-    cnt.style.display='none';
-    bar.classList.add('hidden');
-  }
-}
-async function pushChanges(){
-  const n=Object.keys(pendingChanges).length;
-  if(!n){toast('Nothing to push','warning');return;}
-  const btn=document.getElementById('pushBtn');
-  const lbl=document.getElementById('pushLbl');
-  const ico=document.getElementById('pushIco');
-  btn.disabled=true;lbl.textContent='Pushing…';ico.textContent='⏳';
-  try{
-    const updates=Object.values(pendingChanges);
-    const result=await pushToSheets(updates);
-    // If simulated (Apps Script updateCell not yet deployed), still mark as pushed locally
-    if(result.ok||result.simulated){
-      const wasSimulated=updates.some(u=>u)&&result.simulated;
-      pendingChanges={};
-      localOverrides={};
-      saveLocalChanges();
-      updateChangesUI();
-      if(wasSimulated){
-        toast(`✓ ${n} change${n>1?'s':''} queued — add updateCell handler to Apps Script to write back`,'warning');
-      } else {
-        toast(`✓ ${n} update${n>1?'s':''} pushed to Google Sheets`,'success');
+
+// ── Load data from Apps Script ───────────────────────────────────
+async function loadData() {
+  // UI: loading state
+  document.getElementById('syncDot').className = 'sync-dot loading';
+  document.getElementById('syncTime').textContent = 'Syncing…';
+  document.getElementById('tabbar').style.display = 'none';
+  document.getElementById('mainContent').innerHTML = `
+    <div class="loading-screen">
+      <div class="spinner"></div>
+      <div>Fetching live data from Google Sheets…</div>
+    </div>`;
+
+  try {
+    const res  = await fetch(WEB_APP_URL + '?action=load');
+    const json = await res.json();
+
+    if (!json.ok) throw new Error(json.error || 'API returned ok:false');
+
+    DATA = json;
+
+    // Build CLIENT_MAP from bom array grouped by sheet → project
+    CLIENT_MAP = {};
+    const sheetOrder = [];
+
+    json.bom.forEach(item => {
+      const cname = cleanClient(item.sheet);
+      if (!CLIENT_MAP[cname]) {
+        CLIENT_MAP[cname] = { sheet: item.sheet, projects: {} };
+        sheetOrder.push(cname);
       }
-    } else {
-      throw new Error(result.error||'Push failed');
-    }
-  }catch(e){
-    toast('Push failed: '+e.message,'error');
-  } finally {
-    btn.disabled=Object.keys(pendingChanges).length===0;
-    lbl.textContent='Push to Sheets';ico.textContent='↑';
-    if(Object.keys(pendingChanges).length>0)btn.disabled=false;
-  }
-}
-function pushToSheets(updates){
-  // Apps Script uses doPost with JSON body.
-  // Actions: saveBOM, savePO, saveWH — each takes { action, sheet, row, data[] }
-  // We batch by sheet type. Each update has: { sheet, row, col, value, label }
-  // Build full row arrays by reading procData for the row, then patching the changed column.
-  return new Promise(async(res,rej)=>{
-    try{
-      const results=await Promise.all(updates.map(u=>postUpdate(u)));
-      const failed=results.filter(r=>!r.ok);
-      if(failed.length>0)res({ok:false,error:failed.map(f=>f.error).join('; ')});
-      else res({ok:true,count:results.length});
-    }catch(e){rej(e);}
-  });
-}
-async function postUpdate(u){
-  // Determine action from sheet name
-  const actionMap={
-    'BOM':'saveBOM','MRS':'saveBOM',
-    'PO':'savePO',
-    'WH':'saveWH',
-    'VP':'saveVP',
-  };
-  const action=actionMap[u.sheet]||'saveBOM';
-  // Build minimal payload — Apps Script savePO/saveWH accept { action, row, data }
-  // where data is a full row array. We send a targeted single-cell update instead
-  // via a lightweight wrapper the Apps Script can handle via the update action.
-  const payload={action,sheet:u.sheet,row:u.row,col:u.col,value:u.value,label:u.label};
-  return new Promise((res,rej)=>{
-    const cb='_post'+Date.now()+Math.random().toString(36).slice(2),s=document.createElement('script');
-    const t=setTimeout(()=>{cleanup();rej(new Error('Timeout'));},30000);
-    function cleanup(){clearTimeout(t);delete window[cb];s.parentNode&&s.parentNode.removeChild(s);}
-    window[cb]=d=>{cleanup();res(d||{ok:true});};
-    const enc=encodeURIComponent(JSON.stringify(payload));
-    s.src=PROC_URL+'?action=updateCell&payload='+enc+'&callback='+cb;
-    s.onerror=()=>{cleanup();res({ok:true,simulated:true});};  // graceful — log locally even if script not yet updated
-    document.head.appendChild(s);
-  });
-}
-function discardChanges(){
-  if(!Object.keys(pendingChanges).length)return;
-  if(!confirm('Discard all '+Object.keys(pendingChanges).length+' unsaved changes?'))return;
-  pendingChanges={};localOverrides={};
-  saveLocalChanges();updateChangesUI();
-  renderPanel(activePanel);
-  toast('Changes discarded','warning');
-}
-function saveLocalChanges(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify({pendingChanges,localOverrides}));}catch(e){}
-}
-function loadLocalChanges(){
-  try{
-    const d=JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}');
-    if(d.pendingChanges)pendingChanges=d.pendingChanges;
-    if(d.localOverrides)localOverrides=d.localOverrides;
-    updateChangesUI();
-  }catch(e){}
-}
-// Helper: get override or original value
-function ov(key,original){return key in localOverrides?localOverrides[key]:original;}
-
-// ══════════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════════
-function navTo(name,el){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
-  document.getElementById('panel-'+name).classList.add('active');
-  if(el)el.classList.add('active');
-  activePanel=name;
-  const m=pageMeta[name]||{title:name,sub:''};
-  document.getElementById('pageTitle').textContent=m.title;
-  document.getElementById('pageSub').textContent=m.sub;
-  renderPanel(name);
-}
-function renderAll(){renderPanel(activePanel);}
-function renderPanel(name){
-  switch(name){
-    case'overview':renderOverview();break;
-    case'items':renderItems();break;
-    case'po':renderPO();break;
-    case'alerts':renderAlerts();break;
-    case'wh':renderWH();break;
-    case'projects':renderProjects();break;
-    case'suppliers':renderSuppliers();break;
-    case'pipeline':renderPipeline();break;
-    case'billing':renderBilling();break;
-    case'equipment':renderEquipment();break;
-  }
-}
-
-// ══════════════════════════════════════════════
-// OVERVIEW
-// ══════════════════════════════════════════════
-function renderOverview(){
-  const el=document.getElementById('panel-overview');
-  if(!procData&&!billData){
-    el.innerHTML=errState('Cannot connect to Google Sheets','Deploy both Apps Scripts with access set to Anyone.');
-    return;
-  }
-  const bom=procData?.bom||[],po=procData?.po||[],wh=procData?.wh||[],vp=procData?.vp||[];
-  const ready=bom.filter(r=>ov('bom_status_'+(r._row||r.catNo),r.status||'').includes('Ready')).length;
-  const canvass=bom.filter(r=>ov('bom_status_'+(r._row||r.catNo),r.status||'').includes('Canvass')).length;
-  const pendDel=wh.filter(r=>Number(r.balQty||0)>0&&!ov('wh_status_'+(r.rowIndex||r.poNum+'_'+r.partDesc),r.status||'').includes('Complete')).length;
-  const partial=wh.filter(r=>{const s=ov('wh_status_'+(r.rowIndex||r.poNum+'_'+r.partDesc),r.status||'');return s.includes('Partial');}).length;
-  const totalPOVal=po.reduce((a,r)=>a+Number(r.lineTotal||0),0);
-  const totalPaid=vp.reduce((a,r)=>a+Number(r.amtPaid||0),0);
-  const totalBal=vp.reduce((a,r)=>a+Number(r.balance||0),0);
-  const totalPOs=[...new Set(po.map(r=>r.poNum).filter(Boolean))].length;
-  const activeSup=[...new Set(po.map(r=>r.supplier).filter(Boolean))].length;
-  const weekly=procData?.weekly||[];
-  const clients=procData?.clients||{};
-
-  // Build per-project action summary
-  const projectActions=buildProjectActionSummary(bom,wh,clients);
-
-  el.innerHTML=`
-    <div class="ar-row">
-      ${arCard('🟢','Ready for PO',ready,'#f0fdf4','#16a34a','alerts','READY')}
-      ${arCard('🔍','For Canvass',canvass,'#fffbeb','#d97706','alerts','CANVASS')}
-      ${arCard('🚚','Pending Delivery',pendDel,'#eff6ff','#2563eb','alerts','DELIVERY')}
-      ${arCard('📦','Partial Delivery',partial,'#f5f3ff','#7c3aed','alerts','PARTIAL')}
-    </div>
-    <div class="kpi-row">
-      ${kpiC('TOTAL PO VALUE','₱'+fmt(totalPOVal),'#2563eb',totalPOs+' purchase orders')}
-      ${kpiC('AMOUNT PAID','₱'+fmt(totalPaid),'#16a34a',pct(totalPaid,totalPOVal)+'% of PO value')}
-      ${kpiC('OUTSTANDING','₱'+fmt(totalBal),'#d97706',vp.filter(r=>(r.payStatus||'').includes('Overdue')).length+' overdue')}
-      ${kpiC('ACTIVE SUPPLIERS',activeSup,'#7c3aed',po.length+' PO line items')}
-    </div>
-    <div class="grid-2">
-      <div class="table-wrap">
-        <div class="table-head">
-          <span class="table-title">⚡ Action Required by Project</span>
-          <span style="font-size:10px;color:var(--t3)">Click any badge → view & edit items</span>
-        </div>
-        <div class="scroll-x">
-          <table>
-            <thead><tr>
-              <th>Project / Client</th>
-              <th style="text-align:center;color:#7c3aed">🔍 Canvass</th>
-              <th style="text-align:center;color:#16a34a">🟢 Ready PO</th>
-              <th style="text-align:center;color:#2563eb">🚚 Pending</th>
-              <th style="text-align:center;color:#d97706">📦 Partial</th>
-              <th style="text-align:center;color:#0891b2">🏭 WH Stock</th>
-              <th style="text-align:center">Total</th>
-            </tr></thead>
-            <tbody>
-              ${projectActions.length===0?`<tr><td colspan="7" style="text-align:center;color:var(--t3);padding:20px">✅ All clear! No pending actions.</td></tr>`:
-                projectActions.map(p=>{
-                  const jj=JSON.stringify(JSON.stringify({name:p.project,clientName:p.client}));
-                  return`<tr>
-                  <td style="cursor:pointer" onclick="openProjectDetailModal(${jj},'ALL')">
-                    <div style="font-weight:500;font-size:12px">${p.project}</div>
-                    <div style="font-size:10px;color:var(--t3)">${p.client}</div>
-                  </td>
-                  <td style="text-align:center">${p.canvass>0?`<span class="badge bp ar-clickable" onclick="openProjectDetailModal(${jj},'CANVASS')">${p.canvass}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.ready>0?`<span class="badge bg ar-clickable" onclick="openProjectDetailModal(${jj},'READY')">${p.ready}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.pending>0?`<span class="badge bb ar-clickable" onclick="openProjectDetailModal(${jj},'DELIVERY')">${p.pending}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.partial>0?`<span class="badge by ar-clickable" onclick="openProjectDetailModal(${jj},'PARTIAL')">${p.partial}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center">${p.whStock>0?`<span class="badge" style="background:#e0f2fe;color:#0891b2;cursor:pointer" onclick="openProjectDetailModal(${jj},'WHSTOCK')">${p.whStock}</span>`:'<span style="color:var(--t3)">—</span>'}</td>
-                  <td style="text-align:center;font-weight:600;cursor:pointer;color:${p.total>0?'var(--red)':'var(--green)'}" onclick="openProjectDetailModal(${jj},'ALL')">${p.total||'✓'}</td>
-                </tr>`;}).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="table-wrap">
-        <div class="table-head"><span class="table-title">📅 Weekly Activity by Project</span></div>
-        <div style="padding:12px 16px">
-          ${weeklyProjectBars(weekly,bom,wh)}
-        </div>
-      </div>
-    </div>`;
-}
-
-function buildProjectActionSummary(bom,wh,clients){
-  const sheetToClient={};
-  Object.entries(clients||{}).forEach(([cName,cv])=>{
-    (cv.sheets||[]).forEach(sh=>{sheetToClient[sh]=cName;});
-  });
-  const map={};
-  bom.forEach(r=>{
-    const proj=r.project||r.sheet||'General';
-    const client=sheetToClient[r.sheet]||(r.sheet||'').replace(/^📦\s*/,'').trim()||'—';
-    if(!map[proj])map[proj]={project:proj,client,canvass:0,ready:0,pending:0,partial:0,whStock:0,items:[]};
-    const st=ov('bom_status_'+(r._row||r.catNo),r.status||'');
-    if(st.includes('Canvass'))map[proj].canvass++;
-    if(st.includes('Ready'))map[proj].ready++;
-    if(st.includes('Warehouse')||st.includes('WH Stock'))map[proj].whStock++;
-    map[proj].items.push(r);
-  });
-  wh.forEach(r=>{
-    const proj=r.project||'General';
-    if(!map[proj])map[proj]={project:proj,client:'—',canvass:0,ready:0,pending:0,partial:0,whStock:0,items:[]};
-    const st=ov('wh_status_'+(r.rowIndex||r.poNum+'_'+r.partDesc),r.status||'');
-    if(Number(r.balQty||0)>0&&!st.includes('Complete'))map[proj].pending++;
-    if(st.includes('Partial'))map[proj].partial++;
-  });
-  return Object.values(map)
-    .map(p=>({...p,total:p.canvass+p.ready+p.pending+p.partial}))
-    .filter(p=>p.total>0||p.whStock>0)
-    .sort((a,b)=>b.total-a.total);
-}
-
-function openActionModal(proj, filterType){
-  const bom=procData?.bom||[];
-  const wh=procData?.wh||[];
-  const po=procData?.po||[];
-
-  // Get all BOM items for this project
-  const projBOM=bom.filter(r=>(r.project||r.sheet||'General')===proj);
-  // Get WH rows for this project
-  const poNums=new Set(projBOM.map(r=>r.poNum).filter(Boolean));
-  const projWH=wh.filter(r=>r.project===proj||poNums.has(r.poNum));
-
-  const filterLabels={
-    ALL:'All Items',CANVASS:'🔍 For Canvass',READY:'🟢 Ready for PO',
-    DELIVERY:'🚚 Pending Delivery',PARTIAL:'📦 Partial Delivery',WHSTOCK:'🏭 WH Stock'
-  };
-
-  // Filter items based on type
-  let bomItems=projBOM, whItems=projWH, showBOM=true, showWH=false;
-  if(filterType==='CANVASS'){bomItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Canvass'));showBOM=true;showWH=false;}
-  else if(filterType==='READY'){bomItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Ready'));showBOM=true;showWH=false;}
-  else if(filterType==='WHSTOCK'){bomItems=projBOM.filter(r=>{const s=ov('bom_status_'+(r._row||r.catNo),r.status||'');return s.includes('Warehouse')||s.includes('WH Stock');});showBOM=true;showWH=false;}
-  else if(filterType==='DELIVERY'){bomItems=[];whItems=projWH.filter(r=>Number(r.balQty||0)>0);showBOM=false;showWH=true;}
-  else if(filterType==='PARTIAL'){bomItems=[];whItems=projWH.filter(r=>(ov('wh_status_'+(r.rowIndex||r.poNum+'_'+r.partDesc),r.status||'')).includes('Partial'));showBOM=false;showWH=true;}
-  else{showBOM=true;showWH=true;}  // ALL
-
-  const totalItems=bomItems.length+whItems.length;
-  document.getElementById('modalTitle').textContent=proj;
-  document.getElementById('modalSub').textContent=filterLabels[filterType]||filterType;
-  document.getElementById('modalKpis').innerHTML=`
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Total Items</div><div class="modal-kpi-val">${totalItems}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">BOM Items</div><div class="modal-kpi-val">${bomItems.length}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">WH Rows</div><div class="modal-kpi-val">${whItems.length}</div></div>`;
-
-  let bodyHTML='';
-
-  // BOM section
-  if(showBOM&&bomItems.length){
-    bodyHTML+=`
-    <div class="modal-section">📋 BOM Items — ${bomItems.length} rows</div>
-    <div class="scroll-x"><table>
-      <thead><tr>
-        <th>Cat No</th><th style="min-width:180px">Description</th>
-        <th>Qty</th><th>Unit</th>
-        <th style="min-width:120px">Vendor (editable)</th>
-        <th style="min-width:90px">Unit Price (editable)</th>
-        <th style="min-width:90px">PO # (editable)</th>
-        <th style="min-width:120px">Status (editable)</th>
-        <th>Prev Price</th>
-        <th style="min-width:90px">Best Price</th>
-      </tr></thead>
-      <tbody>${bomItems.map(r=>{
-        const rk=r._row||r.catNo||r.partDesc;
-        const curStatus=ov('bom_status_'+rk,r.status||'');
-        const curVendor=ov('bom_vendor_'+rk,r.vendor||'');
-        const curPrice=ov('bom_price_'+rk,r.unitPrice||'');
-        const curPO=ov('bom_ponum_'+rk,r.poNum||'');
-        return`<tr>
-          <td class="td-mono" style="font-size:10px;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis">${r.catNo||'—'}</td>
-          <td class="wrap" style="font-size:11px;max-width:280px;word-break:break-word">${r.partDesc||'—'}</td>
-          <td>${r.qty||'—'}</td><td style="color:var(--t3)">${r.unit||'—'}</td>
-          <td><input class="inline-input" value="${esc(curVendor)}" style="min-width:110px"
-            onkeydown="event.stopPropagation()"
-            onchange="recordChange('bom_vendor_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.VENDOR},this.value,'Vendor: ${esc(r.catNo||'')}','${esc(r.vendor||'')}')"></td>
-          <td><input class="inline-input td-mono" type="number" value="${curPrice}" style="min-width:80px"
-            onkeydown="event.stopPropagation()"
-            onchange="recordChange('bom_price_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.UNIT_PRICE},this.value,'Unit Price: ${esc(r.catNo||'')}','${esc(String(r.unitPrice||''))}')"></td>
-          <td><input class="inline-input td-mono" value="${esc(curPO)}" style="min-width:80px"
-            onkeydown="event.stopPropagation()"
-            onchange="recordChange('bom_ponum_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.PO_NUM},this.value,'PO#: ${esc(r.catNo||'')}','${esc(r.poNum||'')}')"></td>
-          <td><select class="inline-sel" style="font-size:10px"
-            onchange="recordChange('bom_status_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.STATUS},this.value,'Status: ${esc(r.catNo||'')}','${esc(r.status||'')}')">
-            ${BOM_STATUSES.map(s=>`<option value="${s}" ${curStatus===s?'selected':''}>${s}</option>`).join('')}
-          </select></td>
-          <td class="td-mono td-r" style="color:var(--t3);font-size:10px">${r.prevPrice?'₱'+fmt(r.prevPrice):'—'}</td>
-          <td class="td-mono td-r" style="color:var(--green);font-size:10px">${r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
-        </tr>`;}).join('')}
-      </tbody>
-    </table></div>`;
-  }
-
-  // WH section
-  if(showWH&&whItems.length){
-    bodyHTML+=`
-    <div class="modal-section">🏭 Warehouse / Delivery — ${whItems.length} rows</div>
-    <div class="scroll-x"><table>
-      <thead><tr>
-        <th>PO #</th><th style="min-width:180px">Description</th>
-        <th>Supplier</th><th>PO Qty</th><th>Del Qty</th>
-        <th style="color:var(--orange)">Bal Qty</th>
-        <th>Expected</th>
-        <th style="min-width:115px">Actual Date (editable)</th>
-        <th style="min-width:130px">Status (editable)</th>
-        <th style="min-width:140px">Remarks (editable)</th>
-      </tr></thead>
-      <tbody>${whItems.map(r=>{
-        const rk=r.rowIndex||r.poNum+'_'+r.partDesc;
-        const wStatus=ov('wh_status_'+rk,r.status||'');
-        const wActual=ov('wh_actual_'+rk,r.actualDate||'');
-        const wNotes=ov('wh_notes_'+rk,r.remarks||'');
-        return`<tr>
-          <td class="td-mono" style="color:var(--blue);white-space:nowrap">${r.poNum||'—'}</td>
-          <td class="wrap" style="font-size:11px;max-width:250px;word-break:break-word">${r.partDesc||'—'}</td>
-          <td style="font-size:10px">${r.supplier||'—'}</td>
-          <td style="text-align:center">${r.poQty||'—'}</td>
-          <td style="text-align:center;color:var(--green)">${r.delQty||'0'}</td>
-          <td style="text-align:center;color:var(--orange);font-weight:600">${r.balQty||'—'}</td>
-          <td style="font-size:10px;color:var(--t3)">${r.expectedDate||'—'}</td>
-          <td><input type="date" class="inline-input" value="${wActual}" style="min-width:110px"
-            onchange="recordChange('wh_actual_${rk}','WH',${r.rowIndex||0},${WH_COL.ACTUAL_DATE},this.value,'WH Actual: ${esc(r.poNum||'')}','${esc(r.actualDate||'')}')"></td>
-          <td><select class="inline-sel" style="font-size:10px"
-            onchange="recordChange('wh_status_${rk}','WH',${r.rowIndex||0},${WH_COL.STATUS},this.value,'WH Status: ${esc(r.poNum||'')}','${esc(r.status||'')}')">
-            ${WH_STATUSES.map(s=>`<option value="${s}" ${wStatus===s?'selected':''}>${s}</option>`).join('')}
-          </select></td>
-          <td><input class="inline-input" value="${esc(wNotes)}" placeholder="Remarks…" style="min-width:130px"
-            onkeydown="event.stopPropagation()"
-            onchange="recordChange('wh_notes_${rk}','WH',${r.rowIndex||0},${WH_COL.REMARKS},this.value,'WH Notes: ${esc(r.poNum||'')}','${esc(r.remarks||'')}')"></td>
-        </tr>`;}).join('')}
-      </tbody>
-    </table></div>`;
-  }
-
-  if(!bodyHTML){
-    bodyHTML=`<div style="padding:24px;text-align:center;color:var(--t3)">✅ No items in this category for <b>${esc(proj)}</b></div>`;
-  }
-
-  bodyHTML+=`<div class="modal-btns">
-    <button class="btn btn-green" onclick="pushChanges();toast('Changes pushed','success')">↑ Push to Sheets</button>
-    <button class="btn" onclick="closeModalNow()">Close</button>
-  </div>`;
-
-  document.getElementById('modalBody').innerHTML=bodyHTML;
-  openModalEl('modal-xl');
-}
-
-
-  if(!weekly.length&&!bom.length)return'<div style="color:var(--t3);font-size:11px;text-align:center;padding:20px">No weekly data</div>';
-  // Build project-level breakdown of current status
-  const projMap={};
-  bom.forEach(r=>{
-    const proj=r.project||'General';
-    if(!projMap[proj])projMap[proj]={ordered:0,canvass:0,delivered:0};
-    const st=ov('bom_status_'+(r._row||r.catNo),r.status||'');
-    if(st.includes('PO Issued')||st.includes('Delivered')||st.includes('Stock'))projMap[proj].ordered++;
-    if(st.includes('Canvass'))projMap[proj].canvass++;
-    if(st.includes('Delivered'))projMap[proj].delivered++;
-  });
-  const projects=Object.entries(projMap).sort((a,b)=>(b[1].ordered+b[1].canvass)-(a[1].ordered+a[1].canvass)).slice(0,6);
-  const maxVal=Math.max(...projects.flatMap(([,v])=>[v.ordered,v.canvass]),1);
-  return`
-    <div style="font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:10px">Items per project</div>
-    ${projects.map(([proj,v])=>`
-      <div style="margin-bottom:10px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
-          <div style="font-size:11px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px">${proj}</div>
-          <div style="display:flex;gap:5px;flex-shrink:0;font-size:10px">
-            ${v.canvass?`<span class="badge by">${v.canvass} canvass</span>`:''}
-            ${v.ordered?`<span class="badge bb">${v.ordered} PO</span>`:''}
-            ${v.delivered?`<span class="badge bg">${v.delivered} done</span>`:''}
-          </div>
-        </div>
-        <div style="display:flex;gap:2px;height:6px;border-radius:3px;overflow:hidden;background:var(--border)">
-          <div style="width:${Math.round(v.delivered/maxVal*100)}%;background:var(--green);transition:width .4s"></div>
-          <div style="width:${Math.round((v.ordered-v.delivered)/maxVal*100)}%;background:#bfdbfe;transition:width .4s"></div>
-          <div style="width:${Math.round(v.canvass/maxVal*100)}%;background:#fde68a;transition:width .4s"></div>
-        </div>
-      </div>`).join('')}
-    <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap">
-      <span style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:4px"><span style="width:10px;height:4px;background:var(--green);border-radius:2px;display:inline-block"></span>Delivered</span>
-      <span style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:4px"><span style="width:10px;height:4px;background:#bfdbfe;border-radius:2px;display:inline-block"></span>PO Issued</span>
-      <span style="font-size:10px;color:var(--t3);display:flex;align-items:center;gap:4px"><span style="width:10px;height:4px;background:#fde68a;border-radius:2px;display:inline-block"></span>For Canvass</span>
-    </div>`;
-}
-
-
-// ══════════════════════════════════════════════
-// ITEM HISTORY — full table + debounced search
-// ══════════════════════════════════════════════
-let itemQ='',itemCat='ALL',itemSup='ALL',_itemDebounce=null;
-
-function renderItems(){
-  const el=document.getElementById('panel-items');
-  if(!procData){el.innerHTML=noData();return;}
-  const ih=procData.itemHistory||[];
-  const cats=[...new Set(ih.map(r=>r.category).filter(Boolean))].sort();
-  const sups=[...new Set(ih.map(r=>r.vendor).filter(Boolean))].sort();
-
-  // First call — build the static toolbar shell (only once, or if toolbar missing)
-  if(!document.getElementById('item-search-inp')){
-    el.innerHTML=`
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh)">
-        <div style="flex:1;min-width:260px">
-          <input id="item-search-inp" class="search-inp" style="width:100%"
-            placeholder="🔍 Search item, supplier, PO#, cat no…"
-            onkeydown="event.stopPropagation()"
-            oninput="clearTimeout(_itemDebounce);_itemDebounce=setTimeout(function(){itemQ=document.getElementById('item-search-inp').value;renderItemResults()},300)">
-        </div>
-        <select id="item-cat-sel" class="filter-sel" onchange="itemCat=this.value;renderItemResults()">
-          <option value="ALL">All Categories</option>
-          ${cats.map(c=>`<option value="${esc(c)}">${c}</option>`).join('')}
-        </select>
-        <select id="item-sup-sel" class="filter-sel" style="max-width:200px" onchange="itemSup=this.value;renderItemResults()">
-          <option value="ALL">All Suppliers</option>
-          ${sups.map(s=>`<option value="${esc(s)}">${s}</option>`).join('')}
-        </select>
-        <button class="btn" id="item-clear-btn" style="display:none" onclick="itemQ='';itemSup='ALL';itemCat='ALL';document.getElementById('item-search-inp').value='';document.getElementById('item-cat-sel').value='ALL';document.getElementById('item-sup-sel').value='ALL';renderItemResults()">✕ Clear</button>
-        <span id="item-count-lbl" style="font-size:11px;color:var(--t3);white-space:nowrap;margin-left:auto"></span>
-      </div>
-      <div id="item-results"></div>`;
-  }
-  renderItemResults();
-}
-
-function renderItemResults(){
-  const ih=procData?.itemHistory||[];
-  const sups=[...new Set(ih.map(r=>r.vendor).filter(Boolean))].sort();
-  const q=itemQ.toLowerCase().trim();
-
-  // Sync toolbar state (dropdowns may exist already)
-  const catSel=document.getElementById('item-cat-sel');
-  const supSel=document.getElementById('item-sup-sel');
-  const clearBtn=document.getElementById('item-clear-btn');
-  const countLbl=document.getElementById('item-count-lbl');
-  const resultsEl=document.getElementById('item-results');
-  if(!resultsEl)return;
-  if(catSel&&catSel.value!==itemCat)catSel.value=itemCat;
-  if(supSel&&supSel.value!==itemSup)supSel.value=itemSup;
-  if(clearBtn)clearBtn.style.display=(itemSup!=='ALL'||q)?'':'none';
-
-  // Filter rows — SIMPLE: search matches ANY field
-  const rows=ih.filter(r=>{
-    if(itemCat!=='ALL'&&(r.category||'')!==itemCat)return false;
-    if(itemSup!=='ALL')return(r.vendor||'')=== itemSup;
-    if(!q)return true;
-    return(r.catNo||'').toLowerCase().includes(q)
-      ||(r.partDesc||'').toLowerCase().includes(q)
-      ||(r.vendor||'').toLowerCase().includes(q)
-      ||(r.project||'').toLowerCase().includes(q)
-      ||(r.poNum||'').toLowerCase().includes(q)
-      ||(r.source||'').toLowerCase().includes(q);
-  });
-
-  // Grouping — always group by project unless supplier filter active
-  let groupKey=r=>r.project||'General';
-  let groupLabel='project';
-  if(itemSup!=='ALL'){
-    groupKey=r=>r.vendor||'—';groupLabel='supplier';
-  } else if(q){
-    // If typed text exactly matches a supplier → group by supplier
-    const exactSup=sups.find(s=>s.toLowerCase()===q);
-    if(exactSup){groupKey=r=>r.vendor||'—';groupLabel='supplier';}
-  }
-  // Otherwise always group by project — show all projects that have matching items
-
-  const groups={};
-  rows.forEach(r=>{
-    const k=groupKey(r);
-    if(!groups[k])groups[k]={key:k,items:[],total:0,sups:new Set(),orders:new Set()};
-    groups[k].items.push(r);
-    groups[k].total+=Number(r.unitPrice||0);
-    if(r.vendor)groups[k].sups.add(r.vendor);
-    if(r.poNum)groups[k].orders.add(r.poNum);
-  });
-
-  const totalSpend=rows.reduce((a,r)=>a+Number(r.unitPrice||0),0);
-  if(countLbl)countLbl.textContent=`${rows.length} items · ${Object.keys(groups).length} ${groupLabel}(s) · ₱${fmt(totalSpend)}`;
-
-  resultsEl.innerHTML=Object.keys(groups).length===0
-    ?`<div style="padding:48px;text-align:center;color:var(--t3);background:var(--card);border-radius:var(--r);border:1px solid var(--border)"><div style="font-size:32px;margin-bottom:8px">🔍</div><div>Walang results — subukan ng ibang search o i-clear ang filter</div></div>`
-    :`<div style="display:flex;flex-direction:column;gap:12px">${Object.entries(groups).map(([key,g])=>renderItemGroup(key,g,groupLabel)).join('')}</div>`;
-}
-function renderItemGroup(key,g,groupLabel){
-  const gid='ig_'+key.replace(/\W/g,'_');
-  return`<div class="table-wrap">
-    <div class="table-head" style="cursor:pointer" onclick="toggleIG('${gid}')">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span class="table-title">${key}</span>
-        <span class="pill">${g.items.length}</span>
-        ${groupLabel==='project'?`<span style="font-size:10px;color:var(--t3)">${[...g.sups].slice(0,3).join(', ')}${g.sups.size>3?' +more':''}</span>`:''}
-      </div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <span style="font-size:12px;font-weight:600;color:var(--blue);font-family:'JetBrains Mono',monospace">₱${fmt(g.total)}</span>
-        <span style="font-size:10px;color:var(--t3)">${g.orders.size} PO(s)</span>
-        <span id="${gid}_arr" style="color:var(--t3);font-size:11px;transition:transform .2s">▼</span>
-      </div>
-    </div>
-    <div id="${gid}" class="scroll-x">
-      <table style="min-width:900px">
-        <thead><tr>
-          <th style="min-width:90px">Cat No</th>
-          <th style="min-width:220px">Description</th>
-          <th style="min-width:110px">Project</th>
-          <th style="min-width:80px">PO #</th>
-          <th style="min-width:85px">Date</th>
-          <th style="min-width:170px">Supplier</th>
-          <th>Qty</th><th>Unit</th>
-          <th style="text-align:right;min-width:90px">Unit Price</th>
-          <th style="text-align:right;min-width:90px">Prev Price</th>
-          <th style="text-align:center">% Chg</th>
-          <th style="min-width:100px">Category</th>
-          <th>Source</th>
-          <th style="min-width:130px">Remarks</th>
-        </tr></thead>
-        <tbody>
-          ${g.items.map(r=>{
-            const pc=Number(r.pctChange||0);
-            const pcS=pc!==0?(pc>0?'+':'')+(pc*100).toFixed(1)+'%':'—';
-            const pcC=pc<0?'var(--green)':pc>0?'var(--red)':'var(--t3)';
-            return`<tr>
-              <td class="td-mono" style="font-size:10px">${r.catNo||'—'}</td>
-              <td style="font-size:11px">${r.partDesc||'—'}</td>
-              <td style="font-size:10px;color:var(--t3)">${r.project||'—'}</td>
-              <td class="td-mono td-link" style="font-size:10px" onclick="openPOModal('${escQ(r.poNum||'')}')">${r.poNum||'—'}</td>
-              <td style="color:var(--t3);font-size:10px;white-space:nowrap">${r.poDate||'—'}</td>
-              <td style="font-size:11px">${r.vendor||'—'}</td>
-              <td style="text-align:center">${r.qty||'—'}</td>
-              <td style="color:var(--t3)">${r.unit||'—'}</td>
-              <td class="td-mono td-r" style="color:var(--blue)">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>
-              <td class="td-mono td-r" style="color:var(--t3)">${r.prevPrice?'₱'+fmt(r.prevPrice):'—'}</td>
-              <td style="text-align:center;color:${pcC}">${pcS}</td>
-              <td style="font-size:10px;color:var(--t3)">${r.category||'—'}</td>
-              <td>${statusBadge(r.source||'')}</td>
-              <td style="font-size:10px;color:var(--t3)">${r.remarks||'—'}</td>
-            </tr>`;}).join('')}
-        </tbody>
-      </table>
-    </div>
-  </div>`;
-}
-function toggleIG(gid){
-  const el=document.getElementById(gid);
-  const arr=document.getElementById(gid+'_arr');
-  if(!el)return;
-  const isOpen=el.style.display!=='none'&&el.style.display!=='';
-  el.style.display=isOpen?'none':'';
-  if(arr)arr.style.transform=isOpen?'rotate(-90deg)':'';
-}
-
-// ══════════════════════════════════════════════
-// PURCHASE ORDERS — editable vendor, date, notes
-// ══════════════════════════════════════════════
-function renderPO(){
-  const el=document.getElementById('panel-po');
-  if(!procData){el.innerHTML=noData();return;}
-  let po=[...(procData.po||[])];
-  // Apply sort
-  if(poSort){
-    po.sort((a,b)=>{
-      let av=a[poSort]||'',bv=b[poSort]||'';
-      if(poSort==='lineTotal'||poSort==='unitPrice'){av=Number(av);bv=Number(bv);}
-      return(av<bv?-1:av>bv?1:0)*poSortDir;
+      const proj = (item.project || 'No Project').toString().trim();
+      if (!CLIENT_MAP[cname].projects[proj]) {
+        CLIENT_MAP[cname].projects[proj] = [];
+      }
+      CLIENT_MAP[cname].projects[proj].push(item);
     });
+
+    // Preserve sheet order from API
+    CLIENTS = [...new Set(sheetOrder)];
+
+    // Update topbar
+    const updated = new Date(json.updated);
+    const timeStr = updated.toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit'});
+    document.getElementById('syncDot').className = 'sync-dot';
+    document.getElementById('syncTime').textContent = 'Synced ' + timeStr;
+    document.getElementById('topbarSub').textContent =
+      `Live from Google Sheets · ${json.bom.length} items · ${CLIENTS.length} clients`;
+
+    // Build tabs + render
+    document.getElementById('tabbar').style.display = '';
+    buildTabs();
+    if (!activeClient || !CLIENT_MAP[activeClient]) {
+      activeClient = CLIENTS[0];
+    }
+    highlightActiveTab();
+    renderContent();
+
+  } catch (err) {
+    document.getElementById('syncDot').className = 'sync-dot error';
+    document.getElementById('syncTime').textContent = 'Error';
+    document.getElementById('mainContent').innerHTML = `
+      <div class="error-screen">
+        <div style="font-size:32px">⚠️</div>
+        <div style="font-size:14px;font-weight:600;color:#1e293b">Cannot connect to Google Sheets</div>
+        <div style="font-size:12px;color:#94a3b8;max-width:360px;text-align:center">${err.message}</div>
+        <button onclick="loadData()" style="padding:8px 20px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px">↻ Try Again</button>
+      </div>`;
   }
-  const q=poQ.toLowerCase();
-  const filtered=po.filter(r=>!q||(r.poNum||'').toLowerCase().includes(q)||(r.partDesc||'').toLowerCase().includes(q)||(r.supplier||'').toLowerCase().includes(q)||(r.project||'').toLowerCase().includes(q));
-  const totalVal=filtered.reduce((a,r)=>a+Number(r.lineTotal||0),0);
-  el.innerHTML=`
-    <div class="mini-row" style="margin-bottom:14px">
-      ${mini('Total POs',[...new Set(filtered.map(r=>r.poNum))].length,'var(--blue)')}
-      ${mini('Line Items',filtered.length,'var(--t2)')}
-      ${mini('Total Value','₱'+fmt(totalVal),'var(--green)')}
-      ${mini('Suppliers',[...new Set(filtered.map(r=>r.supplier).filter(Boolean))].length,'var(--purple)')}
+}
+
+// ── Build client tab bar ─────────────────────────────────────────
+function buildTabs() {
+  const bar = document.getElementById('tabsBar');
+  bar.innerHTML = CLIENTS.map(c => {
+    const np = Object.keys(CLIENT_MAP[c].projects).length;
+    const ni = Object.values(CLIENT_MAP[c].projects).flat().length;
+    return `<button class="tab-btn" data-client="${c}"
+      onclick="selectClient('${c.replace(/'/g,"\\'")}')"
+      >${c}<span class="tab-count">${np}p·${ni}</span></button>`;
+  }).join('');
+}
+
+function filterTabs() {
+  const q = document.getElementById('tabSearch').value.toLowerCase();
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.style.display = !q || btn.dataset.client.toLowerCase().includes(q) ? '' : 'none';
+  });
+}
+
+function selectClient(c) {
+  activeClient = c;
+  highlightActiveTab();
+  const activeTab = document.querySelector('.tab-btn.active');
+  if (activeTab) activeTab.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
+  projSearches[c] = projSearches[c] || '';
+  renderContent();
+}
+
+function highlightActiveTab() {
+  document.querySelectorAll('.tab-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.client === activeClient));
+}
+
+// ── Render client content ────────────────────────────────────────
+function renderContent() {
+  const c = activeClient;
+  if (!CLIENT_MAP[c]) return;
+
+  const projs    = CLIENT_MAP[c].projects;
+  const projKeys = Object.keys(projs);
+  const allI     = projKeys.flatMap(p => projs[p]);
+  const s        = stats(allI);
+  const pSearch  = (projSearches[c] || '').toLowerCase();
+  const filtered = pSearch ? projKeys.filter(p => p.toLowerCase().includes(pSearch)) : projKeys;
+
+  // KPI cards
+  const kpiDefs = [
+    ['🟡 For Canvass', s.canvass, '#d97706', '#fef3c7'],
+    ['🟢 Ready for PO', s.ready,  '#065f46', '#d1fae5'],
+    ['✅ PO Issued',    s.issued,  '#6d28d9', '#ede9fe'],
+    ['🏭 WH Stock',    s.whStock, '#1d4ed8', '#dbeafe'],
+    ['✅ WH Complete',  s.done,    '#065f46', '#d1fae5'],
+    ['⬜ Unpaid',       s.unpaid,  '#b91c1c', '#fee2e2'],
+    ['📦 Total items', s.total,   '#7c3aed', '#f5f3ff'],
+  ];
+
+  // Project cards HTML
+  const projCardsHtml = filtered.length === 0
+    ? `<div class="no-results">No projects match "${pSearch}"</div>`
+    : filtered.map(proj => buildProjCard(proj, projs[proj], filtered, projKeys)).join('');
+
+  document.getElementById('mainContent').innerHTML = `
+    <div class="dash-header">
+      <div class="dash-bar"></div>
+      <span class="dash-title">${c}</span>
+      <span class="dash-meta">${s.total} items · ${projKeys.length} project${projKeys.length!==1?'s':''}</span>
     </div>
-    <div class="table-wrap">
-      <div class="table-head">
-        <span class="table-title">Purchase Orders <span class="pill">${filtered.length}</span></span>
-        <div style="display:flex;gap:8px;align-items:center">
-          ${Object.keys(pendingChanges).filter(k=>k.startsWith('po_')).length?`<span class="badge by">⬤ ${Object.keys(pendingChanges).filter(k=>k.startsWith('po_')).length} unsaved</span>`:''}
-          <input class="search-inp" style="width:220px" placeholder="Search PO#, supplier…" value="${esc(poQ)}" oninput="poQ=this.value;renderPO()">
-        </div>
-      </div>
-      <div class="scroll-x">
-        <table>
-          <thead>
-            <tr>
-              <th onclick="sortPO('poNum')">PO # ${sortIcon('poNum',poSort,poSortDir)}</th>
-              <th onclick="sortPO('project')">Project ${sortIcon('project',poSort,poSortDir)}</th>
-              <th>Description</th>
-              <th onclick="sortPO('supplier')">Supplier ${sortIcon('supplier',poSort,poSortDir)}</th>
-              <th>Qty</th>
-              <th onclick="sortPO('unitPrice')" style="text-align:right">Unit Price ${sortIcon('unitPrice',poSort,poSortDir)}</th>
-              <th onclick="sortPO('lineTotal')" style="text-align:right">Line Total ${sortIcon('lineTotal',poSort,poSortDir)}</th>
-              <th onclick="sortPO('poDate')">PO Date ${sortIcon('poDate',poSort,poSortDir)}</th>
-              <th>Actual Del. Date</th>
-              <th>Status</th>
-              <th>Notes</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${filtered.map(r=>{
-              const rowKey=r._row||r.poNum+'_'+r.partDesc;
-              const actualDate=ov('po_actualdate_'+rowKey,r.actualDeliveryDate||'');
-              const notes=ov('po_notes_'+rowKey,r.remarks||'');
-              const supplier=ov('po_supplier_'+rowKey,r.supplier||'');
-              const status=ov('po_status_'+rowKey,r.status||'');
-              const hasPend=pendingChanges['po_actualdate_'+rowKey]||pendingChanges['po_notes_'+rowKey]||pendingChanges['po_supplier_'+rowKey]||pendingChanges['po_status_'+rowKey];
-              return`<tr>
-                <td class="td-mono td-link" onclick="openPOModal('${escQ(rowKey)}')">${r.poNum||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
-                <td>${r.project||'—'}</td>
-                <td class="td-clip">${r.partDesc||'—'}</td>
-                <td>
-                  <input class="inline-input" value="${esc(supplier)}" style="min-width:120px"
-                    onchange="recordChange('po_supplier_${rowKey}','PO',${r.num||0},${PO_COL.SUPPLIER},this.value,'Supplier: ${esc(r.poNum||'')}','${esc(r.supplier||'')}');this.closest('td').querySelector('.edit-indicator')||this.insertAdjacentHTML('afterend','<span class=\\'edit-indicator\\'></span>')"
-                    title="Click to edit supplier">
-                </td>
-                <td>${r.qty||'—'}</td>
-                <td class="td-mono td-r">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>
-                <td class="td-mono td-r" style="color:var(--blue)">${r.lineTotal?'₱'+fmt(r.lineTotal):'—'}</td>
-                <td style="color:var(--t3);white-space:nowrap">${r.poDate||'—'}</td>
-                <td>
-                  <input type="date" class="inline-input" value="${actualDate}" style="min-width:110px"
-                    onchange="recordChange('po_actualdate_${rowKey}','PO',${r.num||0},${PO_COL.STATUS},this.value,'Actual Del. Date: ${esc(r.poNum||'')}','${esc(r.actualDeliveryDate||'')}')"
-                    title="Set actual delivery date">
-                </td>
-                <td>
-                  <select class="inline-sel" onchange="recordChange('po_status_${rowKey}','PO',${r.num||0},${PO_COL.STATUS},this.value,'PO Status: ${esc(r.poNum||'')}','${esc(r.status||'')}');renderPO()">
-                    ${['⬜ Pending','✅ Delivered','🔄 Partial','⛔ Cancelled','✅ Complete'].map(s=>`<option value="${s}" ${status===s?'selected':''}>${s}</option>`).join('')}
-                  </select>
-                </td>
-                <td>
-                  <input class="inline-input" value="${esc(notes)}" placeholder="Add notes…" style="min-width:100px"
-                    onchange="recordChange('po_notes_${rowKey}','PO',${r.num||0},${PO_COL.REMARKS},this.value,'Notes: ${esc(r.poNum||'')}','${esc(r.notes||'')}')"
-                    title="Add notes">
-                </td>
-              </tr>`;}).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>`;
-}
-function sortPO(col){
-  if(poSort===col)poSortDir*=-1;else{poSort=col;poSortDir=1;}
-  renderPO();
-}
-function sortIcon(col,current,dir){
-  if(col!==current)return'<span style="opacity:.3">↕</span>';
-  return dir===1?'↑':'↓';
-}
-function openPOModal(rowKey){
-  const po=procData?.po||[];
-  const r=po.find(x=>(x._row||x.poNum+'_'+x.partDesc)===rowKey)||po.find(x=>x.poNum===rowKey);
-  if(!r)return;
-  const rk=r._row||r.poNum+'_'+r.partDesc;
-  const supplier=ov('po_supplier_'+rk,r.supplier||'');
-  const actualDate=ov('po_actualdate_'+rk,r.actualDeliveryDate||'');
-  const notes=ov('po_notes_'+rk,r.remarks||'');
-  const status=ov('po_status_'+rk,r.status||'');
-  document.getElementById('modalTitle').textContent=r.poNum||'PO Detail';
-  document.getElementById('modalSub').textContent=(supplier||'—')+' · '+(r.poDate||'—');
-  // Gather ALL PO lines with same PO number
-  const allPOLines=(procData?.po||[]).filter(x=>x.poNum===r.poNum);
-  const whRows=(procData?.wh||[]).filter(x=>x.poNum===r.poNum);
-  const totalVal=allPOLines.reduce((a,x)=>a+Number(x.lineTotal||0),0);
-  const totalQty=allPOLines.reduce((a,x)=>a+Number(x.qty||0),0);
-  const totalDel=whRows.reduce((a,x)=>a+Number(x.delQty||0),0);
-  const totalBal=whRows.reduce((a,x)=>a+Number(x.balQty||0),0);
-  document.getElementById('modalKpis').innerHTML=`
-    <div class="modal-kpi"><div class="modal-kpi-lbl">PO Total Value</div><div class="modal-kpi-val" style="color:var(--blue)">${totalVal?'₱'+fmt(totalVal):'—'}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Line Items</div><div class="modal-kpi-val">${allPOLines.length}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Total Qty</div><div class="modal-kpi-val">${totalQty}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Delivered</div><div class="modal-kpi-val" style="color:var(--green)">${totalDel}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Balance</div><div class="modal-kpi-val" style="color:${totalBal>0?'var(--orange)':'var(--green)'}">${totalBal}</div></div>`;
-  // Header info row
-  const headerHTML=`
-    <div class="po-grid" style="margin-bottom:14px">
-      <div class="po-field"><div class="po-label">PO Number</div><div class="po-val td-mono" style="color:var(--blue);font-size:16px;font-weight:700">${r.poNum||'—'}</div></div>
-      <div class="po-field"><div class="po-label">Project</div><div class="po-val">${r.project||'—'}</div></div>
-      <div class="po-field"><div class="po-label">Supplier</div><div class="po-val">${supplier||'—'}</div></div>
-      <div class="po-field"><div class="po-label">PO Date</div><div class="po-val">${r.poDate||'—'}</div></div>
-      <div class="po-field"><div class="po-label">Pay Terms</div><div class="po-val">${r.payTerms||'—'}</div></div>
-      <div class="po-field"><div class="po-label">Approved By</div><div class="po-val">${r.approved1||r.approved2||'—'}</div></div>
-    </div>`;
-
-  // All line items table — editable status per line
-  const linesHTML=`
-    <div class="modal-section">📋 PO Line Items — ${allPOLines.length} items</div>
-    <div class="scroll-x"><table style="min-width:700px">
-      <thead><tr>
-        <th>#</th>
-        <th style="min-width:200px">Description</th>
-        <th>Cat No</th>
-        <th style="text-align:right">Qty</th>
-        <th>Unit</th>
-        <th style="text-align:right">Unit Price</th>
-        <th style="text-align:right">Line Total</th>
-        <th style="min-width:150px">Status (editable)</th>
-        <th style="min-width:140px">Remarks (editable)</th>
-      </tr></thead>
-      <tbody>${allPOLines.map((line,i)=>{
-        const lrk=line._row||line.poNum+'_'+line.partDesc+'_'+i;
-        const lStatus=ov('po_status_'+lrk,line.status||'');
-        const lNotes=ov('po_notes_'+lrk,line.remarks||'');
-        return\`<tr>
-          <td style="color:var(--t3)">\${i+1}</td>
-          <td class="wrap" style="font-size:11px">\${line.partDesc||'—'}</td>
-          <td class="td-mono" style="font-size:10px">\${line.catNo||'—'}</td>
-          <td style="text-align:right">\${line.qty||'—'}</td>
-          <td style="color:var(--t3)">\${line.unit||'—'}</td>
-          <td class="td-mono td-r" style="color:var(--blue)">\${line.unitPrice?'₱'+fmt(line.unitPrice):'—'}</td>
-          <td class="td-mono td-r" style="font-weight:600">\${line.lineTotal?'₱'+fmt(line.lineTotal):'—'}</td>
-          <td><select class="inline-sel"
-            onchange="recordChange('po_status_\${lrk}','PO',\${line.num||0},\${PO_COL.STATUS},this.value,'PO Status: \${esc(line.poNum||'')}','')">
-            \${['⬜ Pending','✅ Delivered','🔄 Partial','⛔ Cancelled'].map(s=>\`<option value="\${s}" \${lStatus===s?'selected':''}>\${s}</option>\`).join('')}
-          </select></td>
-          <td><input class="inline-input" value="\${esc(lNotes)}" placeholder="Remarks…" style="min-width:130px"
-            onkeydown="event.stopPropagation()"
-            onchange="recordChange('po_notes_\${lrk}','PO',\${line.num||0},\${PO_COL.REMARKS},this.value,'PO Notes','')"></td>
-        </tr>\`;}).join('')}
-      </tbody>
-    </table></div>`;
-
-  // WH delivery rows for this PO
-  const whHTML=whRows.length?`
-    <div class="modal-section">🏭 Delivery Tracking — ${whRows.length} rows</div>
-    <div class="scroll-x"><table style="min-width:600px">
-      <thead><tr>
-        <th style="min-width:180px">Description</th>
-        <th>PO Qty</th><th style="color:var(--green)">Del Qty</th>
-        <th style="color:var(--orange)">Bal Qty</th>
-        <th>Expected</th>
-        <th style="min-width:115px">Actual (editable)</th>
-        <th style="min-width:130px">Status (editable)</th>
-      </tr></thead>
-      <tbody>${whRows.map(wr=>{
-        const wrk=wr.rowIndex||wr.poNum+'_'+wr.partDesc;
-        const ws=ov('wh_status_'+wrk,wr.status||'');
-        const wa=ov('wh_actual_'+wrk,wr.actualDate||'');
-        return\`<tr>
-          <td class="wrap" style="font-size:11px">\${wr.partDesc||'—'}</td>
-          <td style="text-align:center">\${wr.poQty||'—'}</td>
-          <td style="text-align:center;color:var(--green)">\${wr.delQty||'0'}</td>
-          <td style="text-align:center;color:var(--orange);font-weight:600">\${wr.balQty||'—'}</td>
-          <td style="font-size:10px;color:var(--t3)">\${wr.expectedDate||'—'}</td>
-          <td><input type="date" class="inline-input" value="\${wa}"
-            onchange="recordChange('wh_actual_\${wrk}','WH',\${wr.rowIndex||0},\${WH_COL.ACTUAL_DATE},this.value,'WH Actual','')"></td>
-          <td><select class="inline-sel"
-            onchange="recordChange('wh_status_\${wrk}','WH',\${wr.rowIndex||0},\${WH_COL.STATUS},this.value,'WH Status','')">
-            \${WH_STATUSES.map(s=>\`<option value="\${s}" \${ws===s?'selected':''}>\${s}</option>\`).join('')}
-          </select></td>
-        </tr>\`;}).join('')}
-      </tbody>
-    </table></div>`:'';
-
-  document.getElementById('modalBody').innerHTML=headerHTML+linesHTML+whHTML+`
-    <div class="modal-btns">
-      <button class="btn btn-green" onclick="pushChanges();toast('Pushed','success')">↑ Push to Sheets</button>
-      <button class="btn" onclick="closeModalNow()">Close</button>
-    </div>`;
-  openModalEl('modal-wide');
-}
-
-// ══════════════════════════════════════════════
-// ALERTS — editable BOM status
-// ══════════════════════════════════════════════
-function renderAlerts(f){
-  if(f)alertFilter=f;
-  const el=document.getElementById('panel-alerts');
-  if(!procData){el.innerHTML=noData();return;}
-  const bom=procData.bom||[],wh=procData.wh||[];
-  const groups={
-    ALL:{label:'All BOM',wh:false,rows:bom},
-    CANVASS:{label:'For Canvass',wh:false,rows:bom.filter(r=>ov('bom_status_'+(r._row||r.catNo),r.status||'').includes('Canvass'))},
-    READY:{label:'Ready for PO',wh:false,rows:bom.filter(r=>ov('bom_status_'+(r._row||r.catNo),r.status||'').includes('Ready'))},
-    DELIVERY:{label:'Pending Delivery',wh:true,rows:wh.filter(r=>Number(r.balQty||0)>0&&!( ov('wh_status_'+(r.rowIndex||r.poNum+'_'+r.partDesc),r.status||'').includes('Complete')))},
-    PARTIAL:{label:'Partial Delivery',wh:true,rows:wh.filter(r=>ov('wh_status_'+(r.rowIndex||r.poNum+'_'+r.partDesc),r.status||'').includes('Partial'))},
-  };
-  const g=groups[alertFilter]||groups['ALL'];
-  const unsavedBOM=Object.keys(pendingChanges).filter(k=>k.startsWith('bom_')).length;
-  el.innerHTML=`
-    <div class="filter-bar" style="margin-bottom:14px">
-      ${Object.entries(groups).map(([k,v])=>`
-        <button class="filter-chip ${alertFilter===k?'active':''}" onclick="renderAlerts('${k}')">${v.label} (${v.rows.length})</button>
-      `).join('')}
-      ${unsavedBOM?`<span class="badge by">⬤ ${unsavedBOM} unsaved</span>`:''}
+    <div class="kpi-grid">
+      ${kpiDefs.map(([l,v,tc,bg]) => `
+        <div class="kpi" style="border-left-color:${tc}">
+          <div class="kpi-label" style="color:${tc}">${l}</div>
+          <div class="kpi-val" style="color:${tc}">${v}</div>
+        </div>`).join('')}
     </div>
-    ${g.rows.length===0?`
-      <div class="loading-state" style="padding:40px">
-        <div style="font-size:32px">✅</div>
-        <div class="load-txt">All clear in this category!</div>
-      </div>`:`
-    <div class="table-wrap">
-      <div class="table-head"><span class="table-title">${g.label} <span class="pill">${g.rows.length}</span></span></div>
-      <div class="scroll-x">
+    <div class="proj-search-row">
+      <input class="proj-search" type="text" id="projSearch" value="${escHtml(projSearches[c]||'')}"
+        placeholder="🔍 Search projects… (e.g. S13475, VCT, WALTERMART)"
+        oninput="projSearches['${escJs(c)}']=this.value; renderContent()">
+      <span class="proj-count">${filtered.length} / ${projKeys.length} projects</span>
+      ${(projSearches[c]||'') ?
+        `<button class="btn-clear" onclick="projSearches['${escJs(c)}']=''; renderContent()">Clear</button>` : ''}
+    </div>
+    ${projCardsHtml}`;
+}
+
+// ── Build single project accordion card ─────────────────────────
+function buildProjCard(proj, items, filtered, projKeys) {
+  const isOpen = openProjects[proj] !== undefined
+    ? openProjects[proj]
+    : (filtered.length === 1 || proj === projKeys[0]);
+
+  const ps = stats(items);
+  const iSearch = (itemSearches[proj] || '').toLowerCase();
+  const fi = iSearch
+    ? items.filter(i => [i.partDesc, i.catNo, i.vendor, i.poNum, i.status, i.category, i.mrf]
+        .some(f => (f || '').toString().toLowerCase().includes(iSearch)))
+    : items;
+
+  const pills = [
+    ps.canvass && pill(`🟡 ${ps.canvass}`,    '#fef3c7','#d97706'),
+    ps.ready   && pill(`🟢 ${ps.ready} ready`,'#d1fae5','#065f46'),
+    ps.issued  && pill(`✅ ${ps.issued} PO`,   '#ede9fe','#6d28d9'),
+    ps.done    && pill(`🏭 ${ps.done} done`,   '#dbeafe','#1d4ed8'),
+    ps.unpaid  && pill(`⬜ ${ps.unpaid} unpaid`,'#fee2e2','#b91c1c'),
+    pill(`${items.length} items`, '#f1f5f9','#64748b'),
+  ].filter(Boolean).join('');
+
+  const tableHtml = fi.length === 0
+    ? `<div class="no-results">No items match "${escHtml(iSearch)}"</div>`
+    : `<div class="tbl-wrap">
         <table>
           <thead><tr>
-            ${g.wh?`<th>PO #</th><th>Project</th><th>Description</th><th>Supplier</th><th>PO Qty</th><th>Bal Qty</th><th>Status (editable)</th><th>Notes</th>`:
-                   `<th>Project</th><th style="min-width:110px">Cat No</th><th style="min-width:200px">Description</th><th>Qty</th><th style="min-width:150px">Best Price / Vendor</th><th style="min-width:150px">Status</th><th>Notes</th>`}
+            <th>#</th><th>Date</th><th>Category</th><th>Description</th>
+            <th>Cat No</th><th>Vendor</th><th>PO #</th>
+            <th>Qty</th><th>Unit</th><th>Price</th>
+            <th>Status</th><th>WH</th><th>Pay</th>
           </tr></thead>
           <tbody>
-            ${g.rows.map(r=>{
-              if(g.wh){
-                const rk=r.rowIndex||r.poNum+'_'+r.partDesc;
-                const wStatus=ov('wh_status_'+rk,r.status||'');
-                const wNotes=ov('wh_notes_'+rk,r.notes||'');
-                const hasPend=pendingChanges['wh_status_'+rk]||pendingChanges['wh_notes_'+rk];
-                return`<tr>
-                  <td class="td-mono td-link" onclick="openPOModal('${escQ(r.poNum||'')}')" style="cursor:pointer">${r.poNum||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
-                  <td style="cursor:pointer" onclick="openPOModal('${escQ(r.poNum||'')}')">${r.project||'—'}</td>
-                  <td class="td-clip">${r.partDesc||'—'}</td>
-                  <td>${r.supplier||'—'}</td>
-                  <td>${r.poQty||'—'}</td>
-                  <td style="color:${Number(r.balQty||0)>0?'var(--orange)':'var(--green)'}">${r.balQty||'0'}</td>
-                  <td>
-                    <select class="inline-sel" onchange="recordChange('wh_status_${rk}','WH',${r.rowIndex||0},${WH_COL.STATUS},this.value,'WH Status: ${esc(r.poNum||'')}','${esc(r.status||'')}');renderAlerts()">
-                      ${WH_STATUSES.map(s=>`<option value="${s}" ${wStatus===s?'selected':''}>${s}</option>`).join('')}
-                    </select>
-                  </td>
-                  <td><input class="inline-input" value="${esc(wNotes)}" placeholder="Notes…"
-                    onchange="recordChange('wh_notes_${rk}','WH',${r.rowIndex||0},${WH_COL.REMARKS},this.value,'WH Notes: ${esc(r.poNum||'')}','${esc(r.remarks||'')}')"></td>
-                </tr>`;
-              } else {
-                const rk=r._row||r.catNo||r.partDesc;
-                const bomStatus=ov('bom_status_'+rk,r.status||'');
-                const bomNotes=ov('bom_notes_'+rk,r.notes||'');
-                const hasPend=pendingChanges['bom_status_'+rk]||pendingChanges['bom_notes_'+rk];
-                const jj=JSON.stringify(JSON.stringify({name:r.project||'General',clientName:r.project||'General'}));
-                return`<tr>
-                  <td style="cursor:pointer;color:var(--blue)" onclick="openProjectDetailModal(${jj},'ALL')">${r.project||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
-                  <td class="td-mono" style="white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis">${r.catNo||'—'}</td>
-                  <td class="wrap" style="max-width:240px;word-break:break-word">${r.partDesc||'—'}</td>
-                  <td>${r.qty||'—'}</td>
-                  <td style="color:var(--orange)">${r.vendor?r.vendor+' ₱'+fmt(r.unitPrice||r.bestPrice||0):r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
-                  <td>
-                    <select class="inline-sel" onchange="recordChange('bom_status_${rk}',r.sheet||'BOM',${r._row||0},${BOM_COL.STATUS},this.value,'BOM Status: ${esc(r.catNo||r.partDesc||'')}','${esc(r.status||'')}');renderAlerts()">
-                      ${BOM_STATUSES.map(s=>`<option value="${s}" ${bomStatus===s?'selected':''}>${s}</option>`).join('')}
-                    </select>
-                  </td>
-                  <td><input class="inline-input" value="${esc(bomNotes)}" placeholder="Notes…"
-                    onchange="recordChange('bom_notes_${rk}',r.sheet||'BOM',${r._row||0},${BOM_COL.PAY_STATUS},this.value,'BOM Notes: ${esc(r.catNo||'')}','${esc(r.notes||'')}')"></td>
-                </tr>`;
-              }
-            }).join('')}
+            ${fi.map(it => `
+            <tr>
+              <td class="td-muted td-right">${it.num||'—'}</td>
+              <td class="td-muted" style="white-space:nowrap">${fmtDate(it.date)}</td>
+              <td class="td-muted">${escHtml(it.category||'—')}</td>
+              <td class="td-clip" title="${escAttr(it.partDesc)}">${escHtml(it.partDesc||'—')}</td>
+              <td class="td-muted">${escHtml(it.catNo||'—')}</td>
+              <td class="td-clip2">${escHtml(it.vendor||'—')}</td>
+              <td class="td-po">${escHtml(it.poNum||'—')}</td>
+              <td class="td-right">${it.qty||'—'}</td>
+              <td class="td-muted">${escHtml(it.unit||'—')}</td>
+              <td class="td-right" style="white-space:nowrap">${fmt₱(it.unitPrice)}</td>
+              <td>${badge(it.status)}</td>
+              <td>${badge(it.whStatus)}</td>
+              <td>${badge(it.payStatus||'—')}</td>
+            </tr>`).join('')}
           </tbody>
         </table>
+      </div>`;
+
+  const projId = 'pc_' + btoa(encodeURIComponent(proj)).replace(/[^a-zA-Z0-9]/g,'').substring(0,20);
+
+  return `
+  <div class="proj-card${isOpen?' open':''}" id="${projId}">
+    <button class="proj-hdr" onclick="toggleProj('${escJs(proj)}','${projId}')">
+      <span class="proj-arrow">▶</span>
+      <span class="proj-name">${escHtml(proj)}</span>
+      <div class="proj-pills">${pills}</div>
+    </button>
+    <div class="proj-body">
+      <div class="item-search-row">
+        <input class="item-search" type="text"
+          value="${escAttr(itemSearches[proj]||'')}"
+          placeholder="🔍 Search ${items.length} items — description, part no., vendor, PO#, status…"
+          oninput="itemSearches['${escJs(proj)}']=this.value; renderContent()">
       </div>
-    </div>`}`;
-}
-
-// ══════════════════════════════════════════════
-// WH INCOMING — editable status + delivery date
-// ══════════════════════════════════════════════
-function renderWH(){
-  const el=document.getElementById('panel-wh');
-  if(!procData){el.innerHTML=noData();return;}
-  const q=whQ.toLowerCase();
-  const wh=(procData.wh||[]).filter(r=>!q||(r.poNum||'').toLowerCase().includes(q)||(r.partDesc||'').toLowerCase().includes(q)||(r.supplier||'').toLowerCase().includes(q)||(r.project||'').toLowerCase().includes(q));
-  const pend=wh.filter(r=>ov('wh_status_'+(r._row||r.poNum+'_'+r.partDesc),r.status||'').includes('Pending')).length;
-  const part=wh.filter(r=>ov('wh_status_'+(r._row||r.poNum+'_'+r.partDesc),r.status||'').includes('Partial')).length;
-  const done=wh.filter(r=>ov('wh_status_'+(r._row||r.poNum+'_'+r.partDesc),r.status||'').includes('Complete')).length;
-  const unsaved=Object.keys(pendingChanges).filter(k=>k.startsWith('wh_')).length;
-  el.innerHTML=`
-    <div class="mini-row" style="margin-bottom:14px">
-      ${mini('Pending',pend,'var(--t2)')}${mini('Partial',part,'var(--orange)')}${mini('Complete',done,'var(--green)')}${mini('Total',wh.length,'var(--blue)')}
-    </div>
-    <div class="table-wrap">
-      <div class="table-head">
-        <span class="table-title">WH Incoming <span class="pill">${wh.length}</span>${unsaved?`&nbsp;<span class="badge by">⬤ ${unsaved} unsaved</span>`:''}</span>
-        <input class="search-inp" style="width:220px" placeholder="Search PO#, supplier…" value="${esc(whQ)}" oninput="whQ=this.value;renderWH()">
-      </div>
-      <div class="scroll-x">
-        <table>
-          <thead><tr><th>PO #</th><th>Project</th><th>Description</th><th>Supplier</th><th>PO Qty</th><th>Del Qty</th><th>Bal Qty</th><th>Expected</th><th>Actual Del. Date</th><th>Days Var</th><th>Status (editable)</th><th>Notes</th></tr></thead>
-          <tbody>
-            ${wh.map(r=>{
-              const rk=r._row||r.poNum+'_'+r.partDesc;
-              const wStatus=ov('wh_status_'+rk,r.status||'');
-              const wActual=ov('wh_actual_'+rk,r.actualDate||'');
-              const wNotes=ov('wh_notes_'+rk,r.notes||'');
-              const hasPend=pendingChanges['wh_status_'+rk]||pendingChanges['wh_actual_'+rk]||pendingChanges['wh_notes_'+rk];
-              const dv=Number(r.daysVar||0);
-              const dvc=dv<=0?'var(--green)':dv<=7?'var(--orange)':'var(--red)';
-              return`<tr>
-                <td class="td-mono td-link" style="cursor:pointer" onclick="openPOModal('${escQ(r.poNum||'')}')">${r.poNum||'—'}${hasPend?'<span class="edit-indicator"></span>':''}</td>
-                <td>${r.project||'—'}</td>
-                <td class="td-clip">${r.partDesc||'—'}</td>
-                <td>${r.supplier||'—'}</td>
-                <td>${r.poQty||'—'}</td>
-                <td class="td-link" style="color:var(--green);cursor:pointer" onclick="openPOModal('${escQ(r.poNum||'')}')"><b>${r.delQty||'0'}</b></td>
-                <td style="color:${Number(r.balQty||0)>0?'var(--orange)':'var(--green)'}">${r.balQty||'0'}</td>
-                <td style="color:var(--t3);white-space:nowrap">${r.expectedDate||'—'}</td>
-                <td>
-                  <input type="date" class="inline-input" value="${wActual}" style="min-width:115px"
-                    onchange="recordChange('wh_actual_${rk}','WH',${r._row||0},${WH_COL.ACTUAL_DATE},this.value,'WH Actual Date: ${esc(r.poNum||'')}','${esc(r.actualDate||'')}')">
-                </td>
-                <td style="color:${dvc}">${r.daysVar!=null&&r.daysVar!==''?r.daysVar:'—'}</td>
-                <td>
-                  <select class="inline-sel" onchange="recordChange('wh_status_${rk}','WH',${r._row||0},${WH_COL.STATUS},this.value,'WH Status: ${esc(r.poNum||'')}','${esc(r.status||'')}');renderWH()">
-                    ${WH_STATUSES.map(s=>`<option value="${s}" ${wStatus===s?'selected':''}>${s}</option>`).join('')}
-                  </select>
-                </td>
-                <td>
-                  <input class="inline-input" value="${esc(wNotes)}" placeholder="Notes…"
-                    onchange="recordChange('wh_notes_${rk}','WH',${r._row||0},${WH_COL.REMARKS},this.value,'WH Notes: ${esc(r.poNum||'')}','${esc(r.remarks||'')}')">
-                </td>
-              </tr>`;}).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>`;
-}
-
-// ══════════════════════════════════════════════
-// PROJECTS — Client cards with per-project breakdown
-// ══════════════════════════════════════════════
-// Build full client→project map from ALL bom rows (not just hardcoded map)
-function buildClientsFromBOM(bom, po, wh){
-  // Group BOM rows by sheet → client name from sheet
-  const sheetClient={};
-  // Use server-sent clients map first (exact matches)
-  const serverClients=procData?.clients||{};
-  Object.entries(serverClients).forEach(([cName,cv])=>{
-    (cv.sheets||[]).forEach(sh=>{ sheetClient[sh]=cName; });
-  });
-  // Fallback: derive client from sheet name for any unregistered sheets
-  (bom||[]).forEach(r=>{
-    if(!sheetClient[r.sheet]){
-      const derived=(r.sheet||'').replace(/^📦\s*/,'').trim()||'Other';
-      sheetClient[r.sheet]=derived;
-    }
-  });
-
-  // Build client map: clientName → { sheets[], projectMap: { projName → {items,poRows,whRows} } }
-  const clientMap={};
-  (bom||[]).forEach(r=>{
-    const cName=sheetClient[r.sheet]||r.sheet||'Other';
-    if(!clientMap[cName])clientMap[cName]={name:cName,sheets:new Set(),projectMap:{}};
-    clientMap[cName].sheets.add(r.sheet);
-    const proj=r.project||r.sheet||'General';
-    if(!clientMap[cName].projectMap[proj])
-      clientMap[cName].projectMap[proj]={name:proj,items:[],poNums:new Set()};
-    clientMap[cName].projectMap[proj].items.push(r);
-    if(r.poNum&&String(r.poNum).startsWith('P'))
-      clientMap[cName].projectMap[proj].poNums.add(r.poNum);
-  });
-
-  // Cross-reference PO rows
-  const poByNum={};(po||[]).forEach(r=>{ if(r.poNum)poByNum[r.poNum]=r; });
-  const whByPO={};(wh||[]).forEach(r=>{ if(r.poNum)whByPO[r.poNum]=(whByPO[r.poNum]||[]).concat(r); });
-
-  // Finalize: convert sets and attach PO/WH data
-  return Object.values(clientMap).map(c=>({
-    name:c.name,
-    sheets:[...c.sheets],
-    projects:Object.values(c.projectMap).map(p=>{
-      const items=p.items;
-      const poNums=[...p.poNums];
-      const poRows=poNums.map(n=>poByNum[n]).filter(Boolean);
-      const whRows=poNums.flatMap(n=>whByPO[n]||[]);
-      const total=items.length;
-      const canvass=items.filter(r=>(r.status||'').includes('Canvass')).length;
-      const ready=items.filter(r=>(r.status||'').includes('Ready')).length;
-      const issued=items.filter(r=>(r.status||'').includes('PO Issued')).length;
-      const delivered=items.filter(r=>(r.status||'').includes('Delivered')).length;
-      const whStock=items.filter(r=>(r.status||'').includes('Warehouse')).length;
-      const done=delivered+whStock;
-      const pendDel=whRows.filter(r=>Number(r.balQty||0)>0&&!(r.status||'').includes('Complete')).length;
-      const progress=total?Math.round(done/total*100):0;
-      return{name:p.name,items,poNums,poRows,whRows,total,canvass,ready,issued,delivered,whStock,done,pendDel,progress};
-    }).sort((a,b)=>b.total-a.total),
-  })).sort((a,b)=>a.name.localeCompare(b.name));
-}
-
-function renderProjects(){
-  const el=document.getElementById('panel-projects');
-  if(!procData){el.innerHTML=noData();return;}
-  const bom=procData.bom||[],po=procData.po||[],wh=procData.wh||[];
-  if(!bom.length){
-    el.innerHTML='<div class="loading-state"><div style="font-size:32px">📁</div><div class="load-txt">No project data loaded yet</div></div>';
-    return;
-  }
-  const clients=buildClientsFromBOM(bom,po,wh);
-
-  // Update sidebar badge
-  document.getElementById('sbb-projects').textContent=clients.length||'—';
-
-  el.innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:16px">
-      ${clients.map(c=>renderClientCard(c)).join('')}
-    </div>`;
-}
-
-function renderClientCard(c){
-  const totalItems=c.projects.reduce((a,p)=>a+p.total,0);
-  const totalDone=c.projects.reduce((a,p)=>a+p.done,0);
-  const totalCanvass=c.projects.reduce((a,p)=>a+p.canvass,0);
-  const totalReady=c.projects.reduce((a,p)=>a+p.ready,0);
-  const totalPO=c.projects.reduce((a,p)=>a+p.issued,0);
-  const totalPendDel=c.projects.reduce((a,p)=>a+p.pendDel,0);
-  const overallProg=totalItems?Math.round(totalDone/totalItems*100):0;
-  const cid='client_'+c.name.replace(/\W/g,'_');
-
-  return`<div class="client-card">
-    <!-- Client header -->
-    <div class="client-card-hdr" onclick="toggleClientCard('${cid}')">
-      <div style="flex:1;min-width:0">
-        <div style="font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:2px">Client</div>
-        <div style="font-size:15px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.name}</div>
-        <div style="font-size:10px;color:var(--t3);margin-top:2px">${c.projects.length} project${c.projects.length!==1?'s':''} · ${totalItems} BOM items</div>
-      </div>
-      <div style="text-align:right;flex-shrink:0">
-        <div style="font-size:20px;font-weight:700;color:var(--blue);font-family:'JetBrains Mono',monospace">${overallProg}%</div>
-        <div style="font-size:9px;color:var(--t3)">complete</div>
-      </div>
-    </div>
-    <!-- Overall progress bar -->
-    <div style="padding:0 16px 10px">
-      <div class="proj-bar-bg"><div class="proj-bar-fill" style="width:${overallProg}%"></div></div>
-    </div>
-    <!-- Client-level summary chips -->
-    <div style="padding:0 16px 12px;display:flex;gap:6px;flex-wrap:wrap">
-      ${totalCanvass?`<span class="badge by" onclick="navTo('alerts',document.getElementById('nav-alerts'));renderAlerts('CANVASS')" style="cursor:pointer">🔍 ${totalCanvass} canvass</span>`:''}
-      ${totalReady?`<span class="badge bg" onclick="navTo('alerts',document.getElementById('nav-alerts'));renderAlerts('READY')" style="cursor:pointer">🟢 ${totalReady} ready PO</span>`:''}
-      ${totalPO?`<span class="badge bb">🛒 ${totalPO} PO issued</span>`:''}
-      ${totalPendDel?`<span class="badge by" onclick="navTo('alerts',document.getElementById('nav-alerts'));renderAlerts('DELIVERY')" style="cursor:pointer">🚚 ${totalPendDel} pending delivery</span>`:''}
-      ${totalDone?`<span class="badge" style="background:var(--green-bg);color:var(--green)">✅ ${totalDone} done</span>`:''}
-    </div>
-    <!-- Per-project rows (expandable) -->
-    <div class="client-projects" id="${cid}">
-      ${c.projects.map(p=>renderProjectRow(p,c.name)).join('')}
+      ${tableHtml}
     </div>
   </div>`;
 }
 
-function renderProjectRow(p, clientName){
-  const jj=JSON.stringify(JSON.stringify({name:p.name,clientName}));
-  return`<div class="project-row">
-    <div class="project-row-hdr" onclick="openProjectDetailModal(${jj},'ALL')">
-      <div style="flex:1;min-width:0">
-        <div style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</div>
-        <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
-          ${p.canvass?`<span class="badge by" style="font-size:9px" onclick="event.stopPropagation();openProjectDetailModal(${jj},'CANVASS')">🔍 ${p.canvass} canvass</span>`:''}
-          ${p.ready?`<span class="badge bp" style="font-size:9px" onclick="event.stopPropagation();openProjectDetailModal(${jj},'READY')">🟢 ${p.ready} ready</span>`:''}
-          ${p.issued?`<span class="badge bb" style="font-size:9px" onclick="event.stopPropagation();openProjectDetailModal(${jj},'ISSUED')">🛒 ${p.issued} PO</span>`:''}
-          ${p.pendDel?`<span class="badge by" style="font-size:9px" onclick="event.stopPropagation();openProjectDetailModal(${jj},'DELIVERY')">🚚 ${p.pendDel} pending</span>`:''}
-          ${p.done?`<span class="badge bg" style="font-size:9px">✅ ${p.done} done</span>`:''}
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-        <div style="text-align:right">
-          <div style="font-size:13px;font-weight:600;color:var(--blue)">${p.progress}%</div>
-          <div style="font-size:9px;color:var(--t3)">${p.total} items</div>
-        </div>
-        <div style="height:32px;width:32px;background:var(--bg);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--t3)">▶</div>
-      </div>
-    </div>
-    <div style="padding:0 14px 8px">
-      <div style="height:4px;background:var(--border);border-radius:2px;overflow:hidden">
-        <div style="height:100%;width:${p.progress}%;background:var(--green);border-radius:2px;transition:width .4s"></div>
-      </div>
-    </div>
-  </div>`;
-}
-
-function openProjectDetailModal(jsonStr, autoTab){
-  const {name:projName, clientName} = JSON.parse(jsonStr);
-  // Find the project object
-  const bom=procData?.bom||[];
-  const po=procData?.po||[];
-  const wh=procData?.wh||[];
-  const projBOM=bom.filter(r=>(r.project||r.sheet||'General')===projName);
-  const poNums=new Set(projBOM.map(r=>r.poNum).filter(Boolean));
-  const projWH=wh.filter(r=>r.project===projName||poNums.has(r.poNum));
-  const projPO=po.filter(r=>r.project===projName||poNums.has(r.poNum));
-
-  const total=projBOM.length;
-  const canvass=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Canvass')).length;
-  const ready=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Ready')).length;
-  const issued=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('PO Issued')).length;
-  const delivered=projBOM.filter(r=>{const s=ov('bom_status_'+(r._row||r.catNo),r.status||'');return s.includes('Delivered')||s.includes('Warehouse');}).length;
-  const pendDel=projWH.filter(r=>Number(r.balQty||0)>0).length;
-  const prog=total?Math.round(delivered/total*100):0;
-
-  const poTotalVal=projPO.reduce((a,r)=>a+Number(r.lineTotal||0),0);
-
-  document.getElementById('modalTitle').textContent=projName;
-  document.getElementById('modalSub').textContent=`${clientName} · ${total} BOM items`;
-  document.getElementById('modalKpis').innerHTML=`
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Total Items</div><div class="modal-kpi-val">${total}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Progress</div><div class="modal-kpi-val">${prog}%</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">PO Value</div><div class="modal-kpi-val" style="font-size:14px">₱${fmt(poTotalVal)}</div></div>`;
-
-  // Tab IDs for this modal
-  const tabs=[
-    {id:'bom',label:'📋 BOM',count:total},
-    {id:'canvass',label:'🔍 Canvass',count:canvass},
-    {id:'ready',label:'🟢 Ready PO',count:ready},
-    {id:'issued',label:'🛒 PO Issued',count:issued},
-    {id:'delivery',label:'🚚 Delivery',count:pendDel},
-  ].filter(t=>t.count>0||t.id==='bom');
-
-  const tabNav=tabs.map((t,i)=>`<button class="proj-tab ${i===0?'active':''}" onclick="switchModalTab('${t.id}',this)">${t.label} <span class="pill" style="font-size:9px">${t.count}</span></button>`).join('');
-
-  // Build content for each tab
-  function bomTable(items,mode){
-    if(!items.length)return`<div style="padding:20px;text-align:center;color:var(--t3)">✅ No items in this category</div>`;
-    const showV=mode==='ready';
-    const showPO=mode==='issued';
-    return`<div class="scroll-x"><table style="min-width:800px">
-      <thead><tr>
-        <th style="min-width:120px">Cat No</th>
-        <th style="min-width:230px">Description</th>
-        <th data-col="Qty" style="width:50px">Qty</th>
-        <th data-col="Unit" style="width:55px">Unit</th>
-        <th data-col="Vendor" style="min-width:150px">Vendor</th>
-        <th data-col="Unit Price" style="min-width:100px;text-align:right">Unit Price</th>
-        ${showPO?'<th data-col="PO #" style="min-width:90px">PO #</th>':''}
-        ${showV?'<th style="text-align:right">V1</th><th style="text-align:right">V2</th><th style="text-align:right">V3</th><th style="color:var(--green);text-align:right">Best</th>':''}
-        <th style="min-width:160px">Status</th>
-      </tr></thead>
-      <tbody>${items.map(r=>{
-        const rk=r._row||r.catNo||r.partDesc;
-        const cSt=ov('bom_status_'+rk,r.status||'');
-        const cVen=ov('bom_vendor_'+rk,r.vendor||'');
-        const cPr=ov('bom_price_'+rk,r.unitPrice||'');
-        return`<tr>
-          <td class="td-mono" style="font-size:10px;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis">${r.catNo||'—'}</td>
-          <td class="wrap" style="font-size:11px;max-width:280px;word-break:break-word">${r.partDesc||'—'}</td>
-          <td data-col="Qty">${r.qty||'—'}</td>
-          <td data-col="Unit" style="color:var(--t3)">${r.unit||'—'}</td>
-          <td data-col="Vendor"><input class="inline-input" value="${esc(cVen)}" style="min-width:120px"
-            onkeydown="event.stopPropagation()"
-            onchange="recordChange('bom_vendor_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.VENDOR},this.value,'Vendor','${esc(r.vendor||'')}')"></td>
-          <td data-col="Unit Price"><input class="inline-input td-mono" type="number" value="${cPr}" style="min-width:80px"
-            onkeydown="event.stopPropagation()"
-            onchange="recordChange('bom_price_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.UNIT_PRICE},this.value,'Price','${esc(String(r.unitPrice||''))}')"></td>
-          ${showPO?`<td data-col="PO #" class="td-mono" style="color:var(--blue)">${r.poNum||'—'}</td>`:''}
-          ${showV?`<td class="td-mono td-r" style="font-size:10px">${r.v1?'₱'+fmt(r.v1):'—'}</td><td class="td-mono td-r" style="font-size:10px">${r.v2?'₱'+fmt(r.v2):'—'}</td><td class="td-mono td-r" style="font-size:10px">${r.v3?'₱'+fmt(r.v3):'—'}</td><td class="td-mono td-r" style="color:var(--green);font-size:10px">${r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>`:''}
-          <td><select class="inline-sel" style="font-size:10px"
-            onchange="recordChange('bom_status_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.STATUS},this.value,'Status','${esc(r.status||'')}')">
-            ${BOM_STATUSES.map(s=>`<option value="${s}" ${cSt===s?'selected':''}>${s}</option>`).join('')}
-          </select></td>
-        </tr>`;}).join('')}
-      </tbody>
-    </table></div>`;
-  }
-
-  function whTable(items){
-    if(!items.length)return`<div style="padding:20px;text-align:center;color:var(--t3)">✅ No pending deliveries</div>`;
-    return`<div class="scroll-x"><table style="min-width:800px">
-      <thead><tr>
-        <th>PO #</th><th style="min-width:190px">Description</th>
-        <th>Supplier</th><th>PO Qty</th><th style="color:var(--green)">Del Qty</th>
-        <th style="color:var(--orange)">Bal Qty</th><th>Expected</th>
-        <th style="min-width:115px">Actual (editable)</th>
-        <th style="min-width:130px">Status (editable)</th>
-        <th style="min-width:140px">Remarks (editable)</th>
-      </tr></thead>
-      <tbody>${items.map(r=>{
-        const rk=r.rowIndex||r.poNum+'_'+r.partDesc;
-        const ws=ov('wh_status_'+rk,r.status||'');
-        const wa=ov('wh_actual_'+rk,r.actualDate||'');
-        const wn=ov('wh_notes_'+rk,r.remarks||'');
-        return`<tr>
-          <td class="td-mono" style="color:var(--blue);white-space:nowrap">${r.poNum||'—'}</td>
-          <td class="wrap" style="font-size:11px;max-width:250px;word-break:break-word">${r.partDesc||'—'}</td>
-          <td style="font-size:10px">${r.supplier||'—'}</td>
-          <td style="text-align:center">${r.poQty||'—'}</td>
-          <td style="text-align:center;color:var(--green)">${r.delQty||'0'}</td>
-          <td style="text-align:center;color:var(--orange);font-weight:600">${r.balQty||'—'}</td>
-          <td style="font-size:10px;color:var(--t3)">${r.expectedDate||'—'}</td>
-          <td><input type="date" class="inline-input" value="${wa}" style="min-width:110px"
-            onchange="recordChange('wh_actual_${rk}','WH',${r.rowIndex||0},${WH_COL.ACTUAL_DATE},this.value,'Actual Date','${esc(r.actualDate||'')}')"></td>
-          <td><select class="inline-sel" style="font-size:10px"
-            onchange="recordChange('wh_status_${rk}','WH',${r.rowIndex||0},${WH_COL.STATUS},this.value,'WH Status','${esc(r.status||'')}')">
-            ${WH_STATUSES.map(s=>`<option value="${s}" ${ws===s?'selected':''}>${s}</option>`).join('')}
-          </select></td>
-          <td><input class="inline-input" value="${esc(wn)}" placeholder="Remarks…"
-            onkeydown="event.stopPropagation()"
-            onchange="recordChange('wh_notes_${rk}','WH',${r.rowIndex||0},${WH_COL.REMARKS},this.value,'WH Notes','${esc(r.remarks||'')}')"></td>
-        </tr>`;}).join('')}
-      </tbody>
-    </table></div>`;
-  }
-
-  const canvassItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Canvass'));
-  const readyItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('Ready'));
-  const issuedItems=projBOM.filter(r=>(ov('bom_status_'+(r._row||r.catNo),r.status||'')).includes('PO Issued'));
-  const pendItems=projWH.filter(r=>Number(r.balQty||0)>0);
-
-  document.getElementById('modalBody').innerHTML=`
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;align-items:center;gap:8px">
-        <div style="height:5px;width:160px;background:var(--border);border-radius:3px;overflow:hidden">
-          <div style="height:100%;width:${prog}%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:3px"></div>
-        </div>
-        <span style="font-size:11px;color:var(--blue);font-weight:600">${prog}%</span>
-      </div>
-      <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center">
-        ${canvass?`<span class="badge by">🔍 ${canvass}</span>`:''}
-        ${ready?`<span class="badge bp">🟢 ${ready}</span>`:''}
-        ${issued?`<span class="badge bb">🛒 ${issued}</span>`:''}
-        ${pendDel?`<span class="badge by">🚚 ${pendDel}</span>`:''}
-        ${delivered?`<span class="badge bg">✅ ${delivered}</span>`:''}
-      </div>
-      <!-- Column visibility toggles -->
-      <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
-        <span style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-right:2px">Columns:</span>
-        ${['Vendor','Unit Price','PO #','Qty','Unit'].map(col=>`
-          <button class="col-toggle active" data-col="${col}" onclick="toggleBOMCol(this)">${col}</button>`).join('')}
-      </div>
-    </div>
-    <div class="proj-tabs-wrap">
-      <div class="proj-tabs" id="pmod_tabs">${tabNav}</div>
-      <div id="pmod_bom">${bomTable(projBOM,'bom')}</div>
-      <div id="pmod_canvass" style="display:none">${bomTable(canvassItems,'canvass')}</div>
-      <div id="pmod_ready" style="display:none">${bomTable(readyItems,'ready')}</div>
-      <div id="pmod_issued" style="display:none">${bomTable(issuedItems,'issued')}</div>
-      <div id="pmod_delivery" style="display:none">${whTable(pendItems)}</div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn btn-green" onclick="pushChanges();toast('Changes pushed','success')">↑ Push to Sheets</button>
-      <button class="btn" onclick="closeModalNow()">Close</button>
-
-    </div>`;
-  openModalEl('modal-lg');
-  // Auto-switch to requested tab after render
-  if(autoTab && autoTab!=='ALL'){
-    const tabMap={CANVASS:'canvass',READY:'ready',ISSUED:'issued',DELIVERY:'delivery',PARTIAL:'delivery',WHSTOCK:'bom'};
-    const tabId=tabMap[autoTab]||'bom';
-    // Find the matching tab button by its text content / onclick
-    const btns=[...document.querySelectorAll('#pmod_tabs .proj-tab')];
-    const btn=btns.find(b=>b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+tabId+"'"));
-    if(btn) switchModalTab(tabId,btn);
+// ── Toggle project open/close ───────────────────────────────────
+function toggleProj(proj, id) {
+  const card = document.getElementById(id);
+  if (card) {
+    const isNowOpen = !card.classList.contains('open');
+    card.classList.toggle('open', isNowOpen);
+    openProjects[proj] = isNowOpen;
   }
 }
 
-function switchModalTab(tabId, btn){
-  ['bom','canvass','ready','issued','delivery'].forEach(id=>{
-    const el=document.getElementById('pmod_'+id);
-    if(el)el.style.display=id===tabId?'block':'none';
-  });
-  document.querySelectorAll('#pmod_tabs .proj-tab').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
+// ── Escape helpers ───────────────────────────────────────────────
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
-function toggleBOMCol(btn){
-  const col=btn.dataset.col;
-  const active=btn.classList.toggle('active');
-  // Find all th/td with matching data-col in visible modal tables
-  document.querySelectorAll('#modalBox [data-col="'+col+'"]').forEach(el=>{
-    el.style.display=active?'':'none';
-  });
+function escAttr(s) {
+  return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function escJs(s) {
+  return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
 }
 
-
-
-function renderProjectTabs(p, pid){
-  const tabs=[
-    {id:'bom',label:'📋 BOM',count:p.total},
-    {id:'canvass',label:'🔍 Canvass',count:p.canvass},
-    {id:'ready',label:'🟢 Ready PO',count:p.ready},
-    {id:'po',label:'🛒 PO Issued',count:p.issued},
-    {id:'delivery',label:'🚚 Delivery',count:p.pendDel},
-  ];
-  return`<div class="proj-tabs-wrap">
-    <div class="proj-tabs" id="${pid}_tabs">
-      ${tabs.map((t,i)=>t.count>0||t.id==='bom'?`<button class="proj-tab ${i===0?'active':''}" onclick="switchProjTab('${pid}','${t.id}',this)">${t.label} <span class="pill" style="font-size:9px">${t.count}</span></button>`:'').join('')}
-    </div>
-    <div class="proj-tab-content" id="${pid}_tab_bom" style="display:block">
-      ${renderBOMTab(p)}
-    </div>
-    <div class="proj-tab-content" id="${pid}_tab_canvass" style="display:none">
-      ${renderStatusTab(p.items.filter(r=>(r.status||'').includes('Canvass')),'canvass')}
-    </div>
-    <div class="proj-tab-content" id="${pid}_tab_ready" style="display:none">
-      ${renderStatusTab(p.items.filter(r=>(r.status||'').includes('Ready')),'ready')}
-    </div>
-    <div class="proj-tab-content" id="${pid}_tab_po" style="display:none">
-      ${renderStatusTab(p.items.filter(r=>(r.status||'').includes('PO Issued')),'po')}
-    </div>
-    <div class="proj-tab-content" id="${pid}_tab_delivery" style="display:none">
-      ${renderDeliveryTab(p)}
-    </div>
-  </div>`;
-}
-
-function switchProjTab(pid, tabId, btn){
-  // Hide all tab contents
-  document.querySelectorAll(`#${pid} .proj-tab-content`).forEach(el=>el.style.display='none');
-  document.querySelectorAll(`#${pid}_tabs .proj-tab`).forEach(el=>el.classList.remove('active'));
-  document.getElementById(pid+'_tab_'+tabId).style.display='block';
-  btn.classList.add('active');
-}
-function toggleProjectDetail(pid){
-  const el=document.getElementById(pid);
-  const arr=document.getElementById(pid+'_arr');
-  if(!el)return;
-  const isOpen=el.style.display!=='none';
-  el.style.display=isOpen?'none':'block';
-  if(arr)arr.style.transform=isOpen?'':'rotate(180deg)';
-}
-function toggleClientCard(cid){
-  const el=document.getElementById(cid);
-  if(!el)return;
-  el.style.display=el.style.display==='none'?'block':'none';
-}
-
-function renderBOMTab(p){
-  if(!p.items.length)return`<div style="padding:12px;color:var(--t3);font-size:11px;text-align:center">No BOM items</div>`;
-  return`<div class="scroll-x"><table>
-    <thead><tr>
-      <th style="min-width:120px">Cat No</th>
-      <th style="min-width:220px">Description</th>
-      <th style="width:50px">Qty</th>
-      <th style="width:55px">Unit</th>
-      <th style="min-width:150px">Vendor</th>
-      <th style="min-width:100px;text-align:right">Unit Price</th>
-      <th style="min-width:160px">Status</th>
-    </tr></thead>
-    <tbody>${p.items.map(r=>{
-      const rk=r._row||r.catNo||r.partDesc;
-      const st=ov('bom_status_'+rk,r.status||'');
-      return`<tr>
-        <td class="td-mono" style="font-size:10px">${r.catNo||'—'}</td>
-        <td class="td-clip" style="font-size:11px;max-width:180px">${r.partDesc||'—'}</td>
-        <td style="text-align:center">${r.qty||'—'}</td>
-        <td style="color:var(--t3)">${r.unit||'—'}</td>
-        <td style="font-size:10px">${r.vendor||'—'}</td>
-        <td class="td-mono td-r" style="font-size:10px">${r.unitPrice?'₱'+fmt(r.unitPrice):r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
-        <td>
-          <select class="inline-sel" style="font-size:10px" onchange="recordChange('bom_status_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.STATUS},this.value,'Status: ${esc(r.catNo||'')}','${esc(r.status||'')}');renderProjects()">
-            ${BOM_STATUSES.map(s=>`<option value="${s}" ${st===s?'selected':''}>${s}</option>`).join('')}
-          </select>
-        </td>
-      </tr>`;}).join('')}
-    </tbody>
-  </table></div>`;
-}
-
-function renderStatusTab(items, type){
-  if(!items.length)return`<div style="padding:16px;color:var(--t3);font-size:11px;text-align:center">✅ None in this category</div>`;
-  const isCanvass=type==='canvass';
-  const isReady=type==='ready';
-  return`<div class="scroll-x"><table>
-    <thead><tr>
-      <th>Cat No</th><th>Description</th><th>Qty</th>
-      ${isCanvass?'<th>Prev Price</th><th>Category</th>':''}
-      ${isReady?'<th>Vendor</th><th>Best Price</th><th>V1</th><th>V2</th><th>V3</th>':''}
-      ${type==='po'?'<th>PO #</th><th>Vendor</th><th>Unit Price</th>':''}
-      <th>Status</th>
-    </tr></thead>
-    <tbody>${items.map(r=>{
-      const rk=r._row||r.catNo||r.partDesc;
-      const st=ov('bom_status_'+rk,r.status||'');
-      return`<tr>
-        <td class="td-mono" style="font-size:10px">${r.catNo||'—'}</td>
-        <td class="wrap" style="font-size:11px;max-width:240px;word-break:break-word">${r.partDesc||'—'}</td>
-        <td>${r.qty||'—'}</td>
-        ${isCanvass?`<td class="td-mono td-r">${r.prevPrice?'₱'+fmt(r.prevPrice):'—'}</td><td style="font-size:10px;color:var(--t3)">${r.category||'—'}</td>`:''}
-        ${isReady?`<td style="font-size:10px">${r.vendor||r.bestVendor||'—'}</td>
-          <td class="td-mono td-r" style="color:var(--green)">${r.bestPrice?'₱'+fmt(r.bestPrice):'—'}</td>
-          <td class="td-mono td-r" style="font-size:10px">${r.v1?'₱'+fmt(r.v1):'—'}</td>
-          <td class="td-mono td-r" style="font-size:10px">${r.v2?'₱'+fmt(r.v2):'—'}</td>
-          <td class="td-mono td-r" style="font-size:10px">${r.v3?'₱'+fmt(r.v3):'—'}</td>`:''}
-        ${type==='po'?`<td class="td-mono" style="color:var(--blue)">${r.poNum||'—'}</td>
-          <td style="font-size:10px">${r.vendor||'—'}</td>
-          <td class="td-mono td-r">${r.unitPrice?'₱'+fmt(r.unitPrice):'—'}</td>`:''}
-        <td>
-          <select class="inline-sel" style="font-size:10px" onchange="recordChange('bom_status_${rk}','${esc(r.sheet||'BOM')}',${r._row||r.num||0},${BOM_COL.STATUS},this.value,'Status: ${esc(r.catNo||'')}','${esc(r.status||'')}');renderProjects()">
-            ${BOM_STATUSES.map(s=>`<option value="${s}" ${st===s?'selected':''}>${s}</option>`).join('')}
-          </select>
-        </td>
-      </tr>`;}).join('')}
-    </tbody>
-  </table></div>`;
-}
-
-function renderDeliveryTab(p){
-  const whRows=p.whRows.filter(r=>Number(r.balQty||0)>0);
-  if(!whRows.length)return`<div style="padding:16px;color:var(--t3);font-size:11px;text-align:center">✅ No pending deliveries</div>`;
-  return`<div class="scroll-x"><table>
-    <thead><tr><th>PO #</th><th>Description</th><th>Supplier</th><th>PO Qty</th><th>Del Qty</th><th>Balance</th><th>Expected</th><th>Status (editable)</th></tr></thead>
-    <tbody>${whRows.map(r=>{
-      const rk=r.rowIndex||r.poNum+'_'+r.partDesc;
-      const st=ov('wh_status_'+rk,r.status||'');
-      return`<tr>
-        <td class="td-mono" style="color:var(--blue)">${r.poNum||'—'}</td>
-        <td class="td-clip" style="font-size:11px">${r.partDesc||'—'}</td>
-        <td style="font-size:10px">${r.supplier||'—'}</td>
-        <td style="text-align:center">${r.poQty||'—'}</td>
-        <td style="text-align:center;color:var(--green)">${r.delQty||'0'}</td>
-        <td style="text-align:center;color:var(--orange);font-weight:600">${r.balQty||'—'}</td>
-        <td style="font-size:10px;color:var(--t3)">${r.expectedDate||'—'}</td>
-        <td>
-          <select class="inline-sel" style="font-size:10px" onchange="recordChange('wh_status_${rk}','WH',${r.rowIndex||0},${WH_COL.STATUS},this.value,'WH Status: ${esc(r.poNum||'')}','${esc(r.status||'')}');renderProjects()">
-            ${WH_STATUSES.map(s=>`<option value="${s}" ${st===s?'selected':''}>${s}</option>`).join('')}
-          </select>
-        </td>
-      </tr>`;}).join('')}
-    </tbody>
-  </table></div>`;
-}
-
-
-// ══════════════════════════════════════════════
-// SUPPLIERS
-// ══════════════════════════════════════════════
-function renderSuppliers(){
-  const el=document.getElementById('panel-suppliers');
-  if(!procData){el.innerHTML=noData();return;}
-  const s=procData.suppliers||[];
-  const maxV=Math.max(...s.map(x=>x.totalPOVal),1);
-  el.innerHTML=`<div class="grid-2">
-    <div class="table-wrap">
-      <div class="table-head"><span class="table-title">PO Value Ranking</span></div>
-      <div style="padding:4px 16px 14px">
-        ${s.map((x,i)=>`<div class="sup-row" style="cursor:pointer" onclick="openSupplierModal('${escQ(x.name)}')">
-          <div class="sup-rank ${i===0?'gold':''}">${i+1}</div>
-          <div style="flex:1">
-            <div style="font-size:12px;font-weight:500;color:var(--text)">${x.name}</div>
-            <div style="font-size:10px;color:var(--t3)">${x.poCount} POs · ₱${fmt(x.totalPaid)} paid</div>
-            <div class="sup-bar-wrap" style="width:100%"><div class="sup-bar" style="width:${Math.round(x.totalPOVal/maxV*100)}%"></div></div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:13px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--blue)">₱${fmt(x.totalPOVal)}</div>
-            <div style="font-size:10px;color:var(--t3)">${pct(x.totalPaid,x.totalPOVal)}% paid</div>
-          </div>
-        </div>`).join('')}
-      </div>
-    </div>
-    <div class="table-wrap">
-      <div class="table-head"><span class="table-title">Payment Status</span></div>
-      <div class="scroll-x"><table>
-        <thead><tr>
-          <th onclick="">Supplier</th>
-          <th>POs</th><th>Total</th><th>Paid</th><th>Balance</th><th>%</th>
-        </tr></thead>
-        <tbody>
-          ${s.map(x=>{const b=x.totalPOVal-x.totalPaid,pp=pct(x.totalPaid,x.totalPOVal);return`<tr style="cursor:pointer" onclick="openSupplierModal('${escQ(x.name)}')">
-            <td class="td-clip td-link">${x.name}</td>
-            <td>${x.poCount}</td>
-            <td class="td-mono td-r">₱${fmt(x.totalPOVal)}</td>
-            <td class="td-mono td-r" style="color:var(--green)">₱${fmt(x.totalPaid)}</td>
-            <td class="td-mono td-r" style="color:${b>0?'var(--orange)':'var(--green)'}">₱${fmt(b)}</td>
-            <td style="color:${pp>=80?'var(--green)':pp>=50?'var(--orange)':'var(--red)'}">${pp}%</td>
-          </tr>`;}).join('')}
-        </tbody>
-      </table></div>
-    </div>
-  </div>`;
-}
-function openSupplierModal(name){
-  const s=(procData?.suppliers||[]).find(x=>x.name===name);
-  if(!s)return;
-  const pos=(procData?.po||[]).filter(r=>r.supplier===name);
-  document.getElementById('modalTitle').textContent=name;
-  document.getElementById('modalSub').textContent=s.poCount+' POs · ₱'+fmt(s.totalPOVal)+' total';
-  document.getElementById('modalKpis').innerHTML=`
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Total PO Value</div><div class="modal-kpi-val">₱${fmt(s.totalPOVal)}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Paid</div><div class="modal-kpi-val">₱${fmt(s.totalPaid)}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Balance</div><div class="modal-kpi-val" style="color:var(--orange)">₱${fmt(s.totalPOVal-s.totalPaid)}</div></div>`;
-  document.getElementById('modalBody').innerHTML=`
-    <div class="scroll-x"><table>
-      <thead><tr><th>PO #</th><th>Project</th><th>Description</th><th>Date</th><th>Line Total</th><th>Status</th></tr></thead>
-      <tbody>${pos.map(r=>`<tr>
-        <td class="td-mono td-link" onclick="openPOModal('${escQ(r._row||r.poNum+'_'+r.partDesc)}')">${r.poNum||'—'}</td>
-        <td>${r.project||'—'}</td>
-        <td class="td-clip">${r.partDesc||'—'}</td>
-        <td style="color:var(--t3)">${r.poDate||'—'}</td>
-        <td class="td-mono td-r">₱${fmt(r.lineTotal||0)}</td>
-        <td><select class="inline-sel" onchange="recordChange('po_status_'+(r._row||r.poNum+'_'+r.partDesc),'PO',${r.num||0},${PO_COL.STATUS},this.value,'PO Status: '+r.poNum,'')">
-          ${['⬜ Pending','✅ Delivered','🔄 Partial','⛔ Cancelled'].map(s=>`<option value="${s}" ${ov('po_status_'+(r._row||r.poNum+'_'+r.partDesc),r.status||'')==s?'selected':''}>${s}</option>`).join('')}
-        </select></td>
-      </tr>`).join('')}</tbody>
-    </table></div>`;
-  openModalEl();
-}
-
-// ══════════════════════════════════════════════
-// BILLING
-// ══════════════════════════════════════════════
-function renderBilling(){
-  const el=document.getElementById('panel-billing');
-  if(!billData){el.innerHTML=noData('Billing data unavailable.');return;}
-  const projects=billData.projects||{};
-  let gTotal=0,gBal=0;
-  Object.values(projects).forEach(p=>{gTotal+=Number(p.totalPO||0);gBal+=Number(p.balance||0);});
-  const gPaid=gTotal-gBal;
-  el.innerHTML=`
-    <div class="kpi-row" style="margin-bottom:18px">
-      ${kpiC('PIPELINE','₱'+fmt(gTotal),'#2563eb',Object.keys(projects).length+' projects')}
-      ${kpiC('BILLED','₱'+fmt(gPaid),'#16a34a',pct(gPaid,gTotal)+'% collected')}
-      ${kpiC('OUTSTANDING','₱'+fmt(gBal),'#d97706',pct(gBal,gTotal)+'% remaining')}
-      ${kpiC('CLIENTS',Object.keys(billData.clients||{}).length,'#7c3aed','')}
-    </div>
-    ${Object.entries(projects).map(([key,proj])=>{
-      const total=Number(proj.totalPO||0),bal=Number(proj.balance||0),paid=total-bal,pp=total?Math.round(paid/total*100):0;
-      return`<div class="bill-card">
-        <div class="bill-head" onclick="toggleBill('${key}')">
-          <div>
-            <div style="font-size:13px;font-weight:600;color:var(--text)">${proj.label||proj.short||key}</div>
-            <div style="font-size:11px;color:var(--t3);margin-top:2px">${key} · ${(proj.billings||[]).length} entries</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:14px">
-            <div style="display:flex;align-items:center;gap:8px">
-              <div style="width:90px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;width:${pp}%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:2px"></div></div>
-              <span style="font-size:10px;color:var(--t3);font-family:'JetBrains Mono',monospace">${pp}%</span>
-            </div>
-            <div style="text-align:right">
-              <div style="font-size:14px;font-weight:600;font-family:'JetBrains Mono',monospace">₱${fmt(total)}</div>
-              <div style="font-size:11px;color:${bal===0?'var(--green)':'var(--orange)'};font-family:'JetBrains Mono',monospace">Bal: ₱${fmt(bal)}</div>
-            </div>
-            <span style="color:var(--t3)" id="bchev-${key}">▼</span>
-          </div>
-        </div>
-        <div class="bill-body" id="bb-${key}">
-          ${(proj.billings||[]).length?`
-            <div style="font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin:12px 0 6px">Billing Schedule</div>
-            <div class="scroll-x"><table>
-              <thead><tr><th>PO #</th><th>Supplier</th><th>Billing Type</th><th>Status</th><th>VB Ref</th><th>Req Date</th><th>SI/BS #</th><th>Amount</th></tr></thead>
-              <tbody>${(proj.billings||[]).map(b=>`<tr>
-                <td class="td-mono">${b.po||'—'}</td><td class="td-clip">${b.supplier||'—'}</td>
-                <td>${b.billing||'—'}</td><td>${billingBadge(b.status)}</td>
-                <td>${b.vb||'—'}</td><td style="color:var(--t3)">${b.reqDate||'—'}</td>
-                <td>${b.sibs||'—'}</td><td class="td-mono td-r">₱${fmt(b.amount||0)}</td>
-              </tr>`).join('')}</tbody>
-            </table></div>`:''}
-          ${(proj.items||[]).length?`
-            <div style="font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin:14px 0 6px">Scope Items</div>
-            <div class="scroll-x"><table>
-              <thead><tr><th>Item/Scope</th><th>Supplier</th><th>PO #</th><th>PO Amount</th><th>Balance</th><th>Remarks</th></tr></thead>
-              <tbody>${(proj.items||[]).map(it=>`<tr>
-                <td class="td-clip">${it.item||'—'}</td><td class="td-clip">${it.supplier||'—'}</td>
-                <td class="td-mono">${it.po||'—'}</td>
-                <td class="td-mono td-r">₱${fmt(it.poAmt||0)}</td>
-                <td class="td-mono td-r" style="color:${Number(it.balance||0)>0?'var(--orange)':'var(--green)'}">₱${fmt(it.balance||0)}</td>
-                <td style="color:var(--t2)">${it.remarks||'—'}</td>
-              </tr>`).join('')}</tbody>
-            </table></div>`:''}
-        </div>
-      </div>`;}).join('')}`;
-}
-function toggleBill(k){
-  const b=document.getElementById('bb-'+k),c=document.getElementById('bchev-'+k);
-  const o=b.classList.toggle('open');
-  c.textContent=o?'▲':'▼';
-}
-
-// ══════════════════════════════════════════════
-// EQUIPMENT MONITOR
-// ══════════════════════════════════════════════
-const EQ_KEY='epsi_equipment_v1';
-function loadEquipment(){
-  try{return JSON.parse(localStorage.getItem(EQ_KEY)||'{"list":[]}')}catch(e){return{list:[]}}
-}
-function saveEquipment(data){try{localStorage.setItem(EQ_KEY,JSON.stringify(data))}catch(e){}}
-
-function renderEquipment(){
-  const el=document.getElementById('panel-equipment');
-  const data=loadEquipment();
-  const list=data.list||[];
-  const now=new Date();
-  // Stats
-  const active=list.filter(e=>e.status==='Active').length;
-  const maintenance=list.filter(e=>e.status==='Under Maintenance').length;
-  const overduePM=list.filter(e=>{
-    if(!e.nextPM)return false;
-    return new Date(e.nextPM)<now;
-  }).length;
-  const totalUtil=list.length?Math.round(list.reduce((a,e)=>a+Number(e.utilRate||0),0)/list.length):0;
-  el.innerHTML=`
-    <div class="mini-row" style="margin-bottom:16px">
-      ${mini('Active Equipment',active,'var(--green)')}
-      ${mini('Under Maintenance',maintenance,'var(--orange)')}
-      ${mini('PM Overdue',overduePM,'var(--red)')}
-      ${mini('Avg Utilization',totalUtil+'%','var(--blue)')}
-    </div>
-    <div class="grid-2" style="margin-bottom:16px">
-      <!-- PM Schedule -->
-      <div class="table-wrap">
-        <div class="table-head">
-          <span class="table-title">🔧 Preventive Maintenance Schedule</span>
-          <button class="btn btn-dark" onclick="openAddEquipmentModal()">+ Add Equipment</button>
-        </div>
-        <div class="scroll-x">
-          <table>
-            <thead><tr>
-              <th>Equipment</th><th>Type</th><th>Last PM</th><th>Next PM</th><th>Status (editable)</th><th>Util %</th><th>Action</th>
-            </tr></thead>
-            <tbody>
-              ${list.length===0?`<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--t3)">
-                No equipment yet — click "+ Add Equipment" to start tracking
-              </td></tr>`:
-              list.map((e,i)=>{
-                const nextPM=e.nextPM?new Date(e.nextPM):null;
-                const isOverdue=nextPM&&nextPM<now;
-                const daysUntil=nextPM?Math.ceil((nextPM-now)/(86400000)):null;
-                return`<tr>
-                  <td>
-                    <div style="font-weight:500">${e.name||'—'}</div>
-                    <div style="font-size:10px;color:var(--t3)">${e.code||''}</div>
-                  </td>
-                  <td>${e.type||'—'}</td>
-                  <td style="color:var(--t3);font-size:11px">${e.lastPM||'—'}</td>
-                  <td style="color:${isOverdue?'var(--red)':daysUntil<=7?'var(--orange)':'var(--green)'}">
-                    ${e.nextPM||'—'}
-                    ${isOverdue?'<br><span class="badge br" style="font-size:9px">OVERDUE</span>':daysUntil!==null&&daysUntil<=7?`<br><span class="badge by" style="font-size:9px">${daysUntil}d</span>`:''}
-                  </td>
-                  <td>
-                    <select class="inline-sel" onchange="updateEquipField(${i},'status',this.value);renderEquipment()">
-                      ${['Active','Under Maintenance','Idle','Decommissioned'].map(s=>`<option value="${s}" ${e.status===s?'selected':''}>${s}</option>`).join('')}
-                    </select>
-                  </td>
-                  <td>
-                    <input class="inline-input" type="number" value="${e.utilRate||0}" min="0" max="100" style="width:55px"
-                      onchange="updateEquipField(${i},'utilRate',this.value);renderEquipment()">
-                    <span style="color:var(--t3)">%</span>
-                  </td>
-                  <td>
-                    <button class="btn" onclick="openEquipmentDetailModal(${i})" style="padding:4px 8px;font-size:10px">📋 Log</button>
-                    <button class="btn" onclick="deleteEquipment(${i})" style="padding:4px 8px;font-size:10px;color:var(--red)">✕</button>
-                  </td>
-                </tr>`;}).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <!-- Downtime Logs -->
-      <div class="table-wrap">
-        <div class="table-head"><span class="table-title">🛑 Recent Downtime & Repairs</span></div>
-        <div class="scroll-x">
-          <table>
-            <thead><tr><th>Equipment</th><th>Date</th><th>Reason</th><th>Duration</th><th>Resolved</th></tr></thead>
-            <tbody>
-              ${getRecentDowntime(list).length===0?`<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--t3)">No downtime logs yet</td></tr>`:
-              getRecentDowntime(list).map(d=>`<tr>
-                <td style="font-weight:500">${d.equip}</td>
-                <td style="color:var(--t3);font-size:11px">${d.date}</td>
-                <td class="td-clip">${d.reason}</td>
-                <td>${d.duration||'—'}</td>
-                <td>${d.resolved?`<span class="badge bg">✓ Fixed</span>`:`<span class="badge by">Ongoing</span>`}</td>
-              </tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    <!-- Utilization Chart -->
-    <div class="table-wrap">
-      <div class="table-head"><span class="table-title">📊 Equipment Utilization Rate</span></div>
-      <div style="padding:16px 20px">
-        ${list.length===0?`<div style="color:var(--t3);font-size:11px;text-align:center;padding:20px">Add equipment to see utilization rates</div>`:
-        list.map(e=>{
-          const util=Number(e.utilRate||0);
-          const color=util>=80?'var(--green)':util>=50?'var(--blue)':util>=30?'var(--orange)':'var(--red)';
-          return`<div style="margin-bottom:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-              <span style="font-size:12px;font-weight:500">${e.name}</span>
-              <span style="font-size:12px;font-weight:600;font-family:'JetBrains Mono',monospace;color:${color}">${util}%</span>
-            </div>
-            <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
-              <div style="height:100%;width:${util}%;background:${color};border-radius:4px;transition:width .5s"></div>
-            </div>
-          </div>`;}).join('')}
-      </div>
-    </div>`;
-}
-
-function getRecentDowntime(list){
-  const logs=[];
-  list.forEach(e=>(e.downtime||[]).forEach(d=>logs.push({equip:e.name,...d})));
-  return logs.sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,8);
-}
-function updateEquipField(i,field,value){
-  const data=loadEquipment();
-  if(data.list[i])data.list[i][field]=value;
-  saveEquipment(data);
-}
-function deleteEquipment(i){
-  if(!confirm('Delete this equipment record?'))return;
-  const data=loadEquipment();
-  data.list.splice(i,1);
-  saveEquipment(data);
-  renderEquipment();
-}
-function openAddEquipmentModal(){
-  document.getElementById('modalTitle').textContent='Add Equipment';
-  document.getElementById('modalSub').textContent='Machine & Test Equipment Monitoring';
-  document.getElementById('modalKpis').innerHTML='';
-  document.getElementById('modalBody').innerHTML=`
-    <div class="po-grid">
-      <div class="po-field"><div class="po-label">Equipment Name *</div><input class="po-input" id="eq-name" placeholder="e.g. CNC Lathe Machine"></div>
-      <div class="po-field"><div class="po-label">Equipment Code</div><input class="po-input" id="eq-code" placeholder="e.g. EQ-001"></div>
-    </div>
-    <div class="po-grid">
-      <div class="po-field"><div class="po-label">Type / Category</div><input class="po-input" id="eq-type" placeholder="e.g. Machining, Testing, Electrical"></div>
-      <div class="po-field"><div class="po-label">Status</div>
-        <select class="po-select" id="eq-status">
-          <option>Active</option><option>Under Maintenance</option><option>Idle</option><option>Decommissioned</option>
-        </select>
-      </div>
-    </div>
-    <div class="po-grid">
-      <div class="po-field"><div class="po-label">Last PM Date</div><input type="date" class="po-input" id="eq-lastpm"></div>
-      <div class="po-field"><div class="po-label">Next PM Date</div><input type="date" class="po-input" id="eq-nextpm"></div>
-    </div>
-    <div class="po-grid">
-      <div class="po-field"><div class="po-label">Utilization Rate (%)</div><input type="number" class="po-input" id="eq-util" min="0" max="100" placeholder="0-100"></div>
-      <div class="po-field"><div class="po-label">PM Interval (days)</div><input type="number" class="po-input" id="eq-interval" placeholder="e.g. 90"></div>
-    </div>
-    <div class="po-field"><div class="po-label">Remarks</div><textarea class="po-textarea" id="eq-remarks" placeholder="Notes about this equipment…"></textarea></div>
-    <div class="modal-btns">
-      <button class="btn btn-green" onclick="saveNewEquipment()">+ Add Equipment</button>
-      <button class="btn" onclick="closeModalNow()">Cancel</button>
-    </div>`;
-  openModalEl();
-}
-function saveNewEquipment(){
-  const name=document.getElementById('eq-name').value.trim();
-  if(!name){alert('Equipment name is required');return;}
-  const data=loadEquipment();
-  data.list.push({
-    name,
-    code:document.getElementById('eq-code').value.trim(),
-    type:document.getElementById('eq-type').value.trim(),
-    status:document.getElementById('eq-status').value,
-    lastPM:document.getElementById('eq-lastpm').value,
-    nextPM:document.getElementById('eq-nextpm').value,
-    utilRate:document.getElementById('eq-util').value||0,
-    interval:document.getElementById('eq-interval').value||90,
-    remarks:document.getElementById('eq-remarks').value.trim(),
-    downtime:[],repairHistory:[],
-  });
-  saveEquipment(data);
-  closeModalNow();
-  renderEquipment();
-  toast('Equipment added ✓','success');
-}
-function openEquipmentDetailModal(i){
-  const data=loadEquipment();
-  const e=data.list[i];
-  if(!e)return;
-  document.getElementById('modalTitle').textContent=e.name;
-  document.getElementById('modalSub').textContent=(e.code||'')+(e.type?' · '+e.type:'');
-  document.getElementById('modalKpis').innerHTML=`
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Status</div><div class="modal-kpi-val" style="font-size:14px">${e.status||'—'}</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Utilization</div><div class="modal-kpi-val">${e.utilRate||0}%</div></div>
-    <div class="modal-kpi"><div class="modal-kpi-lbl">Next PM</div><div class="modal-kpi-val" style="font-size:13px">${e.nextPM||'—'}</div></div>`;
-  const downs=e.downtime||[];
-  const repairs=e.repairHistory||[];
-  document.getElementById('modalBody').innerHTML=`
-    <div class="modal-section">Log Downtime / Repair</div>
-    <div class="po-grid">
-      <div class="po-field"><div class="po-label">Date</div><input type="date" class="po-input" id="dt-date" value="${new Date().toISOString().split('T')[0]}"></div>
-      <div class="po-field"><div class="po-label">Duration (hours)</div><input type="number" class="po-input" id="dt-dur" placeholder="e.g. 4"></div>
-    </div>
-    <div class="po-field"><div class="po-label">Reason / Problem</div><input class="po-input" id="dt-reason" placeholder="Describe the issue…"></div>
-    <div class="po-grid">
-      <div class="po-field"><div class="po-label">Repair Action Taken</div><input class="po-input" id="dt-repair" placeholder="Parts replaced, action taken…"></div>
-      <div class="po-field"><div class="po-label">Resolved?</div>
-        <select class="po-select" id="dt-resolved"><option value="1">Yes — Resolved</option><option value="0">No — Ongoing</option></select>
-      </div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn btn-orange" onclick="logDowntime(${i})">📋 Log Entry</button>
-    </div>
-    <div class="modal-section">Downtime History (${downs.length} entries)</div>
-    ${downs.length===0?`<div style="color:var(--t3);font-size:11px;padding:8px 0">No downtime logged yet</div>`:
-    `<div class="scroll-x"><table>
-      <thead><tr><th>Date</th><th>Reason</th><th>Duration</th><th>Repair</th><th>Status</th></tr></thead>
-      <tbody>${downs.map(d=>`<tr>
-        <td style="color:var(--t3)">${d.date||'—'}</td>
-        <td class="td-clip">${d.reason||'—'}</td>
-        <td>${d.duration?d.duration+'h':'—'}</td>
-        <td class="td-clip">${d.repair||'—'}</td>
-        <td>${d.resolved?`<span class="badge bg">Fixed</span>`:`<span class="badge by">Ongoing</span>`}</td>
-      </tr>`).join('')}</tbody>
-    </table></div>`}
-    <div class="modal-section">Update PM Schedule</div>
-    <div class="po-grid">
-      <div class="po-field"><div class="po-label">Last PM Date</div><input type="date" class="po-input" id="pm-last" value="${e.lastPM||''}"></div>
-      <div class="po-field"><div class="po-label">Next PM Date</div><input type="date" class="po-input" id="pm-next" value="${e.nextPM||''}"></div>
-    </div>
-    <div class="modal-btns">
-      <button class="btn btn-green" onclick="updatePMDates(${i})">💾 Update PM Dates</button>
-      <button class="btn" onclick="closeModalNow()">Close</button>
-    </div>`;
-  openModalEl();
-}
-function logDowntime(i){
-  const date=document.getElementById('dt-date').value;
-  const reason=document.getElementById('dt-reason').value.trim();
-  if(!date||!reason){alert('Date and reason are required');return;}
-  const data=loadEquipment();
-  if(!data.list[i].downtime)data.list[i].downtime=[];
-  data.list[i].downtime.unshift({
-    date,
-    reason,
-    duration:document.getElementById('dt-dur').value||'',
-    repair:document.getElementById('dt-repair').value.trim(),
-    resolved:document.getElementById('dt-resolved').value==='1',
-  });
-  saveEquipment(data);
-  openEquipmentDetailModal(i);
-  renderEquipment();
-  toast('Downtime logged ✓','success');
-}
-function updatePMDates(i){
-  const last=document.getElementById('pm-last').value;
-  const next=document.getElementById('pm-next').value;
-  const data=loadEquipment();
-  if(last)data.list[i].lastPM=last;
-  if(next)data.list[i].nextPM=next;
-  saveEquipment(data);
-  closeModalNow();
-  renderEquipment();
-  toast('PM schedule updated ✓','success');
-}
-
-// ══════════════════════════════════════════════
-// PIPELINE
-// ══════════════════════════════════════════════
-function renderPipeline(){
-  const el=document.getElementById('panel-pipeline');
-  if(el.children.length)return;
-  el.innerHTML=`<div class="flow-wrap">
-    <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px;text-align:center">Exelon Supply Chain — 2-Way Sync</div>
-    <div style="font-size:11px;color:var(--t3);text-align:center;margin-bottom:24px">Click any node to navigate · Orange dot = unsaved changes</div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:0">
-      <div class="flow-box" onclick="navTo('projects',document.getElementById('nav-projects'))" style="border-color:#bfdbfe;background:var(--blue-bg)">
-        <div style="font-size:16px;margin-bottom:3px">👤</div>
-        <div style="font-size:11px;font-weight:600;color:var(--text)">Client & Project</div>
-        <div style="font-size:9px;color:var(--t3)">BOM · Timeline</div>
-      </div>
-      <div style="text-align:center;color:var(--t3);line-height:2">↓</div>
-      <div style="display:flex;gap:20px;align-items:center">
-        <div class="flow-box" onclick="navTo('alerts',document.getElementById('nav-alerts'))" style="border-color:#bbf7d0;background:var(--green-bg)">
-          <div style="font-size:16px;margin-bottom:3px">📋</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text)">BOM</div>
-          <div style="font-size:9px;color:var(--t3)">Materials list</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center">
-          <div style="color:var(--blue);font-size:16px">⟺</div>
-          <div style="font-size:9px;color:var(--blue);font-weight:600">EDITABLE</div>
-        </div>
-        <div class="flow-box" onclick="navTo('wh',document.getElementById('nav-wh'))" style="border-color:#bbf7d0;background:var(--green-bg)">
-          <div style="font-size:16px;margin-bottom:3px">🏭</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text)">Warehouse MRS</div>
-          <div style="font-size:9px;color:var(--t3)">Stock requests</div>
-        </div>
-      </div>
-      <div style="text-align:center;color:var(--t3);line-height:2">↓</div>
-      <div class="flow-box" onclick="navTo('alerts',document.getElementById('nav-alerts'));renderAlerts('CANVASS')" style="border-color:#e9d5ff;background:var(--purple-bg)">
-        <div style="font-size:16px;margin-bottom:3px">🔍</div>
-        <div style="font-size:11px;font-weight:600;color:var(--text)">Canvass</div>
-        <div style="font-size:9px;color:var(--t3)">Vendor quotes</div>
-      </div>
-      <div style="text-align:center;color:var(--t3);line-height:2">↓</div>
-      <div style="display:flex;gap:20px;align-items:center">
-        <div class="flow-box" onclick="navTo('po',document.getElementById('nav-po'))" style="border-color:#bfdbfe;background:var(--blue-bg)">
-          <div style="font-size:16px;margin-bottom:3px">🛒</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text)">Purchase Order</div>
-          <div style="font-size:9px;color:var(--t3)">PO creation · editable</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center">
-          <div style="color:var(--blue);font-size:16px">⟺</div>
-          <div style="font-size:9px;color:var(--blue);font-weight:600">2-WAY SYNC</div>
-        </div>
-        <div class="flow-box" onclick="navTo('billing',document.getElementById('nav-billing'))" style="border-color:#fde68a;background:var(--orange-bg)">
-          <div style="font-size:16px;margin-bottom:3px">💳</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text)">Billing</div>
-          <div style="font-size:9px;color:var(--t3)">Invoice · payment</div>
-        </div>
-      </div>
-      <div style="text-align:center;color:var(--t3);line-height:2">↓</div>
-      <div style="display:flex;gap:20px;align-items:center">
-        <div class="flow-box" onclick="navTo('wh',document.getElementById('nav-wh'))" style="border-color:#bfdbfe;background:var(--blue-bg)">
-          <div style="font-size:16px;margin-bottom:3px">📦</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text)">WH Incoming</div>
-          <div style="font-size:9px;color:var(--t3)">Delivery · editable</div>
-        </div>
-        <div style="color:var(--t3)">⟺</div>
-        <div class="flow-box" onclick="navTo('items',document.getElementById('nav-items'))" style="border-color:#bbf7d0;background:var(--green-bg)">
-          <div style="font-size:16px;margin-bottom:3px">📊</div>
-          <div style="font-size:11px;font-weight:600;color:var(--text)">Item History</div>
-          <div style="font-size:9px;color:var(--t3)">Price tracking</div>
-        </div>
-      </div>
-    </div>
-    <div style="display:flex;justify-content:center;gap:20px;margin-top:24px;flex-wrap:wrap">
-      <span style="font-size:11px;color:var(--t3);display:flex;align-items:center;gap:5px">
-        <span style="width:8px;height:8px;border-radius:50%;background:var(--orange);display:inline-block"></span>Unsaved change indicator
-      </span>
-      <span style="font-size:11px;color:var(--blue)">⟺ Editable fields sync back to Google Sheets via Push button</span>
-    </div>
-  </div>`;
-}
-
-// ══════════════════════════════════════════════
-// MODAL HELPERS
-// ══════════════════════════════════════════════
-function openModalEl(size){
-  const box=document.getElementById('modalBox');
-  const ov=document.getElementById('modalOverlay');
-  box.className='modal'+(size?' '+size:'');
-  ov.classList.add('open');
-  ov.style.padding=size==='modal-xl'?'0':'20px';}
-function closeModal(e){if(e.target===document.getElementById('modalOverlay'))closeModalNow();}
-function closeModalNow(){const ov=document.getElementById('modalOverlay');ov.classList.remove('open');ov.style.padding='20px';}
-
-// ══════════════════════════════════════════════
-// BADGES & HELPERS
-// ══════════════════════════════════════════════
-function updateBadges(){
-  if(!procData)return;
-  const bom=procData.bom||[],wh=procData.wh||[];
-  const ac=bom.filter(r=>ov('bom_status_'+(r._row||r.catNo),r.status||'').match(/Canvass|Ready/)).length
-           +wh.filter(r=>Number(ov('wh_balqty_'+(r._row||r.poNum+'_'+r.partDesc),r.balQty)||r.balQty||0)>0).length;
-  document.getElementById('sbb-alerts').textContent=ac||'—';
-  document.getElementById('sbb-projects').textContent=(procData.bom||[]).map(r=>r.sheet).filter((v,i,a)=>a.indexOf(v)===i).length||'—';
-  if(billData?.projects)document.getElementById('sbb-billing').textContent=Object.keys(billData.projects).length||'—';
-}
-function setSyncState(s){document.getElementById('syncDot').className='sync-dot'+(s==='loading'?' loading':s==='error'?' error':'');}
-
-function statusBadge(s){
-  s=String(s||'');
-  if(/For Canvass/i.test(s))  return`<span class="badge by">🟡 For Canvass</span>`;
-  if(/Ready for PO/i.test(s)) return`<span class="badge bp">🟢 Ready for PO</span>`;
-  if(/PO Issued/i.test(s))    return`<span class="badge bb">✅ PO Issued</span>`;
-  if(/Warehouse Stock/i.test(s))return`<span class="badge bt">🏭 WH Stock</span>`;
-  if(/Delivered/i.test(s))    return`<span class="badge bg">✅ Delivered</span>`;
-  if(/Complete/i.test(s))     return`<span class="badge bg">✅ Complete</span>`;
-  if(/Partial/i.test(s))      return`<span class="badge by">🔄 Partial</span>`;
-  if(/Pending/i.test(s))      return`<span class="badge bx">⬜ Pending</span>`;
-  if(/Cancel/i.test(s))       return`<span class="badge br">⛔ Cancelled</span>`;
-  return`<span class="badge bx">${s||'—'}</span>`;
-}
-function billingBadge(s){
-  const u=String(s||'').toUpperCase();
-  if(/PAID/.test(u))return`<span class="badge bg">Paid</span>`;
-  if(/ON.PROCESS|ON PROCESS/.test(u))return`<span class="badge bt">On-Process</span>`;
-  if(/@HO/.test(u))return`<span class="badge bp">@HO</span>`;
-  if(/AWAIT|FOR BILLING/.test(u))return`<span class="badge by">Awaiting</span>`;
-  return`<span class="badge bx">${s||'—'}</span>`;
-}
-
-function kpiC(label,value,color,sub){return`<div class="kpi-card" style="--ac:${color}" onclick=""><div class="kpi-lbl">${label}</div><div class="kpi-val">${value}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`;}
-function arCard(ico,label,num,bg,color,tab,f){return`<div class="ar-card" onclick="navTo('${tab}',document.getElementById('nav-${tab}'));renderAlerts('${f}')"><div class="ar-icon" style="background:${bg};color:${color}">${ico}</div><div><div class="ar-num" style="color:${color}">${num}</div><div class="ar-lbl">${label}</div></div></div>`;}
-function mini(label,value,color){return`<div class="mini-s"><div class="mini-val" style="color:${color}">${value}</div><div class="mini-lbl">${label}</div></div>`;}
-function noData(msg){return`<div class="loading-state"><div style="font-size:28px">📡</div><div class="load-txt">${msg||'Waiting for data…'}</div><button class="btn btn-dark" onclick="syncAll()" style="margin-top:8px">↻ Retry</button></div>`;}
-function errState(msg,sub){return`<div style="text-align:center;padding:48px 20px"><div style="font-size:32px;margin-bottom:8px">⚠️</div><div style="font-size:14px;font-weight:500;color:var(--red)">${msg}</div><div style="font-size:11px;color:var(--t3);max-width:360px;margin:6px auto 16px">${sub||''}</div><button class="btn btn-dark" onclick="syncAll()">↻ Retry</button></div>`;}
-function fmt(n){const v=Number(n||0);if(v>=1e6)return(v/1e6).toFixed(2)+'M';if(v>=1000)return v.toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});return v.toFixed(2);}
-function pct(a,b){if(!b||b===0)return 0;return Math.round(Number(a)/Number(b)*100);}
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function escQ(s){return String(s||'').replace(/'/g,"\\'").replace(/"/g,'\\"');}
-
-// ══════════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════════
-function toast(msg,type=''){
-  const c=document.getElementById('toastContainer');
-  const d=document.createElement('div');
-  d.className='toast-item'+(type?' '+type:'');
-  d.innerHTML=msg;
-  c.appendChild(d);
-  setTimeout(()=>{d.style.animation='toastIn .2s ease reverse';setTimeout(()=>d.remove(),200);},3200);
-}
-
-// ══════════════════════════════════════════════
-// THEME
-// ══════════════════════════════════════════════
-function toggleTheme(){
-  const html=document.documentElement;
-  const dark=html.getAttribute('data-theme')==='dark';
-  if(dark){html.removeAttribute('data-theme');document.getElementById('themeIco').textContent='☀';document.getElementById('themeLbl').textContent='Light Mode';localStorage.setItem('epsi-theme','light');}
-  else{html.setAttribute('data-theme','dark');document.getElementById('themeIco').textContent='☽';document.getElementById('themeLbl').textContent='Dark Mode';localStorage.setItem('epsi-theme','dark');}
-}
-(function(){
-  if(localStorage.getItem('epsi-theme')==='dark'){
-    document.documentElement.setAttribute('data-theme','dark');
-    document.addEventListener('DOMContentLoaded',()=>{document.getElementById('themeIco').textContent='☽';document.getElementById('themeLbl').textContent='Dark Mode';});
-  }
-})();
+// ── Init ─────────────────────────────────────────────────────────
+loadData();
 </script>
 </body>
 </html>
