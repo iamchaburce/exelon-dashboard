@@ -200,7 +200,7 @@ function badge(v) {
 function pill(txt, bg, col) {
   return `<span class="pill" style="background:${bg};color:${col}">${txt}</span>`;
 }
-function fmt₱(v) {
+function fmtPeso(v) {
   if (v === '' || v == null) return '—';
   const n = parseFloat(v);
   if (isNaN(n)) return '—';
@@ -433,7 +433,7 @@ function buildProjCard(proj, items, filtered, projKeys) {
               <td class="td-po">${escHtml(it.poNum||'—')}</td>
               <td class="td-right">${it.qty||'—'}</td>
               <td class="td-muted">${escHtml(it.unit||'—')}</td>
-              <td class="td-right" style="white-space:nowrap">${fmt₱(it.unitPrice)}</td>
+              <td class="td-right" style="white-space:nowrap">${fmtPeso(it.unitPrice)}</td>
               <td>${badge(it.status)}</td>
               <td>${badge(it.whStatus)}</td>
               <td>${badge(it.payStatus||'—')}</td>
