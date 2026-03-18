@@ -6,160 +6,180 @@
 <title>EPSI Procurement Dashboard</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;overflow:hidden;height:100vh}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;height:100vh;overflow:hidden}
 ::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:#f1f5f9}
 ::-webkit-scrollbar-thumb{background:#c4b5fd;border-radius:3px}
+::-webkit-scrollbar-track{background:#f1f5f9}
 .app{display:flex;height:100vh;overflow:hidden}
 
-/* Sidebar */
-.sidebar{width:192px;min-width:192px;background:#1e1b4b;display:flex;flex-direction:column;height:100vh;overflow-y:auto;flex-shrink:0}
-.sb-logo{padding:16px 14px 12px;border-bottom:1px solid rgba(255,255,255,.07)}
-.sb-icon{width:32px;height:32px;background:#7c3aed;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;margin-bottom:6px}
-.sb-name{font-size:12px;font-weight:700;color:#fff}
-.sb-sub{font-size:9.5px;color:#7c3aed;margin-top:1px}
-.sb-section{padding:10px 12px 3px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#6d5bae}
-.sb-item{display:flex;align-items:center;gap:8px;padding:7px 12px;font-size:11.5px;color:#a78bfa;cursor:pointer;border-radius:6px;margin:1px 5px;transition:all .12s}
+/* ── Sidebar ─────────────────────────────────────────────── */
+.sidebar{width:188px;min-width:188px;background:#1e1b4b;display:flex;flex-direction:column;flex-shrink:0}
+.sb-logo{padding:14px 12px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
+.sb-icon{width:30px;height:30px;background:#7c3aed;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;margin-bottom:5px}
+.sb-name{font-size:11.5px;font-weight:700;color:#fff}
+.sb-sub{font-size:9px;color:#7c3aed}
+.sb-sec{padding:9px 11px 2px;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#6d5bae}
+.sb-item{padding:6px 11px;font-size:11px;color:#a78bfa;cursor:pointer;border-radius:5px;margin:1px 4px;transition:all .12s;display:flex;align-items:center;gap:7px}
 .sb-item:hover{background:rgba(139,92,246,.12);color:#c4b5fd}
 .sb-item.active{background:rgba(139,92,246,.22);color:#fff;font-weight:600}
 
-/* Main */
+/* ── Main ─────────────────────────────────────────────────── */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:48px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0}
-.topbar-left{min-width:0}
-.topbar-title{font-size:14px;font-weight:600;color:#1e293b}
-.topbar-sub{font-size:10px;color:#94a3b8;margin-top:1px}
-.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.sync-dot{width:7px;height:7px;border-radius:50%;background:#10b981;flex-shrink:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:46px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0;gap:12px}
+.topbar-title{font-size:13.5px;font-weight:600}
+.topbar-sub{font-size:9.5px;color:#94a3b8;margin-top:1px}
+.topbar-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#10b981}
 .sync-dot.loading{background:#f59e0b;animation:pulse 1s infinite}
 .sync-dot.error{background:#ef4444}
-.sync-time{font-size:10px;color:#94a3b8;white-space:nowrap}
-.btn-sync{padding:5px 12px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:11px;color:#64748b;cursor:pointer;font-weight:500;white-space:nowrap}
-.btn-sync:hover{background:#f8fafc}
-.btn-push{padding:5px 14px;border:none;border-radius:6px;background:#7c3aed;color:#fff;font-size:11px;cursor:pointer;font-weight:600}
+.sync-dot.saving{background:#3b82f6;animation:pulse .6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.sync-msg{font-size:10px;color:#64748b;white-space:nowrap}
+.btn{padding:4px 11px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:500;border:1px solid #e2e8f0;background:#fff;color:#64748b;transition:all .12s}
+.btn:hover{background:#f8fafc}
+.btn-primary{background:#7c3aed;color:#fff;border-color:#7c3aed}
+.btn-primary:hover{background:#6d28d9}
 
-/* Tab bar */
+/* ── Tab Bar ──────────────────────────────────────────────── */
 .tabbar{border-bottom:1px solid #e2e8f0;background:#f8fafc;flex-shrink:0}
-.tab-search-row{padding:5px 10px 0;display:flex;align-items:center;gap:6px}
-.tab-search{width:130px;padding:3px 8px;font-size:10.5px;border:1px solid #e2e8f0;border-radius:5px;outline:none;color:#1e293b;background:#fff}
-.tab-search:focus{border-color:#7c3aed}
-.tabs-scroll{display:flex;overflow-x:auto;padding:0 6px;gap:0;scrollbar-width:none}
-.tabs-scroll::-webkit-scrollbar{display:none}
-.tab-btn{padding:8px 13px;border:none;background:transparent;cursor:pointer;white-space:nowrap;font-size:11.5px;font-weight:500;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;flex-shrink:0}
-.tab-btn:hover{color:#7c3aed;background:rgba(124,58,237,.05)}
-.tab-btn.active{color:#7c3aed;font-weight:700;border-bottom-color:#7c3aed;background:#fff}
-.tab-count{font-size:9px;color:inherit;opacity:.7;margin-left:3px}
+.tabs-row{display:flex;overflow-x:auto;padding:0 6px;scrollbar-width:none;align-items:flex-end}
+.tabs-row::-webkit-scrollbar{display:none}
+.tab{padding:8px 14px;border:none;background:transparent;cursor:pointer;font-size:11.5px;font-weight:500;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .15s;flex-shrink:0}
+.tab:hover{color:#7c3aed}
+.tab.active{color:#7c3aed;font-weight:700;border-bottom-color:#7c3aed;background:#fff}
+.tab-badge{font-size:9px;background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:8px;margin-left:4px;font-weight:600}
 
-/* Content */
-.content{flex:1;overflow-y:auto;padding:16px 20px;min-height:0}
+/* ── Content ──────────────────────────────────────────────── */
+.content{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
 
-/* Loading / Error */
-.loading-screen,.error-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;color:#64748b}
-.spinner{width:36px;height:36px;border:3px solid #e2e8f0;border-top-color:#7c3aed;border-radius:50%;animation:spin 0.8s linear infinite}
+/* ── Loading / Error ──────────────────────────────────────── */
+.center-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:14px;color:#64748b}
+.spinner{width:34px;height:34px;border:3px solid #e2e8f0;border-top-color:#7c3aed;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* Mini dashboard KPIs */
-.dash-header{display:flex;align-items:center;gap:7px;margin-bottom:9px}
-.dash-bar{width:3px;height:15px;background:#7c3aed;border-radius:2px}
-.dash-title{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#7c3aed}
-.dash-meta{font-size:10px;color:#94a3b8}
-.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr) repeat(3,1.2fr);gap:8px;margin-bottom:16px}
-.kpi{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:10px 12px;border-left-width:3px}
-.kpi-label{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
-.kpi-val{font-size:22px;font-weight:700;line-height:1.1}
+/* ── Client View pane ────────────────────────────────────── */
+.cv-pane{display:flex;flex-direction:column;height:100%;overflow:hidden}
+.cv-topbar{display:flex;align-items:center;gap:8px;padding:8px 16px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0}
+.cv-client-tabs{display:flex;overflow-x:auto;padding:0 6px;border-bottom:1px solid #e2e8f0;background:#f8fafc;flex-shrink:0;scrollbar-width:none}
+.cv-client-tabs::-webkit-scrollbar{display:none}
+.cv-ctab{padding:6px 12px;border:none;background:transparent;cursor:pointer;font-size:11px;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-weight:500;transition:all .15s}
+.cv-ctab.active{color:#7c3aed;font-weight:700;border-bottom-color:#7c3aed;background:#fff}
+.cv-body{flex:1;overflow-y:auto;padding:12px 16px}
 
-/* Project search */
-.proj-search-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
-.proj-search{flex:1;padding:8px 12px;font-size:12.5px;border:1px solid #cbd5e1;border-radius:8px;outline:none;color:#1e293b;background:#fff}
-.proj-search:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.1)}
-.proj-count{font-size:10.5px;color:#94a3b8;white-space:nowrap}
-.btn-clear{padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;background:#fff;font-size:11px;color:#7c3aed;cursor:pointer}
-.btn-clear:hover{background:#f5f3ff}
+/* ── KPI row ──────────────────────────────────────────────── */
+.kpi-row{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.kpi{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;border-left-width:3px;min-width:100px}
+.kpi-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.kpi-val{font-size:20px;font-weight:700}
 
-/* Project cards */
-.proj-card{border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;margin-bottom:7px;transition:border-color .15s}
+/* ── Project accordion ────────────────────────────────────── */
+.proj-search-row{display:flex;gap:7px;align-items:center;margin-bottom:10px}
+.search-input{flex:1;padding:7px 11px;font-size:12px;border:1px solid #cbd5e1;border-radius:7px;outline:none;background:#fff;color:#1e293b}
+.search-input:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.1)}
+.proj-card{border:1px solid #e2e8f0;border-radius:7px;overflow:hidden;margin-bottom:6px;transition:border-color .15s}
 .proj-card.open{border-color:#c4b5fd}
-.proj-hdr{width:100%;display:flex;align-items:center;gap:9px;padding:10px 13px;background:#f8fafc;border:none;cursor:pointer;text-align:left;transition:background .12s}
+.proj-hdr{width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;background:#f8fafc;border:none;cursor:pointer;text-align:left}
 .proj-card.open .proj-hdr{background:#f5f3ff}
 .proj-hdr:hover{background:#eff0fe}
-.proj-arrow{font-size:10px;color:#94a3b8;min-width:10px;transition:transform .15s}
+.proj-arrow{font-size:9.5px;color:#94a3b8;min-width:9px;transition:transform .15s}
 .proj-card.open .proj-arrow{transform:rotate(90deg);color:#7c3aed}
-.proj-name{font-size:12.5px;font-weight:600;color:#1e293b;flex:1;text-align:left}
+.proj-name{font-size:12px;font-weight:600;color:#1e293b;flex:1}
 .proj-card.open .proj-name{color:#7c3aed}
-.proj-pills{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
-.pill{font-size:9.5px;padding:2px 7px;border-radius:999px;font-weight:600;white-space:nowrap}
-
-/* Item table */
+.pill{font-size:9px;padding:1px 6px;border-radius:999px;font-weight:600;white-space:nowrap}
+.proj-pills{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
 .proj-body{display:none;background:#fff}
 .proj-card.open .proj-body{display:block}
-.item-search-row{padding:7px 12px;border-top:1px solid #f1f5f9}
-.item-search{width:100%;padding:5px 10px;font-size:11.5px;border:1px solid #e2e8f0;border-radius:6px;outline:none;color:#1e293b;background:#fff}
+.item-search-row{padding:6px 11px;border-top:1px solid #f1f5f9}
+.item-search{width:100%;padding:4px 9px;font-size:11px;border:1px solid #e2e8f0;border-radius:5px;outline:none;background:#f8fafc;color:#1e293b}
 .item-search:focus{border-color:#7c3aed}
-.tbl-wrap{overflow-x:auto}
+
+/* ── Data table ───────────────────────────────────────────── */
+.tbl-pane{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.tbl-toolbar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0}
+.tbl-wrap{flex:1;overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
-th{padding:6px 10px;background:#f8fafc;color:#64748b;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e2e8f0;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:2}
-td{padding:6px 10px;border-bottom:1px solid #f8fafc;color:#334155;vertical-align:middle}
+th{padding:6px 9px;background:#f8fafc;color:#64748b;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e2e8f0;white-space:nowrap;position:sticky;top:0;z-index:2;text-align:left}
+th.editable-col{background:#fffbeb}
+td{padding:5px 9px;border-bottom:1px solid #f8fafc;color:#334155;vertical-align:middle;max-width:0}
 tr:hover td{background:#fafafe}
 tr:last-child td{border-bottom:none}
+.td-clip{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
+.td-clip2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px}
 .td-muted{color:#94a3b8}
 .td-po{color:#7c3aed;font-weight:600}
-.td-right{text-align:right}
-.td-clip{max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.td-clip2{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:10px;font-weight:600;white-space:nowrap}
-.no-results{padding:18px;text-align:center;color:#94a3b8;font-size:12px}
+.td-r{text-align:right}
+.no-results{padding:22px;text-align:center;color:#94a3b8;font-size:12px}
+
+/* ── Badge ────────────────────────────────────────────────── */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:9.5px;font-weight:600;white-space:nowrap}
+
+/* ── Editable cell ────────────────────────────────────────── */
+.editable{cursor:pointer;position:relative}
+.editable:hover .editable-inner{background:#f0f9ff;border-radius:3px}
+.editable-inner{display:block;padding:2px 4px;border-radius:3px;min-height:18px;min-width:40px}
+.editable input,.editable select{
+  font-size:11px;padding:2px 5px;border:1.5px solid #7c3aed;border-radius:4px;
+  background:#fff;color:#1e293b;outline:none;width:100%;min-width:80px;
+  font-family:inherit;
+}
+.editable select{cursor:pointer}
+.save-indicator{
+  position:fixed;bottom:14px;right:14px;
+  background:#1e293b;color:#fff;font-size:11px;
+  padding:6px 14px;border-radius:7px;
+  opacity:0;transition:opacity .2s;pointer-events:none;z-index:999;
+}
+.save-indicator.show{opacity:1}
+.save-indicator.ok{background:#065f46}
+.save-indicator.err{background:#b91c1c}
 </style>
 </head>
 <body>
 <div class="app">
 
-<!-- SIDEBAR -->
+<!-- Sidebar -->
 <nav class="sidebar">
   <div class="sb-logo">
     <div class="sb-icon">E</div>
     <div class="sb-name">Exelon Power</div>
     <div class="sb-sub">SOLUTIONS INC.</div>
   </div>
-  <div class="sb-section">Procurement</div>
-  <div class="sb-item">◈ Overview</div>
-  <div class="sb-item active">👤 Client View</div>
-  <div class="sb-item">≡ Item History</div>
-  <div class="sb-item">◻ Purchase Orders</div>
-  <div class="sb-item">△ Alerts</div>
-  <div class="sb-section">Operations</div>
-  <div class="sb-item">⬡ WH Incoming</div>
-  <div class="sb-item">⊟ Project Summary</div>
-  <div class="sb-item">◎ Suppliers</div>
-  <div class="sb-section">Finance</div>
-  <div class="sb-item">$ Billing</div>
-  <div class="sb-section">Equipment</div>
-  <div class="sb-item">⊕ Equipment Monitor</div>
+  <div class="sb-sec">Procurement</div>
+  <div class="sb-item active" onclick="switchTab('bom')">📦 Client / BOM</div>
+  <div class="sb-item" onclick="switchTab('po')">🛒 Purchase Orders</div>
+  <div class="sb-item" onclick="switchTab('wh')">🏭 WH Incoming</div>
+  <div class="sb-item" onclick="switchTab('vp')">💰 Vendor Payable</div>
+  <div class="sb-item" onclick="switchTab('mrs')">📝 MRS</div>
+  <div class="sb-sec">Tools</div>
+  <div class="sb-item" onclick="loadData()">↻ Refresh All</div>
 </nav>
 
-<!-- MAIN -->
+<!-- Main -->
 <div class="main">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="topbar-title">Client View</div>
-      <div class="topbar-sub" id="topbarSub">Loading from Google Sheets…</div>
+    <div style="min-width:0">
+      <div class="topbar-title" id="pageTitle">Client View — BOM</div>
+      <div class="topbar-sub" id="topbarSub">Loading…</div>
     </div>
     <div class="topbar-right">
       <div class="sync-dot loading" id="syncDot"></div>
-      <span class="sync-time" id="syncTime">Connecting…</span>
-      <button class="btn-sync" onclick="loadData()">↻ Refresh</button>
+      <span class="sync-msg" id="syncMsg">Connecting…</span>
+      <button class="btn" onclick="loadData()">↻ Refresh</button>
     </div>
   </div>
 
-  <div class="tabbar" id="tabbar" style="display:none">
-    <div class="tab-search-row">
-      <input class="tab-search" type="text" placeholder="Find client…" id="tabSearch" oninput="filterTabs()">
+  <div class="tabbar">
+    <div class="tabs-row">
+      <button class="tab active" data-tab="bom" onclick="switchTab('bom')">📦 Client View<span class="tab-badge" id="tbadge-bom">—</span></button>
+      <button class="tab" data-tab="po" onclick="switchTab('po')">🛒 Purchase Orders<span class="tab-badge" id="tbadge-po">—</span></button>
+      <button class="tab" data-tab="wh" onclick="switchTab('wh')">🏭 WH Incoming<span class="tab-badge" id="tbadge-wh">—</span></button>
+      <button class="tab" data-tab="vp" onclick="switchTab('vp')">💰 Vendor Payable<span class="tab-badge" id="tbadge-vp">—</span></button>
+      <button class="tab" data-tab="mrs" onclick="switchTab('mrs')">📝 MRS<span class="tab-badge" id="tbadge-mrs">—</span></button>
     </div>
-    <div class="tabs-scroll" id="tabsBar"></div>
   </div>
 
-  <div class="content" id="mainContent">
-    <div class="loading-screen">
+  <div class="content" id="contentArea">
+    <div class="center-screen">
       <div class="spinner"></div>
       <div>Fetching live data from Google Sheets…</div>
     </div>
@@ -167,324 +187,521 @@ tr:last-child td{border-bottom:none}
 </div>
 </div>
 
+<!-- Save indicator -->
+<div class="save-indicator" id="saveIndicator"></div>
+
 <script>
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
+const WEB_APP = 'https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
 
-// ── State ───────────────────────────────────────────────────────
-let DATA = null;         // raw API payload
-let CLIENTS = [];        // ordered list of clean client names
-let CLIENT_MAP = {};     // cleanName → { projects: { projName: [items] } }
-let activeClient = '';
+// ── Global state ─────────────────────────────────────────────
+let API = null;
+let activeTab = 'bom';
+let activeBOMClient = '';
 let openProjects = {};
-let projSearches = {};
-let itemSearches = {};
+let projSearch = {};
+let itemSearch = {};
+let tblSearch = {};
 
-// ── Status badges ───────────────────────────────────────────────
-const SB = {
+// ── Status options ────────────────────────────────────────────
+const BOM_STATUS = ['🟡 For Canvass','🟢 Ready for PO','✅ PO Issued','🏭 Warehouse Stock','✅ Delivered'];
+const WH_STATUS  = ['⬜ Pending','🔄 Partial','✅ Complete'];
+const PAY_STATUS = ['','⬜ Unpaid','🔄 Partial Pay','✅ Paid'];
+const PO_STATUS  = ['For Approval','✅ Approved','✅ Delivered','❌ Cancelled'];
+const PAY_TERMS  = ['COD','30 days','45 days','60 days','Upon Delivery','Advanced'];
+
+// ── Badge styling ─────────────────────────────────────────────
+const BADGE_MAP = {
   '🟡 For Canvass':     ['#fef3c7','#d97706'],
   '🟢 Ready for PO':    ['#d1fae5','#065f46'],
   '✅ PO Issued':        ['#ede9fe','#6d28d9'],
   '🏭 Warehouse Stock': ['#dbeafe','#1d4ed8'],
   '✅ Delivered':        ['#d1fae5','#065f46'],
   '⬜ Pending':          ['#f1f5f9','#64748b'],
-  '🟡 Partial':         ['#ffedd5','#c2410c'],
+  '🔄 Partial':          ['#ffedd5','#c2410c'],
+  '🔄 Partial Pay':      ['#ffedd5','#c2410c'],
   '✅ Complete':         ['#d1fae5','#065f46'],
   '⬜ Unpaid':           ['#fee2e2','#b91c1c'],
   '✅ Paid':             ['#d1fae5','#065f46'],
+  '✅ Approved':         ['#d1fae5','#065f46'],
+  '❌ Cancelled':        ['#fee2e2','#b91c1c'],
 };
 function badge(v) {
-  if (!v) v = '—';
-  const s = SB[v] || ['#f1f5f9','#64748b'];
-  return `<span class="badge" style="background:${s[0]};color:${s[1]}">${v}</span>`;
+  if (!v && v !== 0) return '<span class="badge" style="background:#f1f5f9;color:#94a3b8">—</span>';
+  const s = BADGE_MAP[v] || ['#f1f5f9','#64748b'];
+  return `<span class="badge" style="background:${s[0]};color:${s[1]}">${esc(v)}</span>`;
 }
-function pill(txt, bg, col) {
-  return `<span class="pill" style="background:${bg};color:${col}">${txt}</span>`;
+function pill(t,bg,c){ return `<span class="pill" style="background:${bg};color:${c}">${t}</span>`; }
+function fmtP(v){
+  if(v===''||v==null)return'—';
+  const n=parseFloat(v); if(isNaN(n))return'—';
+  return'₱'+n.toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});
 }
-function fmtPeso(v) {
-  if (v === '' || v == null) return '—';
-  const n = parseFloat(v);
-  if (isNaN(n)) return '—';
-  return '₱' + n.toLocaleString('en-PH', {minimumFractionDigits:0, maximumFractionDigits:0});
+function fmtD(v){
+  if(!v)return'—';
+  try{const d=new Date(v);if(isNaN(d))return v;
+    return d.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});}
+  catch{return v;}
 }
-function fmtDate(v) {
-  if (!v) return '—';
-  try {
-    const d = new Date(v);
-    if (isNaN(d)) return v;
-    return d.toLocaleDateString('en-PH', {month:'short', day:'numeric', year:'numeric'});
-  } catch { return v; }
-}
+function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function escA(s){return String(s??'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+function escJ(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
 
-// ── Stats helper ────────────────────────────────────────────────
-function stats(items) {
-  return {
-    total:   items.length,
-    canvass: items.filter(i => i.status === '🟡 For Canvass').length,
-    ready:   items.filter(i => i.status === '🟢 Ready for PO').length,
-    issued:  items.filter(i => i.status === '✅ PO Issued').length,
-    whStock: items.filter(i => i.status === '🏭 Warehouse Stock').length,
-    done:    items.filter(i => i.whStatus === '✅ Complete').length,
-    unpaid:  items.filter(i => i.payStatus === '⬜ Unpaid').length,
-    paid:    items.filter(i => i.payStatus === '✅ Paid').length,
-  };
+// ── Save indicator ────────────────────────────────────────────
+let saveTimer;
+function showSave(msg,type='ok'){
+  const el=document.getElementById('saveIndicator');
+  el.textContent=msg; el.className='save-indicator show '+type;
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>el.classList.remove('show'),2500);
 }
 
-// ── Clean client name (strip 📦 prefix) ─────────────────────────
-function cleanClient(sheet) {
-  return sheet.replace(/^📦\s*/, '').trim();
+// ── 2-way sync: write cell to Google Sheet ────────────────────
+async function saveCell(sheet,row,col,value){
+  const dot=document.getElementById('syncDot');
+  dot.className='sync-dot saving';
+  document.getElementById('syncMsg').textContent='Saving…';
+  try{
+    const payload=JSON.stringify({sheet,row,col,value});
+    const url=WEB_APP+'?action=updateCell&payload='+encodeURIComponent(payload);
+    const res=await fetch(url);
+    const json=await res.json();
+    if(!json.ok) throw new Error(json.error||'Save failed');
+    dot.className='sync-dot';
+    document.getElementById('syncMsg').textContent='Saved ✓';
+    showSave('✅ Saved to Google Sheets','ok');
+    setTimeout(()=>{document.getElementById('syncMsg').textContent='Live';},3000);
+  }catch(err){
+    dot.className='sync-dot error';
+    document.getElementById('syncMsg').textContent='Error';
+    showSave('❌ Save failed: '+err.message,'err');
+  }
 }
 
-// ── Load data from Apps Script ───────────────────────────────────
-async function loadData() {
-  // UI: loading state
-  document.getElementById('syncDot').className = 'sync-dot loading';
-  document.getElementById('syncTime').textContent = 'Syncing…';
-  document.getElementById('tabbar').style.display = 'none';
-  document.getElementById('mainContent').innerHTML = `
-    <div class="loading-screen">
-      <div class="spinner"></div>
-      <div>Fetching live data from Google Sheets…</div>
-    </div>`;
+// ── Editable cell builder ────────────────────────────────────
+// type: 'text' | 'number' | 'select'
+// options: for select type
+// sheet, row, col: for write-back
+function editCell(val,sheet,row,col,type='text',options=null){
+  const id='ec_'+Math.random().toString(36).slice(2,8);
+  const displayVal=val===''||val==null?'—':val;
+  const rawVal=val===null||val===undefined?'':String(val);
 
-  try {
-    const res  = await fetch(WEB_APP_URL + '?action=load');
-    const json = await res.json();
+  let inner;
+  if(type==='select'&&options){
+    const opts=options.map(o=>`<option value="${escA(o)}"${o===rawVal?' selected':''}>${esc(o)}</option>`).join('');
+    inner=`<div class="editable-inner" id="disp_${id}">${
+      rawVal ? badge(rawVal) : '<span style="color:#94a3b8">—</span>'
+    }</div>
+    <select id="inp_${id}" style="display:none" onchange="commitCell('${id}','${escJ(sheet)}',${row},${col},'select')" onblur="cancelCell('${id}')">
+      <option value="">—</option>${opts}
+    </select>`;
+  }else{
+    inner=`<div class="editable-inner" id="disp_${id}">${esc(displayVal)}</div>
+    <input id="inp_${id}" type="${type==='number'?'number':'text'}" value="${escA(rawVal)}"
+      style="display:none"
+      onkeydown="if(event.key==='Enter')commitCell('${id}','${escJ(sheet)}',${row},${col},'${type}');if(event.key==='Escape')cancelCell('${id}')"
+      onblur="commitCell('${id}','${escJ(sheet)}',${row},${col},'${type}')"
+    >`;
+  }
+  return `<td class="editable" onclick="activateCell(event,'${id}')" title="Click to edit">
+    ${inner}
+  </td>`;
+}
 
-    if (!json.ok) throw new Error(json.error || 'API returned ok:false');
+function activateCell(e,id){
+  e.stopPropagation();
+  const disp=document.getElementById('disp_'+id);
+  const inp=document.getElementById('inp_'+id);
+  if(!inp||inp.style.display!=='none')return;
+  disp.style.display='none';
+  inp.style.display='block';
+  inp.focus();
+  if(inp.tagName==='INPUT')inp.select();
+}
 
-    DATA = json;
+function commitCell(id,sheet,row,col,type){
+  const disp=document.getElementById('disp_'+id);
+  const inp=document.getElementById('inp_'+id);
+  if(!inp)return;
+  const val=inp.value;
+  inp.style.display='none';
+  disp.style.display='block';
+  // Update display
+  if(type==='select')disp.innerHTML=val?badge(val):'<span style="color:#94a3b8">—</span>';
+  else disp.textContent=val||'—';
+  // Save to sheet
+  saveCell(sheet,row,col,val);
+}
 
-    // Build CLIENT_MAP from bom array grouped by sheet → project
-    CLIENT_MAP = {};
-    const sheetOrder = [];
+function cancelCell(id){
+  const disp=document.getElementById('disp_'+id);
+  const inp=document.getElementById('inp_'+id);
+  if(!inp)return;
+  inp.style.display='none';
+  disp.style.display='block';
+}
 
-    json.bom.forEach(item => {
-      const cname = cleanClient(item.sheet);
-      if (!CLIENT_MAP[cname]) {
-        CLIENT_MAP[cname] = { sheet: item.sheet, projects: {} };
-        sheetOrder.push(cname);
-      }
-      const proj = (item.project || 'No Project').toString().trim();
-      if (!CLIENT_MAP[cname].projects[proj]) {
-        CLIENT_MAP[cname].projects[proj] = [];
-      }
-      CLIENT_MAP[cname].projects[proj].push(item);
-    });
-
-    // Preserve sheet order from API
-    CLIENTS = [...new Set(sheetOrder)];
-
-    // Update topbar
-    const updated = new Date(json.updated);
-    const timeStr = updated.toLocaleTimeString('en-PH', {hour:'2-digit', minute:'2-digit'});
-    document.getElementById('syncDot').className = 'sync-dot';
-    document.getElementById('syncTime').textContent = 'Synced ' + timeStr;
-    document.getElementById('topbarSub').textContent =
-      `Live from Google Sheets · ${json.bom.length} items · ${CLIENTS.length} clients`;
-
-    // Build tabs + render
-    document.getElementById('tabbar').style.display = '';
-    buildTabs();
-    if (!activeClient || !CLIENT_MAP[activeClient]) {
-      activeClient = CLIENTS[0];
+// ── Load all data ─────────────────────────────────────────────
+async function loadData(){
+  document.getElementById('syncDot').className='sync-dot loading';
+  document.getElementById('syncMsg').textContent='Syncing…';
+  try{
+    const res=await fetch(WEB_APP+'?action=load');
+    const json=await res.json();
+    if(!json.ok)throw new Error(json.error||'API error');
+    API=json;
+    // Update badges
+    document.getElementById('tbadge-bom').textContent=json.bom?.length||0;
+    document.getElementById('tbadge-po').textContent=json.po?.length||0;
+    document.getElementById('tbadge-wh').textContent=json.wh?.length||0;
+    document.getElementById('tbadge-vp').textContent=json.vp?.length||0;
+    document.getElementById('tbadge-mrs').textContent=json.mrs?.length||0;
+    // Topbar
+    const t=new Date(json.updated).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('topbarSub').textContent=
+      `Live · ${json.bom?.length} BOM · ${json.po?.length} PO · ${json.wh?.length} WH · Updated ${t}`;
+    document.getElementById('syncDot').className='sync-dot';
+    document.getElementById('syncMsg').textContent='Live';
+    // Set default client
+    if(!activeBOMClient){
+      const sheets=[...new Set((json.bom||[]).map(r=>r.sheet))];
+      activeBOMClient=sheets[0]?sheets[0].replace(/^📦\s*/,'').trim():'';
     }
-    highlightActiveTab();
-    renderContent();
-
-  } catch (err) {
-    document.getElementById('syncDot').className = 'sync-dot error';
-    document.getElementById('syncTime').textContent = 'Error';
-    document.getElementById('mainContent').innerHTML = `
-      <div class="error-screen">
-        <div style="font-size:32px">⚠️</div>
-        <div style="font-size:14px;font-weight:600;color:#1e293b">Cannot connect to Google Sheets</div>
-        <div style="font-size:12px;color:#94a3b8;max-width:360px;text-align:center">${err.message}</div>
-        <button onclick="loadData()" style="padding:8px 20px;background:#7c3aed;color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:12px">↻ Try Again</button>
+    renderTab(activeTab);
+  }catch(err){
+    document.getElementById('syncDot').className='sync-dot error';
+    document.getElementById('syncMsg').textContent='Error';
+    document.getElementById('contentArea').innerHTML=`
+      <div class="center-screen">
+        <div style="font-size:28px">⚠️</div>
+        <div style="font-weight:600">Cannot connect to Google Sheets</div>
+        <div style="font-size:11px;color:#94a3b8">${esc(err.message)}</div>
+        <button class="btn btn-primary" onclick="loadData()">↻ Try Again</button>
       </div>`;
   }
 }
 
-// ── Build client tab bar ─────────────────────────────────────────
-function buildTabs() {
-  const bar = document.getElementById('tabsBar');
-  bar.innerHTML = CLIENTS.map(c => {
-    const np = Object.keys(CLIENT_MAP[c].projects).length;
-    const ni = Object.values(CLIENT_MAP[c].projects).flat().length;
-    return `<button class="tab-btn" data-client="${c}"
-      onclick="selectClient('${c.replace(/'/g,"\\'")}')"
-      >${c}<span class="tab-count">${np}p·${ni}</span></button>`;
-  }).join('');
-}
-
-function filterTabs() {
-  const q = document.getElementById('tabSearch').value.toLowerCase();
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.style.display = !q || btn.dataset.client.toLowerCase().includes(q) ? '' : 'none';
+// ── Tab switching ─────────────────────────────────────────────
+function switchTab(tab){
+  activeTab=tab;
+  document.querySelectorAll('.tab,.sb-item').forEach(el=>{
+    el.classList.toggle('active',el.dataset?.tab===tab||el.onclick?.toString().includes("'"+tab+"'"));
   });
+  const TITLES={bom:'Client View — BOM',po:'Purchase Orders',wh:'WH Incoming',vp:'Vendor Payable',mrs:'Material Request Sheet'};
+  document.getElementById('pageTitle').textContent=TITLES[tab]||tab;
+  if(API)renderTab(tab);
 }
 
-function selectClient(c) {
-  activeClient = c;
-  highlightActiveTab();
-  const activeTab = document.querySelector('.tab-btn.active');
-  if (activeTab) activeTab.scrollIntoView({behavior:'smooth', inline:'center', block:'nearest'});
-  projSearches[c] = projSearches[c] || '';
-  renderContent();
+function renderTab(tab){
+  if(!API){document.getElementById('contentArea').innerHTML='<div class="center-screen"><div class="spinner"></div><div>Loading…</div></div>';return;}
+  if(tab==='bom')renderBOM();
+  else if(tab==='po')renderFlatTable('po',API.po||[],poConfig());
+  else if(tab==='wh')renderFlatTable('wh',API.wh||[],whConfig());
+  else if(tab==='vp')renderFlatTable('vp',API.vp||[],vpConfig());
+  else if(tab==='mrs')renderFlatTable('mrs',API.mrs||[],mrsConfig());
 }
 
-function highlightActiveTab() {
-  document.querySelectorAll('.tab-btn').forEach(b =>
-    b.classList.toggle('active', b.dataset.client === activeClient));
+// ── BOM / Client View ─────────────────────────────────────────
+function getBOMClients(){
+  const sheets=[...new Set((API.bom||[]).map(r=>r.sheet))];
+  return sheets.map(s=>({sheet:s,name:s.replace(/^📦\s*/,'').trim()}));
+}
+function getBOMForClient(name){
+  return (API.bom||[]).filter(r=>r.sheet.replace(/^📦\s*/,'').trim()===name);
 }
 
-// ── Render client content ────────────────────────────────────────
-function renderContent() {
-  const c = activeClient;
-  if (!CLIENT_MAP[c]) return;
+function renderBOM(){
+  const clients=getBOMClients();
+  if(!activeBOMClient&&clients.length)activeBOMClient=clients[0].name;
+  const items=getBOMForClient(activeBOMClient);
+  // Group by project
+  const projMap={};
+  items.forEach(it=>{
+    const p=(it.project||'No Project').toString().trim();
+    if(!projMap[p])projMap[p]=[];
+    projMap[p].push(it);
+  });
+  const projKeys=Object.keys(projMap);
+  const pSearch=(projSearch['bom']||'').toLowerCase();
+  const filtProj=pSearch?projKeys.filter(p=>p.toLowerCase().includes(pSearch)):projKeys;
+  // Stats
+  const st=bomStats(items);
+  // Client tab bar
+  const clientTabs=clients.map(c=>`
+    <button class="cv-ctab${c.name===activeBOMClient?' active':''}"
+      onclick="activeBOMClient='${escJ(c.name)}';renderBOM()">
+      ${esc(c.name)}<span style="font-size:9px;opacity:.6;margin-left:3px">${getBOMForClient(c.name).length}</span>
+    </button>`).join('');
+  // KPIs
+  const kpis=[
+    ['🟡 For Canvass',st.canvass,'#d97706','#fef3c7'],
+    ['🟢 Ready',st.ready,'#065f46','#d1fae5'],
+    ['✅ PO Issued',st.issued,'#6d28d9','#ede9fe'],
+    ['🏭 WH Stock',st.whStock,'#1d4ed8','#dbeafe'],
+    ['✅ Done',st.done,'#065f46','#d1fae5'],
+    ['⬜ Unpaid',st.unpaid,'#b91c1c','#fee2e2'],
+    ['📦 Total',st.total,'#7c3aed','#f5f3ff'],
+  ].map(([l,v,tc,bg])=>`
+    <div class="kpi" style="border-left-color:${tc}">
+      <div class="kpi-lbl" style="color:${tc}">${l}</div>
+      <div class="kpi-val" style="color:${tc}">${v}</div>
+    </div>`).join('');
+  // Project cards
+  const cards=filtProj.length===0
+    ?`<div class="no-results">No projects match "${esc(pSearch)}"</div>`
+    :filtProj.map(proj=>buildProjCard(proj,projMap[proj],projKeys)).join('');
 
-  const projs    = CLIENT_MAP[c].projects;
-  const projKeys = Object.keys(projs);
-  const allI     = projKeys.flatMap(p => projs[p]);
-  const s        = stats(allI);
-  const pSearch  = (projSearches[c] || '').toLowerCase();
-  const filtered = pSearch ? projKeys.filter(p => p.toLowerCase().includes(pSearch)) : projKeys;
-
-  // KPI cards
-  const kpiDefs = [
-    ['🟡 For Canvass', s.canvass, '#d97706', '#fef3c7'],
-    ['🟢 Ready for PO', s.ready,  '#065f46', '#d1fae5'],
-    ['✅ PO Issued',    s.issued,  '#6d28d9', '#ede9fe'],
-    ['🏭 WH Stock',    s.whStock, '#1d4ed8', '#dbeafe'],
-    ['✅ WH Complete',  s.done,    '#065f46', '#d1fae5'],
-    ['⬜ Unpaid',       s.unpaid,  '#b91c1c', '#fee2e2'],
-    ['📦 Total items', s.total,   '#7c3aed', '#f5f3ff'],
-  ];
-
-  // Project cards HTML
-  const projCardsHtml = filtered.length === 0
-    ? `<div class="no-results">No projects match "${pSearch}"</div>`
-    : filtered.map(proj => buildProjCard(proj, projs[proj], filtered, projKeys)).join('');
-
-  document.getElementById('mainContent').innerHTML = `
-    <div class="dash-header">
-      <div class="dash-bar"></div>
-      <span class="dash-title">${c}</span>
-      <span class="dash-meta">${s.total} items · ${projKeys.length} project${projKeys.length!==1?'s':''}</span>
-    </div>
-    <div class="kpi-grid">
-      ${kpiDefs.map(([l,v,tc,bg]) => `
-        <div class="kpi" style="border-left-color:${tc}">
-          <div class="kpi-label" style="color:${tc}">${l}</div>
-          <div class="kpi-val" style="color:${tc}">${v}</div>
-        </div>`).join('')}
-    </div>
-    <div class="proj-search-row">
-      <input class="proj-search" type="text" id="projSearch" value="${escHtml(projSearches[c]||'')}"
-        placeholder="🔍 Search projects… (e.g. S13475, VCT, WALTERMART)"
-        oninput="projSearches['${escJs(c)}']=this.value; renderContent()">
-      <span class="proj-count">${filtered.length} / ${projKeys.length} projects</span>
-      ${(projSearches[c]||'') ?
-        `<button class="btn-clear" onclick="projSearches['${escJs(c)}']=''; renderContent()">Clear</button>` : ''}
-    </div>
-    ${projCardsHtml}`;
+  document.getElementById('contentArea').innerHTML=`
+    <div class="cv-pane">
+      <div class="cv-client-tabs">${clientTabs}</div>
+      <div class="cv-body">
+        <div class="kpi-row">${kpis}</div>
+        <div class="proj-search-row">
+          <input class="search-input" type="text" placeholder="🔍 Search projects…"
+            value="${escA(projSearch['bom']||'')}"
+            oninput="projSearch['bom']=this.value;renderBOM()">
+          <span style="font-size:10px;color:#94a3b8">${filtProj.length}/${projKeys.length} projects</span>
+          ${projSearch['bom']?`<button class="btn" onclick="projSearch['bom']='';renderBOM()">Clear</button>`:''}
+        </div>
+        ${cards}
+      </div>
+    </div>`;
 }
 
-// ── Build single project accordion card ─────────────────────────
-function buildProjCard(proj, items, filtered, projKeys) {
-  const isOpen = openProjects[proj] !== undefined
-    ? openProjects[proj]
-    : (filtered.length === 1 || proj === projKeys[0]);
+function bomStats(items){
+  return{
+    total:items.length,
+    canvass:items.filter(i=>i.status==='🟡 For Canvass').length,
+    ready:items.filter(i=>i.status==='🟢 Ready for PO').length,
+    issued:items.filter(i=>i.status==='✅ PO Issued').length,
+    whStock:items.filter(i=>i.status==='🏭 Warehouse Stock').length,
+    done:items.filter(i=>i.whStatus==='✅ Complete').length,
+    unpaid:items.filter(i=>i.payStatus==='⬜ Unpaid').length,
+  };
+}
 
-  const ps = stats(items);
-  const iSearch = (itemSearches[proj] || '').toLowerCase();
-  const fi = iSearch
-    ? items.filter(i => [i.partDesc, i.catNo, i.vendor, i.poNum, i.status, i.category, i.mrf]
-        .some(f => (f || '').toString().toLowerCase().includes(iSearch)))
-    : items;
-
-  const pills = [
-    ps.canvass && pill(`🟡 ${ps.canvass}`,    '#fef3c7','#d97706'),
-    ps.ready   && pill(`🟢 ${ps.ready} ready`,'#d1fae5','#065f46'),
-    ps.issued  && pill(`✅ ${ps.issued} PO`,   '#ede9fe','#6d28d9'),
-    ps.done    && pill(`🏭 ${ps.done} done`,   '#dbeafe','#1d4ed8'),
-    ps.unpaid  && pill(`⬜ ${ps.unpaid} unpaid`,'#fee2e2','#b91c1c'),
-    pill(`${items.length} items`, '#f1f5f9','#64748b'),
+function buildProjCard(proj,items,allKeys){
+  const isOpen=openProjects[proj]!==undefined?openProjects[proj]:proj===allKeys[0];
+  const st=bomStats(items);
+  const iSearch=(itemSearch[proj]||'').toLowerCase();
+  const fi=iSearch?items.filter(i=>[i.partDesc,i.catNo,i.vendor,i.poNum,i.status,i.category]
+    .some(f=>(f||'').toString().toLowerCase().includes(iSearch))):items;
+  const pills=[
+    st.canvass&&pill(`🟡 ${st.canvass}`,'#fef3c7','#d97706'),
+    st.ready&&pill(`🟢 ${st.ready}`,'#d1fae5','#065f46'),
+    st.issued&&pill(`✅ ${st.issued} PO`,'#ede9fe','#6d28d9'),
+    st.done&&pill(`🏭 ${st.done} done`,'#dbeafe','#1d4ed8'),
+    st.unpaid&&pill(`⬜ ${st.unpaid} unpaid`,'#fee2e2','#b91c1c'),
+    pill(`${items.length}`,'#f1f5f9','#64748b'),
   ].filter(Boolean).join('');
+  const cid='pc_'+btoa(encodeURIComponent(proj)).replace(/\W/g,'').slice(0,16);
 
-  const tableHtml = fi.length === 0
-    ? `<div class="no-results">No items match "${escHtml(iSearch)}"</div>`
-    : `<div class="tbl-wrap">
-        <table>
-          <thead><tr>
-            <th>#</th><th>Date</th><th>Category</th><th>Description</th>
-            <th>Cat No</th><th>Vendor</th><th>PO #</th>
-            <th>Qty</th><th>Unit</th><th>Price</th>
-            <th>Status</th><th>WH</th><th>Pay</th>
-          </tr></thead>
-          <tbody>
-            ${fi.map(it => `
-            <tr>
-              <td class="td-muted td-right">${it.num||'—'}</td>
-              <td class="td-muted" style="white-space:nowrap">${fmtDate(it.date)}</td>
-              <td class="td-muted">${escHtml(it.category||'—')}</td>
-              <td class="td-clip" title="${escAttr(it.partDesc)}">${escHtml(it.partDesc||'—')}</td>
-              <td class="td-muted">${escHtml(it.catNo||'—')}</td>
-              <td class="td-clip2">${escHtml(it.vendor||'—')}</td>
-              <td class="td-po">${escHtml(it.poNum||'—')}</td>
-              <td class="td-right">${it.qty||'—'}</td>
-              <td class="td-muted">${escHtml(it.unit||'—')}</td>
-              <td class="td-right" style="white-space:nowrap">${fmtPeso(it.unitPrice)}</td>
-              <td>${badge(it.status)}</td>
-              <td>${badge(it.whStatus)}</td>
-              <td>${badge(it.payStatus||'—')}</td>
-            </tr>`).join('')}
-          </tbody>
-        </table>
-      </div>`;
+  const rows=fi.length===0
+    ?`<tr><td colspan="14" class="no-results">No items match "${esc(iSearch)}"</td></tr>`
+    :fi.map(it=>{
+      const sheet=it.sheet;
+      const row=it.rowIndex||0;
+      // Editable cols: status(14), poNum(15), vendor(16), unitPrice(17), v1(19), v2(20), v3(21), whStatus(26), payStatus(27)
+      return`<tr>
+        <td class="td-muted td-r">${it.num}</td>
+        <td class="td-muted" style="white-space:nowrap">${fmtD(it.date)}</td>
+        <td class="td-muted">${esc(it.category||'—')}</td>
+        <td class="td-clip" title="${escA(it.partDesc)}">${esc(it.partDesc||'—')}</td>
+        <td class="td-muted td-clip">${esc(it.catNo||'—')}</td>
+        ${row?editCell(it.vendor,sheet,row,16):`<td class="td-clip2">${esc(it.vendor||'—')}</td>`}
+        ${row?editCell(it.poNum,sheet,row,15):`<td class="td-po">${esc(it.poNum||'—')}</td>`}
+        <td class="td-r">${it.qty||'—'}</td>
+        <td class="td-muted">${esc(it.unit||'—')}</td>
+        ${row?editCell(it.unitPrice,sheet,row,17,'number'):`<td class="td-r">${fmtP(it.unitPrice)}</td>`}
+        ${row?editCell(it.v1,sheet,row,19,'number'):`<td class="td-r td-muted">${it.v1||'—'}</td>`}
+        ${row?editCell(it.v2,sheet,row,20,'number'):`<td class="td-r td-muted">${it.v2||'—'}</td>`}
+        ${row?editCell(it.v3,sheet,row,21,'number'):`<td class="td-r td-muted">${it.v3||'—'}</td>`}
+        ${row?editCell(it.status,sheet,row,14,'select',BOM_STATUS):`<td>${badge(it.status)}</td>`}
+        ${row?editCell(it.whStatus,sheet,row,26,'select',WH_STATUS):`<td>${badge(it.whStatus)}</td>`}
+        ${row?editCell(it.payStatus,sheet,row,27,'select',PAY_STATUS):`<td>${badge(it.payStatus)}</td>`}
+      </tr>`;
+    }).join('');
 
-  const projId = 'pc_' + btoa(encodeURIComponent(proj)).replace(/[^a-zA-Z0-9]/g,'').substring(0,20);
-
-  return `
-  <div class="proj-card${isOpen?' open':''}" id="${projId}">
-    <button class="proj-hdr" onclick="toggleProj('${escJs(proj)}','${projId}')">
+  return`<div class="proj-card${isOpen?' open':''}" id="${cid}">
+    <button class="proj-hdr" onclick="toggleProj('${escJ(proj)}','${cid}')">
       <span class="proj-arrow">▶</span>
-      <span class="proj-name">${escHtml(proj)}</span>
+      <span class="proj-name">${esc(proj)}</span>
       <div class="proj-pills">${pills}</div>
     </button>
     <div class="proj-body">
       <div class="item-search-row">
-        <input class="item-search" type="text"
-          value="${escAttr(itemSearches[proj]||'')}"
-          placeholder="🔍 Search ${items.length} items — description, part no., vendor, PO#, status…"
-          oninput="itemSearches['${escJs(proj)}']=this.value; renderContent()">
+        <input class="item-search" type="text" value="${escA(itemSearch[proj]||'')}"
+          placeholder="🔍 Search ${items.length} items…"
+          oninput="itemSearch['${escJ(proj)}']=this.value;renderBOM()">
       </div>
-      ${tableHtml}
+      <div class="tbl-wrap" style="max-height:380px">
+      <table>
+        <thead><tr>
+          <th>#</th><th>Date</th><th>Category</th><th>Description</th><th>Cat No</th>
+          <th class="editable-col">Vendor ✎</th>
+          <th class="editable-col">PO # ✎</th>
+          <th>Qty</th><th>Unit</th>
+          <th class="editable-col">Unit Price ✎</th>
+          <th class="editable-col">V1 ✎</th>
+          <th class="editable-col">V2 ✎</th>
+          <th class="editable-col">V3 ✎</th>
+          <th class="editable-col">Status ✎</th>
+          <th class="editable-col">WH ✎</th>
+          <th class="editable-col">Pay ✎</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      </div>
     </div>
   </div>`;
 }
 
-// ── Toggle project open/close ───────────────────────────────────
-function toggleProj(proj, id) {
-  const card = document.getElementById(id);
-  if (card) {
-    const isNowOpen = !card.classList.contains('open');
-    card.classList.toggle('open', isNowOpen);
-    openProjects[proj] = isNowOpen;
-  }
+function toggleProj(proj,cid){
+  const card=document.getElementById(cid);
+  if(!card)return;
+  const now=!card.classList.contains('open');
+  card.classList.toggle('open',now);
+  openProjects[proj]=now;
 }
 
-// ── Escape helpers ───────────────────────────────────────────────
-function escHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function escAttr(s) {
-  return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-function escJs(s) {
-  return String(s||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+// ── Flat table renderer (PO, WH, VP, MRS) ─────────────────────
+function renderFlatTable(tabKey,data,cfg){
+  const q=(tblSearch[tabKey]||'').toLowerCase();
+  const filtered=q?data.filter(r=>cfg.searchFields.some(f=>(r[f]||'').toString().toLowerCase().includes(q))):data;
+
+  const headers=cfg.cols.map(c=>`<th${c.editable?' class="editable-col"':''}>${esc(c.label)}${c.editable?' ✎':''}</th>`).join('');
+
+  const rows=filtered.length===0
+    ?`<tr><td colspan="${cfg.cols.length}" class="no-results">No results${q?` for "${esc(q)}"`:''}</td></tr>`
+    :filtered.map(row=>
+      '<tr>'+cfg.cols.map(col=>{
+        const v=row[col.field];
+        if(col.editable&&row.rowIndex){
+          return editCell(v,cfg.sheet,row.rowIndex,col.col,col.type||'text',col.options||null);
+        }
+        if(col.badge)return`<td>${badge(v)}</td>`;
+        if(col.peso)return`<td class="td-r">${fmtP(v)}</td>`;
+        if(col.date)return`<td style="white-space:nowrap">${fmtD(v)}</td>`;
+        if(col.muted)return`<td class="td-muted td-clip">${esc(v||'—')}</td>`;
+        if(col.clip)return`<td class="td-clip" title="${escA(v)}">${esc(v||'—')}</td>`;
+        return`<td>${esc(v||'—')}</td>`;
+      }).join('')+'</tr>'
+    ).join('');
+
+  document.getElementById('contentArea').innerHTML=`
+    <div class="tbl-pane">
+      <div class="tbl-toolbar">
+        <input class="search-input" style="max-width:300px" type="text"
+          placeholder="🔍 Search ${data.length} rows…"
+          value="${escA(tblSearch[tabKey]||'')}"
+          oninput="tblSearch['${tabKey}']=this.value;renderTab('${tabKey}')">
+        <span style="font-size:10px;color:#94a3b8">${filtered.length} / ${data.length} rows</span>
+        ${q?`<button class="btn" onclick="tblSearch['${tabKey}']='';renderTab('${tabKey}')">Clear</button>`:''}
+        <span style="font-size:10px;color:#94a3b8;margin-left:auto">⚡ Click yellow columns to edit — syncs to Google Sheets</span>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr>${headers}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    </div>`;
 }
 
-// ── Init ─────────────────────────────────────────────────────────
+// ── Table configs ─────────────────────────────────────────────
+function poConfig(){
+  return{
+    sheet:'PO',
+    searchFields:['poNum','project','partDesc','catNo','supplier','status'],
+    cols:[
+      {field:'poNum',label:'PO #',clip:true},
+      {field:'project',label:'Project',clip:true},
+      {field:'partDesc',label:'Description',clip:true},
+      {field:'catNo',label:'Cat No',muted:true},
+      {field:'supplier',label:'Supplier',clip:true},
+      {field:'qty',label:'Qty'},
+      {field:'unit',label:'Unit',muted:true},
+      {field:'unitPrice',label:'Unit Price',peso:true},
+      {field:'lineTotal',label:'Total',peso:true},
+      {field:'poDate',label:'PO Date',date:true},
+      {field:'status',label:'Status',editable:true,col:12,type:'select',options:PO_STATUS,badge:false},
+      {field:'payTerms',label:'Pay Terms',editable:true,col:13,type:'select',options:PAY_TERMS},
+      {field:'remarks',label:'Remarks',editable:true,col:16,type:'text'},
+    ]
+  };
+}
+function whConfig(){
+  return{
+    sheet:'WH',
+    searchFields:['poNum','project','partDesc','supplier','status'],
+    cols:[
+      {field:'poNum',label:'PO #',clip:true},
+      {field:'project',label:'Project',clip:true},
+      {field:'partDesc',label:'Description',clip:true},
+      {field:'supplier',label:'Supplier',clip:true},
+      {field:'poQty',label:'PO Qty'},
+      {field:'delQty',label:'Delivered ✎',editable:true,col:8,type:'number'},
+      {field:'cancelQty',label:'Cancelled ✎',editable:true,col:9,type:'number'},
+      {field:'balQty',label:'Balance'},
+      {field:'expectedDate',label:'Expected ✎',editable:true,col:12,type:'text',date:false},
+      {field:'actualDate',label:'Actual ✎',editable:true,col:11,type:'text',date:false},
+      {field:'daysVar',label:'Days Var',muted:true},
+      {field:'status',label:'Status ✎',editable:true,col:14,type:'select',options:WH_STATUS,badge:false},
+      {field:'remarks',label:'Remarks ✎',editable:true,col:15,type:'text'},
+    ]
+  };
+}
+function vpConfig(){
+  return{
+    sheet:'VP',
+    searchFields:['poNum','project','supplier','partDesc','payStatus','invoice'],
+    cols:[
+      {field:'poNum',label:'PO #',clip:true},
+      {field:'project',label:'Project',clip:true},
+      {field:'supplier',label:'Supplier',clip:true},
+      {field:'partDesc',label:'Description',clip:true},
+      {field:'delQty',label:'Del Qty'},
+      {field:'unitPrice',label:'Unit Price',peso:true},
+      {field:'amount',label:'Amount',peso:true},
+      {field:'billingDate',label:'Billing Date',editable:true,col:12,type:'text'},
+      {field:'invoice',label:'Invoice # ✎',editable:true,col:13,type:'text'},
+      {field:'payTerms',label:'Pay Terms ✎',editable:true,col:14,type:'select',options:PAY_TERMS},
+      {field:'dueDate',label:'Due Date ✎',editable:true,col:15,type:'text'},
+      {field:'payStatus',label:'Pay Status ✎',editable:true,col:16,type:'select',options:PAY_STATUS,badge:false},
+      {field:'amtPaid',label:'Amt Paid ✎',editable:true,col:17,type:'number'},
+      {field:'balance',label:'Balance',peso:true},
+      {field:'orNum',label:'OR # ✎',editable:true,col:19,type:'text'},
+      {field:'datePaid',label:'Date Paid ✎',editable:true,col:20,type:'text'},
+      {field:'remarks',label:'Remarks ✎',editable:true,col:23,type:'text'},
+    ]
+  };
+}
+function mrsConfig(){
+  return{
+    sheet:'MRS',
+    searchFields:['project','partDesc','catNo','vendor','status'],
+    cols:[
+      {field:'num',label:'#',muted:true},
+      {field:'project',label:'Project',clip:true},
+      {field:'type',label:'Type',muted:true},
+      {field:'category',label:'Category',muted:true},
+      {field:'partDesc',label:'Description',clip:true},
+      {field:'catNo',label:'Cat No',muted:true},
+      {field:'qty',label:'Qty'},
+      {field:'unit',label:'Unit',muted:true},
+      {field:'vendor',label:'Vendor ✎',editable:true,col:12,type:'text'},
+      {field:'poNum',label:'PO # ✎',editable:true,col:13,type:'text'},
+      {field:'unitPrice',label:'Price ✎',editable:true,col:14,type:'number'},
+      {field:'v1',label:'V1 ✎',editable:true,col:16,type:'number'},
+      {field:'v2',label:'V2 ✎',editable:true,col:17,type:'number'},
+      {field:'v3',label:'V3 ✎',editable:true,col:18,type:'number'},
+      {field:'status',label:'Status ✎',editable:true,col:11,type:'select',options:BOM_STATUS,badge:false},
+      {field:'remarks',label:'Remarks ✎',editable:true,col:23,type:'text'},
+    ]
+  };
+}
+
+// ── Init ──────────────────────────────────────────────────────
 loadData();
 </script>
 </body>
