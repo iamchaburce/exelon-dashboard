@@ -206,6 +206,9 @@ select.fi{cursor:pointer}
   <div class="sb-sec">Procurement</div>
   <div class="sb-item active" onclick="go('bom')">📦 BOM / Client View</div>
   <div class="sb-item" onclick="go('mrs')">📝 MRS</div>
+  <div class="sb-item" onclick="go('po')">🛒 Purchase Orders</div>
+  <div class="sb-item" onclick="go('wh')">🏭 WH Incoming</div>
+  <div class="sb-item" onclick="go('vp')">💰 Vendor Bill</div>
   <div class="sb-item" onclick="go('history')">📊 Item History</div>
   <div class="sb-item" onclick="go('alerts')">🚨 Alerts</div>
   <div class="sb-sec">Equipment</div>
@@ -339,7 +342,7 @@ async function loadData(){
     if(!j.ok)throw new Error(j.error||'API error');
     API=j;
     const t=new Date(j.updated).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('pgSub').textContent=`live · ${j.bom?.length} items · ${j.mrs?.length} MRS · updated ${t}`;
+    document.getElementById('pgSub').textContent=`live · ${j.bom?.length} BOM · ${j.mrs?.length} MRS · ${j.po?.length||0} PO · ${j.wh?.length||0} WH · updated ${t}`;
     setSync('ok','live');
     const sheets=[...new Set((j.bom||[]).map(r=>r.sheet))];
     if(!activeCli) activeCli=sheets[0]?.replace(/^📦\s*/,'').trim()||'';
@@ -351,10 +354,9 @@ async function loadData(){
 }
 
 // ── Tab routing ────────────────────────────────────
-const TITLES={bom:'Client View — BOM',mrs:'Material Request Sheet',history:'Item History',alerts:'Alerts',equip:'Machine List',equiplog:'Machine Log',testequip:'Test Equipment'};
+const TITLES={bom:'Client View — BOM',mrs:'Material Request Sheet',po:'Purchase Orders',wh:'WH Incoming',vp:'Vendor Bill',history:'Item History',alerts:'Alerts',equip:'Machine List',equiplog:'Machine Log',testequip:'Test Equipment'};
 function go(tab){
   activeTab=tab;
-  document.querySelectorAll('.sb-item').forEach(el=>{el.classList.toggle('active',el.getAttribute('onclick')||''=>`go('${tab}')`.includes?.(tab));});
   document.querySelectorAll('.sb-item').forEach(el=>{const oc=el.getAttribute('onclick')||'';el.classList.toggle('active',oc===`go('${tab}')`);}); 
   document.getElementById('pgTitle').textContent=TITLES[tab]||tab;
   if(API)renderTab(tab);
@@ -363,7 +365,10 @@ function go(tab){
 function renderTab(tab){
   if(!API)return;
   if(tab==='bom')renderBOM();
-  else if(tab==='mrs')renderFlat('mrs',API.mrs||[],mrsCfg());
+  else if(tab==='mrs')renderMRS();
+  else if(tab==='po')renderFlat('po',API.po||[],poCfg());
+  else if(tab==='wh')renderFlat('wh',API.wh||[],whCfg());
+  else if(tab==='vp')renderFlat('vp',API.vp||[],vpCfg());
   else if(tab==='history')renderFlat('history',API.itemHistory||[],historyCfg());
   else if(tab==='alerts')renderAlerts();
   else if(tab==='equip')renderFlat('equip',API.machineList||[],equipCfg());
@@ -498,7 +503,7 @@ function buildProjCard(proj,items,allKeys){
           </tr>
           <tr>
             <th>#</th><th>Date</th><th>Category</th><th>Description</th><th>Cat No</th><th>Qty</th><th>Unit</th>
-            <th class="e grp-start">V1</th><th class="e">V2</th><th class="e">V3</th>
+            <th class="e grp-start">V1</th><th class="e">V2</th><th class="e">V3</th><!-- Budget col shown via prevPrice field -->
             <th class="e grp-start">PO #</th><th class="e">Vendor</th><th class="e">Unit Price</th><th>Line Total</th><th class="e">Pay Terms</th>
             <th class="e grp-start">Del Qty</th><th class="e">Cancel</th><th>Balance</th><th class="e">Expected</th><th class="e">Actual</th>
             <th class="e grp-start">Status</th><th class="e">WH</th>
@@ -576,16 +581,126 @@ function renderAlerts(){
     </div>`;
 }
 
-// ── Table configs ──────────────────────────────────
-function mrsCfg(){return{sheet:'MRS',search:['project','partDesc','catNo','vendor','status'],addBtn:true,cols:[
-  {f:'num',lbl:'#',mono:true},{f:'project',lbl:'Project',clip:true},{f:'type',lbl:'Type',mono:true},
-  {f:'category',lbl:'Category',mono:true},{f:'partDesc',lbl:'Description',clip:true},{f:'catNo',lbl:'Cat No',mono:true},
-  {f:'qty',lbl:'Qty'},{f:'unit',lbl:'Unit',mono:true},
-  {f:'vendor',lbl:'Vendor ✎',e:true,col:12,type:'text'},{f:'poNum',lbl:'PO # ✎',e:true,col:13,type:'text'},
-  {f:'unitPrice',lbl:'Price ✎',e:true,col:14,type:'number'},
-  {f:'v1',lbl:'V1 ✎',e:true,col:16,type:'number'},{f:'v2',lbl:'V2 ✎',e:true,col:17,type:'number'},{f:'v3',lbl:'V3 ✎',e:true,col:18,type:'number'},
-  {f:'status',lbl:'Status ✎',e:true,col:11,type:'select',opts:BOM_ST,bdg:false},
-  {f:'remarks',lbl:'Remarks ✎',e:true,col:23,type:'text'},
+// ── BOM Table: rename budget column ───────────────────────────
+// In BOM table header, "Budget" instead of Prev Price
+// (handled in buildProjCard headers below)
+
+// ── MRS with separators per type ──────────────────────────────
+function renderMRS(){
+  const data=API.mrs||[];
+  const q=(tblQ['mrs']||'').toLowerCase();
+  const fd=q?data.filter(r=>[r.project,r.partDesc,r.catNo,r.vendor,r.status,r.type].some(f=>(f||'').toString().toLowerCase().includes(q))):data;
+
+  // Group by Type for separators
+  const types=[...new Set(fd.map(r=>r.type||'General'))];
+
+  let rowsHtml='';
+  types.forEach(type=>{
+    const typeItems=fd.filter(r=>(r.type||'General')===type);
+    // Separator row
+    rowsHtml+=`<tr><td colspan="23" style="background:rgba(56,189,248,.06);border-left:3px solid var(--accent);padding:5px 10px;font-family:var(--font-mono);font-size:10px;font-weight:600;color:var(--accent)">${esc(type)} <span style="color:var(--text3);font-weight:400">(${typeItems.length} items)</span></td></tr>`;
+    typeItems.forEach(row=>{
+      const s=row.rowIndex,r=row.rowIndex||0;
+      rowsHtml+=`<tr>
+        <td class="td-m td-mono td-r">${row.num}</td>
+        <td class="td-clip" title="${escA(row.project)}">${esc(row.project||'—')}</td>
+        <td class="td-m">${esc(row.category||'—')}</td>
+        <td class="td-clip" title="${escA(row.partDesc)}">${esc(row.partDesc||'—')}</td>
+        <td class="td-m td-mono">${esc(row.catNo||'—')}</td>
+        <td class="td-r td-mono">${row.qty||'—'}</td><td class="td-m">${esc(row.unit||'—')}</td>
+        <td class="td-r td-mono td-m">${fP(row.budget)}</td>
+        ${r?ec(row.v1,'MRS',r,16,'number'):`<td class="td-r td-mono grp-start">${row.v1||'—'}</td>`}
+        ${r?ec(row.v2,'MRS',r,17,'number'):`<td class="td-r td-mono">${row.v2||'—'}</td>`}
+        ${r?ec(row.v3,'MRS',r,18,'number'):`<td class="td-r td-mono">${row.v3||'—'}</td>`}
+        ${r?ec(row.poNum,'MRS',r,13):`<td class="td-mono grp-start">${esc(row.poNum||'—')}</td>`}
+        ${r?ec(row.vendor,'MRS',r,12):`<td class="td-sm">${esc(row.vendor||'—')}</td>`}
+        ${r?ec(row.unitPrice,'MRS',r,14,'number'):`<td class="td-r td-mono">${fP(row.unitPrice)}</td>`}
+        ${r?ec(row.payTerms,'MRS',r,24,'select',TERMS):`<td class="td-m">${esc(row.payTerms||'—')}</td>`}
+        ${r?ec(row.delQty,'MRS',r,25,'number'):`<td class="td-r td-mono grp-start">${row.delQty||'—'}</td>`}
+        ${r?ec(row.cancelQty,'MRS',r,26,'number'):`<td class="td-r td-mono">${row.cancelQty||'—'}</td>`}
+        <td class="td-r td-mono td-m">${row.balQty||'—'}</td>
+        ${r?ec(row.expectedDate,'MRS',r,28):`<td class="td-mono td-m" style="font-size:10px">${fD(row.expectedDate)}</td>`}
+        ${r?ec(row.actualDate,'MRS',r,29):`<td class="td-mono td-m" style="font-size:10px">${fD(row.actualDate)}</td>`}
+        ${r?ec(row.status,'MRS',r,11,'select',BOM_ST):`<td class="grp-start">${bdg(row.status)}</td>`}
+        ${r?ec(row.invoice,'MRS',r,31):`<td class="td-mono grp-start">${esc(row.invoice||'—')}</td>`}
+        ${r?ec(row.amtPaid,'MRS',r,32,'number'):`<td class="td-r td-mono">${fP(row.amtPaid)}</td>`}
+        ${r?ec(row.orNum,'MRS',r,33):`<td class="td-mono td-m">${esc(row.orNum||'—')}</td>`}
+        ${r?ec(row.datePaid,'MRS',r,34):`<td class="td-mono td-m" style="font-size:10px">${fD(row.datePaid)}</td>`}
+        ${r?ec(row.remarks,'MRS',r,23):`<td class="td-m">${esc(row.remarks||'—')}</td>`}
+      </tr>`;
+    });
+  });
+
+  document.getElementById('content').innerHTML=`
+    <div class="flat-pane">
+      <div class="flat-toolbar">
+        <input class="search" style="max-width:260px" type="text" placeholder="search ${data.length} items…" value="${escA(tblQ['mrs']||'')}" oninput="tblQ['mrs']=this.value;renderMRS()">
+        <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${fd.length}/${data.length}</span>
+        ${tblQ['mrs']?`<button class="btn" onclick="tblQ['mrs']='';renderMRS()">clear</button>`:''}
+        <button class="btn btn-green" onclick="openAddModal('mrs')">+ add item</button>
+        <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">✎ click cells to edit → syncs to Google Sheets</span>
+      </div>
+      <div class="flat-body">
+        <table>
+          <thead>
+            <tr class="cg-row">
+              <th colspan="8" class="cg-item">Item Info</th>
+              <th colspan="3" class="cg-canvass">Canvass</th>
+              <th colspan="4" class="cg-po">Purchase Order</th>
+              <th colspan="5" class="cg-delivery">Delivery</th>
+              <th colspan="1" class="cg-po">Status</th>
+              <th colspan="5" class="cg-payment">Payment</th>
+            </tr>
+            <tr>
+              <th>#</th><th>Project</th><th>Category</th><th>Description</th><th>Cat No</th><th>Qty</th><th>Unit</th><th>Budget</th>
+              <th class="e grp-start">V1</th><th class="e">V2</th><th class="e">V3</th>
+              <th class="e grp-start">PO #</th><th class="e">Vendor</th><th class="e">Unit Price</th><th class="e">Pay Terms</th>
+              <th class="e grp-start">Del Qty</th><th class="e">Cancel</th><th>Balance</th><th class="e">Expected</th><th class="e">Actual</th>
+              <th class="e grp-start">Status</th>
+              <th class="e grp-start">Invoice #</th><th class="e">Amt Paid</th><th class="e">OR #</th><th class="e">Date Paid</th><th class="e">Remarks</th>
+            </tr>
+          </thead>
+          <tbody>${rowsHtml||'<tr><td colspan="23" class="no-rows" style="font-family:var(--font-mono)">no data</td></tr>'}</tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ── PO Config ──────────────────────────────────────
+function poCfg(){return{sheet:'PO',search:['poNum','project','partDesc','supplier','status'],addBtn:true,cols:[
+  {f:'poNum',lbl:'PO #',mono:true},{f:'project',lbl:'Project',clip:true},
+  {f:'partDesc',lbl:'Description',clip:true},{f:'catNo',lbl:'Cat No',mono:true},
+  {f:'supplier',lbl:'Supplier',clip:true},{f:'qty',lbl:'Qty'},{f:'unit',lbl:'Unit',mono:true},
+  {f:'unitPrice',lbl:'Unit Price',peso:true},{f:'lineTotal',lbl:'Line Total',peso:true},
+  {f:'poDate',lbl:'PO Date',date:true},
+  {f:'status',lbl:'Status ✎',e:true,col:12,type:'select',opts:['For Approval','✅ Approved','✅ Delivered','❌ Cancelled'],bdg:false},
+  {f:'payTerms',lbl:'Pay Terms ✎',e:true,col:13,type:'select',opts:TERMS},
+  {f:'remarks',lbl:'Remarks ✎',e:true,col:16,type:'text'},
+]}}
+
+// ── WH Config ──────────────────────────────────────
+function whCfg(){return{sheet:'WH',search:['poNum','project','partDesc','supplier','status'],addBtn:false,cols:[
+  {f:'poNum',lbl:'PO #',mono:true},{f:'project',lbl:'Project',clip:true},
+  {f:'partDesc',lbl:'Description',clip:true},{f:'supplier',lbl:'Supplier',clip:true},
+  {f:'poQty',lbl:'PO Qty'},{f:'delQty',lbl:'Delivered',mono:true},{f:'cancelQty',lbl:'Cancelled',mono:true},{f:'balQty',lbl:'Balance',mono:true},
+  {f:'expectedDate',lbl:'Expected',date:true},{f:'actualDate',lbl:'Actual',date:true},
+  {f:'daysVar',lbl:'Days Var',mono:true},
+  {f:'status',lbl:'Status',bdg:true},{f:'remarks',lbl:'Remarks',clip:true},
+]}}
+
+// ── VP (Vendor Bill) Config ────────────────────────
+function vpCfg(){return{sheet:'VP',search:['poNum','project','supplier','payStatus','invoice'],addBtn:false,cols:[
+  {f:'poNum',lbl:'PO #',mono:true},{f:'project',lbl:'Project',clip:true},
+  {f:'supplier',lbl:'Supplier',clip:true},{f:'partDesc',lbl:'Description',clip:true},
+  {f:'delQty',lbl:'Del Qty'},{f:'unitPrice',lbl:'Unit Price',peso:true},{f:'amount',lbl:'Amount',peso:true},
+  {f:'billingDate',lbl:'Billing Date',date:true},
+  {f:'invoice',lbl:'Invoice # ✎',e:true,col:13,type:'text'},
+  {f:'payTerms',lbl:'Pay Terms ✎',e:true,col:14,type:'select',opts:TERMS},
+  {f:'dueDate',lbl:'Due Date',date:true},
+  {f:'payStatus',lbl:'Pay Status ✎',e:true,col:16,type:'select',opts:PAY_ST,bdg:false},
+  {f:'amtPaid',lbl:'Amt Paid ✎',e:true,col:17,type:'number'},{f:'balance',lbl:'Balance',peso:true},
+  {f:'orNum',lbl:'OR # ✎',e:true,col:19,type:'text'},{f:'datePaid',lbl:'Date Paid ✎',e:true,col:20,type:'text'},
+  {f:'remarks',lbl:'Remarks',clip:true},
 ]}}
 function historyCfg(){return{sheet:'',search:['catNo','partDesc','vendor','project','poNum'],addBtn:false,cols:[
   {f:'catNo',lbl:'Cat No',mono:true},{f:'partDesc',lbl:'Description',clip:true},
@@ -640,7 +755,7 @@ function openAddBOMItem(){
 
 function openAddModal(key){
   const CFGS={
-    mrs:{title:'Add MRS Item',fields:[{n:'project',l:'Project',t:'text',req:true,full:true},{n:'type',l:'Type',t:'text'},{n:'category',l:'Category',t:'text'},{n:'partDesc',l:'Description',t:'text',req:true,full:true},{n:'catNo',l:'Cat No',t:'text'},{n:'qty',l:'Qty',t:'number'},{n:'unit',l:'Unit',t:'text'},{n:'vendor',l:'Vendor',t:'text'},{n:'status',l:'Status',t:'select',opts:BOM_ST,def:'🟡 For Canvass'},{n:'remarks',l:'Remarks',t:'text',full:true}],build:(f)=>({sheet:'MRS',values:['',f.project||'',f.type||'',f.category||'',f.partDesc||'',f.catNo||'',f.qty||'',f.unit||'','','',f.status||'','','','','','','','','','','','',f.remarks||'']})},
+    mrs:{title:'Add MRS Item',fields:[{n:'project',l:'Project',t:'text',req:true,full:true},{n:'type',l:'Type (MRS / Machine / Test Equip / Trucking / Office)',t:'text',def:'MRS'},{n:'category',l:'Category',t:'text'},{n:'partDesc',l:'Description',t:'text',req:true,full:true},{n:'catNo',l:'Cat No',t:'text'},{n:'qty',l:'Qty',t:'number'},{n:'unit',l:'Unit',t:'text'},{n:'vendor',l:'Vendor',t:'text'},{n:'status',l:'Status',t:'select',opts:BOM_ST,def:'🟡 For Canvass'},{n:'remarks',l:'Remarks',t:'text',full:true}],build:(f)=>({sheet:'MRS',values:['',f.project||'',f.type||'MRS',f.category||'',f.partDesc||'',f.catNo||'',f.qty||'',f.unit||'','','',f.status||'',f.vendor||'','','','','','','','','','','',f.remarks||'']})},
     equip:{title:'Add Equipment',fields:[{n:'machineId',l:'Machine ID',t:'text',req:true},{n:'name',l:'Name',t:'text',req:true},{n:'type',l:'Type',t:'text'},{n:'brand',l:'Brand',t:'text'},{n:'model',l:'Model',t:'text'},{n:'serial',l:'Serial No',t:'text'},{n:'location',l:'Location',t:'text'},{n:'status',l:'Status',t:'select',opts:MACH_ST,def:'Active'},{n:'assignedTo',l:'Assigned To',t:'text'},{n:'remarks',l:'Remarks',t:'text',full:true}],build:(f)=>({sheet:'EQUIP',values:[f.machineId||'',f.name||'',f.type||'',f.brand||'',f.model||'',f.serial||'',f.location||'',f.status||'','','',f.assignedTo||'',f.remarks||'']})},
     equiplog:{title:'Add Machine Log',fields:[{n:'date',l:'Date',t:'text',req:true,def:new Date().toLocaleDateString()},{n:'machineId',l:'Machine ID',t:'text',req:true},{n:'machineName',l:'Machine Name',t:'text'},{n:'type',l:'Type',t:'select',opts:LOG_TYPE,def:'PM'},{n:'description',l:'Description',t:'text',req:true,full:true},{n:'technician',l:'Technician',t:'text'},{n:'parts',l:'Parts Used',t:'text'},{n:'cost',l:'Cost',t:'number'},{n:'downtime',l:'Downtime hrs',t:'number'},{n:'status',l:'Status',t:'select',opts:['Completed','In Progress','Pending'],def:'Completed'},{n:'nextAction',l:'Next Action',t:'text',full:true}],build:(f)=>({sheet:'MACHLOG',values:[f.date||'',f.machineId||'',f.machineName||'',f.type||'',f.description||'',f.technician||'',f.parts||'',f.cost||'',f.downtime||'',f.status||'',f.nextAction||'','']})},
     testequip:{title:'Add Test Equipment',fields:[{n:'equipId',l:'Equip ID',t:'text',req:true},{n:'name',l:'Name',t:'text',req:true},{n:'brand',l:'Brand',t:'text'},{n:'model',l:'Model',t:'text'},{n:'serial',l:'Serial No',t:'text'},{n:'calibDue',l:'Calib Due',t:'text'},{n:'lastCalib',l:'Last Calib',t:'text'},{n:'calibBy',l:'Calibrated By',t:'text'},{n:'status',l:'Status',t:'select',opts:CALIB_ST,def:'Valid'},{n:'location',l:'Location',t:'text'},{n:'remarks',l:'Remarks',t:'text',full:true}],build:(f)=>({sheet:'TESTEQUIP',values:[f.equipId||'',f.name||'',f.brand||'',f.model||'',f.serial||'',f.calibDue||'',f.lastCalib||'',f.calibBy||'',f.status||'',f.location||'',f.remarks||'']})},
@@ -714,6 +829,7 @@ function openAddProject(){
             <div class="ff"><label class="fl">Sales Order # <span style="color:var(--red)">*</span></label><input class="fi" id="fp_so" type="text" placeholder="e.g. S13500" style="text-transform:uppercase" oninput="updateProjPreview()"></div>
             <div class="ff"><label class="fl">Client Name <span style="color:var(--red)">*</span></label><input class="fi" id="fp_cli" type="text" placeholder="e.g. WALTERMART" style="text-transform:uppercase" oninput="updateProjPreview()"></div>
             <div class="ff full"><label class="fl">Project Title <span style="color:var(--red)">*</span></label><input class="fi" id="fp_ttl" type="text" placeholder="e.g. WALTERMART SAN RAFAEL EXPANSION" oninput="updateProjPreview()"></div>
+            <div class="ff full"><label class="fl">Location <span style="color:var(--text3)">(optional)</span></label><input class="fi" id="fp_loc" type="text" placeholder="e.g. LEMERY, BATANGAS" oninput="updateProjPreview()"></div>
           </div>
           <div class="fprev" id="fp_prev">
             <div class="fprev-title">preview</div>
@@ -736,8 +852,9 @@ function updateProjPreview(){
   const so=document.getElementById('fp_so').value.trim().toUpperCase();
   const cli=document.getElementById('fp_cli').value.trim().toUpperCase();
   const ttl=document.getElementById('fp_ttl').value.trim();
+  const loc=document.getElementById('fp_loc')?.value.trim()||'';
   const prev=document.getElementById('fp_prev');
-  if(so||cli||ttl){prev.style.display='';document.getElementById('fp_tab').textContent=cli?'📦 '+cli:'—';document.getElementById('fp_so2').textContent=so||'—';document.getElementById('fp_ttl2').textContent=ttl||'—';}
+  if(so||cli||ttl){prev.style.display='';document.getElementById('fp_tab').textContent=cli?'📦 '+cli:'—';document.getElementById('fp_so2').textContent=so||'—';document.getElementById('fp_ttl2').textContent=ttl+(loc?' | '+loc:'');}
   else prev.style.display='none';
 }
 
@@ -745,13 +862,14 @@ async function submitAddProject(){
   const so=document.getElementById('fp_so').value.trim().toUpperCase();
   const cli=document.getElementById('fp_cli').value.trim().toUpperCase();
   const ttl=document.getElementById('fp_ttl').value.trim();
+  const loc=document.getElementById('fp_loc')?.value.trim()||'';
   const err=document.getElementById('fp_err');err.style.display='none';
   if(!so){err.style.display='';err.textContent='SO# is required';return;}
   if(!cli){err.style.display='';err.textContent='Client name is required';return;}
   if(!ttl){err.style.display='';err.textContent='Project title is required';return;}
   const btn=document.getElementById('fp_sub');btn.disabled=true;btn.textContent='creating…';
   try{
-    const payload=JSON.stringify({soNum:so,clientName:cli,projectTitle:ttl});
+    const payload=JSON.stringify({soNum:so,clientName:cli,projectTitle:ttl,location:loc});
     const res=await fetch(WEB_APP+'?action=addProject&payload='+encodeURIComponent(payload));
     const j=await res.json();
     if(!j.ok)throw new Error(j.error||'Failed');
