@@ -12,8 +12,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293
 ::-webkit-scrollbar-track{background:#f1f5f9}
 .app{display:flex;height:100vh;overflow:hidden}
 
-/* ── Sidebar ─────────────────────────────────────────────── */
-.sidebar{width:188px;min-width:188px;background:#1e1b4b;display:flex;flex-direction:column;flex-shrink:0}
+/* Sidebar */
+.sidebar{width:188px;min-width:188px;background:#1e1b4b;display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
 .sb-logo{padding:14px 12px 10px;border-bottom:1px solid rgba(255,255,255,.07)}
 .sb-icon{width:30px;height:30px;background:#7c3aed;border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;margin-bottom:5px}
 .sb-name{font-size:11.5px;font-weight:700;color:#fff}
@@ -23,121 +23,130 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293
 .sb-item:hover{background:rgba(139,92,246,.12);color:#c4b5fd}
 .sb-item.active{background:rgba(139,92,246,.22);color:#fff;font-weight:600}
 
-/* ── Main ─────────────────────────────────────────────────── */
+/* Main */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:46px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0;gap:12px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 18px;height:46px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0}
 .topbar-title{font-size:13.5px;font-weight:600}
 .topbar-sub{font-size:9.5px;color:#94a3b8;margin-top:1px}
 .topbar-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
-.sync-dot{width:7px;height:7px;border-radius:50%;background:#10b981}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:#10b981;flex-shrink:0}
 .sync-dot.loading{background:#f59e0b;animation:pulse 1s infinite}
 .sync-dot.error{background:#ef4444}
-.sync-dot.saving{background:#3b82f6;animation:pulse .6s infinite}
+.sync-dot.saving{background:#3b82f6;animation:pulse .5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 .sync-msg{font-size:10px;color:#64748b;white-space:nowrap}
 .btn{padding:4px 11px;border-radius:6px;font-size:11px;cursor:pointer;font-weight:500;border:1px solid #e2e8f0;background:#fff;color:#64748b;transition:all .12s}
 .btn:hover{background:#f8fafc}
 .btn-primary{background:#7c3aed;color:#fff;border-color:#7c3aed}
 .btn-primary:hover{background:#6d28d9}
+.btn-success{background:#059669;color:#fff;border-color:#059669}
+.btn-success:hover{background:#047857}
+.btn-danger{background:#dc2626;color:#fff;border-color:#dc2626;padding:3px 8px;font-size:10px}
 
-/* ── Tab Bar ──────────────────────────────────────────────── */
-.tabbar{border-bottom:1px solid #e2e8f0;background:#f8fafc;flex-shrink:0}
-.tabs-row{display:flex;overflow-x:auto;padding:0 6px;scrollbar-width:none;align-items:flex-end}
-.tabs-row::-webkit-scrollbar{display:none}
-.tab{padding:8px 14px;border:none;background:transparent;cursor:pointer;font-size:11.5px;font-weight:500;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .15s;flex-shrink:0}
+/* Tabs */
+.tabbar{border-bottom:1px solid #e2e8f0;background:#f8fafc;flex-shrink:0;overflow-x:auto;scrollbar-width:none}
+.tabbar::-webkit-scrollbar{display:none}
+.tabs-row{display:flex;padding:0 6px;white-space:nowrap;min-width:max-content}
+.tab{padding:8px 13px;border:none;background:transparent;cursor:pointer;font-size:11px;font-weight:500;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
 .tab:hover{color:#7c3aed}
 .tab.active{color:#7c3aed;font-weight:700;border-bottom-color:#7c3aed;background:#fff}
-.tab-badge{font-size:9px;background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:8px;margin-left:4px;font-weight:600}
+.tbadge{font-size:9px;background:#e0e7ff;color:#4338ca;padding:1px 5px;border-radius:8px;margin-left:3px;font-weight:600}
 
-/* ── Content ──────────────────────────────────────────────── */
+/* Content */
 .content{flex:1;overflow:hidden;display:flex;flex-direction:column;min-height:0}
-
-/* ── Loading / Error ──────────────────────────────────────── */
 .center-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:14px;color:#64748b}
 .spinner{width:34px;height:34px;border:3px solid #e2e8f0;border-top-color:#7c3aed;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── Client View pane ────────────────────────────────────── */
-.cv-pane{display:flex;flex-direction:column;height:100%;overflow:hidden}
-.cv-topbar{display:flex;align-items:center;gap:8px;padding:8px 16px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0}
-.cv-client-tabs{display:flex;overflow-x:auto;padding:0 6px;border-bottom:1px solid #e2e8f0;background:#f8fafc;flex-shrink:0;scrollbar-width:none}
-.cv-client-tabs::-webkit-scrollbar{display:none}
-.cv-ctab{padding:6px 12px;border:none;background:transparent;cursor:pointer;font-size:11px;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-weight:500;transition:all .15s}
-.cv-ctab.active{color:#7c3aed;font-weight:700;border-bottom-color:#7c3aed;background:#fff}
-.cv-body{flex:1;overflow-y:auto;padding:12px 16px}
-
-/* ── KPI row ──────────────────────────────────────────────── */
-.kpi-row{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
-.kpi{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;border-left-width:3px;min-width:100px}
-.kpi-lbl{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
-.kpi-val{font-size:20px;font-weight:700}
-
-/* ── Project accordion ────────────────────────────────────── */
-.proj-search-row{display:flex;gap:7px;align-items:center;margin-bottom:10px}
-.search-input{flex:1;padding:7px 11px;font-size:12px;border:1px solid #cbd5e1;border-radius:7px;outline:none;background:#fff;color:#1e293b}
-.search-input:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.1)}
-.proj-card{border:1px solid #e2e8f0;border-radius:7px;overflow:hidden;margin-bottom:6px;transition:border-color .15s}
-.proj-card.open{border-color:#c4b5fd}
-.proj-hdr{width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;background:#f8fafc;border:none;cursor:pointer;text-align:left}
-.proj-card.open .proj-hdr{background:#f5f3ff}
-.proj-hdr:hover{background:#eff0fe}
-.proj-arrow{font-size:9.5px;color:#94a3b8;min-width:9px;transition:transform .15s}
-.proj-card.open .proj-arrow{transform:rotate(90deg);color:#7c3aed}
-.proj-name{font-size:12px;font-weight:600;color:#1e293b;flex:1}
-.proj-card.open .proj-name{color:#7c3aed}
-.pill{font-size:9px;padding:1px 6px;border-radius:999px;font-weight:600;white-space:nowrap}
-.proj-pills{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
-.proj-body{display:none;background:#fff}
-.proj-card.open .proj-body{display:block}
-.item-search-row{padding:6px 11px;border-top:1px solid #f1f5f9}
-.item-search{width:100%;padding:4px 9px;font-size:11px;border:1px solid #e2e8f0;border-radius:5px;outline:none;background:#f8fafc;color:#1e293b}
-.item-search:focus{border-color:#7c3aed}
-
-/* ── Data table ───────────────────────────────────────────── */
+/* Pane layouts */
 .tbl-pane{flex:1;overflow:hidden;display:flex;flex-direction:column}
-.tbl-toolbar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0}
+.tbl-toolbar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0;flex-wrap:wrap}
 .tbl-wrap{flex:1;overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:11px}
 th{padding:6px 9px;background:#f8fafc;color:#64748b;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-bottom:1px solid #e2e8f0;white-space:nowrap;position:sticky;top:0;z-index:2;text-align:left}
-th.editable-col{background:#fffbeb}
-td{padding:5px 9px;border-bottom:1px solid #f8fafc;color:#334155;vertical-align:middle;max-width:0}
+th.ec{background:#fffbeb}
+td{padding:5px 9px;border-bottom:1px solid #f8fafc;color:#334155;vertical-align:middle}
 tr:hover td{background:#fafafe}
 tr:last-child td{border-bottom:none}
-.td-clip{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:200px}
-.td-clip2{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:130px}
-.td-muted{color:#94a3b8}
-.td-po{color:#7c3aed;font-weight:600}
+.td-clip{max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-sm{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-m{color:#94a3b8}
 .td-r{text-align:right}
+.td-po{color:#7c3aed;font-weight:600}
 .no-results{padding:22px;text-align:center;color:#94a3b8;font-size:12px}
-
-/* ── Badge ────────────────────────────────────────────────── */
 .badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:9.5px;font-weight:600;white-space:nowrap}
+.pill{font-size:9px;padding:1px 6px;border-radius:999px;font-weight:600;white-space:nowrap}
 
-/* ── Editable cell ────────────────────────────────────────── */
-.editable{cursor:pointer;position:relative}
-.editable:hover .editable-inner{background:#f0f9ff;border-radius:3px}
-.editable-inner{display:block;padding:2px 4px;border-radius:3px;min-height:18px;min-width:40px}
-.editable input,.editable select{
-  font-size:11px;padding:2px 5px;border:1.5px solid #7c3aed;border-radius:4px;
-  background:#fff;color:#1e293b;outline:none;width:100%;min-width:80px;
-  font-family:inherit;
-}
-.editable select{cursor:pointer}
-.save-indicator{
-  position:fixed;bottom:14px;right:14px;
-  background:#1e293b;color:#fff;font-size:11px;
-  padding:6px 14px;border-radius:7px;
-  opacity:0;transition:opacity .2s;pointer-events:none;z-index:999;
-}
-.save-indicator.show{opacity:1}
-.save-indicator.ok{background:#065f46}
-.save-indicator.err{background:#b91c1c}
+/* Client View */
+.cv-pane{display:flex;flex-direction:column;flex:1;overflow:hidden}
+.cv-clients{display:flex;overflow-x:auto;padding:0 6px;border-bottom:1px solid #e2e8f0;background:#f8fafc;flex-shrink:0;scrollbar-width:none}
+.cv-clients::-webkit-scrollbar{display:none}
+.cctab{padding:6px 12px;border:none;background:transparent;cursor:pointer;font-size:11px;color:#94a3b8;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;font-weight:500;transition:all .15s}
+.cctab:hover{color:#7c3aed}
+.cctab.active{color:#7c3aed;font-weight:700;border-bottom-color:#7c3aed;background:#fff}
+.cv-body{flex:1;overflow-y:auto;padding:12px 16px}
+.kpi-row{display:flex;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+.kpi{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:8px 12px;border-left-width:3px;min-width:90px}
+.kpi-l{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.kpi-v{font-size:20px;font-weight:700}
+.proj-card{border:1px solid #e2e8f0;border-radius:7px;overflow:hidden;margin-bottom:6px;transition:border-color .15s}
+.proj-card.open{border-color:#c4b5fd}
+.proj-hdr{width:100%;display:flex;align-items:center;gap:8px;padding:9px 12px;background:#f8fafc;border:none;cursor:pointer;text-align:left;transition:background .12s}
+.proj-card.open .proj-hdr{background:#f5f3ff}
+.proj-hdr:hover{background:#eff0fe}
+.proj-arrow{font-size:9px;color:#94a3b8;min-width:9px;transition:transform .15s}
+.proj-card.open .proj-arrow{transform:rotate(90deg);color:#7c3aed}
+.proj-nm{font-size:12px;font-weight:600;color:#1e293b;flex:1}
+.proj-card.open .proj-nm{color:#7c3aed}
+.proj-pills{display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end}
+.proj-body{display:none;background:#fff}
+.proj-card.open .proj-body{display:block}
+
+/* Editable cells */
+.ec-cell{cursor:pointer}
+.ec-cell:hover .ec-disp{background:#fef3c7;border-radius:3px}
+.ec-disp{display:block;padding:2px 4px;border-radius:3px;min-height:18px;min-width:40px}
+.ec-cell input,.ec-cell select{font-size:11px;padding:2px 5px;border:1.5px solid #7c3aed;border-radius:4px;background:#fff;color:#1e293b;outline:none;width:100%;min-width:80px;font-family:inherit}
+
+/* Alerts */
+.alert-card{border:1px solid;border-radius:7px;padding:10px 14px;margin-bottom:7px;display:flex;align-items:flex-start;gap:10px}
+.alert-card.critical{background:#fff5f5;border-color:#fca5a5}
+.alert-card.warning{background:#fffbeb;border-color:#fcd34d}
+.alert-card.info{background:#eff6ff;border-color:#93c5fd}
+.alert-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert-title{font-size:12px;font-weight:600;margin-bottom:2px}
+.alert-desc{font-size:11px;color:#64748b}
+.alert-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:999px;margin-left:auto;flex-shrink:0}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center}
+.modal{background:#fff;border-radius:12px;width:min(560px,95vw);max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-hdr{padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-size:14px;font-weight:600}
+.modal-body{padding:16px 20px;overflow-y:auto;flex:1}
+.modal-footer{padding:12px 20px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;gap:8px;flex-shrink:0}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-field{display:flex;flex-direction:column;gap:4px}
+.form-field.full{grid-column:1/-1}
+.form-label{font-size:10.5px;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:.04em}
+.form-input{padding:7px 10px;border:1px solid #cbd5e1;border-radius:6px;font-size:12px;outline:none;font-family:inherit;color:#1e293b;background:#fff}
+.form-input:focus{border-color:#7c3aed;box-shadow:0 0 0 2px rgba(124,58,237,.1)}
+.form-input select{padding:7px 10px}
+select.form-input{padding:7px 10px}
+
+/* Save toast */
+.toast{position:fixed;bottom:16px;right:16px;background:#1e293b;color:#fff;font-size:11px;padding:7px 16px;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:2000}
+.toast.show{opacity:1}
+.toast.ok{background:#065f46}
+.toast.err{background:#b91c1c}
+
+/* Search */
+.search-input{padding:6px 11px;font-size:12px;border:1px solid #cbd5e1;border-radius:6px;outline:none;background:#fff;color:#1e293b;flex:1;min-width:180px}
+.search-input:focus{border-color:#7c3aed}
 </style>
 </head>
 <body>
 <div class="app">
-
-<!-- Sidebar -->
 <nav class="sidebar">
   <div class="sb-logo">
     <div class="sb-icon">E</div>
@@ -145,561 +154,532 @@ tr:last-child td{border-bottom:none}
     <div class="sb-sub">SOLUTIONS INC.</div>
   </div>
   <div class="sb-sec">Procurement</div>
-  <div class="sb-item active" onclick="switchTab('bom')">📦 Client / BOM</div>
-  <div class="sb-item" onclick="switchTab('po')">🛒 Purchase Orders</div>
-  <div class="sb-item" onclick="switchTab('wh')">🏭 WH Incoming</div>
-  <div class="sb-item" onclick="switchTab('vp')">💰 Vendor Payable</div>
-  <div class="sb-item" onclick="switchTab('mrs')">📝 MRS</div>
+  <div class="sb-item active" onclick="go('bom')">📦 Client / BOM</div>
+  <div class="sb-item" onclick="go('po')">🛒 Purchase Orders</div>
+  <div class="sb-item" onclick="go('wh')">🏭 WH Incoming</div>
+  <div class="sb-item" onclick="go('vp')">💰 Vendor Payable</div>
+  <div class="sb-item" onclick="go('mrs')">📝 MRS</div>
+  <div class="sb-sec">Analytics</div>
+  <div class="sb-item" onclick="go('history')">📊 Item History</div>
+  <div class="sb-item" onclick="go('alerts')">🚨 Alerts</div>
+  <div class="sb-sec">Equipment</div>
+  <div class="sb-item" onclick="go('equip')">🔧 Equipment Monitor</div>
+  <div class="sb-item" onclick="go('equiplog')">🛠️ Machine Log</div>
+  <div class="sb-item" onclick="go('testequip')">🔬 Test Equipment</div>
   <div class="sb-sec">Tools</div>
   <div class="sb-item" onclick="loadData()">↻ Refresh All</div>
 </nav>
 
-<!-- Main -->
 <div class="main">
   <div class="topbar">
     <div style="min-width:0">
-      <div class="topbar-title" id="pageTitle">Client View — BOM</div>
-      <div class="topbar-sub" id="topbarSub">Loading…</div>
+      <div class="topbar-title" id="pgTitle">Client View — BOM</div>
+      <div class="topbar-sub" id="pgSub">Loading…</div>
     </div>
     <div class="topbar-right">
-      <div class="sync-dot loading" id="syncDot"></div>
-      <span class="sync-msg" id="syncMsg">Connecting…</span>
+      <div class="sync-dot loading" id="dot"></div>
+      <span class="sync-msg" id="msg">Connecting…</span>
       <button class="btn" onclick="loadData()">↻ Refresh</button>
     </div>
   </div>
-
   <div class="tabbar">
     <div class="tabs-row">
-      <button class="tab active" data-tab="bom" onclick="switchTab('bom')">📦 Client View<span class="tab-badge" id="tbadge-bom">—</span></button>
-      <button class="tab" data-tab="po" onclick="switchTab('po')">🛒 Purchase Orders<span class="tab-badge" id="tbadge-po">—</span></button>
-      <button class="tab" data-tab="wh" onclick="switchTab('wh')">🏭 WH Incoming<span class="tab-badge" id="tbadge-wh">—</span></button>
-      <button class="tab" data-tab="vp" onclick="switchTab('vp')">💰 Vendor Payable<span class="tab-badge" id="tbadge-vp">—</span></button>
-      <button class="tab" data-tab="mrs" onclick="switchTab('mrs')">📝 MRS<span class="tab-badge" id="tbadge-mrs">—</span></button>
+      <button class="tab active" data-t="bom"       onclick="go('bom')">📦 BOM<span class="tbadge" id="tb-bom">—</span></button>
+      <button class="tab"        data-t="po"        onclick="go('po')">🛒 PO<span class="tbadge" id="tb-po">—</span></button>
+      <button class="tab"        data-t="wh"        onclick="go('wh')">🏭 WH<span class="tbadge" id="tb-wh">—</span></button>
+      <button class="tab"        data-t="vp"        onclick="go('vp')">💰 Payable<span class="tbadge" id="tb-vp">—</span></button>
+      <button class="tab"        data-t="mrs"       onclick="go('mrs')">📝 MRS<span class="tbadge" id="tb-mrs">—</span></button>
+      <button class="tab"        data-t="history"   onclick="go('history')">📊 Item History<span class="tbadge" id="tb-history">—</span></button>
+      <button class="tab"        data-t="alerts"    onclick="go('alerts')">🚨 Alerts<span class="tbadge" id="tb-alerts" style="background:#fee2e2;color:#b91c1c">—</span></button>
+      <button class="tab"        data-t="equip"     onclick="go('equip')">🔧 Equipment<span class="tbadge" id="tb-equip">—</span></button>
+      <button class="tab"        data-t="equiplog"  onclick="go('equiplog')">🛠️ Log<span class="tbadge" id="tb-equiplog">—</span></button>
+      <button class="tab"        data-t="testequip" onclick="go('testequip')">🔬 Test Equip<span class="tbadge" id="tb-testequip">—</span></button>
     </div>
   </div>
-
-  <div class="content" id="contentArea">
-    <div class="center-screen">
-      <div class="spinner"></div>
-      <div>Fetching live data from Google Sheets…</div>
-    </div>
+  <div class="content" id="area">
+    <div class="center-screen"><div class="spinner"></div><div>Fetching live data…</div></div>
   </div>
 </div>
 </div>
 
-<!-- Save indicator -->
-<div class="save-indicator" id="saveIndicator"></div>
+<div class="toast" id="toast"></div>
 
 <script>
-const WEB_APP = 'https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
+const WEB_APP='https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
+let API=null,activeTab='bom',activeCli='',openProj={},projQ={},itemQ={},tblQ={};
 
-// ── Global state ─────────────────────────────────────────────
-let API = null;
-let activeTab = 'bom';
-let activeBOMClient = '';
-let openProjects = {};
-let projSearch = {};
-let itemSearch = {};
-let tblSearch = {};
-
-// ── Status options ────────────────────────────────────────────
-const BOM_STATUS = ['🟡 For Canvass','🟢 Ready for PO','✅ PO Issued','🏭 Warehouse Stock','✅ Delivered'];
-const WH_STATUS  = ['⬜ Pending','🔄 Partial','✅ Complete'];
-const PAY_STATUS = ['','⬜ Unpaid','🔄 Partial Pay','✅ Paid'];
-const PO_STATUS  = ['For Approval','✅ Approved','✅ Delivered','❌ Cancelled'];
-const PAY_TERMS  = ['COD','30 days','45 days','60 days','Upon Delivery','Advanced'];
-
-// ── Badge styling ─────────────────────────────────────────────
-const BADGE_MAP = {
-  '🟡 For Canvass':     ['#fef3c7','#d97706'],
-  '🟢 Ready for PO':    ['#d1fae5','#065f46'],
-  '✅ PO Issued':        ['#ede9fe','#6d28d9'],
-  '🏭 Warehouse Stock': ['#dbeafe','#1d4ed8'],
-  '✅ Delivered':        ['#d1fae5','#065f46'],
-  '⬜ Pending':          ['#f1f5f9','#64748b'],
-  '🔄 Partial':          ['#ffedd5','#c2410c'],
-  '🔄 Partial Pay':      ['#ffedd5','#c2410c'],
-  '✅ Complete':         ['#d1fae5','#065f46'],
-  '⬜ Unpaid':           ['#fee2e2','#b91c1c'],
-  '✅ Paid':             ['#d1fae5','#065f46'],
-  '✅ Approved':         ['#d1fae5','#065f46'],
-  '❌ Cancelled':        ['#fee2e2','#b91c1c'],
+// ── Lookups ──────────────────────────────────────────────────
+const BOM_ST=['🟡 For Canvass','🟢 Ready for PO','✅ PO Issued','🏭 Warehouse Stock','✅ Delivered'];
+const WH_ST=['⬜ Pending','🔄 Partial','✅ Complete'];
+const PAY_ST=['','⬜ Unpaid','🔄 Partial Pay','✅ Paid'];
+const PO_ST=['For Approval','✅ Approved','✅ Delivered','❌ Cancelled'];
+const TERMS=['COD','30 days','45 days','60 days','Upon Delivery','Advanced'];
+const MACH_ST=['Active','Under Maintenance','For Repair','Retired'];
+const LOG_TYPE=['PM','Repair','Calibration','Inspection','Breakdown'];
+const CALIB_ST=['Valid','Due Soon','Overdue','For Calibration'];
+const BDGM={
+  '🟡 For Canvass':['#fef3c7','#d97706'],'🟢 Ready for PO':['#d1fae5','#065f46'],
+  '✅ PO Issued':['#ede9fe','#6d28d9'],'🏭 Warehouse Stock':['#dbeafe','#1d4ed8'],
+  '✅ Delivered':['#d1fae5','#065f46'],'⬜ Pending':['#f1f5f9','#64748b'],
+  '🔄 Partial':['#ffedd5','#c2410c'],'🔄 Partial Pay':['#ffedd5','#c2410c'],
+  '✅ Complete':['#d1fae5','#065f46'],'⬜ Unpaid':['#fee2e2','#b91c1c'],
+  '✅ Paid':['#d1fae5','#065f46'],'✅ Approved':['#d1fae5','#065f46'],
+  '❌ Cancelled':['#fee2e2','#b91c1c'],'Active':['#d1fae5','#065f46'],
+  'Under Maintenance':['#ffedd5','#c2410c'],'For Repair':['#fee2e2','#b91c1c'],
+  'Retired':['#f1f5f9','#64748b'],'Valid':['#d1fae5','#065f46'],
+  'Due Soon':['#fef3c7','#d97706'],'Overdue':['#fee2e2','#b91c1c'],
+  'For Calibration':['#ffedd5','#c2410c']
 };
-function badge(v) {
-  if (!v && v !== 0) return '<span class="badge" style="background:#f1f5f9;color:#94a3b8">—</span>';
-  const s = BADGE_MAP[v] || ['#f1f5f9','#64748b'];
-  return `<span class="badge" style="background:${s[0]};color:${s[1]}">${esc(v)}</span>`;
-}
-function pill(t,bg,c){ return `<span class="pill" style="background:${bg};color:${c}">${t}</span>`; }
-function fmtP(v){
-  if(v===''||v==null)return'—';
-  const n=parseFloat(v); if(isNaN(n))return'—';
-  return'₱'+n.toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});
-}
-function fmtD(v){
-  if(!v)return'—';
-  try{const d=new Date(v);if(isNaN(d))return v;
-    return d.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});}
-  catch{return v;}
-}
+function bdg(v){if(!v&&v!==0)return'<span class="badge" style="background:#f1f5f9;color:#94a3b8">—</span>';const s=BDGM[v]||['#f1f5f9','#64748b'];return`<span class="badge" style="background:${s[0]};color:${s[1]}">${esc(v)}</span>`;}
+function pll(t,bg,c){return`<span class="pill" style="background:${bg};color:${c}">${t}</span>`;}
+function fP(v){if(v===''||v==null)return'—';const n=parseFloat(v);if(isNaN(n))return'—';return'₱'+n.toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fD(v){if(!v)return'—';try{const d=new Date(v);if(isNaN(d))return v;return d.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});}catch{return v;}}
 function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escA(s){return String(s??'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
-function escJ(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+function escJ(s){return String(s??'').replace(/\\/g,'\\\\').replace(/'/g,"\\'")}
 
-// ── Save indicator ────────────────────────────────────────────
-let saveTimer;
-function showSave(msg,type='ok'){
-  const el=document.getElementById('saveIndicator');
-  el.textContent=msg; el.className='save-indicator show '+type;
-  clearTimeout(saveTimer);
-  saveTimer=setTimeout(()=>el.classList.remove('show'),2500);
-}
+// ── Toast ─────────────────────────────────────────────────────
+let toastTm;
+function toast(m,t='ok'){const el=document.getElementById('toast');el.textContent=m;el.className='toast show '+t;clearTimeout(toastTm);toastTm=setTimeout(()=>el.classList.remove('show'),2800);}
 
-// ── 2-way sync: write cell to Google Sheet ────────────────────
-async function saveCell(sheet,row,col,value){
-  const dot=document.getElementById('syncDot');
-  dot.className='sync-dot saving';
-  document.getElementById('syncMsg').textContent='Saving…';
+// ── Save to Sheet ─────────────────────────────────────────────
+async function saveCell(sheet,row,col,val){
+  setSyncState('saving','Saving…');
   try{
-    const payload=JSON.stringify({sheet,row,col,value});
-    const url=WEB_APP+'?action=updateCell&payload='+encodeURIComponent(payload);
-    const res=await fetch(url);
-    const json=await res.json();
-    if(!json.ok) throw new Error(json.error||'Save failed');
-    dot.className='sync-dot';
-    document.getElementById('syncMsg').textContent='Saved ✓';
-    showSave('✅ Saved to Google Sheets','ok');
-    setTimeout(()=>{document.getElementById('syncMsg').textContent='Live';},3000);
-  }catch(err){
-    dot.className='sync-dot error';
-    document.getElementById('syncMsg').textContent='Error';
-    showSave('❌ Save failed: '+err.message,'err');
-  }
+    const res=await fetch(WEB_APP+'?action=updateCell&payload='+encodeURIComponent(JSON.stringify({sheet,row,col,value:val})));
+    const j=await res.json();
+    if(!j.ok)throw new Error(j.error||'Failed');
+    setSyncState('ok','Saved ✓');toast('✅ Saved to Google Sheets','ok');
+    setTimeout(()=>setSyncState('ok','Live'),3000);
+  }catch(e){setSyncState('error','Error');toast('❌ '+e.message,'err');}
 }
 
-// ── Editable cell builder ────────────────────────────────────
-// type: 'text' | 'number' | 'select'
-// options: for select type
-// sheet, row, col: for write-back
-function editCell(val,sheet,row,col,type='text',options=null){
-  const id='ec_'+Math.random().toString(36).slice(2,8);
-  const displayVal=val===''||val==null?'—':val;
-  const rawVal=val===null||val===undefined?'':String(val);
+async function addRow(sheet,values){
+  setSyncState('saving','Adding…');
+  try{
+    const res=await fetch(WEB_APP+'?action=addRow&payload='+encodeURIComponent(JSON.stringify({sheet,values})));
+    const j=await res.json();
+    if(!j.ok)throw new Error(j.error||'Failed');
+    setSyncState('ok','Saved ✓');toast('✅ Row added to Google Sheets — row '+j.newRow,'ok');
+    setTimeout(()=>{setSyncState('ok','Live');loadData();},2000);
+    return j;
+  }catch(e){setSyncState('error','Error');toast('❌ '+e.message,'err');throw e;}
+}
 
+function setSyncState(state,msg){
+  document.getElementById('dot').className='sync-dot'+(state==='loading'?' loading':state==='saving'?' saving':state==='error'?' error':'');
+  document.getElementById('msg').textContent=msg;
+}
+
+// ── Editable cell ─────────────────────────────────────────────
+function ec(val,sheet,row,col,type='text',opts=null){
+  const id='e'+Math.random().toString(36).slice(2,8);
+  const dv=val===''||val==null?'—':val;
+  const rv=val===null||val===undefined?'':String(val);
   let inner;
-  if(type==='select'&&options){
-    const opts=options.map(o=>`<option value="${escA(o)}"${o===rawVal?' selected':''}>${esc(o)}</option>`).join('');
-    inner=`<div class="editable-inner" id="disp_${id}">${
-      rawVal ? badge(rawVal) : '<span style="color:#94a3b8">—</span>'
-    }</div>
-    <select id="inp_${id}" style="display:none" onchange="commitCell('${id}','${escJ(sheet)}',${row},${col},'select')" onblur="cancelCell('${id}')">
-      <option value="">—</option>${opts}
-    </select>`;
+  if(type==='select'&&opts){
+    const o=opts.map(x=>`<option value="${escA(x)}"${x===rv?' selected':''}>${esc(x)}</option>`).join('');
+    inner=`<span class="ec-disp" id="d${id}">${rv?bdg(rv):'<span style="color:#94a3b8">—</span>'}</span>
+    <select id="i${id}" style="display:none" onchange="cc('${id}','${escJ(sheet)}',${row},${col},'select')" onblur="xc('${id}')"><option value="">—</option>${o}</select>`;
   }else{
-    inner=`<div class="editable-inner" id="disp_${id}">${esc(displayVal)}</div>
-    <input id="inp_${id}" type="${type==='number'?'number':'text'}" value="${escA(rawVal)}"
-      style="display:none"
-      onkeydown="if(event.key==='Enter')commitCell('${id}','${escJ(sheet)}',${row},${col},'${type}');if(event.key==='Escape')cancelCell('${id}')"
-      onblur="commitCell('${id}','${escJ(sheet)}',${row},${col},'${type}')"
-    >`;
+    inner=`<span class="ec-disp" id="d${id}">${esc(dv)}</span>
+    <input id="i${id}" type="${type==='number'?'number':'text'}" value="${escA(rv)}" style="display:none"
+      onkeydown="if(event.key==='Enter')cc('${id}','${escJ(sheet)}',${row},${col},'${type}');if(event.key==='Escape')xc('${id}')"
+      onblur="cc('${id}','${escJ(sheet)}',${row},${col},'${type}')">`;
   }
-  return `<td class="editable" onclick="activateCell(event,'${id}')" title="Click to edit">
-    ${inner}
-  </td>`;
+  return`<td class="ec-cell" onclick="ac(event,'${id}')" title="Click to edit">${inner}</td>`;
 }
+function ac(e,id){e.stopPropagation();const d=document.getElementById('d'+id),i=document.getElementById('i'+id);if(!i||i.style.display!=='none')return;d.style.display='none';i.style.display='block';i.focus();if(i.tagName==='INPUT')i.select();}
+function cc(id,sh,row,col,type){const d=document.getElementById('d'+id),i=document.getElementById('i'+id);if(!i)return;const v=i.value;i.style.display='none';d.style.display='';if(type==='select')d.innerHTML=v?bdg(v):'<span style="color:#94a3b8">—</span>';else d.textContent=v||'—';saveCell(sh,row,col,v);}
+function xc(id){const d=document.getElementById('d'+id),i=document.getElementById('i'+id);if(!i)return;i.style.display='none';d.style.display='';}
 
-function activateCell(e,id){
-  e.stopPropagation();
-  const disp=document.getElementById('disp_'+id);
-  const inp=document.getElementById('inp_'+id);
-  if(!inp||inp.style.display!=='none')return;
-  disp.style.display='none';
-  inp.style.display='block';
-  inp.focus();
-  if(inp.tagName==='INPUT')inp.select();
-}
-
-function commitCell(id,sheet,row,col,type){
-  const disp=document.getElementById('disp_'+id);
-  const inp=document.getElementById('inp_'+id);
-  if(!inp)return;
-  const val=inp.value;
-  inp.style.display='none';
-  disp.style.display='block';
-  // Update display
-  if(type==='select')disp.innerHTML=val?badge(val):'<span style="color:#94a3b8">—</span>';
-  else disp.textContent=val||'—';
-  // Save to sheet
-  saveCell(sheet,row,col,val);
-}
-
-function cancelCell(id){
-  const disp=document.getElementById('disp_'+id);
-  const inp=document.getElementById('inp_'+id);
-  if(!inp)return;
-  inp.style.display='none';
-  disp.style.display='block';
-}
-
-// ── Load all data ─────────────────────────────────────────────
+// ── Load data ─────────────────────────────────────────────────
 async function loadData(){
-  document.getElementById('syncDot').className='sync-dot loading';
-  document.getElementById('syncMsg').textContent='Syncing…';
+  setSyncState('loading','Syncing…');
+  document.getElementById('area').innerHTML='<div class="center-screen"><div class="spinner"></div><div>Fetching live data from Google Sheets…</div></div>';
   try{
     const res=await fetch(WEB_APP+'?action=load');
-    const json=await res.json();
-    if(!json.ok)throw new Error(json.error||'API error');
-    API=json;
+    const j=await res.json();
+    if(!j.ok)throw new Error(j.error||'API error');
+    API=j;
     // Update badges
-    document.getElementById('tbadge-bom').textContent=json.bom?.length||0;
-    document.getElementById('tbadge-po').textContent=json.po?.length||0;
-    document.getElementById('tbadge-wh').textContent=json.wh?.length||0;
-    document.getElementById('tbadge-vp').textContent=json.vp?.length||0;
-    document.getElementById('tbadge-mrs').textContent=json.mrs?.length||0;
-    // Topbar
-    const t=new Date(json.updated).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('topbarSub').textContent=
-      `Live · ${json.bom?.length} BOM · ${json.po?.length} PO · ${json.wh?.length} WH · Updated ${t}`;
-    document.getElementById('syncDot').className='sync-dot';
-    document.getElementById('syncMsg').textContent='Live';
-    // Set default client
-    if(!activeBOMClient){
-      const sheets=[...new Set((json.bom||[]).map(r=>r.sheet))];
-      activeBOMClient=sheets[0]?sheets[0].replace(/^📦\s*/,'').trim():'';
-    }
+    const bom=j.bom||[],po=j.po||[],wh=j.wh||[],vp=j.vp||[],mrs=j.mrs||[],hist=j.itemHistory||[];
+    const ml=j.machineList||[],mlog=j.machineLog||[],te=j.testEquip||[];
+    const alerts=buildAlerts(bom,wh,vp);
+    document.getElementById('tb-bom').textContent=bom.length;
+    document.getElementById('tb-po').textContent=po.length;
+    document.getElementById('tb-wh').textContent=wh.length;
+    document.getElementById('tb-vp').textContent=vp.length;
+    document.getElementById('tb-mrs').textContent=mrs.length;
+    document.getElementById('tb-history').textContent=hist.length;
+    document.getElementById('tb-alerts').textContent=alerts.length;
+    document.getElementById('tb-equip').textContent=ml.length;
+    document.getElementById('tb-equiplog').textContent=mlog.length;
+    document.getElementById('tb-testequip').textContent=te.length;
+    const t=new Date(j.updated).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('pgSub').textContent=`Live · ${bom.length} BOM · ${po.length} PO · ${wh.length} WH · ${alerts.length} alerts · Updated ${t}`;
+    setSyncState('ok','Live');
+    if(!activeCli){const sheets=[...new Set(bom.map(r=>r.sheet))];activeCli=sheets[0]?sheets[0].replace(/^📦\s*/,'').trim():'';}
     renderTab(activeTab);
-  }catch(err){
-    document.getElementById('syncDot').className='sync-dot error';
-    document.getElementById('syncMsg').textContent='Error';
-    document.getElementById('contentArea').innerHTML=`
-      <div class="center-screen">
-        <div style="font-size:28px">⚠️</div>
-        <div style="font-weight:600">Cannot connect to Google Sheets</div>
-        <div style="font-size:11px;color:#94a3b8">${esc(err.message)}</div>
-        <button class="btn btn-primary" onclick="loadData()">↻ Try Again</button>
-      </div>`;
+  }catch(e){
+    setSyncState('error','Error');
+    document.getElementById('area').innerHTML=`<div class="center-screen"><div style="font-size:28px">⚠️</div><div style="font-weight:600">Cannot connect to Google Sheets</div><div style="font-size:11px;color:#94a3b8">${esc(e.message)}</div><button class="btn btn-primary" onclick="loadData()">↻ Try Again</button></div>`;
   }
 }
 
-// ── Tab switching ─────────────────────────────────────────────
-function switchTab(tab){
+// ── Routing ───────────────────────────────────────────────────
+const TITLES={bom:'Client View — BOM',po:'Purchase Orders',wh:'WH Incoming',vp:'Vendor Payable',mrs:'Material Request Sheet',history:'Item History',alerts:'Alerts & Action Required',equip:'Equipment Monitor',equiplog:'Machine Log',testequip:'Test Equipment'};
+function go(tab){
   activeTab=tab;
   document.querySelectorAll('.tab,.sb-item').forEach(el=>{
-    el.classList.toggle('active',el.dataset?.tab===tab||el.onclick?.toString().includes("'"+tab+"'"));
+    const dt=el.dataset?.t;
+    const onclick=el.getAttribute('onclick')||'';
+    el.classList.toggle('active',dt===tab||onclick.includes("'"+tab+"'"));
   });
-  const TITLES={bom:'Client View — BOM',po:'Purchase Orders',wh:'WH Incoming',vp:'Vendor Payable',mrs:'Material Request Sheet'};
-  document.getElementById('pageTitle').textContent=TITLES[tab]||tab;
+  document.getElementById('pgTitle').textContent=TITLES[tab]||tab;
   if(API)renderTab(tab);
 }
-
 function renderTab(tab){
-  if(!API){document.getElementById('contentArea').innerHTML='<div class="center-screen"><div class="spinner"></div><div>Loading…</div></div>';return;}
+  if(!API)return;
   if(tab==='bom')renderBOM();
-  else if(tab==='po')renderFlatTable('po',API.po||[],poConfig());
-  else if(tab==='wh')renderFlatTable('wh',API.wh||[],whConfig());
-  else if(tab==='vp')renderFlatTable('vp',API.vp||[],vpConfig());
-  else if(tab==='mrs')renderFlatTable('mrs',API.mrs||[],mrsConfig());
+  else if(tab==='po')renderFlat('po',API.po||[],poCfg());
+  else if(tab==='wh')renderFlat('wh',API.wh||[],whCfg());
+  else if(tab==='vp')renderFlat('vp',API.vp||[],vpCfg());
+  else if(tab==='mrs')renderFlat('mrs',API.mrs||[],mrsCfg());
+  else if(tab==='history')renderFlat('history',API.itemHistory||[],historyCfg());
+  else if(tab==='alerts')renderAlerts();
+  else if(tab==='equip')renderFlat('equip',API.machineList||[],equipCfg());
+  else if(tab==='equiplog')renderFlat('equiplog',API.machineLog||[],equipLogCfg());
+  else if(tab==='testequip')renderFlat('testequip',API.testEquip||[],testEquipCfg());
 }
 
 // ── BOM / Client View ─────────────────────────────────────────
-function getBOMClients(){
-  const sheets=[...new Set((API.bom||[]).map(r=>r.sheet))];
-  return sheets.map(s=>({sheet:s,name:s.replace(/^📦\s*/,'').trim()}));
-}
-function getBOMForClient(name){
-  return (API.bom||[]).filter(r=>r.sheet.replace(/^📦\s*/,'').trim()===name);
-}
+function getBOMClients(){return[...new Set((API.bom||[]).map(r=>r.sheet))].map(s=>({sheet:s,name:s.replace(/^📦\s*/,'').trim()}));}
+function getBOMForClient(name){return(API.bom||[]).filter(r=>r.sheet.replace(/^📦\s*/,'').trim()===name);}
 
 function renderBOM(){
   const clients=getBOMClients();
-  if(!activeBOMClient&&clients.length)activeBOMClient=clients[0].name;
-  const items=getBOMForClient(activeBOMClient);
-  // Group by project
+  if(!activeCli&&clients.length)activeCli=clients[0].name;
+  const items=getBOMForClient(activeCli);
   const projMap={};
-  items.forEach(it=>{
-    const p=(it.project||'No Project').toString().trim();
-    if(!projMap[p])projMap[p]=[];
-    projMap[p].push(it);
-  });
-  const projKeys=Object.keys(projMap);
-  const pSearch=(projSearch['bom']||'').toLowerCase();
-  const filtProj=pSearch?projKeys.filter(p=>p.toLowerCase().includes(pSearch)):projKeys;
-  // Stats
-  const st=bomStats(items);
-  // Client tab bar
-  const clientTabs=clients.map(c=>`
-    <button class="cv-ctab${c.name===activeBOMClient?' active':''}"
-      onclick="activeBOMClient='${escJ(c.name)}';renderBOM()">
-      ${esc(c.name)}<span style="font-size:9px;opacity:.6;margin-left:3px">${getBOMForClient(c.name).length}</span>
-    </button>`).join('');
-  // KPIs
-  const kpis=[
-    ['🟡 For Canvass',st.canvass,'#d97706','#fef3c7'],
-    ['🟢 Ready',st.ready,'#065f46','#d1fae5'],
-    ['✅ PO Issued',st.issued,'#6d28d9','#ede9fe'],
-    ['🏭 WH Stock',st.whStock,'#1d4ed8','#dbeafe'],
-    ['✅ Done',st.done,'#065f46','#d1fae5'],
-    ['⬜ Unpaid',st.unpaid,'#b91c1c','#fee2e2'],
-    ['📦 Total',st.total,'#7c3aed','#f5f3ff'],
-  ].map(([l,v,tc,bg])=>`
-    <div class="kpi" style="border-left-color:${tc}">
-      <div class="kpi-lbl" style="color:${tc}">${l}</div>
-      <div class="kpi-val" style="color:${tc}">${v}</div>
-    </div>`).join('');
-  // Project cards
-  const cards=filtProj.length===0
-    ?`<div class="no-results">No projects match "${esc(pSearch)}"</div>`
-    :filtProj.map(proj=>buildProjCard(proj,projMap[proj],projKeys)).join('');
-
-  document.getElementById('contentArea').innerHTML=`
-    <div class="cv-pane">
-      <div class="cv-client-tabs">${clientTabs}</div>
-      <div class="cv-body">
-        <div class="kpi-row">${kpis}</div>
-        <div class="proj-search-row">
-          <input class="search-input" type="text" placeholder="🔍 Search projects…"
-            value="${escA(projSearch['bom']||'')}"
-            oninput="projSearch['bom']=this.value;renderBOM()">
-          <span style="font-size:10px;color:#94a3b8">${filtProj.length}/${projKeys.length} projects</span>
-          ${projSearch['bom']?`<button class="btn" onclick="projSearch['bom']='';renderBOM()">Clear</button>`:''}
-        </div>
-        ${cards}
+  items.forEach(it=>{const p=(it.project||'No Project').toString().trim();if(!projMap[p])projMap[p]=[];projMap[p].push(it);});
+  const pKeys=Object.keys(projMap);
+  const pq=(projQ['bom']||'').toLowerCase();
+  const fp=pq?pKeys.filter(p=>p.toLowerCase().includes(pq)):pKeys;
+  const st=bst(items);
+  const ctabs=clients.map(c=>`<button class="cctab${c.name===activeCli?' active':''}" onclick="activeCli='${escJ(c.name)}';renderBOM()">${esc(c.name)}<span style="font-size:9px;opacity:.6;margin-left:3px">${getBOMForClient(c.name).length}</span></button>`).join('');
+  const kpis=[['🟡 Canvass',st.canvass,'#d97706','#fef3c7'],['🟢 Ready',st.ready,'#065f46','#d1fae5'],['✅ PO',st.issued,'#6d28d9','#ede9fe'],['🏭 WH',st.wh,'#1d4ed8','#dbeafe'],['✅ Done',st.done,'#065f46','#d1fae5'],['⬜ Unpaid',st.unpaid,'#b91c1c','#fee2e2'],['📦 Total',st.total,'#7c3aed','#f5f3ff']].map(([l,v,tc,bg])=>`<div class="kpi" style="border-left-color:${tc}"><div class="kpi-l" style="color:${tc}">${l}</div><div class="kpi-v" style="color:${tc}">${v}</div></div>`).join('');
+  const cards=fp.length===0?`<div class="no-results">No projects match "${esc(pq)}"</div>`:fp.map(p=>buildProjCard(p,projMap[p],pKeys)).join('');
+  document.getElementById('area').innerHTML=`
+  <div class="cv-pane">
+    <div class="cv-clients">${ctabs}</div>
+    <div class="cv-body">
+      <div class="kpi-row">${kpis}</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+        <input class="search-input" type="text" placeholder="🔍 Search projects…" value="${escA(projQ['bom']||'')}" oninput="projQ['bom']=this.value;renderBOM()">
+        <span style="font-size:10px;color:#94a3b8">${fp.length}/${pKeys.length}</span>
+        ${projQ['bom']?`<button class="btn" onclick="projQ['bom']='';renderBOM()">Clear</button>`:''}
+        <button class="btn btn-success" onclick="openAddModal('bom')">➕ Add Item</button>
       </div>
-    </div>`;
-}
-
-function bomStats(items){
-  return{
-    total:items.length,
-    canvass:items.filter(i=>i.status==='🟡 For Canvass').length,
-    ready:items.filter(i=>i.status==='🟢 Ready for PO').length,
-    issued:items.filter(i=>i.status==='✅ PO Issued').length,
-    whStock:items.filter(i=>i.status==='🏭 Warehouse Stock').length,
-    done:items.filter(i=>i.whStatus==='✅ Complete').length,
-    unpaid:items.filter(i=>i.payStatus==='⬜ Unpaid').length,
-  };
-}
-
-function buildProjCard(proj,items,allKeys){
-  const isOpen=openProjects[proj]!==undefined?openProjects[proj]:proj===allKeys[0];
-  const st=bomStats(items);
-  const iSearch=(itemSearch[proj]||'').toLowerCase();
-  const fi=iSearch?items.filter(i=>[i.partDesc,i.catNo,i.vendor,i.poNum,i.status,i.category]
-    .some(f=>(f||'').toString().toLowerCase().includes(iSearch))):items;
-  const pills=[
-    st.canvass&&pill(`🟡 ${st.canvass}`,'#fef3c7','#d97706'),
-    st.ready&&pill(`🟢 ${st.ready}`,'#d1fae5','#065f46'),
-    st.issued&&pill(`✅ ${st.issued} PO`,'#ede9fe','#6d28d9'),
-    st.done&&pill(`🏭 ${st.done} done`,'#dbeafe','#1d4ed8'),
-    st.unpaid&&pill(`⬜ ${st.unpaid} unpaid`,'#fee2e2','#b91c1c'),
-    pill(`${items.length}`,'#f1f5f9','#64748b'),
-  ].filter(Boolean).join('');
-  const cid='pc_'+btoa(encodeURIComponent(proj)).replace(/\W/g,'').slice(0,16);
-
-  const rows=fi.length===0
-    ?`<tr><td colspan="14" class="no-results">No items match "${esc(iSearch)}"</td></tr>`
-    :fi.map(it=>{
-      const sheet=it.sheet;
-      const row=it.rowIndex||0;
-      // Editable cols: status(14), poNum(15), vendor(16), unitPrice(17), v1(19), v2(20), v3(21), whStatus(26), payStatus(27)
-      return`<tr>
-        <td class="td-muted td-r">${it.num}</td>
-        <td class="td-muted" style="white-space:nowrap">${fmtD(it.date)}</td>
-        <td class="td-muted">${esc(it.category||'—')}</td>
-        <td class="td-clip" title="${escA(it.partDesc)}">${esc(it.partDesc||'—')}</td>
-        <td class="td-muted td-clip">${esc(it.catNo||'—')}</td>
-        ${row?editCell(it.vendor,sheet,row,16):`<td class="td-clip2">${esc(it.vendor||'—')}</td>`}
-        ${row?editCell(it.poNum,sheet,row,15):`<td class="td-po">${esc(it.poNum||'—')}</td>`}
-        <td class="td-r">${it.qty||'—'}</td>
-        <td class="td-muted">${esc(it.unit||'—')}</td>
-        ${row?editCell(it.unitPrice,sheet,row,17,'number'):`<td class="td-r">${fmtP(it.unitPrice)}</td>`}
-        ${row?editCell(it.v1,sheet,row,19,'number'):`<td class="td-r td-muted">${it.v1||'—'}</td>`}
-        ${row?editCell(it.v2,sheet,row,20,'number'):`<td class="td-r td-muted">${it.v2||'—'}</td>`}
-        ${row?editCell(it.v3,sheet,row,21,'number'):`<td class="td-r td-muted">${it.v3||'—'}</td>`}
-        ${row?editCell(it.status,sheet,row,14,'select',BOM_STATUS):`<td>${badge(it.status)}</td>`}
-        ${row?editCell(it.whStatus,sheet,row,26,'select',WH_STATUS):`<td>${badge(it.whStatus)}</td>`}
-        ${row?editCell(it.payStatus,sheet,row,27,'select',PAY_STATUS):`<td>${badge(it.payStatus)}</td>`}
-      </tr>`;
-    }).join('');
-
-  return`<div class="proj-card${isOpen?' open':''}" id="${cid}">
-    <button class="proj-hdr" onclick="toggleProj('${escJ(proj)}','${cid}')">
-      <span class="proj-arrow">▶</span>
-      <span class="proj-name">${esc(proj)}</span>
-      <div class="proj-pills">${pills}</div>
-    </button>
-    <div class="proj-body">
-      <div class="item-search-row">
-        <input class="item-search" type="text" value="${escA(itemSearch[proj]||'')}"
-          placeholder="🔍 Search ${items.length} items…"
-          oninput="itemSearch['${escJ(proj)}']=this.value;renderBOM()">
-      </div>
-      <div class="tbl-wrap" style="max-height:380px">
-      <table>
-        <thead><tr>
-          <th>#</th><th>Date</th><th>Category</th><th>Description</th><th>Cat No</th>
-          <th class="editable-col">Vendor ✎</th>
-          <th class="editable-col">PO # ✎</th>
-          <th>Qty</th><th>Unit</th>
-          <th class="editable-col">Unit Price ✎</th>
-          <th class="editable-col">V1 ✎</th>
-          <th class="editable-col">V2 ✎</th>
-          <th class="editable-col">V3 ✎</th>
-          <th class="editable-col">Status ✎</th>
-          <th class="editable-col">WH ✎</th>
-          <th class="editable-col">Pay ✎</th>
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      </div>
+      ${cards}
     </div>
   </div>`;
 }
 
-function toggleProj(proj,cid){
-  const card=document.getElementById(cid);
-  if(!card)return;
-  const now=!card.classList.contains('open');
-  card.classList.toggle('open',now);
-  openProjects[proj]=now;
+function bst(items){return{total:items.length,canvass:items.filter(i=>i.status==='🟡 For Canvass').length,ready:items.filter(i=>i.status==='🟢 Ready for PO').length,issued:items.filter(i=>i.status==='✅ PO Issued').length,wh:items.filter(i=>i.status==='🏭 Warehouse Stock').length,done:items.filter(i=>i.whStatus==='✅ Complete').length,unpaid:items.filter(i=>i.payStatus==='⬜ Unpaid').length};}
+
+function buildProjCard(proj,items,allKeys){
+  const isOpen=openProj[proj]!==undefined?openProj[proj]:proj===allKeys[0];
+  const st=bst(items);const iq=(itemQ[proj]||'').toLowerCase();
+  const fi=iq?items.filter(i=>[i.partDesc,i.catNo,i.vendor,i.poNum,i.status,i.category].some(f=>(f||'').toString().toLowerCase().includes(iq))):items;
+  const pills=[st.canvass&&pll(`🟡 ${st.canvass}`,'#fef3c7','#d97706'),st.ready&&pll(`🟢 ${st.ready}`,'#d1fae5','#065f46'),st.issued&&pll(`✅ ${st.issued}`,'#ede9fe','#6d28d9'),st.done&&pll(`🏭 ${st.done}`,'#dbeafe','#1d4ed8'),st.unpaid&&pll(`⬜ ${st.unpaid}`,'#fee2e2','#b91c1c'),pll(items.length,'#f1f5f9','#64748b')].filter(Boolean).join('');
+  const cid='pc'+btoa(encodeURIComponent(proj)).replace(/\W/g,'').slice(0,14);
+  const rows=fi.length===0?`<tr><td colspan="16" class="no-results">No items match "${esc(iq)}"</td></tr>`:fi.map(it=>{const sh=it.sheet,r=it.rowIndex||0;return`<tr>
+    <td class="td-m td-r">${it.num}</td><td class="td-m" style="white-space:nowrap">${fD(it.date)}</td>
+    <td class="td-m">${esc(it.category||'—')}</td>
+    <td class="td-clip" title="${escA(it.partDesc)}">${esc(it.partDesc||'—')}</td>
+    <td class="td-m td-sm">${esc(it.catNo||'—')}</td>
+    ${r?ec(it.vendor,sh,r,16):`<td class="td-sm">${esc(it.vendor||'—')}</td>`}
+    ${r?ec(it.poNum,sh,r,15):`<td class="td-po">${esc(it.poNum||'—')}</td>`}
+    <td class="td-r">${it.qty||'—'}</td><td class="td-m">${esc(it.unit||'—')}</td>
+    ${r?ec(it.unitPrice,sh,r,17,'number'):`<td class="td-r">${fP(it.unitPrice)}</td>`}
+    ${r?ec(it.v1,sh,r,19,'number'):`<td class="td-r td-m">${it.v1||'—'}</td>`}
+    ${r?ec(it.v2,sh,r,20,'number'):`<td class="td-r td-m">${it.v2||'—'}</td>`}
+    ${r?ec(it.v3,sh,r,21,'number'):`<td class="td-r td-m">${it.v3||'—'}</td>`}
+    ${r?ec(it.status,sh,r,14,'select',BOM_ST):`<td>${bdg(it.status)}</td>`}
+    ${r?ec(it.whStatus,sh,r,26,'select',WH_ST):`<td>${bdg(it.whStatus)}</td>`}
+    ${r?ec(it.payStatus,sh,r,27,'select',PAY_ST):`<td>${bdg(it.payStatus)}</td>`}
+  </tr>`;}).join('');
+  return`<div class="proj-card${isOpen?' open':''}" id="${cid}">
+    <button class="proj-hdr" onclick="tp('${escJ(proj)}','${cid}')">
+      <span class="proj-arrow">▶</span><span class="proj-nm">${esc(proj)}</span>
+      <div class="proj-pills">${pills}</div>
+    </button>
+    <div class="proj-body">
+      <div style="padding:6px 11px;border-top:1px solid #f1f5f9;display:flex;gap:8px;align-items:center">
+        <input style="flex:1;padding:4px 9px;font-size:11px;border:1px solid #e2e8f0;border-radius:5px;outline:none;background:#f8fafc;color:#1e293b" type="text" value="${escA(itemQ[proj]||'')}" placeholder="🔍 Search ${items.length} items…" oninput="itemQ['${escJ(proj)}']=this.value;renderBOM()">
+      </div>
+      <div style="overflow-x:auto;max-height:380px">
+      <table><thead><tr>
+        <th>#</th><th>Date</th><th>Category</th><th>Description</th><th>Cat No</th>
+        <th class="ec">Vendor ✎</th><th class="ec">PO # ✎</th>
+        <th>Qty</th><th>Unit</th><th class="ec">Unit Price ✎</th>
+        <th class="ec">V1 ✎</th><th class="ec">V2 ✎</th><th class="ec">V3 ✎</th>
+        <th class="ec">Status ✎</th><th class="ec">WH ✎</th><th class="ec">Pay ✎</th>
+      </tr></thead><tbody>${rows}</tbody></table>
+      </div>
+    </div>
+  </div>`;
+}
+function tp(proj,cid){const card=document.getElementById(cid);if(!card)return;const n=!card.classList.contains('open');card.classList.toggle('open',n);openProj[proj]=n;}
+
+// ── Flat table renderer ───────────────────────────────────────
+function renderFlat(key,data,cfg){
+  const q=(tblQ[key]||'').toLowerCase();
+  const fd=q?data.filter(r=>cfg.search.some(f=>(r[f]||'').toString().toLowerCase().includes(q))):data;
+  const heads=cfg.cols.map(c=>`<th${c.e?' class="ec"':''}>${esc(c.lbl)}${c.e?' ✎':''}</th>`).join('');
+  const rows=fd.length===0?`<tr><td colspan="${cfg.cols.length}" class="no-results">No results${q?` for "${esc(q)}"`:''}</td></tr>`:fd.map(row=>'<tr>'+cfg.cols.map(c=>{const v=row[c.f];if(c.e&&row.rowIndex)return ec(v,cfg.sheet,row.rowIndex,c.col,c.type||'text',c.opts||null);if(c.bdg)return`<td>${bdg(v)}</td>`;if(c.peso)return`<td class="td-r">${fP(v)}</td>`;if(c.date)return`<td style="white-space:nowrap;color:#94a3b8">${fD(v)}</td>`;if(c.m)return`<td class="td-m td-sm">${esc(v||'—')}</td>`;if(c.clip)return`<td class="td-clip" title="${escA(v)}">${esc(v||'—')}</td>`;return`<td>${esc(v||'—')}</td>`;}).join('')+'</tr>').join('');
+  document.getElementById('area').innerHTML=`
+  <div class="tbl-pane">
+    <div class="tbl-toolbar">
+      <input class="search-input" style="max-width:280px" type="text" placeholder="🔍 Search ${data.length} rows…" value="${escA(tblQ[key]||'')}" oninput="tblQ['${key}']=this.value;renderTab('${key}')">
+      <span style="font-size:10px;color:#94a3b8">${fd.length}/${data.length}</span>
+      ${tblQ[key]?`<button class="btn" onclick="tblQ['${key}']='';renderTab('${key}')">Clear</button>`:''}
+      ${cfg.addBtn?`<button class="btn btn-success" onclick="openAddModal('${key}')">➕ Add Row</button>`:''}
+      <span style="font-size:10px;color:#94a3b8;margin-left:auto">⚡ Click <span style="background:#fffbeb;padding:1px 5px;border-radius:3px;color:#d97706;font-weight:600">yellow columns</span> to edit → syncs to Google Sheets</span>
+    </div>
+    <div class="tbl-wrap"><table><thead><tr>${heads}</tr></thead><tbody>${rows}</tbody></table></div>
+  </div>`;
 }
 
-// ── Flat table renderer (PO, WH, VP, MRS) ─────────────────────
-function renderFlatTable(tabKey,data,cfg){
-  const q=(tblSearch[tabKey]||'').toLowerCase();
-  const filtered=q?data.filter(r=>cfg.searchFields.some(f=>(r[f]||'').toString().toLowerCase().includes(q))):data;
+// ── Alerts ────────────────────────────────────────────────────
+function buildAlerts(bom,wh,vp){
+  const alerts=[];
+  const canvass=bom.filter(i=>i.status==='🟡 For Canvass');
+  if(canvass.length)alerts.push({type:'warning',icon:'🟡',title:`${canvass.length} items For Canvass`,desc:'Need vendor quotation: '+[...new Set(canvass.slice(0,3).map(i=>i.partDesc?.substring(0,30)))].join(', ')+(canvass.length>3?` + ${canvass.length-3} more`:''),count:canvass.length});
+  const ready=bom.filter(i=>i.status==='🟢 Ready for PO');
+  if(ready.length)alerts.push({type:'info',icon:'🟢',title:`${ready.length} items Ready for PO`,desc:'Waiting for PO issuance: '+[...new Set(ready.slice(0,3).map(i=>i.vendor||'No vendor'))].join(', ')+(ready.length>3?` + ${ready.length-3} more`:''),count:ready.length});
+  const unpaid=vp.filter(i=>i.payStatus==='⬜ Unpaid');
+  if(unpaid.length)alerts.push({type:'critical',icon:'🔴',title:`${unpaid.length} Unpaid Vendor Payables`,desc:'Overdue: '+[...new Set(unpaid.slice(0,3).map(i=>i.supplier||i.vendor||'Unknown'))].join(', ')+(unpaid.length>3?` + ${unpaid.length-3} more`:''),count:unpaid.length});
+  const noWH=bom.filter(i=>i.status==='✅ PO Issued'&&(!i.whStatus||i.whStatus==='⬜ Pending'));
+  if(noWH.length)alerts.push({type:'warning',icon:'🚚',title:`${noWH.length} POs Pending Delivery`,desc:'PO issued but not yet in WH Incoming',count:noWH.length});
+  const partial=wh.filter(i=>i.status==='🔄 Partial');
+  if(partial.length)alerts.push({type:'info',icon:'📦',title:`${partial.length} Partial Deliveries`,desc:'Items partially delivered in WH Incoming',count:partial.length});
+  return alerts;
+}
 
-  const headers=cfg.cols.map(c=>`<th${c.editable?' class="editable-col"':''}>${esc(c.label)}${c.editable?' ✎':''}</th>`).join('');
-
-  const rows=filtered.length===0
-    ?`<tr><td colspan="${cfg.cols.length}" class="no-results">No results${q?` for "${esc(q)}"`:''}</td></tr>`
-    :filtered.map(row=>
-      '<tr>'+cfg.cols.map(col=>{
-        const v=row[col.field];
-        if(col.editable&&row.rowIndex){
-          return editCell(v,cfg.sheet,row.rowIndex,col.col,col.type||'text',col.options||null);
-        }
-        if(col.badge)return`<td>${badge(v)}</td>`;
-        if(col.peso)return`<td class="td-r">${fmtP(v)}</td>`;
-        if(col.date)return`<td style="white-space:nowrap">${fmtD(v)}</td>`;
-        if(col.muted)return`<td class="td-muted td-clip">${esc(v||'—')}</td>`;
-        if(col.clip)return`<td class="td-clip" title="${escA(v)}">${esc(v||'—')}</td>`;
-        return`<td>${esc(v||'—')}</td>`;
-      }).join('')+'</tr>'
-    ).join('');
-
-  document.getElementById('contentArea').innerHTML=`
-    <div class="tbl-pane">
-      <div class="tbl-toolbar">
-        <input class="search-input" style="max-width:300px" type="text"
-          placeholder="🔍 Search ${data.length} rows…"
-          value="${escA(tblSearch[tabKey]||'')}"
-          oninput="tblSearch['${tabKey}']=this.value;renderTab('${tabKey}')">
-        <span style="font-size:10px;color:#94a3b8">${filtered.length} / ${data.length} rows</span>
-        ${q?`<button class="btn" onclick="tblSearch['${tabKey}']='';renderTab('${tabKey}')">Clear</button>`:''}
-        <span style="font-size:10px;color:#94a3b8;margin-left:auto">⚡ Click yellow columns to edit — syncs to Google Sheets</span>
+function renderAlerts(){
+  const alerts=buildAlerts(API.bom||[],API.wh||[],API.vp||[]);
+  const cards=alerts.length===0?'<div class="no-results" style="padding:40px">✅ No alerts — everything looks good!</div>':alerts.map(a=>`
+    <div class="alert-card ${a.type}">
+      <span class="alert-icon">${a.icon}</span>
+      <div style="flex:1">
+        <div class="alert-title">${esc(a.title)}</div>
+        <div class="alert-desc">${esc(a.desc)}</div>
       </div>
-      <div class="tbl-wrap">
-        <table>
-          <thead><tr>${headers}</tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
-      </div>
-    </div>`;
+      <span class="alert-badge" style="background:${a.type==='critical'?'#fee2e2;color:#b91c1c':a.type==='warning'?'#fef3c7;color:#d97706':'#eff6ff;color:#1d4ed8'}">${a.count}</span>
+    </div>`).join('');
+  document.getElementById('area').innerHTML=`
+  <div style="flex:1;overflow-y:auto;padding:16px 20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:600">${alerts.length} Active Alert${alerts.length!==1?'s':''}</div>
+      <button class="btn" onclick="loadData()">↻ Refresh</button>
+    </div>
+    ${cards}
+  </div>`;
 }
 
 // ── Table configs ─────────────────────────────────────────────
-function poConfig(){
-  return{
-    sheet:'PO',
-    searchFields:['poNum','project','partDesc','catNo','supplier','status'],
-    cols:[
-      {field:'poNum',label:'PO #',clip:true},
-      {field:'project',label:'Project',clip:true},
-      {field:'partDesc',label:'Description',clip:true},
-      {field:'catNo',label:'Cat No',muted:true},
-      {field:'supplier',label:'Supplier',clip:true},
-      {field:'qty',label:'Qty'},
-      {field:'unit',label:'Unit',muted:true},
-      {field:'unitPrice',label:'Unit Price',peso:true},
-      {field:'lineTotal',label:'Total',peso:true},
-      {field:'poDate',label:'PO Date',date:true},
-      {field:'status',label:'Status',editable:true,col:12,type:'select',options:PO_STATUS,badge:false},
-      {field:'payTerms',label:'Pay Terms',editable:true,col:13,type:'select',options:PAY_TERMS},
-      {field:'remarks',label:'Remarks',editable:true,col:16,type:'text'},
-    ]
-  };
+function poCfg(){return{sheet:'PO',search:['poNum','project','partDesc','supplier','status'],addBtn:true,cols:[
+  {f:'poNum',lbl:'PO #',clip:true},{f:'project',lbl:'Project',clip:true},
+  {f:'partDesc',lbl:'Description',clip:true},{f:'catNo',lbl:'Cat No',m:true},
+  {f:'supplier',lbl:'Supplier',clip:true},{f:'qty',lbl:'Qty'},{f:'unit',lbl:'Unit',m:true},
+  {f:'unitPrice',lbl:'Unit Price',peso:true},{f:'lineTotal',lbl:'Total',peso:true},
+  {f:'poDate',lbl:'PO Date',date:true},
+  {f:'status',lbl:'Status',e:true,col:12,type:'select',opts:PO_ST,bdg:false},
+  {f:'payTerms',lbl:'Pay Terms',e:true,col:13,type:'select',opts:TERMS},
+  {f:'remarks',lbl:'Remarks',e:true,col:16,type:'text'},
+]}}
+function whCfg(){return{sheet:'WH',search:['poNum','project','partDesc','supplier','status'],addBtn:true,cols:[
+  {f:'poNum',lbl:'PO #',clip:true},{f:'project',lbl:'Project',clip:true},
+  {f:'partDesc',lbl:'Description',clip:true},{f:'supplier',lbl:'Supplier',clip:true},
+  {f:'poQty',lbl:'PO Qty'},{f:'delQty',lbl:'Delivered',e:true,col:8,type:'number'},
+  {f:'cancelQty',lbl:'Cancelled',e:true,col:9,type:'number'},{f:'balQty',lbl:'Balance'},
+  {f:'expectedDate',lbl:'Expected',e:true,col:12,type:'text'},{f:'actualDate',lbl:'Actual',e:true,col:11,type:'text'},
+  {f:'daysVar',lbl:'Days Var',m:true},
+  {f:'status',lbl:'Status',e:true,col:14,type:'select',opts:WH_ST,bdg:false},
+  {f:'remarks',lbl:'Remarks',e:true,col:15,type:'text'},
+]}}
+function vpCfg(){return{sheet:'VP',search:['poNum','project','supplier','payStatus','invoice'],addBtn:false,cols:[
+  {f:'poNum',lbl:'PO #',clip:true},{f:'project',lbl:'Project',clip:true},
+  {f:'supplier',lbl:'Supplier',clip:true},{f:'partDesc',lbl:'Description',clip:true},
+  {f:'delQty',lbl:'Del Qty'},{f:'unitPrice',lbl:'Unit Price',peso:true},{f:'amount',lbl:'Amount',peso:true},
+  {f:'billingDate',lbl:'Billing',e:true,col:12,type:'text'},
+  {f:'invoice',lbl:'Invoice #',e:true,col:13,type:'text'},
+  {f:'payTerms',lbl:'Pay Terms',e:true,col:14,type:'select',opts:TERMS},
+  {f:'dueDate',lbl:'Due Date',e:true,col:15,type:'text'},
+  {f:'payStatus',lbl:'Pay Status',e:true,col:16,type:'select',opts:PAY_ST,bdg:false},
+  {f:'amtPaid',lbl:'Amt Paid',e:true,col:17,type:'number'},{f:'balance',lbl:'Balance',peso:true},
+  {f:'orNum',lbl:'OR #',e:true,col:19,type:'text'},{f:'datePaid',lbl:'Date Paid',e:true,col:20,type:'text'},
+  {f:'remarks',lbl:'Remarks',e:true,col:23,type:'text'},
+]}}
+function mrsCfg(){return{sheet:'MRS',search:['project','partDesc','catNo','vendor','status'],addBtn:true,cols:[
+  {f:'num',lbl:'#',m:true},{f:'project',lbl:'Project',clip:true},{f:'type',lbl:'Type',m:true},
+  {f:'category',lbl:'Category',m:true},{f:'partDesc',lbl:'Description',clip:true},{f:'catNo',lbl:'Cat No',m:true},
+  {f:'qty',lbl:'Qty'},{f:'unit',lbl:'Unit',m:true},
+  {f:'vendor',lbl:'Vendor',e:true,col:12,type:'text'},{f:'poNum',lbl:'PO #',e:true,col:13,type:'text'},
+  {f:'unitPrice',lbl:'Price',e:true,col:14,type:'number'},
+  {f:'v1',lbl:'V1',e:true,col:16,type:'number'},{f:'v2',lbl:'V2',e:true,col:17,type:'number'},{f:'v3',lbl:'V3',e:true,col:18,type:'number'},
+  {f:'status',lbl:'Status',e:true,col:11,type:'select',opts:BOM_ST,bdg:false},
+  {f:'remarks',lbl:'Remarks',e:true,col:23,type:'text'},
+]}}
+function historyCfg(){return{sheet:'',search:['catNo','partDesc','vendor','project','poNum'],addBtn:false,cols:[
+  {f:'catNo',lbl:'Cat No',m:true},{f:'partDesc',lbl:'Description',clip:true},
+  {f:'category',lbl:'Category',m:true},{f:'poNum',lbl:'PO #',clip:true},{f:'poDate',lbl:'Date',date:true},
+  {f:'vendor',lbl:'Vendor',clip:true},{f:'unitPrice',lbl:'Price',peso:true},{f:'prevPrice',lbl:'Prev Price',peso:true},
+  {f:'priceChange',lbl:'Change',peso:true},{f:'pctChange',lbl:'% Change'},{f:'project',lbl:'Project',clip:true},{f:'source',lbl:'Source',m:true},
+]}}
+function equipCfg(){return{sheet:'EQUIP',search:['machineId','name','type','brand','status','location'],addBtn:true,cols:[
+  {f:'machineId',lbl:'Machine ID',m:true},{f:'name',lbl:'Machine Name',clip:true},{f:'type',lbl:'Type',m:true},
+  {f:'brand',lbl:'Brand',m:true},{f:'model',lbl:'Model',m:true},{f:'serial',lbl:'Serial',m:true},
+  {f:'location',lbl:'Location',e:true,col:7,type:'text'},
+  {f:'status',lbl:'Status',e:true,col:8,type:'select',opts:MACH_ST,bdg:false},
+  {f:'lastPM',lbl:'Last PM',date:true},{f:'nextPM',lbl:'Next PM',e:true,col:10,type:'text'},
+  {f:'assignedTo',lbl:'Assigned To',e:true,col:11,type:'text'},{f:'remarks',lbl:'Remarks',e:true,col:12,type:'text'},
+]}}
+function equipLogCfg(){return{sheet:'MACHLOG',search:['machineId','machineName','type','technician','status'],addBtn:true,cols:[
+  {f:'date',lbl:'Date',date:true},{f:'machineId',lbl:'Machine ID',m:true},{f:'machineName',lbl:'Machine',clip:true},
+  {f:'type',lbl:'Type',e:true,col:4,type:'select',opts:LOG_TYPE,bdg:false},
+  {f:'description',lbl:'Description',clip:true},{f:'technician',lbl:'Technician',e:true,col:6,type:'text'},
+  {f:'parts',lbl:'Parts Used',e:true,col:7,type:'text'},{f:'cost',lbl:'Cost',peso:true},
+  {f:'downtime',lbl:'Downtime (hrs)',e:true,col:9,type:'number'},
+  {f:'status',lbl:'Status',e:true,col:10,type:'select',opts:['Completed','In Progress','Pending'],bdg:false},
+  {f:'nextAction',lbl:'Next Action',e:true,col:11,type:'text'},{f:'remarks',lbl:'Remarks',e:true,col:12,type:'text'},
+]}}
+function testEquipCfg(){return{sheet:'TESTEQUIP',search:['equipId','name','brand','status','location'],addBtn:true,cols:[
+  {f:'equipId',lbl:'Equip ID',m:true},{f:'name',lbl:'Equipment',clip:true},{f:'brand',lbl:'Brand',m:true},
+  {f:'model',lbl:'Model',m:true},{f:'serial',lbl:'Serial',m:true},
+  {f:'calibDue',lbl:'Calib Due',date:true},{f:'lastCalib',lbl:'Last Calib',date:true},
+  {f:'calibBy',lbl:'Calibrated By',e:true,col:8,type:'text'},
+  {f:'status',lbl:'Status',e:true,col:9,type:'select',opts:CALIB_ST,bdg:false},
+  {f:'location',lbl:'Location',e:true,col:10,type:'text'},{f:'remarks',lbl:'Remarks',e:true,col:11,type:'text'},
+]}}
+
+// ── Add Row Modal ─────────────────────────────────────────────
+const MODAL_FORMS={
+  bom:{title:'Add BOM Item',sheet:null,fields:[
+    {n:'project',l:'Project / SO#',t:'text',req:true,full:true},
+    {n:'mrf',l:'MRF #',t:'text'},{n:'category',l:'Category',t:'text'},
+    {n:'partDesc',l:'Part Description *',t:'text',req:true,full:true},
+    {n:'catNo',l:'Cat No / Part Code',t:'text'},{n:'qty',l:'Quantity',t:'number',req:true},
+    {n:'unit',l:'Unit',t:'text'},{n:'vendor',l:'Vendor',t:'text'},
+    {n:'status',l:'Status',t:'select',opts:BOM_ST,def:'🟡 For Canvass'},
+    {n:'remarks',l:'Remarks',t:'text',full:true},
+  ],build:(f)=>{
+    const bomSheet=activeCli?(API.bom||[]).find(r=>r.sheet.replace(/^📦\s*/,'').trim()===activeCli)?.sheet||null:null;
+    if(!bomSheet)throw new Error('Please select a client first');
+    return{sheet:bomSheet,values:['',new Date().toLocaleDateString(),f.project||'',f.mrf||'',f.category||'',f.partDesc||'',f.catNo||'','',f.qty||'',f.unit||'','',false,false,f.status||'🟡 For Canvass','',f.vendor||'','','','','','','','','','','⬜ Pending','']};
+  }},
+  po:{title:'Add Purchase Order',sheet:'PO',fields:[
+    {n:'poNum',l:'PO # *',t:'text',req:true},{n:'project',l:'Project *',t:'text',req:true},
+    {n:'partDesc',l:'Part Description *',t:'text',req:true,full:true},
+    {n:'catNo',l:'Cat No',t:'text'},{n:'supplier',l:'Supplier *',t:'text',req:true},
+    {n:'qty',l:'Quantity',t:'number'},{n:'unit',l:'Unit',t:'text'},
+    {n:'unitPrice',l:'Unit Price',t:'number'},{n:'poDate',l:'PO Date',t:'text',def:new Date().toLocaleDateString()},
+    {n:'status',l:'Status',t:'select',opts:PO_ST,def:'For Approval'},
+    {n:'payTerms',l:'Pay Terms',t:'select',opts:TERMS,def:'COD'},
+    {n:'remarks',l:'Remarks',t:'text',full:true},
+  ],build:(f)=>({sheet:'PO',values:['',f.poNum||'',f.project||'',f.partDesc||'',f.catNo||'',f.supplier||'',f.unit||'',f.qty||'',f.unitPrice||'','',f.poDate||'',f.status||'',f.payTerms||'','','',f.remarks||'']})},
+  wh:{title:'Add WH Incoming Entry',sheet:'WH',fields:[
+    {n:'poNum',l:'PO # *',t:'text',req:true},{n:'project',l:'Project',t:'text'},
+    {n:'partDesc',l:'Part Description',t:'text',full:true},
+    {n:'supplier',l:'Supplier',t:'text'},{n:'unit',l:'Unit',t:'text'},
+    {n:'poQty',l:'PO Qty',t:'number'},{n:'delQty',l:'Delivered Qty',t:'number'},
+    {n:'expectedDate',l:'Expected Date',t:'text'},{n:'actualDate',l:'Actual Date',t:'text',def:new Date().toLocaleDateString()},
+    {n:'status',l:'Status',t:'select',opts:WH_ST,def:'⬜ Pending'},
+    {n:'remarks',l:'Remarks',t:'text',full:true},
+  ],build:(f)=>({sheet:'WH',values:[f.poNum||'',f.project||'',f.partDesc||'','',f.supplier||'',f.unit||'',f.poQty||'',f.delQty||'','','',f.actualDate||'',f.expectedDate||'','',f.status||'',f.remarks||'']})},
+  mrs:{title:'Add MRS Item',sheet:'MRS',fields:[
+    {n:'project',l:'Project *',t:'text',req:true},{n:'type',l:'Type',t:'text'},
+    {n:'category',l:'Category',t:'text'},{n:'partDesc',l:'Part Description *',t:'text',req:true,full:true},
+    {n:'catNo',l:'Cat No',t:'text'},{n:'qty',l:'Quantity',t:'number'},{n:'unit',l:'Unit',t:'text'},
+    {n:'status',l:'Status',t:'select',opts:BOM_ST,def:'🟡 For Canvass'},
+    {n:'remarks',l:'Remarks',t:'text',full:true},
+  ],build:(f)=>({sheet:'MRS',values:['',f.project||'',f.type||'',f.category||'',f.partDesc||'',f.catNo||'',f.qty||'',f.unit||'','','',f.status||'','','','','','','','','','','','',f.remarks||'']})},
+  equip:{title:'Add Equipment',sheet:'EQUIP',fields:[
+    {n:'machineId',l:'Machine ID *',t:'text',req:true},{n:'name',l:'Machine Name *',t:'text',req:true},
+    {n:'type',l:'Type',t:'text'},{n:'brand',l:'Brand',t:'text'},
+    {n:'model',l:'Model',t:'text'},{n:'serial',l:'Serial No',t:'text'},
+    {n:'location',l:'Location',t:'text'},{n:'status',l:'Status',t:'select',opts:MACH_ST,def:'Active'},
+    {n:'assignedTo',l:'Assigned To',t:'text'},{n:'remarks',l:'Remarks',t:'text',full:true},
+  ],build:(f)=>({sheet:'EQUIP',values:[f.machineId||'',f.name||'',f.type||'',f.brand||'',f.model||'',f.serial||'',f.location||'',f.status||'','','',f.assignedTo||'',f.remarks||'']})},
+  equiplog:{title:'Add Machine Log',sheet:'MACHLOG',fields:[
+    {n:'date',l:'Date *',t:'text',req:true,def:new Date().toLocaleDateString()},
+    {n:'machineId',l:'Machine ID *',t:'text',req:true},{n:'machineName',l:'Machine Name',t:'text'},
+    {n:'type',l:'Activity Type',t:'select',opts:LOG_TYPE,def:'PM'},
+    {n:'description',l:'Description *',t:'text',req:true,full:true},
+    {n:'technician',l:'Technician',t:'text'},{n:'parts',l:'Parts Used',t:'text'},
+    {n:'cost',l:'Cost (₱)',t:'number'},{n:'downtime',l:'Downtime (hrs)',t:'number'},
+    {n:'status',l:'Status',t:'select',opts:['Completed','In Progress','Pending'],def:'Completed'},
+    {n:'nextAction',l:'Next Action',t:'text',full:true},
+  ],build:(f)=>({sheet:'MACHLOG',values:[f.date||'',f.machineId||'',f.machineName||'',f.type||'',f.description||'',f.technician||'',f.parts||'',f.cost||'',f.downtime||'',f.status||'',f.nextAction||'','']})},
+  testequip:{title:'Add Test Equipment',sheet:'TESTEQUIP',fields:[
+    {n:'equipId',l:'Equipment ID *',t:'text',req:true},{n:'name',l:'Equipment Name *',t:'text',req:true},
+    {n:'brand',l:'Brand',t:'text'},{n:'model',l:'Model',t:'text'},{n:'serial',l:'Serial No',t:'text'},
+    {n:'calibDue',l:'Calibration Due Date',t:'text'},{n:'lastCalib',l:'Last Calibrated',t:'text'},
+    {n:'calibBy',l:'Calibrated By',t:'text'},{n:'status',l:'Status',t:'select',opts:CALIB_ST,def:'Valid'},
+    {n:'location',l:'Location',t:'text'},{n:'remarks',l:'Remarks',t:'text',full:true},
+  ],build:(f)=>({sheet:'TESTEQUIP',values:[f.equipId||'',f.name||'',f.brand||'',f.model||'',f.serial||'',f.calibDue||'',f.lastCalib||'',f.calibBy||'',f.status||'',f.location||'',f.remarks||'']})}
+};
+
+function openAddModal(key){
+  const cfg=MODAL_FORMS[key];if(!cfg)return;
+  const fields=cfg.fields.map(f=>`
+    <div class="form-field${f.full?' full':''}">
+      <label class="form-label">${esc(f.l)}${f.req?' <span style="color:#ef4444">*</span>':''}</label>
+      ${f.t==='select'
+        ?`<select class="form-input" id="f_${f.n}" name="${f.n}"><option value="">—</option>${(f.opts||[]).map(o=>`<option value="${escA(o)}"${o===f.def?' selected':''}>${esc(o)}</option>`).join('')}</select>`
+        :`<input class="form-input" id="f_${f.n}" name="${f.n}" type="${f.t==='number'?'number':'text'}" placeholder="${esc(f.l)}" value="${escA(f.def||'')}">` }
+    </div>`).join('');
+  document.body.insertAdjacentHTML('beforeend',`
+    <div class="modal-overlay" id="addModal" onclick="if(event.target===this)closeModal()">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-hdr">
+          <div class="modal-title">${esc(cfg.title)}</div>
+          <button class="btn" onclick="closeModal()" style="padding:2px 8px;font-size:14px;border:none;color:#94a3b8">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">${fields}</div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn" onclick="closeModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="submitModal('${key}')">💾 Save to Google Sheets</button>
+        </div>
+      </div>
+    </div>`);
 }
-function whConfig(){
-  return{
-    sheet:'WH',
-    searchFields:['poNum','project','partDesc','supplier','status'],
-    cols:[
-      {field:'poNum',label:'PO #',clip:true},
-      {field:'project',label:'Project',clip:true},
-      {field:'partDesc',label:'Description',clip:true},
-      {field:'supplier',label:'Supplier',clip:true},
-      {field:'poQty',label:'PO Qty'},
-      {field:'delQty',label:'Delivered ✎',editable:true,col:8,type:'number'},
-      {field:'cancelQty',label:'Cancelled ✎',editable:true,col:9,type:'number'},
-      {field:'balQty',label:'Balance'},
-      {field:'expectedDate',label:'Expected ✎',editable:true,col:12,type:'text',date:false},
-      {field:'actualDate',label:'Actual ✎',editable:true,col:11,type:'text',date:false},
-      {field:'daysVar',label:'Days Var',muted:true},
-      {field:'status',label:'Status ✎',editable:true,col:14,type:'select',options:WH_STATUS,badge:false},
-      {field:'remarks',label:'Remarks ✎',editable:true,col:15,type:'text'},
-    ]
-  };
+
+function closeModal(){const m=document.getElementById('addModal');if(m)m.remove();}
+
+async function submitModal(key){
+  const cfg=MODAL_FORMS[key];if(!cfg)return;
+  const formData={};
+  cfg.fields.forEach(f=>{const el=document.getElementById('f_'+f.n);if(el)formData[f.n]=el.value;});
+  // Validate required
+  const missing=cfg.fields.filter(f=>f.req&&!formData[f.n]);
+  if(missing.length){toast('❌ Required: '+missing.map(f=>f.l).join(', '),'err');return;}
+  try{
+    const {sheet,values}=cfg.build(formData);
+    if(!sheet)return;
+    const btn=document.querySelector('#addModal .btn-primary');
+    if(btn){btn.disabled=true;btn.textContent='Saving…';}
+    await addRow(sheet,values);
+    closeModal();
+  }catch(e){toast('❌ '+e.message,'err');}
 }
-function vpConfig(){
-  return{
-    sheet:'VP',
-    searchFields:['poNum','project','supplier','partDesc','payStatus','invoice'],
-    cols:[
-      {field:'poNum',label:'PO #',clip:true},
-      {field:'project',label:'Project',clip:true},
-      {field:'supplier',label:'Supplier',clip:true},
-      {field:'partDesc',label:'Description',clip:true},
-      {field:'delQty',label:'Del Qty'},
-      {field:'unitPrice',label:'Unit Price',peso:true},
-      {field:'amount',label:'Amount',peso:true},
-      {field:'billingDate',label:'Billing Date',editable:true,col:12,type:'text'},
-      {field:'invoice',label:'Invoice # ✎',editable:true,col:13,type:'text'},
-      {field:'payTerms',label:'Pay Terms ✎',editable:true,col:14,type:'select',options:PAY_TERMS},
-      {field:'dueDate',label:'Due Date ✎',editable:true,col:15,type:'text'},
-      {field:'payStatus',label:'Pay Status ✎',editable:true,col:16,type:'select',options:PAY_STATUS,badge:false},
-      {field:'amtPaid',label:'Amt Paid ✎',editable:true,col:17,type:'number'},
-      {field:'balance',label:'Balance',peso:true},
-      {field:'orNum',label:'OR # ✎',editable:true,col:19,type:'text'},
-      {field:'datePaid',label:'Date Paid ✎',editable:true,col:20,type:'text'},
-      {field:'remarks',label:'Remarks ✎',editable:true,col:23,type:'text'},
-    ]
-  };
-}
-function mrsConfig(){
-  return{
-    sheet:'MRS',
-    searchFields:['project','partDesc','catNo','vendor','status'],
-    cols:[
-      {field:'num',label:'#',muted:true},
-      {field:'project',label:'Project',clip:true},
-      {field:'type',label:'Type',muted:true},
-      {field:'category',label:'Category',muted:true},
-      {field:'partDesc',label:'Description',clip:true},
-      {field:'catNo',label:'Cat No',muted:true},
-      {field:'qty',label:'Qty'},
-      {field:'unit',label:'Unit',muted:true},
-      {field:'vendor',label:'Vendor ✎',editable:true,col:12,type:'text'},
-      {field:'poNum',label:'PO # ✎',editable:true,col:13,type:'text'},
-      {field:'unitPrice',label:'Price ✎',editable:true,col:14,type:'number'},
-      {field:'v1',label:'V1 ✎',editable:true,col:16,type:'number'},
-      {field:'v2',label:'V2 ✎',editable:true,col:17,type:'number'},
-      {field:'v3',label:'V3 ✎',editable:true,col:18,type:'number'},
-      {field:'status',label:'Status ✎',editable:true,col:11,type:'select',options:BOM_STATUS,badge:false},
-      {field:'remarks',label:'Remarks ✎',editable:true,col:23,type:'text'},
-    ]
-  };
-}
+
+// ── Resolve special sheet keys ────────────────────────────────
+// (Equipment sheets use short keys — map in Apps Script resolveSheetName)
 
 // ── Init ──────────────────────────────────────────────────────
 loadData();
