@@ -367,7 +367,7 @@ function renderTab(tab){
   if(tab==='bom')renderBOM();
   else if(tab==='mrs')renderMRS();
   else if(tab==='po')renderPO();
-  else if(tab==='wh')renderFlat('wh',API.wh||[],whCfg());
+  else if(tab==='wh')renderWH();
   else if(tab==='vp')renderVP();
   else if(tab==='history')renderHistory();
   else if(tab==='alerts')renderAlerts();
@@ -441,7 +441,11 @@ function buildProjCard(proj,items,allKeys){
     ?`<tr><td colspan="20" class="no-rows" style="font-family:var(--font-mono)">no items match</td></tr>`
     :fi.map(it=>{
       const s=it.sheet,r=it.rowIndex||0;
-      // Line total compute
+      // Compute budgetVsPct client-side (API may not have it yet)
+      const bvp = (it.budgetVsPct!=null&&it.budgetVsPct!==undefined) ? it.budgetVsPct
+        : (it.budget&&it.unitPrice) ? Math.round((Number(it.unitPrice)-Number(it.budget))/Number(it.budget)*1000)/10 : null;
+      const bvpColor = bvp!=null ? (bvp>0?'var(--red)':bvp<0?'var(--green)':'var(--text3)') : 'var(--text3)';
+      const bvpTxt = bvp!=null ? (bvp>0?'+':'')+bvp+'%' : '—';
 
       return`<tr>
         <td class="td-m td-mono td-r">${it.num}</td>
@@ -460,7 +464,7 @@ function buildProjCard(proj,items,allKeys){
         ${r?ec(it.vendor,s,r,16):`<td class="td-sm">${esc(it.vendor||'—')}</td>`}
         ${r?ec(it.unitPrice,s,r,17,'number'):`<td class="td-r td-mono">${fP(it.unitPrice)}</td>`}
         <td class="td-r td-mono td-m">${fP(it.budget)}</td>
-        <td class="td-r td-mono" style="color:${it.budgetVsPct!=null?(it.budgetVsPct>0?'var(--red)':it.budgetVsPct<0?'var(--green)':'var(--text3)'):'var(--text3)'}">${it.budgetVsPct!=null?(it.budgetVsPct>0?'+':'')+it.budgetVsPct+'%':'—'}</td>
+        <td class="td-r td-mono" style="color:${bvpColor};font-weight:${bvp!=null&&bvp!==0?'600':'400'}">${bvpTxt}</td>
         ${r?ec(it.payTerms,s,r,28,'select',TERMS):`<td class="td-m">${esc(it.payTerms||'—')}</td>`}
         <!-- Delivery -->
         ${r?ec(it.delQty,s,r,29,'number'):`<td class="td-r td-mono grp-start">${it.delQty||'—'}</td>`}
@@ -551,111 +555,166 @@ function renderFlat(key,data,cfg){
     </div>`;
 }
 
-// ── Alerts ─────────────────────────────────────────
+// ── Alerts — clickable to see items ──────────────────────────
+let _alertDetail = null;
 function renderAlerts(){
-  const bom=API.bom||[];
+  const bom=API.bom||[], vp=API.vp||[];
   const canvass=bom.filter(i=>i.status==='🟡 For Canvass');
   const ready=bom.filter(i=>i.status==='🟢 Ready for PO');
-  const unpaid=bom.filter(i=>i.payStatus==='⬜ Unpaid'||i.payStatus==='🔄 Partial Pay');
-  const noDelivery=bom.filter(i=>i.status==='✅ PO Issued'&&(!i.whStatus||i.whStatus==='⬜ Pending')&&!i.delQty);
-  const alerts=[
-    canvass.length&&{type:'warn',icon:'🟡',title:`${canvass.length} items need quotation (For Canvass)`,desc:[...new Set(canvass.slice(0,4).map(i=>i.project))].join(' · '),n:canvass.length},
-    ready.length&&{type:'info',icon:'🟢',title:`${ready.length} items ready for PO issuance`,desc:'Has vendor price — waiting for PO#',n:ready.length},
-    unpaid.length&&{type:'crit',icon:'🔴',title:`${unpaid.length} items with unpaid / partial payment`,desc:[...new Set(unpaid.slice(0,4).map(i=>i.vendor||i.project))].join(' · '),n:unpaid.length},
-    noDelivery.length&&{type:'warn',icon:'🚚',title:`${noDelivery.length} POs pending delivery`,desc:'PO Issued but no delivery recorded yet',n:noDelivery.length},
-  ].filter(Boolean);
+  const unpaid=vp.filter(i=>i.payStatus==='⬜ Unpaid'||i.payStatus==='🔄 Partial Pay');
+  const noDelivery=bom.filter(i=>i.status==='✅ PO Issued'&&(!i.whStatus||i.whStatus==='⬜ Pending')&&!Number(i.delQty||0));
+  const partialDel=bom.filter(i=>i.whStatus==='🔄 Partial'||i.whStatus==='🔄 Partial Delivery');
+  const groups=[
+    {type:'warn',icon:'🟡',title:'For Canvass',sub:'Need vendor quotation',items:canvass,color:'var(--amber)',key:'canvass'},
+    {type:'info',icon:'🟢',title:'Ready for PO',sub:'Has price — no PO# yet',items:ready,color:'var(--green)',key:'ready'},
+    {type:'crit',icon:'🔴',title:'Unpaid / Partial Bills',sub:'Vendor Bill outstanding',items:unpaid,color:'var(--red)',key:'unpaid'},
+    {type:'warn',icon:'🚚',title:'Pending Delivery',sub:'PO issued, not yet received',items:noDelivery,color:'var(--amber)',key:'pending'},
+    {type:'info',icon:'📦',title:'Partial Delivery',sub:'Balance still pending',items:partialDel,color:'var(--teal)',key:'partial'},
+  ].filter(g=>g.items.length>0);
+
+  function makeDetail(g) {
+    const isBOM = g.key!=='unpaid';
+    const rows = g.items.map(it => {
+      if(isBOM) return `<tr>
+        <td class="td-mono td-m" style="font-size:10px">${esc(it.sheet?.replace(/^📦\s*/,'')||'')}</td>
+        <td class="td-clip" title="${escA(it.project)}">${esc(it.project||'—')}</td>
+        <td class="td-clip" title="${escA(it.partDesc)}">${esc(it.partDesc||'—')}</td>
+        <td class="td-mono td-m" style="min-width:90px">${esc(it.catNo||'—')}</td>
+        <td class="td-r td-mono">${it.qty||'—'}</td>
+        <td class="td-m">${esc(it.unit||'—')}</td>
+        <td class="td-r td-mono td-m">${fP(it.budget)}</td>
+        <td>${bdg(it.status)}</td>
+        <td class="td-mono td-m">${esc(it.poNum||'—')}</td>
+        <td class="td-clip td-m">${esc(it.vendor||'—')}</td>
+        <td class="td-r td-mono">${fP(it.unitPrice)}</td>
+      </tr>`;
+      else return `<tr>
+        <td class="td-mono td-m">${esc(it.poNum||'—')}</td>
+        <td class="td-clip">${esc(it.supplier||'—')}</td>
+        <td class="td-clip">${esc(it.partDesc||'—')}</td>
+        <td class="td-r td-mono">${fP(it.amount)}</td>
+        <td class="td-r td-mono">${fP(it.amtPaid)}</td>
+        <td class="td-r td-mono" style="color:var(--red)">${fP(it.balance)}</td>
+        <td>${bdg(it.payStatus)}</td>
+        <td class="td-mono td-m">${esc(it.invoice||'—')}</td>
+      </tr>`;
+    }).join('');
+    const hdrs = isBOM
+      ? '<th>Client</th><th>Project</th><th>Description</th><th style="min-width:90px">Cat No</th><th>Qty</th><th>Unit</th><th>Budget</th><th>Status</th><th>PO #</th><th>Vendor</th><th>Unit Price</th>'
+      : '<th>PO #</th><th>Supplier</th><th>Description</th><th>Amount</th><th>Paid</th><th>Balance</th><th>Status</th><th>Invoice</th>';
+    return `<div style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;overflow:hidden">
+      <div style="padding:6px 12px;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:10px;font-weight:600;color:${g.color}">${g.icon} ${g.title} — ${g.items.length} items</div>
+      <div style="max-height:300px;overflow:auto">
+        <table><thead><tr>${hdrs}</tr></thead><tbody>${rows}</tbody></table>
+      </div>
+    </div>`;
+  }
+
+  const cards = groups.map(g => {
+    const isActive = _alertDetail===g.key;
+    return `<div class="ac ${g.type}" style="cursor:pointer;flex-direction:column" onclick="_alertDetail=_alertDetail==='${g.key}'?null:'${g.key}';renderAlerts()">
+      <div style="display:flex;align-items:center;gap:10px;width:100%">
+        <span class="ac-icon">${g.icon}</span>
+        <div style="flex:1">
+          <div class="ac-title" style="color:var(--text)">${esc(g.title)}</div>
+          <div class="ac-desc">${esc(g.sub)}</div>
+        </div>
+        <span class="ac-n" style="background:rgba(255,255,255,.06);color:${g.color};font-size:16px;font-family:var(--font-mono)">${g.items.length}</span>
+        <span style="font-family:var(--font-mono);font-size:10px;color:var(--text3)">${isActive?'▲ hide':'▼ show'}</span>
+      </div>
+      ${isActive?makeDetail(g):''}
+    </div>`;
+  }).join('');
+
   document.getElementById('content').innerHTML=`
     <div class="alert-list">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text2)">${alerts.length} active alert${alerts.length!==1?'s':''}</div>
+        <div style="font-family:var(--font-mono);font-size:11px;color:var(--text2)">${groups.length} alert group${groups.length!==1?'s':''} · click to expand</div>
         <button class="btn" onclick="loadData()">↻ refresh</button>
       </div>
-      ${alerts.length===0?`<div class="no-rows" style="padding:40px;font-family:var(--font-mono)">✅ all clear — no alerts</div>`:alerts.map(a=>`
-        <div class="ac ${a.type}">
-          <span class="ac-icon">${a.icon}</span>
-          <div style="flex:1">
-            <div class="ac-title" style="color:var(--text)">${esc(a.title)}</div>
-            <div class="ac-desc">${esc(a.desc)}</div>
-          </div>
-          <span class="ac-n" style="background:rgba(255,255,255,.06);color:var(--text2)">${a.n}</span>
-        </div>`).join('')}
+      ${groups.length===0?'<div class="no-rows" style="padding:40px;font-family:var(--font-mono)">✅ all clear — no alerts</div>':cards}
     </div>`;
 }
 
-// ── PO Tab — grouped by PO# expandable ────────────────────────
+// ── PO Tab — grouped by Project → PO# ────────────────────────
 function renderPO() {
   const data = API.po || [];
   const q = (tblQ['po'] || '').toLowerCase();
-  // Group by PO#
-  const groups = {};
-  const groupOrder = [];
+  const groups = {}, groupOrder = [];
   data.forEach(row => {
     const po = row.poNum || '—';
     if (!groups[po]) { groups[po] = []; groupOrder.push(po); }
     groups[po].push(row);
   });
   const filteredKeys = q
-    ? groupOrder.filter(po => {
-        const items = groups[po];
-        return po.toLowerCase().includes(q) ||
-          items.some(r => [r.project, r.partDesc, r.supplier, r.status].some(f => (f||'').toLowerCase().includes(q)));
-      })
+    ? groupOrder.filter(po => groups[po].some(r => [r.project,r.partDesc,r.supplier,r.status,r.catNo,po].some(f=>(f||'').toLowerCase().includes(q))))
     : groupOrder;
-
-  const cards = filteredKeys.length === 0
-    ? `<div class="no-rows" style="font-family:var(--font-mono);padding:30px">no results</div>`
-    : filteredKeys.map(po => {
-        const items = groups[po];
-        const s0 = items[0];
-        const total = items.reduce((s, r) => s + Number(r.lineTotal || 0), 0);
-        const status = s0.status || '—';
-        const cid = 'po_' + po.replace(/\W/g, '');
-        const isOpen = openProj['po_' + po];
-        const rows = items.map(it => `<tr>
-          <td class="td-clip td-m" title="${escA(it.partDesc)}">${esc(it.partDesc||'—')}</td>
-          <td class="td-mono td-m">${esc(it.catNo||'—')}</td>
-          <td class="td-r td-mono">${it.qty||'—'}</td>
-          <td class="td-m">${esc(it.unit||'—')}</td>
-          <td class="td-r td-mono">${fP(it.unitPrice)}</td>
-          <td class="td-r td-mono">${fP(it.lineTotal)}</td>
-          ${ec(it.payTerms,'PO',it.rowIndex,13,'select',TERMS)}
-          ${ec(it.remarks,'PO',it.rowIndex,16,'text')}
-        </tr>`).join('');
-
-        return `<div class="proj-card${isOpen?' open':''}" id="${cid}">
-          <button class="proj-hdr" onclick="tp('po_${escJ(po)}','${cid}')">
-            <span class="proj-arrow">▶</span>
-            <span class="proj-name" style="font-family:var(--font-mono);color:var(--accent)">${esc(po)}</span>
-            <span style="font-size:11px;color:var(--text2);margin-left:4px">${esc(s0.project||'')}</span>
-            <span style="flex:1"></span>
-            <span class="pill" style="background:rgba(255,255,255,.06);color:var(--text3);font-family:var(--font-mono)">${items.length} items</span>
-            <span style="margin-left:6px;font-family:var(--font-mono);font-size:11px;color:var(--teal)">${fP(total)}</span>
-            <span style="margin-left:8px">${bdg(status)}</span>
-            <span style="margin-left:6px;font-size:11px;color:var(--text3)">${esc(s0.supplier||'')}</span>
-          </button>
-          <div class="proj-body">
-            <div class="tbl-wrap" style="max-height:320px">
-            <table>
-              <thead><tr>
-                <th>Description</th><th>Cat No</th><th>Qty</th><th>Unit</th>
-                <th>Unit Price</th><th>Line Total</th>
-                <th class="e">Pay Terms ✎</th><th class="e">Remarks ✎</th>
-              </tr></thead>
-              <tbody>${rows}</tbody>
-            </table></div>
-          </div>
-        </div>`;
-      }).join('');
-
+  // Group by project
+  const byProject = {}, projOrder = [];
+  filteredKeys.forEach(po => {
+    const proj = groups[po][0]?.project || '—';
+    if (!byProject[proj]) { byProject[proj]=[]; projOrder.push(proj); }
+    byProject[proj].push(po);
+  });
+  const grandTotal = filteredKeys.reduce((s,po)=>s+groups[po].reduce((s2,r)=>s2+Number(r.lineTotal||0),0),0);
+  let html = '';
+  projOrder.forEach(proj => {
+    const projPOs = byProject[proj];
+    const projTotal = projPOs.reduce((s,po)=>s+groups[po].reduce((s2,r)=>s2+Number(r.lineTotal||0),0),0);
+    html += `<div style="background:rgba(56,189,248,.05);border-left:3px solid rgba(56,189,248,.3);padding:5px 12px;margin-bottom:4px;display:flex;align-items:center;gap:8px;border-radius:0 4px 4px 0">
+      <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;color:var(--accent)">${esc(proj)}</span>
+      <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono)">${projPOs.length} PO${projPOs.length!==1?'s':''}</span>
+      <span style="font-size:9.5px;color:var(--teal);font-family:var(--font-mono);margin-left:auto">${fP(projTotal)}</span>
+    </div>`;
+    projPOs.forEach(po => {
+      const items = groups[po];
+      const s0 = items[0];
+      const total = items.reduce((s,r)=>s+Number(r.lineTotal||0),0);
+      const cid = 'po_'+po.replace(/\W/g,'');
+      const isOpen = openProj['po_'+po];
+      const rows = items.map(it => `<tr>
+        <td class="td-clip" title="${escA(it.partDesc)}" style="min-width:180px">${esc(it.partDesc||'—')}</td>
+        <td class="td-mono td-m" style="min-width:110px">${esc(it.catNo||'—')}</td>
+        <td class="td-r td-mono">${it.qty||'—'}</td><td class="td-m">${esc(it.unit||'—')}</td>
+        ${it.rowIndex?ec(it.unitPrice,'PO',it.rowIndex,9,'number'):`<td class="td-r td-mono">${fP(it.unitPrice)}</td>`}
+        <td class="td-r td-mono td-m">${fP(it.lineTotal)}</td>
+        <td class="td-mono td-m" style="font-size:10px;white-space:nowrap">${fD(it.poDate)}</td>
+        ${it.rowIndex?ec(it.status,'PO',it.rowIndex,12,'select',['For Approval','✅ Approved','✅ Delivered','❌ Cancelled']):`<td>${bdg(it.status)}</td>`}
+        ${it.rowIndex?ec(it.payTerms,'PO',it.rowIndex,13,'select',TERMS):`<td class="td-m">${esc(it.payTerms||'—')}</td>`}
+        ${it.rowIndex?ec(it.remarks,'PO',it.rowIndex,16):`<td class="td-m td-sm">${esc(it.remarks||'—')}</td>`}
+      </tr>`).join('');
+      html += `<div class="proj-card${isOpen?' open':''}" id="${cid}" style="margin-bottom:3px;margin-left:10px">
+        <button class="proj-hdr" onclick="tp('po_${escJ(po)}','${cid}')">
+          <span class="proj-arrow">▶</span>
+          <span class="proj-name" style="font-family:var(--font-mono);color:var(--accent);min-width:70px">${esc(po)}</span>
+          <span class="pill" style="background:rgba(255,255,255,.05);color:var(--text3);font-family:var(--font-mono);margin-left:4px">${items.length} item${items.length!==1?'s':''}</span>
+          <span style="flex:1"></span>
+          <span style="font-family:var(--font-mono);font-size:11px;color:var(--teal)">${fP(total)}</span>
+          <span style="margin-left:8px">${bdg(s0.status||'')}</span>
+          <span style="margin-left:8px;font-size:11px;color:var(--text3);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s0.supplier||'')}</span>
+        </button>
+        <div class="proj-body"><div class="tbl-wrap" style="max-height:300px">
+          <table><thead><tr>
+            <th style="min-width:180px">Description</th><th style="min-width:110px">Cat No</th>
+            <th>Qty</th><th>Unit</th>
+            <th class="e">Unit Price ✎</th><th>Line Total</th><th>PO Date</th>
+            <th class="e">Status ✎</th><th class="e">Pay Terms ✎</th><th class="e">Remarks ✎</th>
+          </tr></thead><tbody>${rows}</tbody></table>
+        </div></div>
+      </div>`;
+    });
+    html += '<div style="height:6px"></div>';
+  });
+  if(!html) html='<div class="no-rows" style="font-family:var(--font-mono);padding:30px">no results</div>';
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="max-width:260px" type="text" placeholder="search POs…" value="${escA(tblQ['po']||'')}" oninput="tblQ['po']=this.value;renderPO()">
-        <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${groupOrder.length} POs · ${data.length} items</span>
-        ${tblQ['po'] ? `<button class="btn" onclick="tblQ['po']='';renderPO()">clear</button>` : ''}
-        <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">✎ click to edit → syncs to Sheets</span>
+        <input class="search" style="max-width:260px" type="text" placeholder="search POs, supplier, item…" value="${escA(tblQ['po']||'')}" oninput="tblQ['po']=this.value;renderPO()">
+        <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${groupOrder.length} POs · ${data.length} lines · ${fP(grandTotal)}</span>
+        ${tblQ['po']?`<button class="btn" onclick="tblQ['po']='';renderPO()">clear</button>`:''}
+        <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by project → ✎ click to edit</span>
       </div>
-      <div style="flex:1;overflow-y:auto;padding:10px 14px">${cards}</div>
+      <div style="flex:1;overflow-y:auto;padding:10px 14px">${html}</div>
     </div>`;
 }
 
@@ -748,8 +807,90 @@ function renderVP() {
     </div>`;
 }
 
-// ── WH Tab — flat table ────────────────────────────────────────
-function renderWH() { renderFlat('wh', API.wh||[], whCfg()); }
+// ── WH Tab — grouped by PO# ────────────────────────────────────
+function renderWH() {
+  const data = API.wh || [];
+  const q = (tblQ['wh']||'').toLowerCase();
+  // Group by PO#
+  const groups = {}, gOrder = [];
+  data.forEach(row => {
+    const po = row.poNum||'—';
+    if(!groups[po]){ groups[po]=[]; gOrder.push(po); }
+    groups[po].push(row);
+  });
+  const filteredKeys = q
+    ? gOrder.filter(po => groups[po].some(r=>[r.project,r.partDesc,r.supplier,r.status,po].some(f=>(f||'').toLowerCase().includes(q))))
+    : gOrder;
+
+  // Group by project for section headers
+  const byProj={}, projOrder=[];
+  filteredKeys.forEach(po=>{
+    const proj=groups[po][0]?.project||'—';
+    if(!byProj[proj]){byProj[proj]=[];projOrder.push(proj);}
+    byProj[proj].push(po);
+  });
+
+  let html = '';
+  projOrder.forEach(proj => {
+    const projPOs = byProj[proj];
+    html += `<div style="background:rgba(45,212,191,.04);border-left:3px solid rgba(45,212,191,.25);padding:5px 12px;margin-bottom:4px;display:flex;align-items:center;gap:8px;border-radius:0 4px 4px 0">
+      <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;color:var(--teal)">${esc(proj)}</span>
+      <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono)">${projPOs.length} PO${projPOs.length!==1?'s':''}</span>
+    </div>`;
+    projPOs.forEach(po => {
+      const items = groups[po];
+      const s0 = items[0];
+      const cid = 'wh_'+po.replace(/\W/g,'');
+      const isOpen = openProj['wh_'+po];
+      const allComplete = items.every(r=>r.status==='✅ Complete');
+      const anyDelivered = items.some(r=>Number(r.delQty||0)>0);
+      const whStatus = allComplete?'✅ Complete':anyDelivered?'🔄 Partial':'⬜ Pending';
+      const rows = items.map(it=>`<tr>
+        <td class="td-clip" title="${escA(it.partDesc)}" style="min-width:160px">${esc(it.partDesc||'—')}</td>
+        <td class="td-mono td-m">${esc(it.catNo||'—')}</td>
+        <td class="td-r td-mono">${it.poQty||'—'}</td>
+        <td class="td-r td-mono td-m">${it.delQty||'—'}</td>
+        <td class="td-r td-mono td-m">${it.cancelQty||'—'}</td>
+        <td class="td-r td-mono" style="color:${Number(it.balQty||0)>0?'var(--amber)':'var(--text3)'}">${it.balQty||'—'}</td>
+        <td class="td-mono td-m" style="font-size:10px;white-space:nowrap">${fD(it.expectedDate)}</td>
+        <td class="td-mono td-m" style="font-size:10px;white-space:nowrap">${fD(it.actualDate)}</td>
+        <td class="td-m">${it.daysVar||'—'}</td>
+        <td>${bdg(it.status)}</td>
+        <td class="td-m td-sm">${esc(it.remarks||'—')}</td>
+      </tr>`).join('');
+      html += `<div class="proj-card${isOpen?' open':''}" id="${cid}" style="margin-bottom:3px;margin-left:10px">
+        <button class="proj-hdr" onclick="tp('wh_${escJ(po)}','${cid}')">
+          <span class="proj-arrow">▶</span>
+          <span class="proj-name" style="font-family:var(--font-mono);color:var(--teal);min-width:70px">${esc(po)}</span>
+          <span class="pill" style="background:rgba(255,255,255,.05);color:var(--text3);font-family:var(--font-mono);margin-left:4px">${items.length} item${items.length!==1?'s':''}</span>
+          <span style="flex:1"></span>
+          <span style="margin-left:8px">${bdg(whStatus)}</span>
+          <span style="margin-left:8px;font-size:11px;color:var(--text3);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s0.supplier||'')}</span>
+        </button>
+        <div class="proj-body"><div class="tbl-wrap" style="max-height:280px">
+          <table><thead><tr>
+            <th style="min-width:160px">Description</th><th>Cat No</th>
+            <th>PO Qty</th><th>Delivered</th><th>Cancelled</th>
+            <th>Balance</th><th>Expected</th><th>Actual</th><th>Days Var</th>
+            <th>Status</th><th>Remarks</th>
+          </tr></thead><tbody>${rows}</tbody></table>
+        </div></div>
+      </div>`;
+    });
+    html += '<div style="height:6px"></div>';
+  });
+  if(!html) html='<div class="no-rows" style="font-family:var(--font-mono);padding:30px">no results</div>';
+  document.getElementById('content').innerHTML = `
+    <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
+      <div class="flat-toolbar">
+        <input class="search" style="max-width:260px" type="text" placeholder="search WH, PO, supplier…" value="${escA(tblQ['wh']||'')}" oninput="tblQ['wh']=this.value;renderWH()">
+        <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${gOrder.length} POs · ${data.length} rows</span>
+        ${tblQ['wh']?`<button class="btn" onclick="tblQ['wh']='';renderWH()">clear</button>`:''}
+        <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by project → PO</span>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:10px 14px">${html}</div>
+    </div>`;
+}
 
 // ── Item History — searchable with sort ────────────────────────
 function renderHistory() {
@@ -838,22 +979,25 @@ function renderHistory() {
 }
 
 function histRow(r) {
-  const pct = Number(r.pctChange||0);
-  const pctColor = pct > 0 ? 'var(--red)' : pct < 0 ? 'var(--green)' : 'var(--text3)';
-  const pctStr = r.pctChange ? (pct > 0 ? '+' : '') + (pct*100).toFixed(1) + '%' : '—';
+  const pct = r.pctChange ? Number(r.pctChange) : null;
+  const pctColor = pct!=null ? (pct > 0 ? 'var(--red)' : pct < 0 ? 'var(--green)' : 'var(--text3)') : 'var(--text3)';
+  const pctStr = pct!=null ? (pct>0?'+':'')+(pct*100).toFixed(1)+'%' : '—';
+  // Truncate cat no — max 20 chars visible
+  const catNoFull = r.catNo||'—';
+  const catNoShort = catNoFull.length > 20 ? catNoFull.substring(0,18)+'…' : catNoFull;
   return `<tr>
-    <td class="td-mono" style="white-space:nowrap;min-width:140px">${esc(r.catNo||'—')}</td>
-    <td class="td-clip" style="min-width:220px" title="${escA(r.partDesc)}">${esc(r.partDesc||'—')}</td>
-    <td class="td-m">${esc(r.category||'—')}</td>
-    <td class="td-mono td-m">${esc(r.poNum||'—')}</td>
+    <td class="td-mono" style="white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis" title="${escA(catNoFull)}">${esc(catNoShort)}</td>
+    <td class="td-clip" style="min-width:180px;max-width:240px" title="${escA(r.partDesc)}">${esc(r.partDesc||'—')}</td>
+    <td class="td-m" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.category||'—')}</td>
+    <td class="td-mono td-m" style="white-space:nowrap">${esc(r.poNum||'—')}</td>
     <td class="td-mono td-m" style="white-space:nowrap;font-size:10px">${fD(r.poDate)}</td>
-    <td class="td-clip td-m">${esc(r.vendor||'—')}</td>
-    <td class="td-r td-mono">${fP(r.unitPrice)}</td>
-    <td class="td-r td-mono td-m">${fP(r.prevPrice)}</td>
-    <td class="td-r td-mono" style="color:${pctColor}">${r.priceChange?fP(r.priceChange):'—'}</td>
-    <td class="td-r td-mono" style="color:${pctColor};font-weight:600">${pctStr}</td>
-    <td class="td-m td-sm">${esc(r.project||'—')}</td>
-    <td class="td-mono td-m" style="font-size:9px">${esc(r.source||'—')}</td>
+    <td class="td-clip td-m" style="max-width:140px">${esc(r.vendor||'—')}</td>
+    <td class="td-r td-mono" style="white-space:nowrap">${fP(r.unitPrice)}</td>
+    <td class="td-r td-mono td-m" style="white-space:nowrap">${fP(r.prevPrice||r.budget)}</td>
+    <td class="td-r td-mono" style="color:${pctColor};white-space:nowrap">${r.priceChange?fP(r.priceChange):'—'}</td>
+    <td class="td-r td-mono" style="color:${pctColor};font-weight:600;white-space:nowrap">${pctStr}</td>
+    <td class="td-m" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.project||'—')}</td>
+    <td class="td-mono td-m" style="font-size:9px;white-space:nowrap">${esc(r.source||'—')}</td>
   </tr>`;
 }
 
@@ -867,12 +1011,12 @@ function renderMRS() {
   const groups = {};
   const groupOrder = [];
   fd.forEach(row => {
-    const mrsNum = row.num ? `MRS-${String(row.num).padStart(3,'0')}` : 'MRS-?';
+    const mrsNum = row.mrsNum || (row.num ? 'MRS-'+String(Math.floor(row.num)).padStart(3,'0') : 'MRS-?');
     if (!groups[mrsNum]) { groups[mrsNum] = []; groupOrder.push(mrsNum); }
     groups[mrsNum].push(row);
   });
 
-  const allMrsNums = [...new Set(data.map(r => r.num ? `MRS-${String(r.num).padStart(3,'0')}` : 'MRS-?'))];
+  const allMrsNums = [...new Set(data.map(r => r.mrsNum || (r.num ? 'MRS-'+String(Math.floor(r.num)).padStart(3,'0') : 'MRS-?')))];
 
   const cards = groupOrder.length === 0
     ? `<div class="no-rows" style="font-family:var(--font-mono);padding:30px">no results</div>`
@@ -896,16 +1040,14 @@ function renderMRS() {
 
         let rowsHtml = '';
         Object.entries(typeGroups).forEach(([type, typeItems]) => {
-          rowsHtml += `<tr><td colspan="23" style="background:rgba(56,189,248,.04);border-left:2px solid rgba(56,189,248,.3);padding:4px 10px;font-family:var(--font-mono);font-size:9px;color:var(--text3)">${esc(type)} · ${typeItems.length} item${typeItems.length!==1?'s':''}</td></tr>`;
+          rowsHtml += `<tr><td colspan="21" style="background:rgba(56,189,248,.04);border-left:2px solid rgba(56,189,248,.3);padding:4px 10px;font-family:var(--font-mono);font-size:9px;color:var(--text3)">${esc(type)} · ${typeItems.length} item${typeItems.length!==1?'s':''}</td></tr>`;
           typeItems.forEach(row => {
             const s = 'MRS', r = row.rowIndex || 0;
             rowsHtml += `<tr>
-              <td class="td-clip td-m" title="${escA(row.project)}">${esc(row.project||'—')}</td>
-              <td class="td-m">${esc(row.category||'—')}</td>
+              <td class="td-m" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(row.category||'—')}</td>
               <td class="td-clip" title="${escA(row.partDesc)}">${esc(row.partDesc||'—')}</td>
-              <td class="td-mono td-m" style="min-width:100px">${esc(row.catNo||'—')}</td>
+              <td class="td-mono td-m" style="min-width:110px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escA(row.catNo)}">${esc(row.catNo||'—')}</td>
               <td class="td-r td-mono">${row.qty||'—'}</td><td class="td-m">${esc(row.unit||'—')}</td>
-              <td class="td-r td-mono td-m">${fP(row.budget)}</td>
               ${r?ec(row.v1,s,r,16,'number'):`<td class="td-r td-mono grp-start">${row.v1||'—'}</td>`}
               ${r?ec(row.v2,s,r,17,'number'):`<td class="td-r td-mono">${row.v2||'—'}</td>`}
               ${r?ec(row.v3,s,r,18,'number'):`<td class="td-r td-mono">${row.v3||'—'}</td>`}
@@ -929,8 +1071,8 @@ function renderMRS() {
         return `<div class="proj-card${isOpen?' open':''}" id="${cid}">
           <button class="proj-hdr" onclick="tp('mrs_${escJ(mrsNum)}','${cid}')">
             <span class="proj-arrow">▶</span>
-            <span class="proj-name" style="font-family:var(--font-mono);color:var(--accent)">${esc(mrsNum)}</span>
-            <span style="font-size:11px;color:var(--text2);margin-left:4px">${esc(s0.project||'')}</span>
+            <span class="proj-name" style="font-family:var(--font-mono);color:var(--accent);min-width:70px">${esc(mrsNum)}</span>
+            <span style="font-size:11px;color:var(--text);margin-left:6px;font-weight:500">${esc(s0.project||'')}</span>
             <span style="flex:1"></span>
             <div style="display:flex;gap:3px">${pills}</div>
             <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono);margin-left:6px">${types.join(' · ')}</span>
@@ -940,7 +1082,7 @@ function renderMRS() {
             <table>
               <thead>
                 <tr class="cg-row">
-                  <th colspan="7" class="cg-item">Item Info</th>
+                  <th colspan="5" class="cg-item">Item Info</th>
                   <th colspan="3" class="cg-canvass">Canvass</th>
                   <th colspan="4" class="cg-po">PO</th>
                   <th colspan="4" class="cg-delivery">Delivery</th>
@@ -948,7 +1090,7 @@ function renderMRS() {
                   <th colspan="4" class="cg-payment">Payment</th>
                 </tr>
                 <tr>
-                  <th>Project</th><th>Category</th><th>Description</th><th style="min-width:100px">Cat No</th><th>Qty</th><th>Unit</th><th>Budget</th>
+                  <th>Category</th><th>Description</th><th style="min-width:110px">Cat No</th><th>Qty</th><th>Unit</th>
                   <th class="e grp-start">V1</th><th class="e">V2</th><th class="e">V3</th>
                   <th class="e grp-start">PO #</th><th class="e">Vendor</th><th class="e">Unit Price</th><th class="e">Pay Terms</th>
                   <th class="e grp-start">Del Qty</th><th class="e">Cancel</th><th>Balance</th><th class="e">Actual Date</th>
