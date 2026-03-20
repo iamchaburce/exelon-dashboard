@@ -941,11 +941,21 @@ function today() {
 }
 
 // ─── NAVIGATION ───────────────────────────────────────────
+// FIX: Removed dependency on event.currentTarget — now uses page ID to find nav item
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  event.currentTarget && event.currentTarget.classList.add('active');
+
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) pageEl.classList.add('active');
+
+  // Find matching nav item by its onclick attribute instead of relying on event
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') === "navigate('" + page + "')") {
+      n.classList.add('active');
+    }
+  });
+
   state.currentPage = page;
 
   const titles = {
@@ -956,8 +966,11 @@ function navigate(page) {
     budget:'Budget & Spending', weekly:'Weekly Review',
     machinelist:'Machine List', machinelog:'Machine Log', testequip:'Test Equipment',
   };
-  document.getElementById('page-title').textContent = titles[page] || page;
-  document.getElementById('page-sub').textContent = '';
+
+  const titleEl = document.getElementById('page-title');
+  const subEl = document.getElementById('page-sub');
+  if (titleEl) titleEl.textContent = titles[page] || page;
+  if (subEl) subEl.textContent = '';
 
   const loaders = {
     mrs: loadMRS, po: loadPO, wh: loadWH, payable: loadPayable,
@@ -1074,19 +1087,42 @@ async function loadBOMSheets() {
 async function loadBOMProject() {
   const sheet = document.getElementById('bom-project-select').value;
   if (!sheet) return;
-  loadBOMDirect(sheet);
+  await loadBOMDirect(sheet);
 }
 
+// FIX: No longer calls navigate() — directly switches page to avoid event dependency crash
 async function loadBOMDirect(sheetName) {
-  navigate('bom');
-  document.getElementById('bom-project-select').value = sheetName;
-  document.getElementById('bom-sheet-title').textContent = '⏳ Loading...';
-  document.getElementById('bom-tbody').innerHTML = `<tr><td colspan="13"><div class="loading"><div class="spinner"></div></div></td></tr>`;
+  // Switch to BOM page directly without relying on event context
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-bom').classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => {
+    if (n.getAttribute('onclick') === "navigate('bom')") n.classList.add('active');
+  });
+  state.currentPage = 'bom';
+  const titleEl = document.getElementById('page-title');
+  const subEl = document.getElementById('page-sub');
+  if (titleEl) titleEl.textContent = 'BOM / Client View';
+  if (subEl) subEl.textContent = '';
+
+  // Set dropdown selection
+  const sel = document.getElementById('bom-project-select');
+  if (sel) sel.value = sheetName;
+
+  // Show loading state
+  const titleDisplay = document.getElementById('bom-sheet-title');
+  const tbody = document.getElementById('bom-tbody');
+  const countEl = document.getElementById('bom-count');
+  if (titleDisplay) titleDisplay.textContent = '⏳ Loading...';
+  if (tbody) tbody.innerHTML = `<tr><td colspan="13"><div class="loading"><div class="spinner"></div></div></td></tr>`;
+
+  // Fetch data
   const data = await api('getBOMByProject', { project: encodeURIComponent(sheetName) });
   const rows = data.data || [];
-  document.getElementById('bom-sheet-title').textContent = sheetName.replace('📦 ','').replace('📦','');
-  document.getElementById('bom-count').textContent = rows.length + ' items';
-  document.getElementById('bom-tbody').innerHTML = rows.map(r => `
+
+  if (titleDisplay) titleDisplay.textContent = sheetName.replace('📦 ','').replace('📦','');
+  if (countEl) countEl.textContent = rows.length + ' items';
+  if (tbody) tbody.innerHTML = rows.map(r => `
     <tr>
       <td class="mono">${r.num}</td>
       <td>${r.category || ''}</td>
@@ -1255,7 +1291,6 @@ async function loadHistory() {
   setLoading('hist-tbody');
   const d = await api('getItemHistory');
   state.data.history = d.data || [];
-  // Build category filter
   const cats = [...new Set(state.data.history.map(r => r.category).filter(Boolean))];
   const sel = document.getElementById('hist-cat');
   cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
