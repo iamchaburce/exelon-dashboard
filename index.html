@@ -1230,7 +1230,7 @@ function renderVP() {
               Bills are auto-generated when you enter Del Qty or Invoice # in the BOM tab.\nGo to BOM → enter delivery data → it will cascade here automatically.
             </div>
            </div>`
-        : `<div class="no-rows" style="font-family:var(--font-mono)">no results</div>`)`
+        : `<div class="no-rows" style="font-family:var(--font-mono)">no results</div>`)
     : filteredKeys.map(key => {
         const items = groups[key];
         const s0 = items[0];
@@ -1795,9 +1795,9 @@ function openAddProject(){
           </div>
           <div class="fprev" id="fp_prev">
             <div class="fprev-title">preview</div>
-            <div class="fprev-row">📦 Tab: <strong id="fp_tab">—</strong></div>
-            <div class="fprev-row">📌 SO#: <strong id="fp_so2">—</strong></div>
-            <div class="fprev-row">📝 Title: <strong id="fp_ttl2">—</strong></div>
+            <div class="fprev-row">📦 Tab: <span id="fp_tab" style="font-weight:700">—</span></div>
+            <div class="fprev-row">📌 SO#: <span id="fp_so2" style="font-weight:700">—</span></div>
+            <div class="fprev-row">📝 Title: <span id="fp_ttl2" style="font-weight:700">—</span></div>
           </div>
           <div class="ferr" id="fp_err"></div>
         </div>
