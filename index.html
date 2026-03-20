@@ -203,7 +203,7 @@ body{
   flex-shrink:0;gap:12px;
 }
 .tb-title{font-size:14px;font-weight:700;color:var(--text)}
-.tb-sub{font-size:10.5px;color:var(--text3);font-family:var(--font-mono);margin-top:1px}
+.tb-sub{font-size:11px;color:var(--text2);font-family:var(--font-mono);margin-top:2px}
 .tb-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green)}
 .sync-dot.loading{background:var(--amber);animation:pulse .8s infinite}
@@ -238,14 +238,14 @@ body{
 }
 .client-bar::-webkit-scrollbar{display:none}
 .ctab{
-  padding:10px 15px;border:none;background:transparent;
-  cursor:pointer;font-size:12px;font-weight:500;color:var(--text3);
+  padding:10px 16px;border:none;background:transparent;
+  cursor:pointer;font-size:12.5px;font-weight:500;color:var(--text3);
   border-bottom:2.5px solid transparent;margin-bottom:-1px;
   white-space:nowrap;transition:all .12s;font-family:var(--font-body);
 }
 .ctab:hover{color:var(--text2)}
 .ctab.active{
-  color:var(--accent);font-weight:600;
+  color:var(--accent);font-weight:700;
   border-bottom-color:var(--accent);
   background:rgba(88,166,255,.04);
 }
@@ -261,25 +261,27 @@ body{
 }
 .kpi{flex:1;padding:9px 14px;background:var(--kpi-bg);min-width:0}
 .kpi-l{
-  font-size:9.5px;font-family:var(--font-mono);font-weight:600;
-  text-transform:uppercase;letter-spacing:.06em;
-  color:var(--text3);margin-bottom:3px;
+  font-size:10px;font-family:var(--font-body);font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;
+  color:var(--text3);margin-bottom:4px;
 }
-.kpi-v{font-size:20px;font-weight:700;font-family:var(--font-mono);line-height:1}
+.kpi-v{font-size:22px;font-weight:800;font-family:var(--font-mono);line-height:1.1}
 
 /* ── Body scroll ──────────────────────────────────── */
 .body{flex:1;overflow-y:auto;padding:12px 16px}
 
 /* ── Project card ─────────────────────────────────── */
-.proj-search-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.proj-search-row{display:flex;gap:8px;align-items:center;margin-bottom:12px;padding:4px 0}
 .search{
-  flex:1;padding:7px 11px;background:var(--bg2);
-  border:1px solid var(--border);border-radius:7px;
-  color:var(--text);font-size:13px;outline:none;
-  font-family:var(--font-body);transition:border-color .1s;
+  flex:1;padding:8px 13px;background:var(--bg2);
+  border:1.5px solid var(--border2);border-radius:8px;
+  color:var(--text);font-size:13.5px;outline:none;
+  font-family:var(--font-body);transition:all .12s;
+  min-width:0;
 }
-.search:focus{border-color:var(--accent)}
-.search::placeholder{color:var(--text3)}
+.search:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(88,166,255,.12);}
+.search::placeholder{color:var(--text3);font-size:13px}
+select.search{font-size:12.5px;}
 select.search{cursor:pointer}
 .proj-card{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:6px;transition:border-color .12s}
 .proj-card.open{border-color:var(--border2);box-shadow:var(--shadow)}
@@ -292,8 +294,8 @@ select.search{cursor:pointer}
 .proj-hdr:hover{background:var(--bg3)}
 .proj-arrow{font-size:9px;color:var(--text3);min-width:9px;transition:transform .12s}
 .proj-card.open .proj-arrow{transform:rotate(90deg);color:var(--accent)}
-.proj-name{font-size:13px;font-weight:600;color:var(--text2);flex:1}
-.proj-card.open .proj-name{color:var(--text)}
+.proj-name{font-size:13.5px;font-weight:700;color:var(--text2);flex:1}
+.proj-card.open .proj-name{color:var(--text);font-weight:700}
 .pill{
   font-size:10px;padding:2px 8px;border-radius:999px;
   font-weight:600;font-family:var(--font-mono);white-space:nowrap;
@@ -305,10 +307,15 @@ select.search{cursor:pointer}
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 .cg-row th{
-  padding:5px 8px;font-size:9.5px;font-family:var(--font-mono);
-  font-weight:700;text-transform:uppercase;letter-spacing:.06em;
-  text-align:center;border-bottom:none;border-right:1px solid var(--border);
+  padding:7px 10px;font-size:10px;font-family:var(--font-body);
+  font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  text-align:center;border-bottom:2px solid var(--bg);border-right:1px solid var(--border);
 }
+.cg-item   { background:var(--bg4)!important; color:var(--text2)!important; }
+.cg-canvass{ background:rgba(210,153,34,.15)!important; color:var(--amber)!important; font-weight:800; }
+.cg-po     { background:rgba(188,140,255,.12)!important; color:var(--purple)!important; font-weight:800; }
+.cg-delivery{background:rgba(57,211,83,.12)!important;  color:var(--teal)!important; font-weight:800; }
+.cg-payment{ background:rgba(63,185,80,.12)!important;  color:var(--green)!important; font-weight:800; }
 .cg-row th:last-child{border-right:none}
 .cg-item{background:var(--bg3);color:var(--text3)}
 .cg-canvass{background:rgba(210,153,34,.08);color:var(--amber)}
@@ -320,10 +327,10 @@ table{width:100%;border-collapse:collapse;font-size:12.5px}
 [data-theme="light"] .cg-delivery{background:rgba(26,127,55,.06)}
 [data-theme="light"] .cg-payment{background:rgba(26,127,55,.06)}
 th{
-  padding:6px 9px;background:var(--bg2);
-  color:var(--text3);font-size:10.5px;
-  font-family:var(--font-mono);font-weight:600;
-  letter-spacing:.03em;border-bottom:1px solid var(--border);
+  padding:6px 10px;background:var(--bg2);
+  color:var(--text2);font-size:11px;
+  font-family:var(--font-body);font-weight:600;
+  letter-spacing:.01em;border-bottom:2px solid var(--border);
   text-align:left;white-space:nowrap;
   position:sticky;top:0;z-index:2;
 }
@@ -538,10 +545,11 @@ function initTheme(){
 let API=null, activeTab='bom', activeCli='', openProj={}, projQ={}, itemQ={}, tblQ={};
 let ALL_CATS=[], ALL_MRS_CATS=[];  // populated after load
 
-// Compute client-side balance for a BOM item
+// Compute client-side balance — ALWAYS from qty/del/cancel, ignore API balQty
 function computeBal(it){
   const dq=Number(it.delQty||0), cq=Number(it.cancelQty||0), q=Number(it.qty||0);
-  if(dq===0&&cq===0) return it.balQty!==''&&it.balQty!=null ? it.balQty : '';
+  if(isNaN(dq)||isNaN(cq)||isNaN(q)) return '';
+  if(dq===0&&cq===0) return '';  // No delivery entered yet
   return Math.max(0, q-dq-cq);
 }
 // Compute WH status client-side
@@ -610,14 +618,18 @@ function bdg(v){
 function pill(t,bg,c){return`<span class="pill" style="background:${bg};color:${c}">${t}</span>`;}
 function fP(v){if(v===''||v==null)return'—';const n=parseFloat(v);if(isNaN(n))return'—';if(n===0)return'₱0';return'₱'+n.toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});}
 function fD(v){
-  if(!v||v===''||v===null)return'—';
+  if(v===null||v===undefined||v===''||v===false)return'—';
+  // Reject NaN values (number or string)
+  if(typeof v==='number'&&isNaN(v)) return '—';
+  if(String(v)==='NaN'||String(v)==='null'||String(v)==='undefined') return '—';
+  // Reject Excel date serials (raw numbers 40000-80000 = year 2010-2119)
+  if(typeof v==='number'&&v>40000&&v<80000) return '—';
   try{
     const d=new Date(v);
-    if(isNaN(d.getTime()))return String(v)||'—';
-    // Reject obviously wrong dates (before 2000)
-    if(d.getFullYear()<2000)return'—';
+    if(isNaN(d.getTime())) return '—';
+    if(d.getFullYear()<2000||d.getFullYear()>2099) return '—';
     return d.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});
-  }catch{return String(v)||'—';}
+  }catch{ return '—'; }
 }
 function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escA(s){return String(s??'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
@@ -649,6 +661,9 @@ async function saveCell(sheet,row,col,val){
 
 // ── Editable cell ──────────────────────────────────
 function ec(val,sheet,row,col,type='text',opts=null){
+  // Sanitize — convert date serials and garbage to empty
+  if(typeof val==='number'&&val>40000&&val<80000) val=''; // Excel date serial
+  if(String(val)==='NaN'||String(val)==='undefined') val='';
   const id='e'+Math.random().toString(36).slice(2,8);
   const dv=val===''||val==null?'—':val;
   const rv=val===null||val===undefined?'':String(val);
@@ -731,12 +746,23 @@ function renderTab(tab){
 }
 
 // ── BOM / Client View ──────────────────────────────
+let _pendingClients=[];  // newly added clients not yet in API
+
 function getClients(){
-  // Use bomSheets from API (includes empty new projects), fallback to bom data
+  // Use bomSheets from API (includes empty new projects)
+  let list=[];
   if(API.bomSheets&&API.bomSheets.length>0){
-    return API.bomSheets.map(s=>({sheet:s.sheet,name:s.clientName,meta:s}));
+    list = API.bomSheets.map(s=>({sheet:s.sheet,name:s.clientName,meta:s}));
+  } else {
+    list = [...new Set((API.bom||[]).map(r=>r.sheet))].map(s=>({sheet:s,name:s.replace(/^📦\s*/,'').trim(),meta:null}));
   }
-  return [...new Set((API.bom||[]).map(r=>r.sheet))].map(s=>({sheet:s,name:s.replace(/^📦\s*/,'').trim(),meta:null}));
+  // Add any pending new clients not yet in API
+  _pendingClients.forEach(pc=>{
+    if(!list.find(c=>c.name===pc.name)){
+      list.push({sheet:'📦 '+pc.name,name:pc.name,meta:{clientName:pc.name,projectTitle:pc.title,location:pc.location,contract:pc.contract,itemCount:0}});
+    }
+  });
+  return list;
 }
 function getBOMForClient(name){return(API.bom||[]).filter(r=>r.sheet.replace(/^📦\s*/,'').trim()===name);}
 
@@ -877,7 +903,7 @@ function buildProjCard(proj,items,allKeys){
     </button>
     <div class="proj-body">
       <div style="padding:6px 10px;display:flex;gap:6px;align-items:center;border-bottom:1px solid var(--border)">
-        <input style="flex:1;padding:4px 8px;background:var(--bg2);border:1px solid var(--border);border-radius:5px;color:var(--text);font-size:11px;outline:none;font-family:var(--font-mono)" type="text" value="${escA(itemQ[proj]||'')}" placeholder="search ${items.length} items…" oninput="itemQ['${escJ(proj)}']=this.value;renderBOM()">
+        <input style="flex:1;padding:6px 10px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-size:12.5px;outline:none;font-family:var(--font-body)" type="text" value="${escA(itemQ[proj]||'')}" placeholder="search ${items.length} items…" oninput="itemQ['${escJ(proj)}']=this.value;renderBOM()">
         <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono)">${fi.length}/${items.length}</span>
       </div>
       <div class="tbl-wrap" style="max-height:400px">
@@ -894,7 +920,7 @@ function buildProjCard(proj,items,allKeys){
           <tr>
             <th>#</th><th>Date</th><th>Category</th><th>Description</th><th style="min-width:120px">Cat No</th><th>Qty</th><th>Unit</th>
             <th class="e grp-start">V1</th><th class="e">V2</th><th class="e">V3</th><!-- Budget col shown via prevPrice field -->
-            <th class="e grp-start">PO #</th><th class="e">Vendor</th><th class="e">Unit Price</th><th>Budget</th><th>vs Budget%</th><th class="e">Pay Terms</th>
+            <th class="e grp-start">PO #</th><th class="e">Vendor</th><th class="e">Unit Price</th><th style="white-space:nowrap">Budget (₱)</th><th style="white-space:nowrap;color:var(--amber)">vs Budget %</th><th class="e">Pay Terms</th>
             <th class="e grp-start">Del Qty</th><th class="e">Cancel</th><th>Balance</th><th class="e">Expected</th><th class="e">Actual</th>
             <th class="e grp-start">Status</th><th class="e">WH</th>
             <th class="e grp-start">Invoice #</th><th class="e">Amt Paid</th><th class="e">OR #</th><th class="e">Date Paid</th><th class="e">Pay Status</th>
@@ -1096,10 +1122,13 @@ function renderPO() {
   projOrder.forEach(proj => {
     const projPOs = byProject[proj];
     const projTotal = projPOs.reduce((s,po)=>s+groups[po].reduce((s2,r)=>s2+Number(r.lineTotal||0),0),0);
-    html += `<div style="background:rgba(56,189,248,.05);border-left:3px solid rgba(56,189,248,.3);padding:5px 12px;margin-bottom:4px;display:flex;align-items:center;gap:8px;border-radius:0 4px 4px 0">
-      <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;color:var(--accent)">${esc(proj)}</span>
-      <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono)">${projPOs.length} PO${projPOs.length!==1?'s':''}</span>
-      <span style="font-size:9.5px;color:var(--teal);font-family:var(--font-mono);margin-left:auto">${fP(projTotal)}</span>
+    const projPoCount = projPOs.length;
+    const projVendors=[...new Set(projPOs.flatMap(po=>groups[po].map(r=>r.supplier||'')).filter(Boolean))].slice(0,3);
+    html += `<div style="background:rgba(56,189,248,.06);border-left:3px solid var(--accent);padding:7px 14px;margin-bottom:5px;display:flex;align-items:center;gap:8px;border-radius:0 6px 6px 0">
+      <span style="font-size:12px;font-weight:700;color:var(--accent)">${esc(proj)}</span>
+      <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${projPoCount} PO${projPoCount!==1?'s':''}</span>
+      ${projVendors.length?`<span style="font-size:10px;color:var(--text2)">· ${esc(projVendors.join(' · '))}</span>`:''}
+      <span style="font-size:11px;color:var(--teal);font-family:var(--font-mono);font-weight:700;margin-left:auto">${fP(projTotal)}</span>
     </div>`;
     projPOs.forEach(po => {
       const items = groups[po];
@@ -1144,7 +1173,7 @@ function renderPO() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="max-width:260px" type="text" placeholder="search POs, supplier, item…" value="${escA(tblQ['po']||'')}" oninput="tblQ['po']=this.value;renderPO()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search POs, supplier, item…" value="${escA(tblQ['po']||'')}" oninput="tblQ['po']=this.value;renderPO()">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${groupOrder.length} POs · ${data.length} lines · ${fP(grandTotal)}</span>
         ${tblQ['po']?`<button class="btn" onclick="tblQ['po']='';renderPO()">clear</button>`:''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by project → ✎ click to edit</span>
@@ -1174,8 +1203,19 @@ function renderVP() {
       })
     : groupOrder;
 
+  const totalBilled = data.reduce((s,r)=>s+Number(r.amount||0),0);
+  const totalPaidAll = data.reduce((s,r)=>s+Number(r.amtPaid||0),0);
   const cards = filteredKeys.length === 0
-    ? `<div class="no-rows" style="font-family:var(--font-mono);padding:30px">no results</div>`
+    ? (data.length===0
+        ? `<div style="padding:30px;text-align:center">
+            <div style="font-size:32px;margin-bottom:12px">💰</div>
+            <div style="font-family:var(--font-mono);font-size:13px;color:var(--text2);margin-bottom:8px">No vendor bills yet</div>
+            <div style="font-size:12px;color:var(--text3);max-width:380px;margin:0 auto;line-height:1.7">
+              Bills are auto-generated when you enter <strong>Del Qty</strong> or <strong>Invoice #</strong> in the BOM tab.<br>
+              Go to BOM → enter delivery data → it will cascade here automatically.
+            </div>
+           </div>`
+        : `<div class="no-rows" style="font-family:var(--font-mono)">no results</div>`)`
     : filteredKeys.map(key => {
         const items = groups[key];
         const s0 = items[0];
@@ -1207,13 +1247,14 @@ function renderVP() {
         return `<div class="proj-card${isOpen?' open':''}" id="${cid}">
           <button class="proj-hdr" onclick="tp('vp_${escJ(key)}','${cid}')">
             <span class="proj-arrow">▶</span>
-            <span class="proj-name" style="font-family:var(--font-mono);color:${isInv?'var(--green)':'var(--accent)'}">${isInv?'🧾 INV-'+esc(label):'🛒 '+esc(label)}</span>
-            <span style="font-size:11px;color:var(--text2);margin-left:6px">${esc(s0.supplier||'')}</span>
+            <span class="proj-name" style="font-family:var(--font-mono);color:${isInv?'var(--green)':'var(--accent)'};font-size:13px;font-weight:700">${isInv?'🧾 '+esc(label):'🛒 '+esc(label)}</span>
+            <span style="font-size:12px;color:var(--text);margin-left:8px;font-weight:600">${esc(s0.supplier||'')}</span>
+            <span style="font-size:11px;color:var(--text3);margin-left:6px">${esc(s0.project||'')}</span>
             <span style="flex:1"></span>
-            <span class="pill" style="background:rgba(255,255,255,.06);color:var(--text3);font-family:var(--font-mono)">${items.length} line${items.length!==1?'s':''}</span>
-            <span style="margin-left:6px;font-family:var(--font-mono);font-size:11px;color:var(--teal)">${fP(totalAmt)}</span>
-            ${totalPaid > 0 ? `<span style="margin-left:4px;font-family:var(--font-mono);font-size:10px;color:var(--text3)">paid ${fP(totalPaid)}</span>` : ''}
-            <span style="margin-left:6px">${bdg(payStatus)}</span>
+            <span class="pill" style="background:var(--pill-bg);color:var(--pill-text)">${items.length} line${items.length!==1?'s':''}</span>
+            <span style="margin-left:8px;font-family:var(--font-mono);font-size:12px;color:var(--teal);font-weight:700">${fP(totalAmt)}</span>
+            ${totalPaid > 0 ? `<span style="margin-left:6px;font-family:var(--font-mono);font-size:10px;color:var(--text3)">paid ${fP(totalPaid)}</span>` : ''}
+            <span style="margin-left:8px">${bdg(payStatus)}</span>
           </button>
           <div class="proj-body">
             <div class="tbl-wrap" style="max-height:320px">
@@ -1233,7 +1274,7 @@ function renderVP() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="max-width:260px" type="text" placeholder="search bills…" value="${escA(tblQ['vp']||'')}" oninput="tblQ['vp']=this.value;renderVP()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search bills…" value="${escA(tblQ['vp']||'')}" oninput="tblQ['vp']=this.value;renderVP()">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length} bills · ${data.length} lines</span>
         ${tblQ['vp'] ? `<button class="btn" onclick="tblQ['vp']='';renderVP()">clear</button>` : ''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by invoice — ✎ click to edit</span>
@@ -1318,7 +1359,7 @@ function renderWH() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="max-width:260px" type="text" placeholder="search WH, PO, supplier…" value="${escA(tblQ['wh']||'')}" oninput="tblQ['wh']=this.value;renderWH()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search WH, PO, supplier…" value="${escA(tblQ['wh']||'')}" oninput="tblQ['wh']=this.value;renderWH()">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${gOrder.length} POs · ${data.length} rows</span>
         ${tblQ['wh']?`<button class="btn" onclick="tblQ['wh']='';renderWH()">clear</button>`:''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by project → PO</span>
@@ -1381,7 +1422,7 @@ function renderHistory() {
   document.getElementById('content').innerHTML = `
     <div class="flat-pane">
       <div class="flat-toolbar" style="flex-wrap:wrap;gap:6px">
-        <input class="search" style="max-width:240px" type="text" placeholder="search items, cat no, vendor…" value="${escA(q)}" oninput="tblQ['history']=this.value;renderHistory()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search items, cat no, vendor…" value="${escA(q)}" oninput="tblQ['history']=this.value;renderHistory()">
         <select class="search" style="max-width:180px;flex:none" onchange="tblQ['histCat']=this.value;renderHistory()">
           <option value="">All categories</option>
           ${cats.map(c => `<option value="${escA(c)}"${c===cat?' selected':''}>${esc(c)}</option>`).join('')}
@@ -1790,15 +1831,17 @@ async function submitAddProject(){
     const j=await res.json();
     if(!j.ok)throw new Error(j.error||'Failed');
     document.getElementById('projModal')?.remove();
-    toast('✅ Created: '+j.sheetName+' — loading…','ok');
-    // Reload data and auto-navigate to new client
-    const newClientName=cli;
+    // Immediately add to pending list and navigate
+    _pendingClients.push({name:cli,title:ttl,location:loc,contract:contractAmt});
+    activeCli=cli;
+    go('bom');
+    toast('✅ Created: '+j.sheetName+' — refreshing…','ok');
+    // Background reload after 3s to get fresh API data
     setTimeout(async()=>{
       await loadDataSilent();
-      activeCli=newClientName;
+      activeCli=cli;  // keep same client selected
       go('bom');
-      toast('✅ Switched to new project: '+j.sheetName,'ok');
-    },2000);
+    },3000);
   }catch(e){err.style.display='';err.textContent='❌ '+e.message;btn.disabled=false;btn.textContent='📦 create project';}
 }
 
