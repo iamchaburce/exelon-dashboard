@@ -323,7 +323,7 @@ function bdg(v){
   return`<span class="badge" style="background:${s[0]};color:${s[1]}">${esc(v)}</span>`;
 }
 function pill(t,bg,c){return`<span class="pill" style="background:${bg};color:${c}">${t}</span>`;}
-function fP(v){if(v===''||v==null)return'—';const n=parseFloat(v);if(isNaN(n))return'—';return'₱'+n.toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function fP(v){if(v===''||v==null)return'—';const n=parseFloat(v);if(isNaN(n))return'—';if(n===0)return'₱0';return'₱'+n.toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:0});}
 function fD(v){if(!v)return'—';try{const d=new Date(v);if(isNaN(d))return v;return d.toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'});}catch{return v;}}
 function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escA(s){return String(s??'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
@@ -376,6 +376,20 @@ function cc(id,sh,row,col,type){const d=document.getElementById('d'+id),i=docume
 function xc(id){const d=document.getElementById('d'+id),i=document.getElementById('i'+id);if(!i)return;i.style.display='none';d.style.display='';}
 
 // ── Load data ──────────────────────────────────────
+async function loadDataSilent(){
+  try{
+    const res=await fetch(WEB_APP+'?action=load');
+    const j=await res.json();
+    if(!j.ok) return;
+    API=j;
+    ALL_CATS=[...new Set((j.bom||[]).map(r=>r.category||'').filter(Boolean))].sort();
+    ALL_MRS_CATS=[...new Set([...(j.bom||[]),...(j.mrs||[])].map(r=>r.category||'').filter(Boolean))].sort();
+    const t=new Date(j.updated).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
+    document.getElementById('pgSub').textContent=`live · ${j.bom?.length} BOM · ${j.mrs?.length} MRS · ${j.po?.length||0} PO · ${j.wh?.length||0} WH · updated ${t}`;
+    setSync('ok','live');
+  }catch(e){ setSync('error','error'); }
+}
+
 async function loadData(){
   setSync('loading','syncing…');
   document.getElementById('content').innerHTML='<div class="center"><div class="spinner"></div><div style="font-family:var(--font-mono);font-size:11px">fetching live data…</div></div>';
@@ -423,7 +437,13 @@ function renderTab(tab){
 }
 
 // ── BOM / Client View ──────────────────────────────
-function getClients(){return[...new Set((API.bom||[]).map(r=>r.sheet))].map(s=>({sheet:s,name:s.replace(/^📦\s*/,'').trim()}));}
+function getClients(){
+  // Use bomSheets from API (includes empty new projects), fallback to bom data
+  if(API.bomSheets&&API.bomSheets.length>0){
+    return API.bomSheets.map(s=>({sheet:s.sheet,name:s.clientName,meta:s}));
+  }
+  return [...new Set((API.bom||[]).map(r=>r.sheet))].map(s=>({sheet:s,name:s.replace(/^📦\s*/,'').trim(),meta:null}));
+}
 function getBOMForClient(name){return(API.bom||[]).filter(r=>r.sheet.replace(/^📦\s*/,'').trim()===name);}
 
 function renderBOM(){
@@ -437,7 +457,10 @@ function renderBOM(){
   const fp=pq?pKeys.filter(p=>p.toLowerCase().includes(pq)):pKeys;
   const st=kpis(items);
 
-  const clientTabs=clients.map(c=>`<button class="ctab${c.name===activeCli?' active':''}" onclick="activeCli='${escJ(c.name)}';renderBOM()">${esc(c.name)}<span class="ctab-count">${getBOMForClient(c.name).length}</span></button>`).join('');
+  const clientTabs=clients.map(c=>{
+    const cnt=getBOMForClient(c.name).length;
+    return `<button class="ctab${c.name===activeCli?' active':''}" onclick="activeCli='${escJ(c.name)}';renderBOM()">${esc(c.name)}<span class="ctab-count">${cnt||'new'}</span></button>`;
+  }).join('');
 
   const kpiHtml=[
     ['CANVASS',st.canvass,'var(--amber)'],
@@ -448,7 +471,21 @@ function renderBOM(){
     ['TOTAL',st.total,'var(--accent)'],
   ].map(([l,v,c])=>`<div class="kpi"><div class="kpi-l" style="color:${c}">${l}</div><div class="kpi-v" style="color:${c}">${v}</div></div>`).join('');
 
-  const cards=fp.length===0?`<div class="no-rows" style="font-family:var(--font-mono)">no projects match</div>`:fp.map(p=>buildProjCard(p,projs[p],pKeys)).join('');
+  // New project card for empty sheets (from bomSheets metadata)
+  const activeMeta=(API.bomSheets||[]).find(s=>s.clientName===activeCli)||null;
+  const cards=fp.length===0
+    ? (activeMeta&&activeMeta.itemCount===0
+        ? `<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:20px;margin:10px 0">
+            <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:8px">📦 New Project — No BOM items yet</div>
+            <div style="font-size:12px;color:var(--text2);margin-bottom:4px"><strong>${esc(activeMeta.projectTitle||'')}</strong></div>
+            ${activeMeta.location?`<div style="font-size:11px;color:var(--text3)">📍 ${esc(activeMeta.location)}</div>`:''}
+            ${activeMeta.contract?`<div style="font-size:11px;color:var(--green);margin-top:4px">💰 Contract: ₱${Number(activeMeta.contract).toLocaleString('en-PH')}</div>`:''}
+            ${activeMeta.clientPO?`<div style="font-size:11px;color:var(--text3)">📄 Client PO: ${esc(activeMeta.clientPO)}</div>`:''}
+            ${activeMeta.target?`<div style="font-size:11px;color:var(--amber)">🎯 Target: ${esc(activeMeta.target)}</div>`:''}
+            <button class="btn btn-green" style="margin-top:12px" onclick="openAddBOMItem()">+ Add First BOM Item</button>
+          </div>`
+        : `<div class="no-rows" style="font-family:var(--font-mono)">no projects match</div>`)
+    : fp.map(p=>buildProjCard(p,projs[p],pKeys)).join('');
 
   document.getElementById('content').innerHTML=`
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
@@ -508,7 +545,13 @@ function buildProjCard(proj,items,allKeys){
         ${r?ec(it.v2,s,r,20,'number'):`<td class="td-r td-mono">${it.v2||'—'}</td>`}
         ${r?ec(it.v3,s,r,21,'number'):`<td class="td-r td-mono">${it.v3||'—'}</td>`}
         <!-- PO -->
-        ${r?ec(it.poNum,s,r,15):`<td class="td-mono grp-start">${esc(it.poNum||'—')}</td>`}
+        ${(()=>{
+          const pv=it.poNum||'';
+          const haspo=pv.startsWith('P');
+          const link=haspo?`<span onclick="event.stopPropagation();jumpToPO('${escJ(pv)}')" title="▶ View in PO tab" style="cursor:pointer;color:var(--accent);margin-left:4px;font-size:9px">↗</span>`:'';
+          if(r) return ec(pv,s,r,15)+`<td style="padding:0;width:14px;border-bottom:1px solid rgba(255,255,255,.03)">${link}</td>`;
+          return `<td class="td-mono grp-start">${esc(pv||'—')}${link}</td><td style="width:0;padding:0"></td>`;
+        })()}
         ${r?ec(it.vendor,s,r,16):`<td class="td-sm">${esc(it.vendor||'—')}</td>`}
         ${r?ec(it.unitPrice,s,r,17,'number'):`<td class="td-r td-mono">${fP(it.unitPrice)}</td>`}
         <td class="td-r td-mono td-m">${fP(it.budget)}</td>
@@ -571,6 +614,28 @@ function buildProjCard(proj,items,allKeys){
 }
 
 function tp(proj,cid){const c=document.getElementById(cid);if(!c)return;const n=!c.classList.contains('open');c.classList.toggle('open',n);openProj[proj]=n;}
+
+// Jump to PO tab and highlight a specific PO
+function jumpToPO(poNum){
+  activeTab='po';
+  go('po');
+  setTimeout(()=>{
+    tblQ['po']=poNum;
+    renderPO();
+    // Open the matching PO card
+    setTimeout(()=>{
+      const cid='po_'+poNum.replace(/\W/g,'');
+      const card=document.getElementById(cid);
+      if(card){
+        openProj['po_'+poNum]=true;
+        card.classList.add('open');
+        card.style.outline='2px solid var(--accent)';
+        card.scrollIntoView({block:'center',behavior:'smooth'});
+        setTimeout(()=>{ card.style.outline=''; tblQ['po']=''; },3000);
+      }
+    },200);
+  },100);
+}
 
 // Jump to BOM tab for a specific item
 function jumpToBOM(sheet, rowIndex, projName){
@@ -767,7 +832,7 @@ function renderPO() {
           <span style="flex:1"></span>
           <span style="font-family:var(--font-mono);font-size:11px;color:var(--teal)">${fP(total)}</span>
           <span style="margin-left:8px">${bdg(s0.status||'')}</span>
-          <span style="margin-left:8px;font-size:11px;color:var(--text3);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s0.supplier||'')}</span>
+          <span style="margin-left:8px;font-size:11px;color:var(--text2);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400">${esc(s0.supplier||'')}</span>
         </button>
         <div class="proj-body"><div class="tbl-wrap" style="max-height:300px">
           <table><thead><tr>
@@ -941,7 +1006,7 @@ function renderWH() {
           <span class="pill" style="background:rgba(255,255,255,.05);color:var(--text3);font-family:var(--font-mono);margin-left:4px">${items.length} item${items.length!==1?'s':''}</span>
           <span style="flex:1"></span>
           <span style="margin-left:8px">${bdg(whStatus)}</span>
-          <span style="margin-left:8px;font-size:11px;color:var(--text3);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(s0.supplier||'')}</span>
+          <span style="margin-left:8px;font-size:11px;color:var(--text2);max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400">${esc(s0.supplier||'')}</span>
         </button>
         <div class="proj-body"><div class="tbl-wrap" style="max-height:280px">
           <table><thead><tr>
@@ -1162,7 +1227,13 @@ function renderMRS() {
               ${r?ec(row.v1,s,r,16,'number'):`<td class="td-r td-mono grp-start">${row.v1||'—'}</td>`}
               ${r?ec(row.v2,s,r,17,'number'):`<td class="td-r td-mono">${row.v2||'—'}</td>`}
               ${r?ec(row.v3,s,r,18,'number'):`<td class="td-r td-mono">${row.v3||'—'}</td>`}
-              ${r?ec(row.poNum,s,r,13):`<td class="td-mono grp-start">${esc(row.poNum||'—')}</td>`}
+              ${(()=>{
+                const pv=row.poNum||'';
+                const haspo=pv.startsWith('P');
+                const link=haspo?`<span onclick="event.stopPropagation();jumpToPO('${escJ(pv)}')" title="View PO" style="cursor:pointer;color:var(--accent);font-size:9px;margin-left:4px">↗</span>`:'';
+                if(r) return ec(pv,s,r,13)+`<td style="padding:0;width:14px;border-bottom:1px solid rgba(255,255,255,.03)">${link}</td>`;
+                return `<td class="td-mono grp-start">${esc(pv||'—')}${link}</td><td style="width:0;padding:0"></td>`;
+              })()}
               ${r?ec(row.vendor,s,r,12):`<td class="td-sm">${esc(row.vendor||'—')}</td>`}
               ${r?ec(row.unitPrice,s,r,14,'number'):`<td class="td-r td-mono">${fP(row.unitPrice)}</td>`}
               ${r?ec(row.payTerms,s,r,24,'select',TERMS):`<td class="td-m">${esc(row.payTerms||'—')}</td>`}
@@ -1368,6 +1439,9 @@ function openAddProject(){
             <div class="ff"><label class="fl">Client Name <span style="color:var(--red)">*</span></label><input class="fi" id="fp_cli" type="text" placeholder="e.g. WALTERMART" style="text-transform:uppercase" oninput="updateProjPreview()"></div>
             <div class="ff full"><label class="fl">Project Title <span style="color:var(--red)">*</span></label><input class="fi" id="fp_ttl" type="text" placeholder="e.g. WALTERMART SAN RAFAEL EXPANSION" oninput="updateProjPreview()"></div>
             <div class="ff full"><label class="fl">Location <span style="color:var(--text3)">(optional)</span></label><input class="fi" id="fp_loc" type="text" placeholder="e.g. LEMERY, BATANGAS" oninput="updateProjPreview()"></div>
+            <div class="ff"><label class="fl">Contract Amount ₱ <span style="color:var(--text3)">(optional)</span></label><input class="fi" id="fp_contract" type="number" placeholder="e.g. 1500000"></div>
+            <div class="ff"><label class="fl">Client PO # <span style="color:var(--text3)">(optional)</span></label><input class="fi" id="fp_cpo" type="text" placeholder="e.g. PO-2026-001"></div>
+            <div class="ff full"><label class="fl">Target Completion / Delivery Date <span style="color:var(--text3)">(optional)</span></label><input class="fi" id="fp_target" type="text" placeholder="e.g. Dec 31, 2026"></div>
           </div>
           <div class="fprev" id="fp_prev">
             <div class="fprev-title">preview</div>
@@ -1391,9 +1465,16 @@ function updateProjPreview(){
   const cli=document.getElementById('fp_cli').value.trim().toUpperCase();
   const ttl=document.getElementById('fp_ttl').value.trim();
   const loc=document.getElementById('fp_loc')?.value.trim()||'';
+  const contract=document.getElementById('fp_contract')?.value.trim()||'';
+  const cpo=document.getElementById('fp_cpo')?.value.trim()||'';
+  const target=document.getElementById('fp_target')?.value.trim()||'';
   const prev=document.getElementById('fp_prev');
-  if(so||cli||ttl){prev.style.display='';document.getElementById('fp_tab').textContent=cli?'📦 '+cli:'—';document.getElementById('fp_so2').textContent=so||'—';document.getElementById('fp_ttl2').textContent=ttl+(loc?' | '+loc:'');}
-  else prev.style.display='none';
+  if(so||cli||ttl){
+    prev.style.display='';
+    document.getElementById('fp_tab').textContent=cli?'📦 '+cli:'—';
+    document.getElementById('fp_so2').textContent=so||'—';
+    document.getElementById('fp_ttl2').textContent=ttl+(loc?' | '+loc:'');
+  } else prev.style.display='none';
 }
 
 async function submitAddProject(){
@@ -1401,19 +1482,29 @@ async function submitAddProject(){
   const cli=document.getElementById('fp_cli').value.trim().toUpperCase();
   const ttl=document.getElementById('fp_ttl').value.trim();
   const loc=document.getElementById('fp_loc')?.value.trim()||'';
+  const contractAmt=document.getElementById('fp_contract')?.value.trim()||'';
+  const clientPONum=document.getElementById('fp_cpo')?.value.trim()||'';
+  const targetDate=document.getElementById('fp_target')?.value.trim()||'';
   const err=document.getElementById('fp_err');err.style.display='none';
   if(!so){err.style.display='';err.textContent='SO# is required';return;}
   if(!cli){err.style.display='';err.textContent='Client name is required';return;}
   if(!ttl){err.style.display='';err.textContent='Project title is required';return;}
   const btn=document.getElementById('fp_sub');btn.disabled=true;btn.textContent='creating…';
   try{
-    const payload=JSON.stringify({soNum:so,clientName:cli,projectTitle:ttl,location:loc});
+    const payload=JSON.stringify({soNum:so,clientName:cli,projectTitle:ttl,location:loc,contractAmt,clientPONum,targetDate});
     const res=await fetch(WEB_APP+'?action=addProject&payload='+encodeURIComponent(payload));
     const j=await res.json();
     if(!j.ok)throw new Error(j.error||'Failed');
     document.getElementById('projModal')?.remove();
-    toast('✅ Created: '+j.sheetName+' — refreshing…','ok');
-    setTimeout(()=>loadData(),2200);
+    toast('✅ Created: '+j.sheetName+' — loading…','ok');
+    // Reload data and auto-navigate to new client
+    const newClientName=cli;
+    setTimeout(async()=>{
+      await loadDataSilent();
+      activeCli=newClientName;
+      go('bom');
+      toast('✅ Switched to new project: '+j.sheetName,'ok');
+    },2000);
   }catch(e){err.style.display='';err.textContent='❌ '+e.message;btn.disabled=false;btn.textContent='📦 create project';}
 }
 
