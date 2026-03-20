@@ -145,7 +145,7 @@ body{
   letter-spacing:.08em;color:var(--text3);
 }
 .sb-item{
-  padding:7px 12px;font-size:12.5px;color:var(--text2);
+  padding:8px 12px;font-size:13px;color:var(--text2);
   cursor:pointer;border-radius:6px;
   margin:1px 6px;transition:all .12s;
   display:flex;align-items:center;gap:8px;
@@ -234,9 +234,12 @@ body{
   display:flex;overflow-x:auto;
   border-bottom:1px solid var(--border);
   background:var(--bg2);flex-shrink:0;
-  scrollbar-width:none;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border2) transparent;
 }
-.client-bar::-webkit-scrollbar{display:none}
+.client-bar::-webkit-scrollbar{height:3px}
+.client-bar::-webkit-scrollbar-track{background:transparent}
+.client-bar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
 .ctab{
   padding:10px 16px;border:none;background:transparent;
   cursor:pointer;font-size:12.5px;font-weight:500;color:var(--text3);
@@ -307,15 +310,15 @@ select.search{cursor:pointer}
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 .cg-row th{
-  padding:7px 10px;font-size:10px;font-family:var(--font-body);
-  font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+  padding:8px 12px;font-size:11px;font-family:var(--font-body);
+  font-weight:800;text-transform:uppercase;letter-spacing:.04em;
   text-align:center;border-bottom:2px solid var(--bg);border-right:1px solid var(--border);
 }
-.cg-item   { background:var(--bg4)!important; color:var(--text2)!important; }
-.cg-canvass{ background:rgba(210,153,34,.15)!important; color:var(--amber)!important; font-weight:800; }
-.cg-po     { background:rgba(188,140,255,.12)!important; color:var(--purple)!important; font-weight:800; }
-.cg-delivery{background:rgba(57,211,83,.12)!important;  color:var(--teal)!important; font-weight:800; }
-.cg-payment{ background:rgba(63,185,80,.12)!important;  color:var(--green)!important; font-weight:800; }
+.cg-item   { background:var(--bg4)!important; color:var(--text2)!important; font-size:11px!important; }
+.cg-canvass{ background:rgba(210,153,34,.2)!important; color:var(--amber)!important; font-weight:800; border-bottom:2px solid rgba(210,153,34,.4)!important; }
+.cg-po     { background:rgba(188,140,255,.18)!important; color:var(--purple)!important; font-weight:800; border-bottom:2px solid rgba(188,140,255,.4)!important; }
+.cg-delivery{background:rgba(57,211,83,.18)!important;  color:var(--teal)!important; font-weight:800; border-bottom:2px solid rgba(57,211,83,.4)!important; }
+.cg-payment{ background:rgba(63,185,80,.18)!important;  color:var(--green)!important; font-weight:800; border-bottom:2px solid rgba(63,185,80,.4)!important; }
 .cg-row th:last-child{border-right:none}
 .cg-item{background:var(--bg3);color:var(--text3)}
 .cg-canvass{background:rgba(210,153,34,.08);color:var(--amber)}
@@ -327,10 +330,10 @@ table{width:100%;border-collapse:collapse;font-size:12.5px}
 [data-theme="light"] .cg-delivery{background:rgba(26,127,55,.06)}
 [data-theme="light"] .cg-payment{background:rgba(26,127,55,.06)}
 th{
-  padding:6px 10px;background:var(--bg2);
-  color:var(--text2);font-size:11px;
-  font-family:var(--font-body);font-weight:600;
-  letter-spacing:.01em;border-bottom:2px solid var(--border);
+  padding:7px 10px;background:var(--bg2);
+  color:var(--text);font-size:11.5px;
+  font-family:var(--font-body);font-weight:700;
+  letter-spacing:.01em;border-bottom:2px solid var(--border2);
   text-align:left;white-space:nowrap;
   position:sticky;top:0;z-index:2;
 }
@@ -543,6 +546,27 @@ function initTheme(){
 }
 
 let API=null, activeTab='bom', activeCli='', openProj={}, projQ={}, itemQ={}, tblQ={};
+
+// Search helper — re-renders tab then restores focus + cursor position
+function searchRender(key, val, renderFn) {
+  tblQ[key] = val;
+  // Capture cursor position before render
+  const ae = document.activeElement;
+  const hasFocus = ae && ae.dataset && ae.dataset.search === key;
+  const selStart = hasFocus ? ae.selectionStart : null;
+  const selEnd   = hasFocus ? ae.selectionEnd   : null;
+  renderFn();
+  // Restore focus + cursor after render
+  if (hasFocus) {
+    requestAnimationFrame(() => {
+      const inp = document.querySelector(`[data-search="${key}"]`);
+      if (inp) {
+        inp.focus();
+        try { inp.setSelectionRange(selStart, selEnd); } catch(e){}
+      }
+    });
+  }
+}
 let ALL_CATS=[], ALL_MRS_CATS=[];  // populated after load
 
 // Compute client-side balance — ALWAYS from qty/del/cancel, ignore API balQty
@@ -701,7 +725,7 @@ async function loadDataSilent(){
 
 async function loadData(){
   setSync('loading','syncing…');
-  document.getElementById('content').innerHTML='<div class="center"><div class="spinner"></div><div style="font-family:var(--font-mono);font-size:12px;color:var(--text3)">Fetching data from Google Sheets…<br><span style="font-size:10px;margin-top:4px;display:block">Large datasets may take 10-30 seconds</span></div></div>';
+  document.getElementById('content').innerHTML='<div class="center"><div class="spinner"></div><div style="font-family:var(--font-mono);font-size:12px;color:var(--text3)"><div>Fetching data from Google Sheets…</div><div style="font-size:10px;margin-top:4px">Large datasets may take 10-30 seconds</div></div></div>';
   try{
     // 45-second timeout for large sheets
     const ctrl=new AbortController();
@@ -717,8 +741,9 @@ async function loadData(){
     const t=new Date(j.updated).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
     document.getElementById('pgSub').textContent=`live · ${j.bom?.length} BOM · ${j.mrs?.length} MRS · ${j.po?.length||0} PO · ${j.wh?.length||0} WH · updated ${t}`;
     setSync('ok','live');
-    const sheets=[...new Set((j.bom||[]).map(r=>r.sheet))];
-    if(!activeCli) activeCli=sheets[0]?.replace(/^📦\s*/,'').trim()||'';
+    // Use bomSheets for tab list (includes empty new projects)
+    const allClients = j.bomSheets?.length ? j.bomSheets.map(s=>s.clientName) : [...new Set((j.bom||[]).map(r=>r.sheet))].map(s=>s.replace(/^📦\s*/,'').trim());
+    if(!activeCli && allClients.length) activeCli=allClients[0];
     renderTab(activeTab);
   }catch(e){
     setSync('error','error');
@@ -784,6 +809,11 @@ function getBOMForClient(name){return(API.bom||[]).filter(r=>r.sheet.replace(/^�
 
 function renderBOM(){
   const clients=getClients();
+  // Scroll active tab into view
+  requestAnimationFrame(()=>{
+    const active=document.querySelector('.ctab.active');
+    if(active) active.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
+  });
   if(!activeCli&&clients.length) activeCli=clients[0].name;
   const items=getBOMForClient(activeCli);
   const projs={};
@@ -829,7 +859,7 @@ function renderBOM(){
       <div class="kpi-bar">${kpiHtml}</div>
       <div class="body">
         <div class="proj-search-row">
-          <input class="search" type="text" placeholder="search projects…" value="${escA(projQ['bom']||'')}" oninput="projQ['bom']=this.value;renderBOM()">
+          <input class="search" type="text" placeholder="search projects…" value="${escA(projQ['bom']||'')}" data-search="bom_proj" oninput="searchRender('bom_proj',this.value,renderBOM)">
           <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${fp.length}/${pKeys.length}</span>
           ${projQ['bom']?`<button class="btn" onclick="projQ['bom']='';renderBOM()">clear</button>`:''}
           <button class="btn btn-green" onclick="openAddBOMItem()">+ item</button>
@@ -896,7 +926,7 @@ function buildProjCard(proj,items,allKeys){
         <!-- Delivery -->
         ${r?ec(it.delQty,s,r,25,'number'):`<td class="td-r td-mono grp-start">${it.delQty||'—'}</td>`}
         ${r?ec(it.cancelQty,s,r,26,'number'):`<td class="td-r td-mono">${it.cancelQty||'—'}</td>`}
-        <td class="td-r td-mono td-m bal-cell" style="color:${Number(cBal)>0?'var(--amber)':'var(--text3)'}">${cBal!==''?cBal:'—'}</td>
+        <td class="td-r td-mono td-m bal-cell" style="color:${cBal!==''&&Number(cBal)>0?'var(--amber)':cBal!==''&&Number(cBal)===0?'var(--green)':'var(--text3)'}">${cBal!==''?cBal:'—'}</td>
         ${r?ec(it.expectedDate,s,r,28):`<td class="td-mono td-m" style="font-size:10px">${fD(it.expectedDate)}</td>`}
         ${r?ec(it.actualDate,s,r,29):`<td class="td-mono td-m" style="font-size:10px">${fD(it.actualDate)}</td>`}
         <!-- Status -->
@@ -919,7 +949,7 @@ function buildProjCard(proj,items,allKeys){
     </button>
     <div class="proj-body">
       <div style="padding:6px 10px;display:flex;gap:6px;align-items:center;border-bottom:1px solid var(--border)">
-        <input style="flex:1;padding:6px 10px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-size:12.5px;outline:none;font-family:var(--font-body)" type="text" value="${escA(itemQ[proj]||'')}" placeholder="search ${items.length} items…" oninput="itemQ['${escJ(proj)}']=this.value;renderBOM()">
+        <input style="flex:1;padding:6px 10px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-size:12.5px;outline:none;font-family:var(--font-body)" type="text" value="${escA(itemQ[proj]||'')}" placeholder="search ${items.length} items…" data-search="item_${escJ(proj)}" oninput="itemQ['${escJ(proj)}']=this.value;renderBOM()">
         <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono)">${fi.length}/${items.length}</span>
       </div>
       <div class="tbl-wrap" style="max-height:400px">
@@ -1117,6 +1147,14 @@ function renderAlerts(){
 function renderPO() {
   const data = API.po || [];
   const q = (tblQ['po'] || '').toLowerCase();
+  // Build PO → MRS source map
+  const poMrsMap = {};
+  (API.mrs || []).forEach(r => {
+    if (r.poNum && r.mrsNum) {
+      if (!poMrsMap[r.poNum]) poMrsMap[r.poNum] = [];
+      if (!poMrsMap[r.poNum].includes(r.mrsNum)) poMrsMap[r.poNum].push(r.mrsNum);
+    }
+  });
   const groups = {}, groupOrder = [];
   data.forEach(row => {
     const po = row.poNum || '—';
@@ -1140,11 +1178,11 @@ function renderPO() {
     const projTotal = projPOs.reduce((s,po)=>s+groups[po].reduce((s2,r)=>s2+Number(r.lineTotal||0),0),0);
     const projPoCount = projPOs.length;
     const projVendors=[...new Set(projPOs.flatMap(po=>groups[po].map(r=>r.supplier||'')).filter(Boolean))].slice(0,3);
-    html += `<div style="background:rgba(56,189,248,.06);border-left:3px solid var(--accent);padding:7px 14px;margin-bottom:5px;display:flex;align-items:center;gap:8px;border-radius:0 6px 6px 0">
-      <span style="font-size:12px;font-weight:700;color:var(--accent)">${esc(proj)}</span>
-      <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${projPoCount} PO${projPoCount!==1?'s':''}</span>
-      ${projVendors.length?`<span style="font-size:10px;color:var(--text2)">· ${esc(projVendors.join(' · '))}</span>`:''}
-      <span style="font-size:11px;color:var(--teal);font-family:var(--font-mono);font-weight:700;margin-left:auto">${fP(projTotal)}</span>
+    html += `<div style="background:rgba(56,189,248,.06);border-left:3px solid var(--accent);padding:8px 14px;margin-bottom:5px;display:flex;align-items:center;gap:8px;border-radius:0 6px 6px 0">
+      <span style="font-size:13px;font-weight:700;color:var(--accent)">${esc(proj)}</span>
+      <span style="font-size:10px;background:var(--pill-bg);color:var(--pill-text);padding:2px 7px;border-radius:999px;font-family:var(--font-mono)">${projPoCount} PO${projPoCount!==1?'s':''}</span>
+      ${projVendors.length?`<span style="font-size:11px;color:var(--text2)">· ${esc(projVendors.join(' · '))}</span>`:''}
+      <span style="font-size:12px;color:var(--teal);font-family:var(--font-mono);font-weight:700;margin-left:auto">${fP(projTotal)}</span>
     </div>`;
     projPOs.forEach(po => {
       const items = groups[po];
@@ -1162,11 +1200,14 @@ function renderPO() {
         ${it.rowIndex?ec(it.status,'PO',it.rowIndex,12,'select',['For Approval','✅ Approved','✅ Delivered','❌ Cancelled']):`<td>${bdg(it.status)}</td>`}
         ${it.rowIndex?ec(it.payTerms,'PO',it.rowIndex,13,'select',TERMS):`<td class="td-m">${esc(it.payTerms||'—')}</td>`}
         ${it.rowIndex?ec(it.remarks,'PO',it.rowIndex,16):`<td class="td-m td-sm">${esc(it.remarks||'—')}</td>`}
+        <td style="font-family:var(--font-mono);font-size:9px;color:var(--purple)">${(poMrsMap[it.poNum]||[]).join(' / ')||'—'}</td>
       </tr>`).join('');
+      const _mrsNums = (poMrsMap[po] || []).join(' / ');
       html += `<div class="proj-card${isOpen?' open':''}" id="${cid}" style="margin-bottom:3px;margin-left:10px">
         <button class="proj-hdr" onclick="tp('po_${escJ(po)}','${cid}')">
           <span class="proj-arrow">▶</span>
           <span class="proj-name" style="font-family:var(--font-mono);color:var(--accent);min-width:70px">${esc(po)}</span>
+          ${_mrsNums?`<span style="font-size:9px;background:rgba(188,140,255,.15);color:var(--purple);padding:2px 7px;border-radius:999px;font-family:var(--font-mono)">MRS ${esc(_mrsNums)}</span>`:''}
           <span class="pill" style="background:rgba(255,255,255,.05);color:var(--text3);font-family:var(--font-mono);margin-left:4px">${items.length} item${items.length!==1?'s':''}</span>
           <span style="flex:1"></span>
           <span style="font-family:var(--font-mono);font-size:11px;color:var(--teal)">${fP(total)}</span>
@@ -1179,6 +1220,7 @@ function renderPO() {
             <th>Qty</th><th>Unit</th>
             <th class="e">Unit Price ✎</th><th>Line Total</th><th>PO Date</th>
             <th class="e">Status ✎</th><th class="e">Pay Terms ✎</th><th class="e">Remarks ✎</th>
+            <th style="color:var(--purple)">MRS Source</th>
           </tr></thead><tbody>${rows}</tbody></table>
         </div></div>
       </div>`;
@@ -1189,7 +1231,7 @@ function renderPO() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search POs, supplier, item…" value="${escA(tblQ['po']||'')}" oninput="tblQ['po']=this.value;renderPO()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search POs, supplier, item…" spellcheck="false" autocomplete="off" data-search="po" oninput="searchRender('po',this.value,renderPO)" value="${escA(tblQ['po']||'')}">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${groupOrder.length} POs · ${data.length} lines · ${fP(grandTotal)}</span>
         ${tblQ['po']?`<button class="btn" onclick="tblQ['po']='';renderPO()">clear</button>`:''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by project → ✎ click to edit</span>
@@ -1289,7 +1331,7 @@ function renderVP() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search bills…" value="${escA(tblQ['vp']||'')}" oninput="tblQ['vp']=this.value;renderVP()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search bills…" spellcheck="false" autocomplete="off" data-search="vp" oninput="searchRender('vp',this.value,renderVP)" value="${escA(tblQ['vp']||'')}">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length} bills · ${data.length} lines</span>
         ${tblQ['vp'] ? `<button class="btn" onclick="tblQ['vp']='';renderVP()">clear</button>` : ''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by invoice — ✎ click to edit</span>
@@ -1374,7 +1416,7 @@ function renderWH() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search WH, PO, supplier…" value="${escA(tblQ['wh']||'')}" oninput="tblQ['wh']=this.value;renderWH()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search WH, PO, supplier…" spellcheck="false" autocomplete="off" data-search="wh" oninput="searchRender('wh',this.value,renderWH)" value="${escA(tblQ['wh']||'')}">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${gOrder.length} POs · ${data.length} rows</span>
         ${tblQ['wh']?`<button class="btn" onclick="tblQ['wh']='';renderWH()">clear</button>`:''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by project → PO</span>
@@ -1437,7 +1479,7 @@ function renderHistory() {
   document.getElementById('content').innerHTML = `
     <div class="flat-pane">
       <div class="flat-toolbar" style="flex-wrap:wrap;gap:6px">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search items, cat no, vendor…" value="${escA(q)}" oninput="tblQ['history']=this.value;renderHistory()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search items, cat no, vendor…" spellcheck="false" autocomplete="off" data-search="history" oninput="searchRender('history',this.value,renderHistory)" value="${escA(q)}">
         <select class="search" style="max-width:180px;flex:none" onchange="tblQ['histCat']=this.value;renderHistory()">
           <option value="">All categories</option>
           ${cats.map(c => `<option value="${escA(c)}"${c===cat?' selected':''}>${esc(c)}</option>`).join('')}
@@ -1565,7 +1607,9 @@ function renderMRS() {
           rowsHtml += `<tr><td colspan="21" style="background:rgba(255,255,255,.025);border-left:2px solid rgba(56,189,248,.25);padding:4px 10px;font-family:var(--font-mono);font-size:9px;color:var(--text3)">${esc(subKey)} · ${subItems.length} item${subItems.length!==1?'s':''}</td></tr>`;
           subItems.forEach(row => {
             const s = 'MRS', r = row.rowIndex || 0;
-            const mBal = (Number(row.qty||0)-Number(row.delQty||0)-Number(row.cancelQty||0));
+            const _dq=Number(row.delQty||0),_cq=Number(row.cancelQty||0);
+            const hasDeliv = _dq>0||_cq>0;
+            const mBal = hasDeliv ? Math.max(0,Number(row.qty||0)-_dq-_cq) : null;
             rowsHtml += `<tr>
               <td class="td-m" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
                 ${r?ec(row.category,s,r,4,'select',ALL_MRS_CATS||[]):`<span>${esc(row.category||'—')}</span>`}
@@ -1589,7 +1633,7 @@ function renderMRS() {
               ${r?ec(row.payTerms,s,r,24,'select',TERMS):`<td class="td-m">${esc(row.payTerms||'—')}</td>`}
               ${r?ec(row.delQty,s,r,25,'number'):`<td class="td-r td-mono grp-start">${row.delQty||'—'}</td>`}
               ${r?ec(row.cancelQty,s,r,26,'number'):`<td class="td-r td-mono">${row.cancelQty||'—'}</td>`}
-              <td class="td-r td-mono" style="color:${mBal>0?'var(--amber)':'var(--text3)'}">${row.qty?mBal:'—'}</td>
+              <td class="td-r td-mono" style="color:${mBal!==null&&mBal>0?'var(--amber)':mBal!==null&&mBal===0?'var(--green)':'var(--text3)'}">${mBal!==null?mBal:'—'}</td>
               ${r?ec(row.expectedDate,s,r,28):`<td class="td-mono td-m" style="font-size:10px">${fD(row.expectedDate)}</td>`}
               ${r?ec(row.actualDate,s,r,29):`<td class="td-mono td-m" style="font-size:10px">${fD(row.actualDate)}</td>`}
               ${r?ec(row.status,s,r,11,'select',BOM_ST):`<td class="grp-start">${bdg(row.status)}</td>`}
@@ -1640,7 +1684,7 @@ function renderMRS() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar" style="flex-wrap:wrap;gap:6px">
-        <input class="search" style="max-width:240px" type="text" placeholder="search MRS#, project, item…" value="${escA(q)}" oninput="tblQ['mrs']=this.value;renderMRS()">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search MRS#, project, item…" spellcheck="false" autocomplete="off" data-search="mrs" oninput="searchRender('mrs',this.value,renderMRS)" value="${escA(q)}">
         <div style="display:flex;gap:4px">
           <button class="btn${filterStock==='all'?' btn-accent':''}" onclick="tblQ['mrsFilter']='all';renderMRS()">All</button>
           <button class="btn${filterStock==='stock'?' btn-accent':''}" onclick="tblQ['mrsFilter']='stock';renderMRS()">🏭 Stock</button>
