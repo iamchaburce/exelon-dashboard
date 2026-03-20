@@ -145,7 +145,7 @@ body{
   letter-spacing:.08em;color:var(--text3);
 }
 .sb-item{
-  padding:8px 12px;font-size:13px;color:var(--text2);
+  padding:7px 12px;font-size:12.5px;color:var(--text2);
   cursor:pointer;border-radius:6px;
   margin:1px 6px;transition:all .12s;
   display:flex;align-items:center;gap:8px;
@@ -234,12 +234,9 @@ body{
   display:flex;overflow-x:auto;
   border-bottom:1px solid var(--border);
   background:var(--bg2);flex-shrink:0;
-  scrollbar-width:thin;
-  scrollbar-color:var(--border2) transparent;
+  scrollbar-width:none;
 }
-.client-bar::-webkit-scrollbar{height:3px}
-.client-bar::-webkit-scrollbar-track{background:transparent}
-.client-bar::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.client-bar::-webkit-scrollbar{display:none}
 .ctab{
   padding:10px 16px;border:none;background:transparent;
   cursor:pointer;font-size:12.5px;font-weight:500;color:var(--text3);
@@ -498,6 +495,8 @@ select.fi{cursor:pointer}
   <div class="sb-item" onclick="go('vp')">💰 Vendor Bill</div>
   <div class="sb-item" onclick="go('history')">📊 Item History</div>
   <div class="sb-item" onclick="go('alerts')">🚨 Alerts</div>
+  <div class="sb-sec">Reports</div>
+  <div class="sb-item" onclick="go('budget')">📊 Budget Report</div>
   <div class="sb-sec">Equipment</div>
   <div class="sb-item" onclick="go('equip')">🔧 Machine List</div>
   <div class="sb-item" onclick="go('equiplog')">🛠️ Machine Log</div>
@@ -546,27 +545,9 @@ function initTheme(){
 }
 
 let API=null, activeTab='bom', activeCli='', openProj={}, projQ={}, itemQ={}, tblQ={};
-
-// Search helper — re-renders tab then restores focus + cursor position
-function searchRender(key, val, renderFn) {
-  tblQ[key] = val;
-  // Capture cursor position before render
-  const ae = document.activeElement;
-  const hasFocus = ae && ae.dataset && ae.dataset.search === key;
-  const selStart = hasFocus ? ae.selectionStart : null;
-  const selEnd   = hasFocus ? ae.selectionEnd   : null;
-  renderFn();
-  // Restore focus + cursor after render
-  if (hasFocus) {
-    requestAnimationFrame(() => {
-      const inp = document.querySelector(`[data-search="${key}"]`);
-      if (inp) {
-        inp.focus();
-        try { inp.setSelectionRange(selStart, selEnd); } catch(e){}
-      }
-    });
-  }
-}
+let _srchKey=null, _srchPos=0;
+function snapSearch(){ const el=document.activeElement; if(el?.classList?.contains('search')||el?.tagName==='INPUT'){_srchKey=el.dataset?.key||el.placeholder||''; _srchPos=el.selectionStart||0;}}
+function restoreSearch(){ if(!_srchKey) return; const el=document.querySelector('#content input.search, #content input[type=text]'); if(el){el.focus();try{el.setSelectionRange(_srchPos,_srchPos);}catch(e){}} _srchKey=null;}
 let ALL_CATS=[], ALL_MRS_CATS=[];  // populated after load
 
 // Compute client-side balance — ALWAYS from qty/del/cancel, ignore API balQty
@@ -780,6 +761,7 @@ function renderTab(tab){
   else if(tab==='wh')renderWH();
   else if(tab==='vp')renderVP();
   else if(tab==='history')renderHistory();
+  else if(tab==='budget')renderBudget();
   else if(tab==='alerts')renderAlerts();
   else if(tab==='equip')renderFlat('equip',API.machineList||[],equipCfg());
   else if(tab==='equiplog')renderFlat('equiplog',API.machineLog||[],equipLogCfg());
@@ -807,13 +789,143 @@ function getClients(){
 }
 function getBOMForClient(name){return(API.bom||[]).filter(r=>r.sheet.replace(/^📦\s*/,'').trim()===name);}
 
+
+// ── Project Progress for active client ───────────────────────────────────
+// Status weights (ref: MRS Progress Tracker Guide)
+const STATUS_WEIGHTS = {
+  'canvass': 0.10, 'canvassed': 0.25, 'ready': 0.25,
+  'issued': 0.50,  'stock': 0.50,
+  'delivered': 0.75, 'partial': null, // partial = delQty/qty per item
+  'complete': 1.00, 'cancelled': 0,
+};
+
+function computeWeightedCompletion(items) {
+  // items from API.bom for this client
+  if (!items.length) return 0;
+  let weightSum = 0, total = 0;
+  items.forEach(it => {
+    const s = String(it.status||'').toLowerCase();
+    const qty = Number(it.qty||0);
+    if (!qty) return;
+    total++;
+    if (s.includes('cancel')) { weightSum += 0; }
+    else if (s.includes('complete') || s.includes('deliver') && !s.includes('partial')) {
+      // check whStatus to distinguish Delivered vs Complete
+      const wh = String(it.whStatus||'').toLowerCase();
+      if (wh.includes('complete') || s.includes('complete')) weightSum += 1.00;
+      else weightSum += 0.75;
+    }
+    else if (s.includes('partial')) {
+      const dq = Number(it.delQty||0);
+      weightSum += qty > 0 ? Math.min(dq/qty, 1) : 0;
+    }
+    else if (s.includes('warehouse')) { weightSum += 0.50; }
+    else if (s.includes('po issued') || s.includes('po')) { weightSum += 0.50; }
+    else if (s.includes('ready')) { weightSum += 0.25; }
+    else if (s.includes('canvass')) { weightSum += 0.10; }
+    else { weightSum += 0; }
+  });
+  return total > 0 ? weightSum / total : 0;
+}
+
+function buildProjectProgress(clientName) {
+  const br = (API.budgetReport||[]).find(p=>p.clientName===clientName);
+  if (!br || br.totalItems===0) return '';
+
+  // Get BOM items for this client for weighted completion
+  const sheet = (API.bomSheets||[]).find(s=>s.clientName===clientName)?.sheet||('📦 '+clientName);
+  const items = (API.bom||[]).filter(r=>r.sheet===sheet);
+  const totalItems = br.totalItems;
+
+  const fP2 = v => v>0?'₱'+Number(v).toLocaleString('en-PH',{maximumFractionDigits:0}):'—';
+  const varAmt = br.totalPOValue - br.totalBudget;
+  const varPct = br.totalBudget>0?(varAmt/br.totalBudget*100).toFixed(1):null;
+  const varColor = varAmt>0?'var(--red)':varAmt<0?'var(--green)':'var(--text3)';
+
+  // Three metrics from reference
+  const completionPct = Math.round(computeWeightedCompletion(items)*100);
+  const deliveryPct = br.deliveryPct; // items with WH Complete or Partial
+  const poPct = totalItems>0?Math.round(((br.issued||0)+(br.delivered||0)+(br.stock||0)+(br.complete||0))/totalItems*100):0;
+  const payPct = br.totalBilled>0?Math.round(br.totalPaid/br.totalBilled*100):0;
+
+  // Status breakdown bar — colors match the reference
+  const segs = [
+    {label:'✅ Complete',  count:(br.complete||0),  bg:'rgba(63,185,80,.85)',    color:'var(--green)'},
+    {label:'🚚 Delivered', count:(br.delivered||0), bg:'rgba(88,214,141,.8)',    color:'#56d48d'},
+    {label:'🏭 WH Stock',  count:(br.stock||0),     bg:'rgba(188,140,255,.7)',   color:'var(--purple)'},
+    {label:'✅ PO Issued', count:(br.issued||0),     bg:'rgba(88,166,255,.8)',    color:'var(--accent)'},
+    {label:'🔍 Ready',     count:(br.ready||0),      bg:'rgba(56,189,248,.6)',    color:'var(--teal)'},
+    {label:'🟡 Canvass',   count:(br.canvass||0),    bg:'rgba(210,153,34,.8)',    color:'var(--amber)'},
+  ].filter(s=>s.count>0);
+
+  const bar = segs.map(s=>
+    `<div title="${s.label}: ${s.count}" style="flex:${s.count};background:${s.bg};min-width:2px"></div>`
+  ).join('');
+
+  const legend = segs.map(s=>
+    `<span style="font-size:9.5px;color:${s.color};display:flex;align-items:center;gap:3px">
+      <span style="width:7px;height:7px;border-radius:50%;background:${s.bg};flex-shrink:0"></span>
+      ${s.label.split(' ').slice(1).join(' ')} <strong>${s.count}</strong>
+    </span>`
+  ).join('');
+
+  // Three metric bars
+  const metricBar = (label, pct, color) =>
+    `<div>
+      <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--text3);margin-bottom:3px">
+        <span>${label}</span>
+        <span style="font-weight:700;color:${pct>=100?'var(--green)':pct>0?color:'var(--text3)'}">${pct}%</span>
+      </div>
+      <div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${Math.min(pct,100)}%;background:${pct>=100?'var(--green)':color};border-radius:3px;transition:width .4s"></div>
+      </div>
+    </div>`;
+
+  return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:8px 0 6px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span style="font-size:10.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em">📊 Project Progress</span>
+      ${br.contractAmt>0?`<span style="font-size:10px;color:var(--text3)">Contract: <strong style="color:var(--text2)">${fP2(br.contractAmt)}</strong></span>`:''}
+    </div>
+    <!-- KPI tiles -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:12px">
+      ${[
+        {l:'Budget',    v:fP2(br.totalBudget), c:'var(--text2)'},
+        {l:'PO Value',  v:fP2(br.totalPOValue), c:'var(--purple)'},
+        {l:'Variance',  v:varAmt?(varAmt>0?'+':'')+fP2(Math.abs(varAmt))+(varPct?' ('+varPct+'%)':''):'—', c:varColor},
+        {l:'Billed',    v:fP2(br.totalBilled), c:'var(--amber)'},
+        {l:'Paid',      v:fP2(br.totalPaid), c:'var(--green)'},
+      ].map(k=>`<div style="background:var(--bg3);border-radius:7px;padding:7px 9px">
+        <div style="font-size:8.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px">${k.l}</div>
+        <div style="font-size:11.5px;font-weight:700;color:${k.c};font-family:var(--font-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${k.v}</div>
+      </div>`).join('')}
+    </div>
+    <!-- Item status bar -->
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:9.5px;color:var(--text3);margin-bottom:4px">
+        <span>Item Status</span>
+        <span>${totalItems} items total</span>
+      </div>
+      <div style="display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--bg4);gap:1px">
+        ${bar||`<div style="flex:1;background:var(--bg4)"></div>`}
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:5px">${legend}</div>
+    </div>
+    <!-- Three progress metrics (ref: MRS Progress Tracker) -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px">
+      ${metricBar('Completion % (weighted)', completionPct, 'var(--accent)')}
+      ${metricBar('Delivery %', deliveryPct, 'var(--teal)')}
+      ${metricBar('PO %', poPct, 'var(--purple)')}
+    </div>
+    <!-- Payment -->
+    <div style="display:grid;grid-template-columns:1fr;gap:4px">
+      ${metricBar('Payment %', payPct, 'var(--amber)')}
+      ${br.balance>0?`<div style="font-size:9.5px;color:var(--red);text-align:right">Balance due: <strong>${fP2(br.balance)}</strong></div>`:''}
+    </div>
+  </div>`;
+}
+
 function renderBOM(){
   const clients=getClients();
-  // Scroll active tab into view
-  requestAnimationFrame(()=>{
-    const active=document.querySelector('.ctab.active');
-    if(active) active.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'});
-  });
   if(!activeCli&&clients.length) activeCli=clients[0].name;
   const items=getBOMForClient(activeCli);
   const projs={};
@@ -839,6 +951,7 @@ function renderBOM(){
 
   // New project card for empty sheets (from bomSheets metadata)
   const activeMeta=(API.bomSheets||[]).find(s=>s.clientName===activeCli)||null;
+  const progressHtml = buildProjectProgress(activeCli);
   const cards=fp.length===0
     ? (activeMeta&&activeMeta.itemCount===0
         ? `<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:20px;margin:10px 0">
@@ -859,10 +972,11 @@ function renderBOM(){
       <div class="kpi-bar">${kpiHtml}</div>
       <div class="body">
         <div class="proj-search-row">
-          <input class="search" type="text" placeholder="search projects…" value="${escA(projQ['bom']||'')}" data-search="bom_proj" oninput="searchRender('bom_proj',this.value,renderBOM)">
+          <input class="search" type="text" placeholder="search projects…" value="${escA(projQ['bom']||'')}" oninput="projQ['bom']=this.value;snapSearch();renderBOM()" data-key="bom">
           <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${fp.length}/${pKeys.length}</span>
           ${projQ['bom']?`<button class="btn" onclick="projQ['bom']='';renderBOM()">clear</button>`:''}
           <button class="btn btn-green" onclick="openAddBOMItem()">+ item</button>
+          <button class="btn" onclick="openAddBOMBulk()" title="Add multiple blank rows" style="font-size:11px">+ bulk (multi)</button>
         </div>
         ${cards}
       </div>
@@ -915,8 +1029,8 @@ function buildProjCard(proj,items,allKeys){
           const pv=it.poNum||'';
           const haspo=pv.startsWith('P');
           const link=haspo?`<span onclick="event.stopPropagation();jumpToPO('${escJ(pv)}')" title="▶ View in PO tab" style="cursor:pointer;color:var(--accent);margin-left:4px;font-size:9px">↗</span>`:'';
-          if(r) return ec(pv,s,r,15)+`<td style="padding:0;width:14px;border-bottom:1px solid rgba(255,255,255,.03)">${link}</td>`;
-          return `<td class="td-mono grp-start">${esc(pv||'—')}${link}</td><td style="width:0;padding:0"></td>`;
+          if(r) return ec(pv,s,r,15).replace('</td>',link+'</td>');
+          return `<td class="td-mono grp-start">${esc(pv||'—')}${link}</td>`;
         })()}
         ${r?ec(it.vendor,s,r,16):`<td class="td-sm">${esc(it.vendor||'—')}</td>`}
         ${r?ec(it.unitPrice,s,r,17,'number'):`<td class="td-r td-mono">${fP(it.unitPrice)}</td>`}
@@ -926,7 +1040,7 @@ function buildProjCard(proj,items,allKeys){
         <!-- Delivery -->
         ${r?ec(it.delQty,s,r,25,'number'):`<td class="td-r td-mono grp-start">${it.delQty||'—'}</td>`}
         ${r?ec(it.cancelQty,s,r,26,'number'):`<td class="td-r td-mono">${it.cancelQty||'—'}</td>`}
-        <td class="td-r td-mono td-m bal-cell" style="color:${cBal!==''&&Number(cBal)>0?'var(--amber)':cBal!==''&&Number(cBal)===0?'var(--green)':'var(--text3)'}">${cBal!==''?cBal:'—'}</td>
+        <td class="td-r td-mono td-m bal-cell" style="color:${Number(cBal)>0?'var(--amber)':'var(--text3)'}">${cBal!==''?cBal:'—'}</td>
         ${r?ec(it.expectedDate,s,r,28):`<td class="td-mono td-m" style="font-size:10px">${fD(it.expectedDate)}</td>`}
         ${r?ec(it.actualDate,s,r,29):`<td class="td-mono td-m" style="font-size:10px">${fD(it.actualDate)}</td>`}
         <!-- Status -->
@@ -949,7 +1063,7 @@ function buildProjCard(proj,items,allKeys){
     </button>
     <div class="proj-body">
       <div style="padding:6px 10px;display:flex;gap:6px;align-items:center;border-bottom:1px solid var(--border)">
-        <input style="flex:1;padding:6px 10px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-size:12.5px;outline:none;font-family:var(--font-body)" type="text" value="${escA(itemQ[proj]||'')}" placeholder="search ${items.length} items…" data-search="item_${escJ(proj)}" oninput="itemQ['${escJ(proj)}']=this.value;renderBOM()">
+        <input style="flex:1;padding:6px 10px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:6px;color:var(--text);font-size:12.5px;outline:none;font-family:var(--font-body)" type="text" value="${escA(itemQ[proj]||'')}" placeholder="search ${items.length} items…" oninput="itemQ['${escJ(proj)}']=this.value;snapSearch();renderBOM()" data-key="item_${escJ(proj)}">
         <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono)">${fi.length}/${items.length}</span>
       </div>
       <div class="tbl-wrap" style="max-height:400px">
@@ -1200,7 +1314,6 @@ function renderPO() {
         ${it.rowIndex?ec(it.status,'PO',it.rowIndex,12,'select',['For Approval','✅ Approved','✅ Delivered','❌ Cancelled']):`<td>${bdg(it.status)}</td>`}
         ${it.rowIndex?ec(it.payTerms,'PO',it.rowIndex,13,'select',TERMS):`<td class="td-m">${esc(it.payTerms||'—')}</td>`}
         ${it.rowIndex?ec(it.remarks,'PO',it.rowIndex,16):`<td class="td-m td-sm">${esc(it.remarks||'—')}</td>`}
-        <td style="font-family:var(--font-mono);font-size:9px;color:var(--purple)">${(poMrsMap[it.poNum]||[]).join(' / ')||'—'}</td>
       </tr>`).join('');
       const _mrsNums = (poMrsMap[po] || []).join(' / ');
       html += `<div class="proj-card${isOpen?' open':''}" id="${cid}" style="margin-bottom:3px;margin-left:10px">
@@ -1220,7 +1333,6 @@ function renderPO() {
             <th>Qty</th><th>Unit</th>
             <th class="e">Unit Price ✎</th><th>Line Total</th><th>PO Date</th>
             <th class="e">Status ✎</th><th class="e">Pay Terms ✎</th><th class="e">Remarks ✎</th>
-            <th style="color:var(--purple)">MRS Source</th>
           </tr></thead><tbody>${rows}</tbody></table>
         </div></div>
       </div>`;
@@ -1231,9 +1343,10 @@ function renderPO() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search POs, supplier, item…" spellcheck="false" autocomplete="off" data-search="po" oninput="searchRender('po',this.value,renderPO)" value="${escA(tblQ['po']||'')}">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search POs, supplier, item…" spellcheck="false" autocomplete="off" oninput="tblQ['po']=this.value;snapSearch();renderPO()" data-key="po" onfocus="this.value=tblQ['po']||''" value="${escA(tblQ['po']||'')}">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${groupOrder.length} POs · ${data.length} lines · ${fP(grandTotal)}</span>
-        ${tblQ['po']?`<button class="btn" onclick="tblQ['po']='';renderPO()">clear</button>`:''}
+        ${tblQ['po']?`<button class="btn" onclick="tblQ['po']='';
+  restoreSearch();renderPO()">clear</button>`:''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by project → ✎ click to edit</span>
       </div>
       <div style="flex:1;overflow-y:auto;padding:10px 14px">${html}</div>
@@ -1331,9 +1444,10 @@ function renderVP() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search bills…" spellcheck="false" autocomplete="off" data-search="vp" oninput="searchRender('vp',this.value,renderVP)" value="${escA(tblQ['vp']||'')}">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search bills…" spellcheck="false" autocomplete="off" oninput="tblQ['vp']=this.value;snapSearch();renderVP()" data-key="vp" value="${escA(tblQ['vp']||'')}">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length} bills · ${data.length} lines</span>
-        ${tblQ['vp'] ? `<button class="btn" onclick="tblQ['vp']='';renderVP()">clear</button>` : ''}
+        ${tblQ['vp'] ? `<button class="btn" onclick="tblQ['vp']='';
+  restoreSearch();renderVP()">clear</button>` : ''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by invoice — ✎ click to edit</span>
       </div>
       <div style="flex:1;overflow-y:auto;padding:10px 14px">${cards}</div>
@@ -1416,13 +1530,144 @@ function renderWH() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search WH, PO, supplier…" spellcheck="false" autocomplete="off" data-search="wh" oninput="searchRender('wh',this.value,renderWH)" value="${escA(tblQ['wh']||'')}">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search WH, PO, supplier…" spellcheck="false" autocomplete="off" oninput="tblQ['wh']=this.value;snapSearch();renderWH()" data-key="wh" value="${escA(tblQ['wh']||'')}">
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${filteredKeys.length}/${gOrder.length} POs · ${data.length} rows</span>
-        ${tblQ['wh']?`<button class="btn" onclick="tblQ['wh']='';renderWH()">clear</button>`:''}
+        ${tblQ['wh']?`<button class="btn" onclick="tblQ['wh']='';
+  restoreSearch();renderWH()">clear</button>`:''}
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by project → PO</span>
       </div>
       <div style="flex:1;overflow-y:auto;padding:10px 14px">${html}</div>
     </div>`;
+}
+
+
+// ══════════════════════════════════════════════════════════
+// BUDGET & SPENDING REPORT
+// ══════════════════════════════════════════════════════════
+function renderBudget() {
+  const data = API.budgetReport || [];
+  const fPm = v => v>0?'₱'+Number(v).toLocaleString('en-PH',{maximumFractionDigits:0}):'—';
+  const fPn = v => v===0||v===''||v==null?'—':(v>0?'+':'')+Number(v).toLocaleString('en-PH',{maximumFractionDigits:0});
+  const pct = (a,b) => b>0?Math.round(a/b*100)+'%':'—';
+
+  if (!data.length) {
+    document.getElementById('content').innerHTML=`<div class="center" style="gap:12px">
+      <div style="font-size:40px">📊</div>
+      <div style="font-size:13px;font-weight:600;color:var(--text)">No budget data yet</div>
+      <div style="font-size:12px;color:var(--text3);text-align:center;max-width:380px">
+        Deploy Apps Script v8.0 and run<br><strong>📊 Build Budget &amp; Spending Report</strong><br>from the Google Sheet menu.
+      </div>
+      <button class="btn btn-accent" onclick="loadDataSilent().then(()=>renderBudget())">↻ Retry</button>
+    </div>`;
+    return;
+  }
+
+  const totals = data.reduce((a,p)=>({
+    budget:a.budget+p.totalBudget, po:a.po+p.totalPOValue,
+    billed:a.billed+p.totalBilled, paid:a.paid+p.totalPaid,
+    items:a.items+p.totalItems,
+  }),{budget:0,po:0,billed:0,paid:0,items:0});
+
+  const kpis = [
+    {l:'Projects',v:data.length,c:'var(--accent)'},
+    {l:'Total Items',v:totals.items.toLocaleString(),c:'var(--text)',mono:true},
+    {l:'Total Budget',v:fPm(totals.budget),c:'var(--text2)',mono:true},
+    {l:'PO Value',v:fPm(totals.po),c:'var(--purple)',mono:true},
+    {l:'Variance',v:fPn(totals.po-totals.budget),c:totals.po>totals.budget?'var(--red)':'var(--green)',mono:true},
+    {l:'Billed',v:fPm(totals.billed),c:'var(--amber)',mono:true},
+    {l:'Paid',v:fPm(totals.paid),c:'var(--green)',mono:true},
+    {l:'Balance Due',v:fPm(totals.billed-totals.paid),c:totals.billed>totals.paid?'var(--red)':'var(--text3)',mono:true},
+  ];
+
+  const kpiHtml = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px">
+    ${kpis.map(k=>`<div style="background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:10px 14px">
+      <div style="font-size:9.5px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:4px">${k.l}</div>
+      <div style="font-size:${k.mono?'15':'20'}px;font-weight:700;color:${k.c};font-family:${k.mono?'var(--font-mono)':'var(--font-body)'}">${k.v}</div>
+    </div>`).join('')}
+  </div>`;
+
+  const cards = data.map(p => {
+    const varAmt = p.totalPOValue - p.totalBudget;
+    const varPct = p.totalBudget>0?(varAmt/p.totalBudget*100):null;
+    const varC = varAmt>0?'var(--red)':varAmt<0?'var(--green)':'var(--text3)';
+    const payPct = p.totalBilled>0?Math.round(p.totalPaid/p.totalBilled*100):0;
+    const done = (p.delivered||0)+(p.stock||0);
+
+    const segs=[
+      {n:done,bg:'rgba(63,185,80,.8)',l:'Done'},
+      {n:p.issued||0,bg:'rgba(188,140,255,.8)',l:'PO Issued'},
+      {n:p.ready||0,bg:'rgba(88,166,255,.8)',l:'Ready'},
+      {n:p.canvass||0,bg:'rgba(210,153,34,.8)',l:'Canvass'},
+    ].filter(s=>s.n>0);
+
+    return `<div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 16px" onclick="activeCli='${escJ(p.clientName)}';go('bom')" style="cursor:pointer">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;cursor:pointer" onclick="activeCli='${escJ(p.clientName)}';go('bom')">
+        <div>
+          <div style="font-size:13.5px;font-weight:700;color:var(--accent)">${esc(p.clientName)}</div>
+          ${p.contractAmt>0?`<div style="font-size:10px;color:var(--text3)">Contract: <strong>${fPm(p.contractAmt)}</strong></div>`:''}
+        </div>
+        <span style="font-size:10px;background:var(--pill-bg);color:var(--pill-text);padding:2px 8px;border-radius:999px;font-family:var(--font-mono)">${p.totalItems} items</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-bottom:10px">
+        ${[['Budget',fPm(p.totalBudget),'var(--text2)'],['PO Value',fPm(p.totalPOValue),'var(--purple)'],
+          ['Variance',(varPct!=null?fPn(varAmt)+' ('+(varPct>0?'+':'')+varPct.toFixed(1)+'%)':'—'),varC]
+        ].map(([l,v,co])=>`<div style="background:var(--bg3);border-radius:6px;padding:6px 9px">
+          <div style="font-size:8.5px;color:${co};text-transform:uppercase;margin-bottom:2px">${l}</div>
+          <div style="font-size:11px;font-weight:700;color:${co};font-family:var(--font-mono)">${v}</div>
+        </div>`).join('')}
+      </div>
+      <div style="height:7px;border-radius:4px;overflow:hidden;display:flex;gap:1px;background:var(--bg4);margin-bottom:5px">
+        ${segs.map(s=>`<div style="flex:${s.n};background:${s.bg}" title="${s.l}:${s.n}"></div>`).join('')||'<div style="flex:1;background:var(--bg4)"></div>'}
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        ${segs.map(s=>`<span style="font-size:9px;color:var(--text3)">${s.l}:<strong style="color:var(--text)">${s.n}</strong></span>`).join('')}
+      </div>
+      <!-- Three metrics from MRS Progress Tracker reference -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:6px">
+        ${[
+          ['Completion%', Math.round((p.completion||0)*100), 'var(--accent)'],
+          ['Delivery%',   p.deliveryPct||0, 'var(--teal)'],
+          ['PO%',         Math.round(((p.issued||0)+(p.delivered||0)+(p.stock||0)+(p.complete||0))/(p.totalItems||1)*100), 'var(--purple)'],
+        ].map(([l,pv,col])=>`<div>
+          <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-bottom:2px">
+            <span>${l}</span><span style="font-weight:700;color:${pv>=100?'var(--green)':pv>0?col:'var(--text3)'}">${pv}%</span>
+          </div>
+          <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden">
+            <div style="height:100%;width:${Math.min(pv,100)}%;background:${pv>=100?'var(--green)':col};border-radius:3px"></div>
+          </div>
+        </div>`).join('')}
+      </div>
+      <div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-bottom:2px">
+          <span>💰 Payment</span><span style="font-weight:700;color:${payPct>=100?'var(--green)':payPct>0?'var(--amber)':'var(--text3)'}">${p.totalBilled>0?payPct+'%':'No bills yet'}</span>
+        </div>
+        <div style="height:5px;background:var(--bg4);border-radius:3px;overflow:hidden">
+          <div style="height:100%;width:${payPct}%;background:var(--amber);border-radius:3px"></div>
+        </div>
+        ${p.balance>0?`<div style="font-size:9px;color:var(--red);margin-top:2px;text-align:right">Due: ${fPm(p.balance)}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('content').innerHTML = `
+    <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
+      <div style="padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg2);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+        <span style="font-size:13px;font-weight:700">📊 Budget &amp; Spending Report</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-accent" onclick="buildReportSheet()">📋 Write to GSheet</button>
+          <button class="btn" onclick="loadDataSilent().then(()=>renderBudget())">↻ Refresh</button>
+        </div>
+      </div>
+      <div class="body">${kpiHtml}<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:10px">${cards}</div></div>
+    </div>`;
+}
+
+function buildReportSheet(){
+  toast('Building report…','saving');
+  fetch(WEB_APP+'?action=buildBudgetReport')
+    .then(r=>r.json())
+    .then(d=>toast(d.ok?'✅ Report written to GSheet!':'❌ '+(d.error||'failed'),'ok'))
+    .catch(e=>toast('Error: '+e.message,'err'));
 }
 
 // ── Item History — searchable with sort ────────────────────────
@@ -1479,7 +1724,7 @@ function renderHistory() {
   document.getElementById('content').innerHTML = `
     <div class="flat-pane">
       <div class="flat-toolbar" style="flex-wrap:wrap;gap:6px">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search items, cat no, vendor…" spellcheck="false" autocomplete="off" data-search="history" oninput="searchRender('history',this.value,renderHistory)" value="${escA(q)}">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search items, cat no, vendor…" spellcheck="false" autocomplete="off" oninput="tblQ['history']=this.value;snapSearch();renderHistory()" data-key="hist" value="${escA(q)}">
         <select class="search" style="max-width:180px;flex:none" onchange="tblQ['histCat']=this.value;renderHistory()">
           <option value="">All categories</option>
           ${cats.map(c => `<option value="${escA(c)}"${c===cat?' selected':''}>${esc(c)}</option>`).join('')}
@@ -1625,8 +1870,8 @@ function renderMRS() {
                 const pv=row.poNum||'';
                 const haspo=pv.startsWith('P');
                 const link=haspo?`<span onclick="event.stopPropagation();jumpToPO('${escJ(pv)}')" title="View PO" style="cursor:pointer;color:var(--accent);font-size:9px;margin-left:4px">↗</span>`:'';
-                if(r) return ec(pv,s,r,13)+`<td style="padding:0;width:14px;border-bottom:1px solid rgba(255,255,255,.03)">${link}</td>`;
-                return `<td class="td-mono grp-start">${esc(pv||'—')}${link}</td><td style="width:0;padding:0"></td>`;
+                if(r) return ec(pv,s,r,13).replace('</td>',link+'</td>');
+                return `<td class="td-mono grp-start">${esc(pv||'—')}${link}</td>`;
               })()}
               ${r?ec(row.vendor,s,r,12):`<td class="td-sm">${esc(row.vendor||'—')}</td>`}
               ${r?ec(row.unitPrice,s,r,14,'number'):`<td class="td-r td-mono">${fP(row.unitPrice)}</td>`}
@@ -1684,14 +1929,15 @@ function renderMRS() {
   document.getElementById('content').innerHTML = `
     <div style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="flat-toolbar" style="flex-wrap:wrap;gap:6px">
-        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search MRS#, project, item…" spellcheck="false" autocomplete="off" data-search="mrs" oninput="searchRender('mrs',this.value,renderMRS)" value="${escA(q)}">
+        <input class="search" style="flex:1;max-width:360px" type="text" placeholder="search MRS#, project, item…" spellcheck="false" autocomplete="off" oninput="tblQ['mrs']=this.value;snapSearch();renderMRS()" data-key="mrs" value="${escA(q)}">
         <div style="display:flex;gap:4px">
           <button class="btn${filterStock==='all'?' btn-accent':''}" onclick="tblQ['mrsFilter']='all';renderMRS()">All</button>
           <button class="btn${filterStock==='stock'?' btn-accent':''}" onclick="tblQ['mrsFilter']='stock';renderMRS()">🏭 Stock</button>
           <button class="btn${filterStock==='project'?' btn-accent':''}" onclick="tblQ['mrsFilter']='project';renderMRS()">📦 Project</button>
         </div>
         <span style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">${groupOrder.length}/${allKeys.length} MRS · ${fd.length}/${data.length} items</span>
-        ${q?`<button class="btn" onclick="tblQ['mrs']='';renderMRS()">clear</button>`:''}
+        ${q?`<button class="btn" onclick="tblQ['mrs']='';
+  restoreSearch();renderMRS()">clear</button>`:''}
         <button class="btn btn-green" onclick="openAddModal('mrs')">+ add item</button>
         <span style="font-size:9.5px;color:var(--text3);font-family:var(--font-mono);margin-left:auto">grouped by MRS# · ✎ click to edit</span>
       </div>
@@ -1736,6 +1982,22 @@ function testEquipCfg(){return{sheet:'TESTEQUIP',search:['equipId','name','brand
 ]}}
 
 // ── Add BOM Item ───────────────────────────────────
+function openAddBOMBulk(){
+  const n=parseInt(prompt('How many blank rows to add? (1-20)','5')||'0');
+  if(!n||n<1||n>20){return;}
+  const sheet=activeCli?(API.bomSheets||[]).find(s=>s.clientName===activeCli)?.sheet||('📦 '+activeCli):null;
+  if(!sheet){toast('No active client','err');return;}
+  const promises=[];
+  for(let i=0;i<n;i++){
+    promises.push(fetch(WEB_APP+'?action=addRow&payload='+encodeURIComponent(JSON.stringify({sheet,values:[i+1,'','','','','','','','','','','','','','','','','','','','']}))).then(r=>r.json()));
+  }
+  Promise.all(promises).then(results=>{
+    const ok=results.filter(r=>r.ok).length;
+    toast(`✅ Added ${ok} blank row${ok!==1?'s':''} to BOM`,'ok');
+    setTimeout(()=>loadDataSilent().then(()=>go('bom')),1500);
+  }).catch(e=>toast('Error: '+e.message,'err'));
+}
+
 function openAddBOMItem(){
   const bomSheet=(API.bom||[]).find(r=>r.sheet.replace(/^📦\s*/,'').trim()===activeCli)?.sheet||null;
   if(!bomSheet){toast('❌ Select a client first','err');return;}
