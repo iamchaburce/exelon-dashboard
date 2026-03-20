@@ -728,7 +728,7 @@ async function loadData(){
       <div style="font-size:13px;font-weight:600;color:var(--text)">${isTimeout?'Request timed out':'Connection error'}</div>
       <div style="font-family:var(--font-mono);font-size:11px;color:var(--text3);max-width:360px;text-align:center">${esc(e.message)}</div>
       <div style="font-size:12px;color:var(--text3);max-width:380px;text-align:center;line-height:1.6">
-        ${isTimeout?'The Google Apps Script is taking too long. Make sure v7.7 is deployed.<br>The script URL must be deployed as a <strong>Web App</strong>.':'Check that the Apps Script is deployed and accessible.'}
+        ${isTimeout?'The Google Apps Script is taking too long. Make sure v7.7 is deployed.\nThe script URL must be deployed as a Web App.':'Check that the Apps Script is deployed and accessible.'}
       </div>
       <div style="display:flex;gap:8px">
         <button class="btn btn-accent" onclick="loadData()">↻ Retry</button>
@@ -813,7 +813,7 @@ function renderBOM(){
     ? (activeMeta&&activeMeta.itemCount===0
         ? `<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:20px;margin:10px 0">
             <div style="font-family:var(--font-mono);font-size:11px;color:var(--accent);margin-bottom:8px">📦 New Project — No BOM items yet</div>
-            <div style="font-size:12px;color:var(--text2);margin-bottom:4px"><strong>${esc(activeMeta.projectTitle||'')}</strong></div>
+            <div style="font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:600">${esc(activeMeta.projectTitle||'')}</div>
             ${activeMeta.location?`<div style="font-size:11px;color:var(--text3)">📍 ${esc(activeMeta.location)}</div>`:''}
             ${activeMeta.contract?`<div style="font-size:11px;color:var(--green);margin-top:4px">💰 Contract: ₱${Number(activeMeta.contract).toLocaleString('en-PH')}</div>`:''}
             ${activeMeta.clientPO?`<div style="font-size:11px;color:var(--text3)">📄 Client PO: ${esc(activeMeta.clientPO)}</div>`:''}
@@ -1227,8 +1227,7 @@ function renderVP() {
             <div style="font-size:32px;margin-bottom:12px">💰</div>
             <div style="font-family:var(--font-mono);font-size:13px;color:var(--text2);margin-bottom:8px">No vendor bills yet</div>
             <div style="font-size:12px;color:var(--text3);max-width:380px;margin:0 auto;line-height:1.7">
-              Bills are auto-generated when you enter <strong>Del Qty</strong> or <strong>Invoice #</strong> in the BOM tab.<br>
-              Go to BOM → enter delivery data → it will cascade here automatically.
+              Bills are auto-generated when you enter Del Qty or Invoice # in the BOM tab.\nGo to BOM → enter delivery data → it will cascade here automatically.
             </div>
            </div>`
         : `<div class="no-rows" style="font-family:var(--font-mono)">no results</div>`)`
