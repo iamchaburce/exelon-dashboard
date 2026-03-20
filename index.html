@@ -183,6 +183,8 @@ select.fi{cursor:pointer}
 
 /* ── Alerts ───────────────────────────────────── */
 .alert-list{padding:14px}
+.alert-row-link:hover td{background:rgba(56,189,248,.08)!important;cursor:pointer}
+.alert-row-link td{transition:background .1s}
 .ac{border:1px solid;border-radius:8px;padding:10px 14px;margin-bottom:7px;display:flex;gap:10px;align-items:flex-start}
 .ac.warn{background:rgba(251,191,36,.05);border-color:rgba(251,191,36,.2)}
 .ac.crit{background:rgba(248,113,113,.05);border-color:rgba(248,113,113,.2)}
@@ -245,6 +247,45 @@ select.fi{cursor:pointer}
 <script>
 const WEB_APP='https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
 let API=null, activeTab='bom', activeCli='', openProj={}, projQ={}, itemQ={}, tblQ={};
+let ALL_CATS=[], ALL_MRS_CATS=[];  // populated after load
+
+// Compute client-side balance for a BOM item
+function computeBal(it){
+  const dq=Number(it.delQty||0), cq=Number(it.cancelQty||0), q=Number(it.qty||0);
+  if(dq===0&&cq===0) return it.balQty!==''&&it.balQty!=null ? it.balQty : '';
+  return Math.max(0, q-dq-cq);
+}
+// Compute WH status client-side
+function computeWH(it, bal){
+  const dq=Number(it.delQty||0);
+  if(dq<=0) return it.whStatus||'⬜ Pending';
+  return (bal===0||Number(bal)<=0)?'✅ Complete':'🔄 Partial';
+}
+// Update DOM balance + WH status when del/cancel qty changes
+function updateBalanceDOM(sheet, rowIndex, col, newVal){
+  const tr=document.querySelector(`tr[data-sheet="${sheet}"][data-row="${rowIndex}"]`);
+  if(!tr) return;
+  const qty=Number(tr.dataset.qty||0);
+  const delQty=col===29?Number(newVal||0):Number(tr.dataset.delqty||0);
+  const cancelQty=col===30?Number(newVal||0):Number(tr.dataset.cancelqty||0);
+  if(col===29) tr.dataset.delqty=newVal||0;
+  if(col===30) tr.dataset.cancelqty=newVal||0;
+  const bal=Math.max(0,qty-delQty-cancelQty);
+  const balCell=tr.querySelector('.bal-cell');
+  if(balCell) balCell.textContent=bal||'—';
+  const whStatus=delQty<=0?'⬜ Pending':bal<=0?'✅ Complete':'🔄 Partial';
+  const whCell=tr.querySelector('.wh-cell .ec-v');
+  if(whCell) whCell.innerHTML=bdg(whStatus);
+  // Auto-derive BOM status
+  const poNum=tr.dataset.ponum||'';
+  const whStock=tr.dataset.whstock==='true';
+  let newStatus=tr.dataset.status||'';
+  if(whStock) newStatus='🏭 Warehouse Stock';
+  else if(whStatus==='✅ Complete') newStatus='✅ Delivered';
+  else if(poNum.startsWith('P')) newStatus='✅ PO Issued';
+  const statusCell=tr.querySelector('.status-cell .ec-v');
+  if(statusCell) statusCell.innerHTML=bdg(newStatus);
+}
 
 // ── Options ──────────────────────────────────────
 const BOM_ST=['🟡 For Canvass','🟢 Ready for PO','✅ PO Issued','🏭 Warehouse Stock','✅ Delivered'];
@@ -301,6 +342,8 @@ function setSync(st,msg){
 // ── Save cell ──────────────────────────────────────
 async function saveCell(sheet,row,col,val){
   setSync('saving','saving…');
+  // Immediately update balance in DOM for del qty / cancel qty changes
+  if(col===29||col===30) updateBalanceDOM(sheet,row,col,val);
   try{
     const res=await fetch(WEB_APP+'?action=updateCell&payload='+encodeURIComponent(JSON.stringify({sheet,row,col,value:val})));
     const j=await res.json();
@@ -341,6 +384,9 @@ async function loadData(){
     const j=await res.json();
     if(!j.ok)throw new Error(j.error||'API error');
     API=j;
+    // Build category lists for dropdowns
+    ALL_CATS=[...new Set((j.bom||[]).map(r=>r.category||'').filter(Boolean))].sort();
+    ALL_MRS_CATS=[...new Set([...(j.bom||[]),...(j.mrs||[])].map(r=>r.category||'').filter(Boolean))].sort();
     const t=new Date(j.updated).toLocaleTimeString('en-PH',{hour:'2-digit',minute:'2-digit'});
     document.getElementById('pgSub').textContent=`live · ${j.bom?.length} BOM · ${j.mrs?.length} MRS · ${j.po?.length||0} PO · ${j.wh?.length||0} WH · updated ${t}`;
     setSync('ok','live');
@@ -447,12 +493,14 @@ function buildProjCard(proj,items,allKeys){
       const bvpColor = bvp!=null ? (bvp>0?'var(--red)':bvp<0?'var(--green)':'var(--text3)') : 'var(--text3)';
       const bvpTxt = bvp!=null ? (bvp>0?'+':'')+bvp+'%' : '—';
 
-      return`<tr>
+      const cBal = computeBal(it);
+      const cWH  = computeWH(it, cBal);
+      return`<tr data-sheet="${escA(it.sheet)}" data-row="${r}" data-qty="${it.qty||0}" data-delqty="${Number(it.delQty||0)}" data-cancelqty="${Number(it.cancelQty||0)}" data-ponum="${escA(it.poNum||'')}" data-status="${escA(it.status||'')}" data-whstock="false">
         <td class="td-m td-mono td-r">${it.num}</td>
         <td class="td-m td-mono" style="white-space:nowrap;font-size:9.5px">${fD(it.date)}</td>
-        <td class="td-m">${esc(it.category||'—')}</td>
+        ${r?ec(it.category,s,r,5,'select',ALL_CATS||[]):`<td class="td-m">${esc(it.category||'—')}</td>`}
         <td class="td-clip" title="${escA(it.partDesc)}">${esc(it.partDesc||'—')}</td>
-        <td class="td-m td-mono">${esc(it.catNo||'—')}</td>
+        <td class="td-mono td-m" style="min-width:110px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escA(it.catNo)}">${esc(it.catNo||'—')}</td>
         <td class="td-r td-mono">${it.qty||'—'}</td>
         <td class="td-m">${esc(it.unit||'—')}</td>
         <!-- Canvass -->
@@ -469,12 +517,12 @@ function buildProjCard(proj,items,allKeys){
         <!-- Delivery -->
         ${r?ec(it.delQty,s,r,29,'number'):`<td class="td-r td-mono grp-start">${it.delQty||'—'}</td>`}
         ${r?ec(it.cancelQty,s,r,30,'number'):`<td class="td-r td-mono">${it.cancelQty||'—'}</td>`}
-        <td class="td-r td-mono td-m">${it.balQty||'—'}</td>
+        <td class="td-r td-mono td-m bal-cell" style="color:${Number(cBal)>0?'var(--amber)':'var(--text3)'}">${cBal!==''?cBal:'—'}</td>
         ${r?ec(it.expectedDate,s,r,32):`<td class="td-mono td-m" style="font-size:10px">${fD(it.expectedDate)}</td>`}
         ${r?ec(it.actualDate,s,r,33):`<td class="td-mono td-m" style="font-size:10px">${fD(it.actualDate)}</td>`}
         <!-- Status -->
-        ${r?ec(it.status,s,r,14,'select',BOM_ST):`<td class="grp-start">${bdg(it.status)}</td>`}
-        ${r?ec(it.whStatus,s,r,26,'select',WH_ST):`<td>${bdg(it.whStatus)}</td>`}
+        <td class="grp-start status-cell">${r?`<span class="ec-v">${bdg(it.status)}</span>`:bdg(it.status)}</td>
+        <td class="wh-cell">${r?`<span class="ec-v">${bdg(cWH)}</span>`:bdg(cWH)}</td>
         <!-- Payment -->
         ${r?ec(it.invoice,s,r,35):`<td class="td-mono grp-start">${esc(it.invoice||'—')}</td>`}
         ${r?ec(it.amtPaid,s,r,36,'number'):`<td class="td-r td-mono">${fP(it.amtPaid)}</td>`}
@@ -523,6 +571,25 @@ function buildProjCard(proj,items,allKeys){
 }
 
 function tp(proj,cid){const c=document.getElementById(cid);if(!c)return;const n=!c.classList.contains('open');c.classList.toggle('open',n);openProj[proj]=n;}
+
+// Jump to BOM tab for a specific item
+function jumpToBOM(sheet, rowIndex, projName){
+  const clientName = sheet.replace(/^📦\s*/,'').trim();
+  activeCli = clientName;
+  activeTab = 'bom';
+  go('bom');
+  // Open the right project card and highlight
+  setTimeout(()=>{
+    // open all projects that contain this item
+    Object.keys(openProj).forEach(k=>{ openProj[k]=false; });
+    if(projName) openProj[projName]=true;
+    renderBOM();
+    setTimeout(()=>{
+      const tr=document.querySelector(`tr[data-sheet="${sheet}"][data-row="${rowIndex}"]`);
+      if(tr){ tr.style.outline='2px solid var(--accent)'; tr.scrollIntoView({block:'center',behavior:'smooth'}); setTimeout(()=>tr.style.outline='',3000); }
+    },200);
+  },100);
+}
 
 // ── Flat table ─────────────────────────────────────
 function renderFlat(key,data,cfg){
@@ -575,36 +642,45 @@ function renderAlerts(){
   function makeDetail(g) {
     const isBOM = g.key!=='unpaid';
     const rows = g.items.map(it => {
-      if(isBOM) return `<tr>
-        <td class="td-mono td-m" style="font-size:10px">${esc(it.sheet?.replace(/^📦\s*/,'')||'')}</td>
-        <td class="td-clip" title="${escA(it.project)}">${esc(it.project||'—')}</td>
-        <td class="td-clip" title="${escA(it.partDesc)}">${esc(it.partDesc||'—')}</td>
-        <td class="td-mono td-m" style="min-width:90px">${esc(it.catNo||'—')}</td>
-        <td class="td-r td-mono">${it.qty||'—'}</td>
-        <td class="td-m">${esc(it.unit||'—')}</td>
-        <td class="td-r td-mono td-m">${fP(it.budget)}</td>
-        <td>${bdg(it.status)}</td>
-        <td class="td-mono td-m">${esc(it.poNum||'—')}</td>
-        <td class="td-clip td-m">${esc(it.vendor||'—')}</td>
-        <td class="td-r td-mono">${fP(it.unitPrice)}</td>
-      </tr>`;
-      else return `<tr>
-        <td class="td-mono td-m">${esc(it.poNum||'—')}</td>
-        <td class="td-clip">${esc(it.supplier||'—')}</td>
-        <td class="td-clip">${esc(it.partDesc||'—')}</td>
-        <td class="td-r td-mono">${fP(it.amount)}</td>
-        <td class="td-r td-mono">${fP(it.amtPaid)}</td>
-        <td class="td-r td-mono" style="color:var(--red)">${fP(it.balance)}</td>
-        <td>${bdg(it.payStatus)}</td>
-        <td class="td-mono td-m">${esc(it.invoice||'—')}</td>
-      </tr>`;
+      if(isBOM){
+        const clickable = it.sheet && it.rowIndex;
+        const proj = it.project||'';
+        const onclk = clickable ? `onclick="jumpToBOM('${escJ(it.sheet)}',${it.rowIndex},'${escJ(proj)}')" style="cursor:pointer" title="▶ Click to open in BOM tab"` : '';
+        return `<tr ${onclk} class="${clickable?'alert-row-link':''}">
+          <td class="td-mono td-m" style="font-size:10px">${esc((it.sheet||'').replace(/^📦\s*/,''))}</td>
+          <td class="td-clip" style="max-width:120px" title="${escA(proj)}">${esc(proj||'—')}</td>
+          <td class="td-clip" title="${escA(it.partDesc)}">${esc(it.partDesc||'—')}</td>
+          <td class="td-mono td-m" style="min-width:90px;max-width:120px;overflow:hidden;text-overflow:ellipsis">${esc(it.catNo||'—')}</td>
+          <td class="td-r td-mono">${it.qty||'—'} ${esc(it.unit||'')}</td>
+          <td class="td-r td-mono td-m">${fP(it.budget)}</td>
+          <td>${bdg(it.status)}</td>
+          <td class="td-mono td-m">${esc(it.poNum||'—')}</td>
+          <td class="td-clip td-m">${esc(it.vendor||'—')}</td>
+          <td class="td-r td-mono">${fP(it.unitPrice)}</td>
+          ${clickable?`<td style="font-size:9px;color:var(--accent);font-family:var(--font-mono)">▶ open</td>`:'<td></td>'}
+        </tr>`;
+      } else {
+        return `<tr>
+          <td class="td-mono td-m">${esc(it.poNum||'—')}</td>
+          <td class="td-clip">${esc(it.supplier||'—')}</td>
+          <td class="td-clip">${esc(it.partDesc||'—')}</td>
+          <td class="td-r td-mono">${fP(it.amount)}</td>
+          <td class="td-r td-mono">${fP(it.amtPaid)}</td>
+          <td class="td-r td-mono" style="color:var(--red)">${fP(it.balance)}</td>
+          <td>${bdg(it.payStatus)}</td>
+          <td class="td-mono td-m">${esc(it.invoice||'—')}</td>
+        </tr>`;
+      }
     }).join('');
     const hdrs = isBOM
-      ? '<th>Client</th><th>Project</th><th>Description</th><th style="min-width:90px">Cat No</th><th>Qty</th><th>Unit</th><th>Budget</th><th>Status</th><th>PO #</th><th>Vendor</th><th>Unit Price</th>'
+      ? '<th>Client</th><th>Project</th><th>Description</th><th>Cat No</th><th>Qty</th><th>Budget</th><th>Status</th><th>PO #</th><th>Vendor</th><th>Unit Price</th><th></th>'
       : '<th>PO #</th><th>Supplier</th><th>Description</th><th>Amount</th><th>Paid</th><th>Balance</th><th>Status</th><th>Invoice</th>';
     return `<div style="margin-top:10px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;overflow:hidden">
-      <div style="padding:6px 12px;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:10px;font-weight:600;color:${g.color}">${g.icon} ${g.title} — ${g.items.length} items</div>
-      <div style="max-height:300px;overflow:auto">
+      <div style="padding:6px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+        <span style="font-family:var(--font-mono);font-size:10px;font-weight:600;color:${g.color}">${g.icon} ${g.title} — ${g.items.length} items</span>
+        ${isBOM?`<span style="font-size:9px;color:var(--text3);font-family:var(--font-mono)">click any row to open in BOM tab ▶</span>`:''}
+      </div>
+      <div style="max-height:320px;overflow:auto">
         <table><thead><tr>${hdrs}</tr></thead><tbody>${rows}</tbody></table>
       </div>
     </div>`;
@@ -964,13 +1040,14 @@ function renderHistory() {
       <div class="flat-body">
         <table>
           <thead><tr>
-            <th style="min-width:140px">Cat No</th>
-            <th style="min-width:220px">Description</th>
-            <th>Category</th>
-            <th>PO #</th><th>Date</th><th>Supplier</th>
+            <th style="min-width:130px">Cat No</th>
+            <th style="min-width:200px">Description</th>
+            <th style="max-width:90px">Category</th>
+            <th>PO #</th><th>Date</th><th style="max-width:130px">Supplier</th>
             <th>Unit Price</th><th>Budget</th>
             <th>Change ₱</th><th>% Change</th>
-            <th>Project</th><th>Source</th>
+            <th style="max-width:100px">Trend</th>
+            <th style="max-width:110px">Project</th><th>Source</th>
           </tr></thead>
           <tbody>${tableRows}</tbody>
         </table>
@@ -979,9 +1056,11 @@ function renderHistory() {
 }
 
 function histRow(r) {
-  const pct = r.pctChange ? Number(r.pctChange) : null;
+  // pctChange from API is a raw fraction (e.g. -0.546 = -54.6%)
+  const pctRaw = r.pctChange!=null&&r.pctChange!=='' ? Number(r.pctChange) : null;
+  const pct = pctRaw!=null ? pctRaw*100 : null;  // convert to %
   const pctColor = pct!=null ? (pct > 0 ? 'var(--red)' : pct < 0 ? 'var(--green)' : 'var(--text3)') : 'var(--text3)';
-  const pctStr = pct!=null ? (pct>0?'+':'')+(pct*100).toFixed(1)+'%' : '—';
+  const pctStr = pct!=null ? (pct>0?'+':'')+pct.toFixed(1)+'%' : '—';
   // Truncate cat no — max 20 chars visible
   const catNoFull = r.catNo||'—';
   const catNoShort = catNoFull.length > 20 ? catNoFull.substring(0,18)+'…' : catNoFull;
@@ -996,7 +1075,18 @@ function histRow(r) {
     <td class="td-r td-mono td-m" style="white-space:nowrap">${fP(r.prevPrice||r.budget)}</td>
     <td class="td-r td-mono" style="color:${pctColor};white-space:nowrap">${r.priceChange?fP(r.priceChange):'—'}</td>
     <td class="td-r td-mono" style="color:${pctColor};font-weight:600;white-space:nowrap">${pctStr}</td>
-    <td class="td-m" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.project||'—')}</td>
+    <td style="max-width:100px">
+      ${(()=>{
+        const sp=pct;  // use outer pct (already in %)
+        if(sp===null||sp===undefined) return '<span style="color:var(--text3);font-size:10px">—</span>';
+        const arrow=sp>0?'↑':'↓';
+        const color=sp>0?'var(--red)':'var(--green)';
+        const bars=Math.min(Math.abs(Math.round(sp/20)),5);
+        const filled='█'.repeat(bars)+'░'.repeat(5-bars);
+        return `<span style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:${color}">${arrow}</span><span style="font-family:var(--font-mono);font-size:9px;color:${color};letter-spacing:-1px"> ${filled}</span>`;
+      })()}
+    </td>
+    <td class="td-m" style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.project||'—')}</td>
     <td class="td-mono td-m" style="font-size:9px;white-space:nowrap">${esc(r.source||'—')}</td>
   </tr>`;
 }
@@ -1023,7 +1113,10 @@ function renderMRS() {
     : groupOrder.map(mrsNum => {
         const items = groups[mrsNum];
         const s0 = items[0];
-        const types = [...new Set(items.map(r => r.type||'MRS'))];
+        const isStock = String(s0.project||'').toUpperCase().includes('STOCK');
+        const stockBadge = isStock
+          ? pill('🏭 STOCK','rgba(45,212,191,.12)','#2dd4bf')
+          : pill('📦 PROJECT','rgba(167,139,250,.12)','#a78bfa');
         const cid = 'mrs_' + mrsNum.replace(/\W/g,'');
         const isOpen = openProj['mrs_'+mrsNum] !== undefined ? openProj['mrs_'+mrsNum] : true;
         const st = kpis(items.map(i => ({status:i.status, whStatus:i.delQty?'✅ Complete':'⬜ Pending', payStatus:i.amtPaid?'✅ Paid':'⬜ Unpaid'})));
@@ -1044,7 +1137,9 @@ function renderMRS() {
           typeItems.forEach(row => {
             const s = 'MRS', r = row.rowIndex || 0;
             rowsHtml += `<tr>
-              <td class="td-m" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(row.category||'—')}</td>
+              <td class="td-m" style="max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
+                ${r?ec(row.category,s,r,4,'select',ALL_MRS_CATS||[]):`<span>${esc(row.category||'—')}</span>`}
+              </td>
               <td class="td-clip" title="${escA(row.partDesc)}">${esc(row.partDesc||'—')}</td>
               <td class="td-mono td-m" style="min-width:110px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escA(row.catNo)}">${esc(row.catNo||'—')}</td>
               <td class="td-r td-mono">${row.qty||'—'}</td><td class="td-m">${esc(row.unit||'—')}</td>
@@ -1072,10 +1167,9 @@ function renderMRS() {
           <button class="proj-hdr" onclick="tp('mrs_${escJ(mrsNum)}','${cid}')">
             <span class="proj-arrow">▶</span>
             <span class="proj-name" style="font-family:var(--font-mono);color:var(--accent);min-width:70px">${esc(mrsNum)}</span>
-            <span style="font-size:11px;color:var(--text);margin-left:6px;font-weight:500">${esc(s0.project||'')}</span>
-            <span style="flex:1"></span>
+            ${stockBadge}
+            <span style="font-size:11px;color:var(--text);margin-left:6px;font-weight:500;flex:1">${esc(s0.project||'')}</span>
             <div style="display:flex;gap:3px">${pills}</div>
-            <span style="font-size:9px;color:var(--text3);font-family:var(--font-mono);margin-left:6px">${types.join(' · ')}</span>
           </button>
           <div class="proj-body">
             <div class="tbl-wrap" style="max-height:400px">
@@ -1090,7 +1184,7 @@ function renderMRS() {
                   <th colspan="4" class="cg-payment">Payment</th>
                 </tr>
                 <tr>
-                  <th>Category</th><th>Description</th><th style="min-width:110px">Cat No</th><th>Qty</th><th>Unit</th>
+                  <th>Category ✎</th><th>Description</th><th style="min-width:110px">Cat No</th><th>Qty</th><th>Unit</th>
                   <th class="e grp-start">V1</th><th class="e">V2</th><th class="e">V3</th>
                   <th class="e grp-start">PO #</th><th class="e">Vendor</th><th class="e">Unit Price</th><th class="e">Pay Terms</th>
                   <th class="e grp-start">Del Qty</th><th class="e">Cancel</th><th>Balance</th><th class="e">Actual Date</th>
