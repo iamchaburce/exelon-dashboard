@@ -380,17 +380,84 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
 <!-- PROJECT PROGRESS -->
 <div id="page-progress" class="page">
   <div class="sh"><h2>📈 Project Progress</h2><div class="cnt" id="cnt-pp">0</div>
-    <div class="mla"><button class="hbtn p" onclick="openPPModal()">➕ New Project</button></div>
+    <div class="mla" style="display:flex;gap:7px">
+      <button class="hbtn" onclick="togglePPView()" id="pp-view-btn">🃏 Card View</button>
+      <button class="hbtn p" onclick="openPPModal()">➕ New Project</button>
+    </div>
   </div>
   <div class="stats-grid" id="pp-stats"></div>
+  <!-- Overall progress bar -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="ch"><h3>📊 Overall Procurement Progress</h3>
+      <span id="pp-overall-pct" class="mono bold" style="font-size:20px;margin-left:auto;color:var(--blue)">—</span>
+    </div>
+    <div style="padding:12px 17px 14px">
+      <div id="pp-overall-bar" style="height:16px;border-radius:8px;overflow:hidden;display:flex;margin-bottom:10px;background:var(--border)"></div>
+      <div id="pp-legend" style="display:flex;flex-wrap:wrap;gap:11px;font-size:10.5px"></div>
+    </div>
+  </div>
   <div class="fb">
-    <input id="pp-q" placeholder="🔍 Search SO#, client…" oninput="filterTable('pp-body','pp-q')">
+    <input id="pp-q" placeholder="🔍 Search SO#, client…" oninput="filterPPLive()">
     <select id="pp-sf" onchange="filterPP()"><option value="">All Status</option><option>🔄 In Progress</option><option>✅ Completed</option><option>⚠️ At Risk</option><option>⏸️ On Hold</option></select>
   </div>
-  <div class="card"><div class="tw" style="max-height:65vh;overflow-y:auto">
-    <table><thead><tr><th>#</th><th>SO #</th><th>Client</th><th>Description</th><th>Target</th><th>Contract (₱)</th><th>Budget (₱)</th><th>Spend (₱)</th><th>Variance</th><th>% Done</th><th>BOM Status</th><th>Status</th><th>Priority</th><th>Phase</th><th>✏️</th></tr></thead>
-    <tbody id="pp-body"></tbody></table>
-  </div></div>
+  <!-- TABLE VIEW -->
+  <div id="pp-tview">
+    <div class="card"><div class="tw" style="max-height:58vh;overflow-y:auto">
+      <table><thead><tr>
+        <th>#</th><th>SO / Project</th><th>Client</th>
+        <th>Total<br>Items</th><th>🟡 For<br>Canvass</th><th>✅ PO<br>Issued</th>
+        <th>🚚 Delivered</th><th>🔄 Partial</th><th>✅ Complete</th><th>❌ Cancel</th>
+        <th>Completion %</th><th>Delivery %</th><th>PO %</th>
+        <th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th>
+        <th>Status</th>
+      </tr></thead>
+      <tbody id="pp-body"></tbody>
+    </table></div></div>
+  </div>
+  <!-- CARD VIEW -->
+  <div id="pp-cview" style="display:none">
+    <div id="pp-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px"></div>
+  </div>
+</div>
+
+<!-- BUDGET & SPENDING -->
+<div id="page-budget" class="page">
+  <div class="sh"><h2>💹 Budget & Spending</h2></div>
+  <div class="stats-grid" id="budget-stats"></div>
+  <!-- Section A: Project -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="ch" style="background:var(--navy)"><h3 style="color:#fff">📦 Section A: Project Budget vs Actual</h3></div>
+    <div class="tw"><table><thead><tr>
+      <th>SO / Project</th><th>Client</th><th>Items</th><th>✅ Complete</th>
+      <th>Completion %</th><th>Delivery %</th><th>PO %</th>
+      <th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th><th>Var %</th><th>Status</th>
+    </tr></thead><tbody id="bg-proj"></tbody></table></div>
+  </div>
+  <!-- Section B: Category -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="ch" style="background:var(--teal)"><h3 style="color:#fff">📊 Section B: Spending & Progress per Category</h3></div>
+    <div style="padding:12px 17px 6px" id="bg-cat-bars"></div>
+    <div class="tw"><table><thead><tr>
+      <th>Category</th><th>Items</th><th>✅ PO Issued</th><th>🟡 For Canvass</th>
+      <th>Progress %</th><th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th><th>Var %</th><th>Budget Status</th>
+    </tr></thead><tbody id="bg-cat"></tbody></table></div>
+  </div>
+  <!-- Section C: Internal Request -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="ch"><h3>🏢 Section C: Internal Request by Category</h3></div>
+    <div class="cb" id="budget-cat"></div>
+  </div>
+  <!-- Section D: Machine + Test Equip -->
+  <div class="g2">
+    <div class="card"><div class="ch" style="background:var(--orange)"><h3 style="color:#fff">🔧 Machine Spending</h3></div>
+      <div class="tw"><table><thead><tr><th>Equipment</th><th>Repair</th><th>Parts</th><th>Tools</th><th>Total (₱)</th></tr></thead>
+      <tbody id="bg-mach"></tbody></table></div>
+    </div>
+    <div class="card"><div class="ch" style="background:var(--purple)"><h3 style="color:#fff">🔬 Test Equipment</h3></div>
+      <div class="tw"><table><thead><tr><th>Equipment</th><th>2022</th><th>2023</th><th>2024</th><th>Total (₱)</th><th>Last Calib</th></tr></thead>
+      <tbody id="bg-te"></tbody></table></div>
+    </div>
+  </div>
 </div>
 
 <!-- BUDGET & SPENDING -->
@@ -998,39 +1065,275 @@ function renderIRStats(s){document.getElementById('ir-stats').innerHTML=[{l:'Tot
 function filterIR(){const cat=document.getElementById('ir-cf').value,sf=document.getElementById('ir-sf').value;let rows=S.data.internal||[];if(cat)rows=rows.filter(r=>r.category===cat);if(sf)rows=rows.filter(r=>r.status===sf);renderIR(rows);}
 
 // ─── PROJECT PROGRESS ────────────────────────────────────
+const PW={'For Canvass':0.10,'Ready for PO':0.40,'PO Issued':0.50,'Warehouse Stock':0.50,'Partial':0.75,'Delivered':0.75,'Complete':1.00,'Cancelled':0};
+const PCLR={complete:'#26A69A',delivered:'#42A5F5',partial:'#FFCA28',po:'#66BB6A',canvass:'#FFA726',cancel:'#EF5350'};
+let ppView='table';
+function togglePPView(){
+  ppView=ppView==='table'?'card':'table';
+  document.getElementById('pp-tview').style.display=ppView==='table'?'':'none';
+  document.getElementById('pp-cview').style.display=ppView==='card'?'':'none';
+  document.getElementById('pp-view-btn').textContent=ppView==='table'?'🃏 Card View':'📋 Table View';
+  if(ppView==='card'&&S.data.progress)renderPPCards(S.data.progress);
+}
 async function loadProjectProg(){
   setLoad('pp-body');const d=await api('getProjectProg');
-  if(d.error){document.getElementById('pp-body').innerHTML=`<tr><td colspan="15" style="padding:18px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;return;}
-  S.data.progress=d.data||[];renderPP(S.data.progress);renderPPStats(d.summary||{});
+  if(d.error){document.getElementById('pp-body').innerHTML=`<tr><td colspan="17" style="padding:18px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;return;}
+  S.data.progress=d.data||[];
+  renderPP(S.data.progress);renderPPStats(d.summary||{});renderOverallBar(d.data||[]);
   const e=document.getElementById('cnt-pp');if(e)e.textContent=d.count||0;
 }
+function calcComp(r){const tot=r.totalItems||1;const w=(r.complete||0)*1.0+(r.partial||0)*0.75+(r.delivered||0)*0.75+(r.poIssued||0)*0.5+(r.whStock||0)*0.5+(r.canvassed||0)*0.25+(r.forCanvass||0)*0.10;return tot>0?Math.min(w/tot,1):0;}
+function pBar(pct,color,minW){const p=Math.round(pct*100);const c=color||(p>=80?'#26A69A':p>=50?'#FF9800':'#2196F3');return`<div style="display:flex;align-items:center;gap:4px"><div style="background:var(--border);border-radius:4px;height:8px;min-width:${minW||55}px;overflow:hidden"><div style="width:${p}%;height:100%;background:${c};border-radius:4px"></div></div><span class="mono" style="font-size:10px;font-weight:700">${p}%</span></div>`;}
+function stageBar(r){const tot=r.totalItems||1;const segs=[{v:r.complete||0,c:PCLR.complete,l:'✅ Complete'},{v:r.delivered||0,c:PCLR.delivered,l:'🚚 Delivered'},{v:r.partial||0,c:PCLR.partial,l:'🔄 Partial'},{v:(r.poIssued||0)+(r.whStock||0),c:PCLR.po,l:'✅ PO Issued'},{v:(r.forCanvass||0)+(r.canvassed||0),c:PCLR.canvass,l:'🟡 Canvass'},{v:r.cancelled||0,c:PCLR.cancel,l:'❌ Cancel'}];return`<div style="display:flex;height:12px;border-radius:6px;overflow:hidden;border:1px solid var(--border)">${segs.map(s=>{const w=(s.v/tot*100).toFixed(1);return s.v>0?`<div style="width:${w}%;background:${s.c}" title="${s.l}: ${s.v}"></div>`:''}).join('')}</div>`;}
 function renderPP(rows){
   document.getElementById('pp-body').innerHTML=rows.map(r=>{
-    const pct=Math.round(((r.pctDoneCalc!==undefined?r.pctDoneCalc:Number(r.pctDone))||0)*100);
-    const bc=pct>=80?'var(--green)':pct>=50?'var(--orange)':'var(--blue)';
-    let bar='';
-    if(r.bomBreakdown){const bd=r.bomBreakdown;bar=`<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;min-width:60px;border:1px solid var(--border)">${Object.keys(SC).map(s=>{const w=bd.total>0?((bd.statusCounts[s]||0)/bd.total*100):0;return w>0?`<div style="width:${w}%;background:${SC[s]}" title="${s}: ${bd.statusCounts[s]||0}"></div>`:'';}).join('')}</div>`;}
-    return`<tr><td class="mono">${r.num}</td><td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td><td style="font-size:11px;max-width:150px">${r.description||''}</td><td>${r.targetDate||''}</td><td class="tr mono">₱${fmt(r.contractValue||0)}</td><td class="tr mono">₱${fmt(r.bomBudget||0)}</td><td class="tr mono">₱${fmt(r.actualSpend||0)}</td><td class="tr mono ${Number(r.variance)<0?'badge br':'badge bg'}">₱${fmt(r.variance||0)}</td>
-    <td><div style="display:flex;align-items:center;gap:5px"><div class="pbar"><div class="pfill" style="width:${pct}%;background:${bc}"></div></div><span class="mono" style="font-size:10px">${pct}%</span></div></td>
-    <td>${bar||'<span class="mu" style="font-size:10px">—</span>'}</td><td>${sBadge(r.status)}</td><td>${prioBadge(r.priority)}</td><td style="font-size:11px">${r.phase||''}</td>
-    <td><button class="eb" onclick="openGenEdit('pp',${r.rowIndex},'SO ${r.so||''}','${(r.client||'').replace(/'/g,"&#39;")}'",[['status','Status','select',['📋 Planning','🔄 In Progress','⚠️ At Risk','⏸️ On Hold','✅ Completed']],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['phase','Phase','select',['Engineering','Procurement','Fabrication','Assembly','Testing','Delivery','Completed']],['actualSpend','Actual Spend','number'],['issues','Issues','text'],['engineer','Engineer','text'],['actualDate','Actual Compl.','date']])">✏️</button></td>
-    </tr>`;}).join('')||emr(15,'No project data. Run ⚡ EXELON Tools → Setup All New Sheets first.');
+    const comp=calcComp(r);
+    const del=((r.complete||0)+(r.partial||0)+(r.delivered||0))/(r.totalItems||1);
+    const po=((r.poIssued||0)+(r.whStock||0)+(r.complete||0)+(r.partial||0)+(r.delivered||0))/(r.totalItems||1);
+    const variance=(r.actualSpend||r.poValue||0)-(r.bomBudget||0);
+    const varCls=variance>0?'bo':'bg';
+    return`<tr>
+      <td class="mono">${r.num}</td>
+      <td class="mono bold" style="cursor:pointer;color:var(--blue)" onclick="showProjDetail(${r.num-1})">${r.so||''}</td>
+      <td style="font-weight:600;font-size:11px">${r.client||''}</td>
+      <td class="tc">${r.totalItems||0}</td>
+      <td class="tc" style="color:#FFA726">${r.forCanvass||0}</td>
+      <td class="tc" style="color:#66BB6A">${(r.poIssued||0)+(r.whStock||0)}</td>
+      <td class="tc" style="color:#42A5F5">${r.delivered||0}</td>
+      <td class="tc" style="color:#FFCA28">${r.partial||0}</td>
+      <td class="tc bold" style="color:#26A69A">${r.complete||0}</td>
+      <td class="tc" style="color:#EF5350">${r.cancelled||0}</td>
+      <td style="min-width:100px">${pBar(comp)}</td>
+      <td style="min-width:80px">${pBar(del,'#26A69A')}</td>
+      <td style="min-width:80px">${pBar(po,'#66BB6A')}</td>
+      <td class="tr mono">₱${fmt(r.bomBudget||0)}</td>
+      <td class="tr mono bold">₱${fmt(r.actualSpend||r.poValue||0)}</td>
+      <td><span class="badge ${varCls}" style="font-size:10px">₱${fmt(Math.abs(variance))} ${variance>0?'▲over':'▼under'}</span></td>
+      <td>${sBadge(r.status||(comp>=1?'✅ Complete':comp>=0.5?'🔄 In Progress':'🟡 For Canvass'))}</td>
+    </tr>`;
+  }).join('')||emr(17,'No project data. Run ▶ Run Full Auto-Sync from Procurement Sync menu.');
 }
-function renderPPStats(s){document.getElementById('pp-stats').innerHTML=[{l:'Total',v:s.total||0,c:'blue',i:'📋'},{l:'In Progress',v:s.inProgress||0,c:'teal',i:'🔄'},{l:'Completed',v:s.completed||0,c:'green',i:'✅'},{l:'At Risk',v:s.atRisk||0,c:'red',i:'⚠️'},{l:'Contract',v:'₱'+sn(s.totalContract||0),c:'purple',i:'💰'},{l:'Spend',v:'₱'+sn(s.totalSpend||0),c:'orange',i:'💸'}].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');}
-function filterPP(){const v=document.getElementById('pp-sf').value;renderPP(v?(S.data.progress||[]).filter(r=>r.status===v):S.data.progress||[]);}
+function renderPPCards(rows){
+  document.getElementById('pp-cards').innerHTML=rows.map((r,idx)=>{
+    const comp=calcComp(r);const cp=Math.round(comp*100);
+    const del=Math.round(((r.complete||0)+(r.partial||0)+(r.delivered||0))/(r.totalItems||1)*100);
+    const po=Math.round(((r.poIssued||0)+(r.whStock||0)+(r.complete||0)+(r.partial||0))/(r.totalItems||1)*100);
+    const cc=cp>=80?'#26A69A':cp>=50?'#FF9800':'#1565C0';
+    const catHTML=(r.categoryProgress||[]).map(c=>{
+      const ccp=Math.round((c.pct||0)*100);const ccc=ccp>=100?'#26A69A':ccp>=50?'#FF9800':'#1565C0';
+      return`<div style="margin-bottom:6px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">
+          <span style="font-weight:600">${c.category}</span>
+          <span style="display:flex;gap:7px">
+            <span style="color:#26A69A">✅${c.complete||0}</span>
+            <span style="color:#66BB6A">🛒${c.poIssued||0}</span>
+            <span style="color:#FFA726">🟡${c.forCanvass||0}</span>
+            <b class="mono" style="color:${ccc}">${ccp}%</b>
+          </span>
+        </div>
+        <div style="background:var(--border);border-radius:3px;height:7px;overflow:hidden">
+          <div style="width:${ccp}%;height:100%;background:${ccc};border-radius:3px"></div>
+        </div>
+      </div>`;
+    }).join('');
+    return`<div class="card" style="overflow:hidden">
+      <div style="background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:12px 14px 10px;color:#fff">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="mono" style="font-size:10px;color:var(--gold);font-weight:700;letter-spacing:.5px">${r.so||''}</div>
+            <div style="font-size:14px;font-weight:700;margin:2px 0">${r.client||''}</div>
+            <div style="font-size:10px;opacity:.6">${r.totalItems||0} items${r.targetDate?' · Target: '+r.targetDate:''}</div>
+          </div>
+          <div style="text-align:right;background:rgba(255,255,255,.1);border-radius:8px;padding:7px 11px">
+            <div class="mono" style="font-size:26px;font-weight:700;color:${cc};line-height:1">${cp}%</div>
+            <div style="font-size:9px;opacity:.6">completion</div>
+          </div>
+        </div>
+        <div style="margin-top:9px">${stageBar(r)}</div>
+        <div style="display:flex;gap:10px;margin-top:7px;font-size:10px;opacity:.8;flex-wrap:wrap">
+          <span>✅ ${r.complete||0}</span><span>🔄 ${r.partial||0}</span>
+          <span>🛒 ${(r.poIssued||0)+(r.whStock||0)}</span><span>🟡 ${r.forCanvass||0}</span>
+        </div>
+      </div>
+      <div style="padding:10px 14px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
+          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px">
+            <div style="font-size:9px;color:var(--muted)">Delivery</div>
+            <div class="mono" style="font-size:15px;font-weight:700;color:#26A69A">${del}%</div>
+          </div>
+          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px">
+            <div style="font-size:9px;color:var(--muted)">PO Issued</div>
+            <div class="mono" style="font-size:15px;font-weight:700;color:#66BB6A">${po}%</div>
+          </div>
+          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px">
+            <div style="font-size:9px;color:var(--muted)">Budget</div>
+            <div class="mono" style="font-size:14px;font-weight:700;color:var(--blue)">₱${sn(r.actualSpend||0)}</div>
+          </div>
+        </div>
+        ${catHTML?`<div style="border-top:1px solid var(--border);padding-top:8px">
+          <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Category Progress</div>
+          ${catHTML}
+        </div>`:''}
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;margin-top:8px;padding-top:7px;border-top:1px solid var(--border)">
+          <span style="color:var(--muted)">Budget: <b class="mono">₱${fmt(r.bomBudget||0)}</b></span>
+          <span class="${(r.actualSpend||0)>(r.bomBudget||0)?'badge br':'badge bg'}" style="font-size:10px">
+            ₱${fmt(Math.abs((r.actualSpend||0)-(r.bomBudget||0)))} ${(r.actualSpend||0)>(r.bomBudget||0)?'over':'under'}
+          </span>
+        </div>
+      </div>
+    </div>`;
+  }).join('')||'<div class="empty"><div class="ei">📭</div><h4>No data</h4></div>';
+}
+function renderOverallBar(rows){
+  const tot=rows.reduce((a,r)=>a+(r.totalItems||0),0)||1;
+  const complete=rows.reduce((a,r)=>a+(r.complete||0),0);
+  const delivered=rows.reduce((a,r)=>a+(r.delivered||0),0);
+  const partial=rows.reduce((a,r)=>a+(r.partial||0),0);
+  const po=rows.reduce((a,r)=>a+(r.poIssued||0)+(r.whStock||0),0);
+  const canvass=rows.reduce((a,r)=>a+(r.forCanvass||0)+(r.canvassed||0),0);
+  const cancel=rows.reduce((a,r)=>a+(r.cancelled||0),0);
+  const weighted=(complete*1.0+delivered*0.75+partial*0.75+po*0.5+canvass*0.10)/tot;
+  document.getElementById('pp-overall-pct').textContent=Math.round(weighted*100)+'%';
+  const segs=[{v:complete,c:PCLR.complete,l:'✅ Complete'},{v:delivered,c:PCLR.delivered,l:'🚚 Delivered'},{v:partial,c:PCLR.partial,l:'🔄 Partial'},{v:po,c:PCLR.po,l:'✅ PO Issued'},{v:canvass,c:PCLR.canvass,l:'🟡 For Canvass'},{v:cancel,c:PCLR.cancel,l:'❌ Cancelled'}];
+  document.getElementById('pp-overall-bar').innerHTML=segs.map(s=>{const w=(s.v/tot*100).toFixed(1);return s.v>0?`<div style="width:${w}%;background:${s.c}" title="${s.l}: ${s.v}"></div>`:''}).join('');
+  document.getElementById('pp-legend').innerHTML=segs.filter(s=>s.v>0).map(s=>`<span style="display:inline-flex;align-items:center;gap:4px"><span style="width:9px;height:9px;background:${s.c};border-radius:2px;display:inline-block"></span>${s.l}: <b>${s.v}</b></span>`).join('');
+}
+function showProjDetail(idx){
+  const r=(S.data.progress||[])[idx];if(!r)return;
+  const comp=Math.round(calcComp(r)*100);
+  const del=Math.round(((r.complete||0)+(r.partial||0)+(r.delivered||0))/(r.totalItems||1)*100);
+  const catRows=(r.categoryProgress||[]).map(c=>{
+    const cp=Math.round((c.pct||0)*100);
+    return`<tr>
+      <td style="font-weight:600">${c.category}</td>
+      <td class="tc">${c.count||0}</td>
+      <td class="tc bold" style="color:#26A69A">${c.complete||0}</td>
+      <td class="tc" style="color:#66BB6A">${c.poIssued||0}</td>
+      <td class="tc" style="color:#FFA726">${c.forCanvass||0}</td>
+      <td style="min-width:90px">${pBar(c.pct||0)}</td>
+      <td class="tr mono">₱${fmt(c.budget||0)}</td>
+      <td class="tr mono">₱${fmt(c.actual||0)}</td>
+      <td><span class="badge ${(c.actual||0)>(c.budget||0)&&c.budget>0?'br':'bg'}" style="font-size:10px">₱${fmt(Math.abs((c.actual||0)-(c.budget||0)))} ${(c.actual||0)>(c.budget||0)&&c.budget>0?'over':'under'}</span></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('edit-title').textContent=`📊 ${r.so||''} — ${r.client||''}`;
+  document.getElementById('edit-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px">
+      ${[['Completion',comp+'%','#1565C0'],['Delivery',del+'%','#26A69A'],['✅ Complete',(r.complete||0)+'/'+(r.totalItems||0),'#26A69A'],['🟡 Canvass',r.forCanvass||0,'#FF9800']].map(([l,v,c])=>`
+        <div style="text-align:center;background:var(--bg);border-radius:8px;padding:10px">
+          <div class="mono" style="font-size:22px;font-weight:700;color:${c}">${v}</div>
+          <div style="font-size:10px;color:var(--muted)">${l}</div>
+        </div>`).join('')}
+    </div>
+    <div style="margin-bottom:12px">${stageBar(r)}</div>
+    <div style="display:flex;flex-wrap:wrap;gap:9px;font-size:10.5px;margin-bottom:12px">
+      ${[['✅ Complete',r.complete||0,PCLR.complete],['🚚 Delivered',r.delivered||0,PCLR.delivered],['🔄 Partial',r.partial||0,PCLR.partial],['🛒 PO Issued',(r.poIssued||0)+(r.whStock||0),PCLR.po],['🟡 Canvass',(r.forCanvass||0)+(r.canvassed||0),PCLR.canvass],['❌ Cancelled',r.cancelled||0,PCLR.cancel]].map(([l,v,c])=>v>0?`<span style="background:var(--bg);border-radius:20px;padding:3px 10px;display:inline-flex;align-items:center;gap:5px"><span style="width:8px;height:8px;background:${c};border-radius:2px"></span>${l}: <b>${v}</b></span>`:'').join('')}
+    </div>
+    ${catRows?`<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Category Progress</div>
+    <div class="tw"><table><thead><tr><th>Category</th><th>Items</th><th>✅ Done</th><th>🛒 PO</th><th>🟡 Canvass</th><th>Progress %</th><th>Budget (₱)</th><th>Actual (₱)</th><th>Variance</th></tr></thead>
+    <tbody>${catRows}</tbody></table></div>`:''}`;
+  openModal('m-edit');
+}
+function renderPPStats(s){document.getElementById('pp-stats').innerHTML=[{l:'Total Projects',v:s.total||0,c:'blue',i:'📋'},{l:'🔄 In Progress',v:s.inProgress||0,c:'teal',i:'🔄'},{l:'✅ Completed',v:s.completed||0,c:'green',i:'✅'},{l:'Total Budget',v:'₱'+sn(s.totalBudget||s.totalContract||0),c:'purple',i:'💰'},{l:'Total Spend',v:'₱'+sn(s.totalActual||s.totalSpend||0),c:'orange',i:'💸'},{l:'Overall',v:s.overallProgress?Math.round(s.overallProgress*100)+'%':'—',c:'blue',i:'📊'}].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');}
+function filterPP(){const v=document.getElementById('pp-sf').value;const rows=v?(S.data.progress||[]).filter(r=>r.status===v):S.data.progress||[];renderPP(rows);if(ppView==='card')renderPPCards(rows);}
+function filterPPLive(){const q=document.getElementById('pp-q').value.toLowerCase();const rows=(S.data.progress||[]).filter(r=>JSON.stringify(r).toLowerCase().includes(q));renderPP(rows);if(ppView==='card')renderPPCards(rows);}
 
 // ─── BUDGET ──────────────────────────────────────────────
 async function loadBudget(){
   const d=await api('getBudgetSpend');S.data.budget=d;
   if(d.error){toast('⚠️ '+d.error,'e');return;}
   const ps=d.projects||[];
-  const tc=ps.reduce((s,r)=>s+(Number(r.contract)||0),0),tb=ps.reduce((s,r)=>s+(Number(r.budget)||0),0),ts=ps.reduce((s,r)=>s+(Number(r.spend)||0),0);
-  document.getElementById('budget-stats').innerHTML=[{l:'Total Contract',v:'₱'+sn(tc),c:'blue'},{l:'Total Budget',v:'₱'+sn(tb),c:'teal'},{l:'Total Spend',v:'₱'+sn(ts),c:'orange'},{l:'% Used',v:tb?pctF(ts/tb):'0%',c:ts/tb>0.9?'red':'green'}].map(s=>`<div class="sc ${s.c}"><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');
-  const cats=Object.entries(d.categoryTotals||{}).sort((a,b)=>b[1].spend-a[1].spend);const mx=cats.length?cats[0][1].spend:1;
-  document.getElementById('budget-cat').innerHTML=cats.length?cats.map(([cat,info])=>`<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px"><div style="font-size:11px;min-width:195px">${cat}</div><div style="flex:1;background:var(--border);border-radius:4px;height:13px;overflow:hidden"><div style="width:${(info.spend/mx*100).toFixed(1)}%;height:100%;background:var(--blue);border-radius:4px"></div></div><div class="mono" style="font-size:11px;min-width:75px;text-align:right">₱${fmt(info.spend)}</div><div class="mu" style="font-size:10px;min-width:35px">${info.count}</div></div>`).join(''):'<div class="mu" style="padding:14px;text-align:center">No internal request data</div>';
-  document.getElementById('bg-proj').innerHTML=ps.map(r=>{const pct=Number(r.pctUsed)||0;const bc=pct>1?'#B71C1C':pct>0.85?'#E65100':'#1B5E20';return`<tr><td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td><td class="tr mono">₱${fmt(r.contract||0)}</td><td class="tr mono">₱${fmt(r.budget||0)}</td><td class="tr mono bold">₱${fmt(r.spend||0)}</td><td class="tr mono ${Number(r.remaining)<0?'badge br':''}">₱${fmt(r.remaining||0)}</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pbar"><div class="pfill" style="width:${Math.min(pct*100,100)}%;background:${bc}"></div></div><span class="mono" style="font-size:10px">${pctF(pct)}</span></div></td><td>${bgBadge(r.status)}</td></tr>`;}).join('')||emr(8,'No budget data');
-  document.getElementById('bg-mach').innerHTML=(d.machines||[]).map(r=>`<tr><td style="max-width:150px;font-weight:600">${r.name||''}</td><td style="font-size:11px">${r.model||''}</td><td class="tr mono">₱${fmt(r.repair||0)}</td><td class="tr mono">₱${fmt(r.parts||0)}</td><td class="tr mono">₱${fmt(r.tools||0)}</td><td class="tr mono bold">₱${fmt(r.total||0)}</td></tr>`).join('')||emr(6,'No machine data');
-  document.getElementById('bg-te').innerHTML=(d.testEquip||[]).map(r=>`<tr><td style="max-width:150px;font-weight:600">${r.name||''}</td><td class="tr mono">₱${fmt(r.y2022||0)}</td><td class="tr mono">₱${fmt(r.y2023||0)}</td><td class="tr mono">₱${fmt(r.y2024||0)}</td><td class="tr mono bold">₱${fmt(r.total||0)}</td><td>${r.lastCalib||''}</td><td>${r.nextDue||''}</td></tr>`).join('')||emr(7,'No test equip data');
+  const tc=ps.reduce((s,r)=>s+(Number(r.contract)||0),0);
+  const tb=ps.reduce((s,r)=>s+(Number(r.budget)||0),0);
+  const ts=ps.reduce((s,r)=>s+(Number(r.spend)||0),0);
+  document.getElementById('budget-stats').innerHTML=[
+    {l:'Total Contract',v:'₱'+sn(tc),c:'blue'},{l:'Total Budget',v:'₱'+sn(tb),c:'teal'},
+    {l:'Total Spend',v:'₱'+sn(ts),c:'orange'},{l:'% Budget Used',v:tb?pctF(ts/tb):'0%',c:ts/tb>0.9?'red':'green'},
+  ].map(s=>`<div class="sc ${s.c}"><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');
+
+  // Section A: Project table
+  document.getElementById('bg-proj').innerHTML=ps.map(r=>{
+    const comp=Math.round((r.overallPct||0)*100);
+    const del=Math.round((r.deliveryPct||0)*100);
+    const po=Math.round((r.poPct||0)*100);
+    const variance=(r.spend||0)-(r.budget||0);
+    const pct=Number(r.pctUsed)||0;
+    const bc=pct>1?'#B71C1C':pct>0.85?'#E65100':'#1B5E20';
+    return`<tr>
+      <td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td>
+      <td class="tc">${r.totalItems||0}</td>
+      <td class="tc bold" style="color:#26A69A">${r.complete||0}</td>
+      <td style="min-width:90px">${pBar(r.overallPct||0)}</td>
+      <td style="min-width:80px">${pBar(r.deliveryPct||0,'#26A69A')}</td>
+      <td style="min-width:80px">${pBar(r.poPct||0,'#66BB6A')}</td>
+      <td class="tr mono">₱${fmt(r.budget||0)}</td>
+      <td class="tr mono bold">₱${fmt(r.spend||0)}</td>
+      <td class="tr mono ${variance>0?'badge bo':'badge bg'}" style="font-size:10px">₱${fmt(Math.abs(variance))} ${variance>0?'▲':'▼'}</td>
+      <td><span style="font-size:10px;color:${pct>1?'#B71C1C':pct>0.85?'#E65100':'#1B5E20'}">${pctF(pct)}</span></td>
+      <td>${bgBadge(r.status)}</td>
+    </tr>`;
+  }).join('')||emr(12,'No project data');
+
+  // Section B: Category — bars + table
+  const cats=d.categories||[];
+  const maxSpend=cats.length?Math.max(...cats.map(c=>c.actual||0),1):1;
+  document.getElementById('bg-cat-bars').innerHTML=cats.map(c=>{
+    const compPct=Math.round((c.overallPct||0)*100);
+    const varPct=Math.round(Math.abs(c.pctVariance||0)*100);
+    const over=(c.actual||0)>(c.budget||0)&&c.budget>0;
+    const cc=compPct>=80?'#26A69A':compPct>=50?'#FF9800':'#2196F3';
+    return`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <div style="font-size:11px;min-width:220px;font-weight:600">${c.category}</div>
+      <div style="flex:1;background:var(--border);border-radius:5px;height:12px;overflow:hidden;position:relative">
+        <div style="width:${((c.actual||0)/maxSpend*100).toFixed(1)}%;height:100%;background:${over?'#EF5350':'#2196F3'};border-radius:5px;opacity:.7"></div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;min-width:280px">
+        <span class="mono" style="font-size:10px;min-width:70px;text-align:right">₱${fmt(c.actual||0)}</span>
+        <span class="mono" style="font-size:10px;color:var(--muted);min-width:55px">/${fmt(c.budget||0)}</span>
+        <span class="badge ${over?'br':'bg'}" style="font-size:9px;min-width:55px">${over?'▲ over':'▼ under'} ${varPct}%</span>
+        <div style="display:flex;align-items:center;gap:3px;min-width:70px">
+          <div style="background:var(--border);border-radius:3px;height:7px;width:60px;overflow:hidden">
+            <div style="width:${compPct}%;height:100%;background:${cc};border-radius:3px"></div>
+          </div>
+          <span class="mono" style="font-size:9px;font-weight:700;color:${cc}">${compPct}%</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('')||'<div class="mu" style="padding:10px">No category data</div>';
+
+  document.getElementById('bg-cat').innerHTML=cats.map(c=>{
+    const comp=Math.round((c.overallPct||0)*100);
+    const del=Math.round((c.deliveryPct||0)*100);
+    const over=(c.actual||0)>(c.budget||0)&&c.budget>0;
+    return`<tr>
+      <td style="font-weight:600">${c.category}</td>
+      <td class="tc">${c.count||0}</td>
+      <td class="tc bold" style="color:#66BB6A">${c.poIssued||0}</td>
+      <td class="tc" style="color:#FFA726">${c.forCanvass||0}</td>
+      <td style="min-width:90px">${pBar(c.overallPct||0)}</td>
+      <td class="tr mono">₱${fmt(c.budget||0)}</td>
+      <td class="tr mono bold">₱${fmt(c.actual||0)}</td>
+      <td class="tr mono ${over?'badge bo':'badge bg'}" style="font-size:10px">₱${fmt(Math.abs((c.actual||0)-(c.budget||0)))}</td>
+      <td class="tc mono" style="font-size:10px;color:${over?'#E65100':'#1B5E20'}">${over?'▲':'▼'}${Math.round(Math.abs(c.pctVariance||0)*100)}%</td>
+      <td>${bgBadge(over?'🔴 Over Budget':'🟢 Under Budget')}</td>
+    </tr>`;
+  }).join('')||emr(10,'No category data');
+
+  // Section C: Internal request
+  const irCats=Object.entries(d.categoryTotals||{}).sort((a,b)=>b[1].spend-a[1].spend);
+  const mx=irCats.length?irCats[0][1].spend||1:1;
+  document.getElementById('budget-cat').innerHTML=irCats.length?irCats.map(([cat,info])=>`<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px">
+    <div style="font-size:11px;min-width:195px">${cat}</div>
+    <div style="flex:1;background:var(--border);border-radius:4px;height:11px;overflow:hidden">
+      <div style="width:${(info.spend/mx*100).toFixed(1)}%;height:100%;background:var(--blue);border-radius:4px"></div>
+    </div>
+    <div class="mono" style="font-size:11px;min-width:75px;text-align:right">₱${fmt(info.spend)}</div>
+    <div class="mu" style="font-size:10px;min-width:30px">${info.count}x</div>
+  </div>`).join(''):'<div class="mu" style="padding:14px;text-align:center">No internal request data</div>';
+
+  // Section D: Machines & Test Equip
+  document.getElementById('bg-mach').innerHTML=(d.machines||[]).map(r=>`<tr><td style="font-weight:600;max-width:160px">${r.name||''}</td><td class="tr mono">₱${fmt(r.repair||0)}</td><td class="tr mono">₱${fmt(r.parts||0)}</td><td class="tr mono">₱${fmt(r.tools||0)}</td><td class="tr mono bold">₱${fmt(r.total||0)}</td></tr>`).join('')||emr(5,'No machine data');
+  document.getElementById('bg-te').innerHTML=(d.testEquip||[]).map(r=>`<tr><td style="font-weight:600;max-width:160px">${r.name||''}</td><td class="tr mono">₱${fmt(r.y2022||0)}</td><td class="tr mono">₱${fmt(r.y2023||0)}</td><td class="tr mono">₱${fmt(r.y2024||0)}</td><td class="tr mono bold">₱${fmt(r.total||0)}</td><td>${r.lastCalib||''}</td></tr>`).join('')||emr(6,'No test equip data');
 }
 
 // ─── WEEKLY REVIEW ───────────────────────────────────────
