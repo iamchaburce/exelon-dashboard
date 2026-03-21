@@ -8,409 +8,245 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --navy:    #0A1628;
-  --navy2:   #0F2044;
-  --blue:    #1565C0;
-  --blue-lt: #1976D2;
-  --teal:    #00695C;
-  --orange:  #E65100;
-  --purple:  #4A148C;
-  --green:   #1B5E20;
-  --red:     #B71C1C;
-  --gold:    #FFD600;
-  --gold2:   #FFC107;
-  --bg:      #F0F4F8;
-  --card:    #FFFFFF;
-  --border:  #DDE3EA;
-  --text:    #1A2332;
-  --muted:   #6B7A8D;
-  --sidebar-w: 232px;
-  --hdr-h:   54px;
-  --radius:  10px;
-  --shadow:  0 2px 12px rgba(10,22,40,.10);
-  --shadow2: 0 6px 28px rgba(10,22,40,.16);
+  --navy:#0A1628;--navy2:#0F2044;--blue:#1565C0;--blue-lt:#1976D2;
+  --teal:#00695C;--orange:#E65100;--purple:#4A148C;--green:#1B5E20;
+  --red:#B71C1C;--gold:#FFD600;--gold2:#FFC107;
+  --bg:#F0F4F8;--card:#FFFFFF;--border:#DDE3EA;--text:#1A2332;--muted:#6B7A8D;
+  --sidebar-w:232px;--hdr-h:54px;--radius:10px;
+  --shadow:0 2px 12px rgba(10,22,40,.10);--shadow2:0 6px 28px rgba(10,22,40,.16);
 }
-[data-theme="dark"] {
-  --bg:     #0D1117;
-  --card:   #161B22;
-  --border: #2D3748;
-  --text:   #E2E8F0;
-  --muted:  #8B9AB0;
-  --navy:   #0D1117;
-  --navy2:  #161B22;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-html,body { height:100%; font-family:'IBM Plex Sans',sans-serif; background:var(--bg); color:var(--text); font-size:13px; }
-
-/* ─── SIDEBAR ─────────────────────────────── */
-#sidebar {
-  position:fixed; top:0; left:0; width:var(--sidebar-w); height:100%;
-  background:var(--navy); display:flex; flex-direction:column;
-  z-index:200; border-right:1px solid rgba(255,255,255,.06);
-  transition:transform .25s ease;
-}
-.sidebar-logo {
-  padding:14px 16px 12px; border-bottom:1px solid rgba(255,255,255,.07);
-}
-.sidebar-logo .brand { font-size:15px; font-weight:700; color:#fff; letter-spacing:.3px; }
-.sidebar-logo .sub { font-size:10px; color:rgba(255,255,255,.42); letter-spacing:1px; text-transform:uppercase; }
-.sidebar-logo .ver { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--gold); margin-top:2px; }
-
-.sidebar-nav { flex:1; overflow-y:auto; padding:8px 0 16px; }
-.sidebar-nav::-webkit-scrollbar { width:3px; }
-.sidebar-nav::-webkit-scrollbar-thumb { background:rgba(255,255,255,.12); border-radius:2px; }
-
-.nav-section { padding:14px 16px 4px; font-size:9px; font-weight:600; letter-spacing:1.4px; text-transform:uppercase; color:rgba(255,255,255,.28); }
-.nav-item {
-  display:flex; align-items:center; gap:9px;
-  padding:8px 16px; cursor:pointer; color:rgba(255,255,255,.60);
-  font-size:12.5px; font-weight:400; border-left:3px solid transparent;
-  transition:all .15s; position:relative;
-  text-decoration:none;
-}
-.nav-item:hover { background:rgba(255,255,255,.06); color:#fff; border-left-color:rgba(255,255,255,.2); }
-.nav-item.active { background:rgba(21,101,192,.25); color:#fff; border-left-color:var(--gold); font-weight:600; }
-.nav-item .icon { font-size:14px; flex-shrink:0; width:18px; text-align:center; }
-.nav-item .badge {
-  margin-left:auto; background:var(--red); color:#fff;
-  font-size:9px; font-weight:700; padding:1px 6px; border-radius:10px;
-  font-family:'IBM Plex Mono',monospace;
-}
-.nav-item .badge.yellow { background:var(--gold2); color:#000; }
-.nav-item .badge.green  { background:var(--teal); }
-
-.sidebar-footer { padding:12px 16px; border-top:1px solid rgba(255,255,255,.07); }
-.live-dot { display:flex; align-items:center; gap:6px; font-size:10px; color:rgba(255,255,255,.4); }
-.live-dot::before { content:''; width:6px; height:6px; background:#4CAF50; border-radius:50%; animation:pulse 2s infinite; }
-@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
-
-/* ─── HEADER ─────────────────────────────── */
-#header {
-  position:fixed; top:0; left:var(--sidebar-w); right:0; height:var(--hdr-h);
-  background:var(--card); border-bottom:1px solid var(--border);
-  display:flex; align-items:center; padding:0 24px; gap:16px;
-  z-index:100; box-shadow:0 1px 4px rgba(0,0,0,.06);
-}
-#page-title { font-size:16px; font-weight:700; color:var(--text); flex:1; }
-#page-title span { color:var(--muted); font-weight:400; font-size:13px; margin-left:8px; }
-.hdr-btn {
-  padding:6px 14px; border-radius:6px; border:1px solid var(--border);
-  background:var(--card); color:var(--text); cursor:pointer; font-size:12px;
-  font-family:'IBM Plex Sans',sans-serif; font-weight:500;
-  display:flex; align-items:center; gap:6px; transition:all .15s;
-}
-.hdr-btn:hover { background:var(--bg); border-color:var(--blue); color:var(--blue); }
-.hdr-btn.primary { background:var(--blue); color:#fff; border-color:var(--blue); }
-.hdr-btn.primary:hover { background:var(--blue-lt); }
-#sync-time { font-size:10px; color:var(--muted); font-family:'IBM Plex Mono',monospace; }
-#theme-toggle { cursor:pointer; font-size:18px; background:none; border:none; padding:4px; }
-
-/* ─── MAIN ────────────────────────────────── */
-#main {
-  margin-left:var(--sidebar-w); margin-top:var(--hdr-h);
-  padding:22px 24px; min-height:calc(100vh - var(--hdr-h));
-}
-.page { display:none; }
-.page.active { display:block; animation:fadeIn .2s ease; }
-@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-
-/* ─── CARDS ────────────────────────────────── */
-.card {
-  background:var(--card); border:1px solid var(--border);
-  border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden;
-}
-.card-header {
-  padding:14px 18px 12px; border-bottom:1px solid var(--border);
-  display:flex; align-items:center; gap:10px;
-}
-.card-header h3 { font-size:13.5px; font-weight:700; flex:1; }
-.card-header .subtitle { font-size:11px; color:var(--muted); }
-.card-body { padding:16px 18px; }
-
-/* ─── STAT CARDS ───────────────────────────── */
-.stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(185px,1fr)); gap:14px; margin-bottom:20px; }
-.stat-card {
-  background:var(--card); border:1px solid var(--border);
-  border-radius:var(--radius); padding:16px; position:relative;
-  overflow:hidden; transition:box-shadow .15s;
-}
-.stat-card:hover { box-shadow:var(--shadow2); }
-.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
-.stat-card.blue::before   { background:var(--blue); }
-.stat-card.teal::before   { background:var(--teal); }
-.stat-card.orange::before { background:var(--orange); }
-.stat-card.purple::before { background:var(--purple); }
-.stat-card.green::before  { background:var(--green); }
-.stat-card.red::before    { background:var(--red); }
-.stat-card.gold::before   { background:var(--gold2); }
-.stat-label { font-size:10.5px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.6px; margin-bottom:6px; }
-.stat-value { font-size:26px; font-weight:700; line-height:1; font-family:'IBM Plex Mono',monospace; color:var(--text); }
-.stat-value.big { font-size:20px; }
-.stat-sub { font-size:10px; color:var(--muted); margin-top:4px; }
-.stat-icon { position:absolute; right:14px; top:14px; font-size:22px; opacity:.18; }
-
-/* ─── TABLE ────────────────────────────────── */
-.tbl-wrap { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; font-size:12px; }
-th {
-  background:var(--navy); color:#fff; padding:9px 12px;
-  text-align:left; font-weight:600; font-size:11px;
-  letter-spacing:.3px; white-space:nowrap; position:sticky; top:0;
-}
-td { padding:8px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
-tr:hover td { background:rgba(21,101,192,.04); }
-tr:nth-child(even) td { background:rgba(0,0,0,.018); }
-[data-theme="dark"] tr:nth-child(even) td { background:rgba(255,255,255,.022); }
-
-/* ─── BADGES ────────────────────────────────── */
-.badge {
-  display:inline-block; padding:2px 8px; border-radius:20px;
-  font-size:10.5px; font-weight:600; white-space:nowrap;
-}
-.badge-green   { background:#E8F5E9; color:#1B5E20; }
-.badge-blue    { background:#E3F2FD; color:#0D47A1; }
-.badge-yellow  { background:#FFFDE7; color:#F57F17; }
-.badge-orange  { background:#FFF3E0; color:#E65100; }
-.badge-red     { background:#FFEBEE; color:#B71C1C; }
-.badge-grey    { background:#ECEFF1; color:#37474F; }
-.badge-purple  { background:#F3E5F5; color:#4A148C; }
-[data-theme="dark"] .badge-green  { background:rgba(27,94,32,.3);  color:#81C784; }
-[data-theme="dark"] .badge-blue   { background:rgba(21,101,192,.3); color:#90CAF9; }
-[data-theme="dark"] .badge-yellow { background:rgba(249,168,37,.3); color:#FFE082; }
-[data-theme="dark"] .badge-red    { background:rgba(183,28,28,.3);  color:#EF9A9A; }
-[data-theme="dark"] .badge-grey   { background:rgba(55,71,79,.5);   color:#B0BEC5; }
-
-/* ─── PROGRESS BAR ────────────────────────── */
-.progress { background:var(--border); border-radius:6px; height:7px; overflow:hidden; min-width:80px; }
-.progress-fill { height:100%; border-radius:6px; transition:width .4s ease; }
-
-/* ─── SECTION HEADER ──────────────────────── */
-.section-hdr {
-  display:flex; align-items:center; gap:12px;
-  margin-bottom:16px; padding-bottom:10px; border-bottom:1px solid var(--border);
-}
-.section-hdr h2 { font-size:15px; font-weight:700; }
-.section-hdr .count { background:var(--blue); color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:700; }
-
-/* ─── GRID LAYOUTS ────────────────────────── */
-.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
-@media(max-width:900px){ .grid-2,.grid-3 { grid-template-columns:1fr; } }
-
-/* ─── FILTER BAR ──────────────────────────── */
-.filter-bar {
-  display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center;
-}
-.filter-bar input, .filter-bar select {
-  padding:7px 11px; border:1px solid var(--border); border-radius:6px;
-  background:var(--card); color:var(--text); font-size:12px;
-  font-family:'IBM Plex Sans',sans-serif; outline:none;
-}
-.filter-bar input:focus, .filter-bar select:focus { border-color:var(--blue); }
-.filter-bar input { min-width:220px; }
-
-/* ─── MODAL ────────────────────────────────── */
-.modal-overlay {
-  position:fixed; inset:0; background:rgba(0,0,0,.55);
-  display:none; z-index:1000; align-items:center; justify-content:center;
-}
-.modal-overlay.open { display:flex; }
-.modal {
-  background:var(--card); border-radius:12px; width:560px; max-width:95vw;
-  max-height:88vh; overflow:auto; box-shadow:var(--shadow2);
-  animation:slideUp .2s ease;
-}
-@keyframes slideUp { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
-.modal-header {
-  padding:18px 20px 14px; border-bottom:1px solid var(--border);
-  display:flex; align-items:center;
-}
-.modal-header h3 { flex:1; font-size:15px; font-weight:700; }
-.modal-close { cursor:pointer; font-size:20px; color:var(--muted); background:none; border:none; padding:2px 6px; }
-.modal-body { padding:20px; }
-.modal-footer { padding:14px 20px; border-top:1px solid var(--border); display:flex; gap:10px; justify-content:flex-end; }
-
-/* ─── FORM ────────────────────────────────── */
-.form-row { margin-bottom:14px; }
-.form-row label { display:block; font-size:11px; font-weight:600; color:var(--muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:.4px; }
-.form-row input, .form-row select, .form-row textarea {
-  width:100%; padding:8px 11px; border:1px solid var(--border);
-  border-radius:6px; background:var(--card); color:var(--text);
-  font-size:12.5px; font-family:'IBM Plex Sans',sans-serif; outline:none;
-}
-.form-row input:focus, .form-row select:focus, .form-row textarea:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(21,101,192,.1); }
-.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-
-/* ─── LOADING ────────────────────────────── */
-.loading { text-align:center; padding:48px; color:var(--muted); }
-.spinner {
-  width:28px; height:28px; border:3px solid var(--border);
-  border-top-color:var(--blue); border-radius:50%;
-  animation:spin .8s linear infinite; margin:0 auto 12px;
-}
-@keyframes spin { to{transform:rotate(360deg)} }
-
-/* ─── TOAST ────────────────────────────────── */
-#toast-container { position:fixed; bottom:24px; right:24px; z-index:9999; display:flex; flex-direction:column; gap:8px; }
-.toast {
-  padding:12px 18px; border-radius:8px; color:#fff; font-size:12.5px;
-  font-weight:600; box-shadow:var(--shadow2); animation:toastIn .25s ease;
-  max-width:320px;
-}
-@keyframes toastIn { from{opacity:0;transform:translateX(20px)} to{opacity:1;transform:translateX(0)} }
-.toast.success { background:var(--teal); }
-.toast.error   { background:var(--red); }
-.toast.info    { background:var(--blue); }
-.toast.warning { background:var(--orange); }
-
-/* ─── EMPTY STATE ─────────────────────────── */
-.empty { text-align:center; padding:48px 24px; color:var(--muted); }
-.empty .icon { font-size:40px; margin-bottom:10px; opacity:.5; }
-.empty h4 { font-size:14px; margin-bottom:6px; color:var(--text); }
-
-/* ─── MISC ────────────────────────────────── */
-.mono { font-family:'IBM Plex Mono',monospace; }
-.text-right { text-align:right; }
-.text-center { text-align:center; }
-.gap { display:flex; align-items:center; gap:8px; }
-.ml-auto { margin-left:auto; }
-.bold { font-weight:700; }
-.muted { color:var(--muted); }
-.peso::before { content:'₱'; }
-hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+[data-theme="dark"]{--bg:#0D1117;--card:#161B22;--border:#2D3748;--text:#E2E8F0;--muted:#8B9AB0;--navy:#0D1117;--navy2:#161B22;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px;}
+#sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100%;background:var(--navy);display:flex;flex-direction:column;z-index:200;border-right:1px solid rgba(255,255,255,.06);}
+.sidebar-logo{padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sidebar-logo .brand{font-size:15px;font-weight:700;color:#fff;}
+.sidebar-logo .sub{font-size:10px;color:rgba(255,255,255,.42);letter-spacing:1px;text-transform:uppercase;}
+.sidebar-logo .ver{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);margin-top:2px;}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0 16px;}
+.sidebar-nav::-webkit-scrollbar{width:3px;}
+.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px;}
+.nav-section{padding:14px 16px 4px;font-size:9px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.28);}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;color:rgba(255,255,255,.60);font-size:12.5px;border-left:3px solid transparent;transition:all .15s;text-decoration:none;}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff;border-left-color:rgba(255,255,255,.2);}
+.nav-item.active{background:rgba(21,101,192,.25);color:#fff;border-left-color:var(--gold);font-weight:600;}
+.nav-item .icon{font-size:14px;flex-shrink:0;width:18px;text-align:center;}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;font-family:'IBM Plex Mono',monospace;}
+.nav-badge.yellow{background:var(--gold2);color:#000;}
+.nav-badge.green{background:var(--teal);}
+.nav-badge.orange{background:var(--orange);}
+.sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.07);}
+.live-dot{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.4);}
+.live-dot::before{content:'';width:6px;height:6px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+#header{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--hdr-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+#page-title{font-size:16px;font-weight:700;color:var(--text);flex:1;}
+#page-title span{color:var(--muted);font-weight:400;font-size:13px;margin-left:8px;}
+.hdr-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:12px;font-family:'IBM Plex Sans',sans-serif;font-weight:500;display:flex;align-items:center;gap:6px;transition:all .15s;}
+.hdr-btn:hover{background:var(--bg);border-color:var(--blue);color:var(--blue);}
+.hdr-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+.hdr-btn.primary:hover{background:var(--blue-lt);}
+.hdr-btn.danger{background:var(--red);color:#fff;border-color:var(--red);}
+#sync-time{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+#theme-toggle{cursor:pointer;font-size:18px;background:none;border:none;padding:4px;}
+#main{margin-left:var(--sidebar-w);margin-top:var(--hdr-h);padding:22px 24px;min-height:calc(100vh - var(--hdr-h));}
+.page{display:none;}
+.page.active{display:block;animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+.card-header{padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.card-header h3{font-size:13.5px;font-weight:700;flex:1;}
+.card-header .subtitle{font-size:11px;color:var(--muted);}
+.card-body{padding:16px 18px;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;margin-bottom:20px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;transition:box-shadow .15s;}
+.stat-card:hover{box-shadow:var(--shadow2);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.stat-card.blue::before{background:var(--blue);}
+.stat-card.teal::before{background:var(--teal);}
+.stat-card.orange::before{background:var(--orange);}
+.stat-card.purple::before{background:var(--purple);}
+.stat-card.green::before{background:var(--green);}
+.stat-card.red::before{background:var(--red);}
+.stat-card.gold::before{background:var(--gold2);}
+.stat-label{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
+.stat-value{font-size:26px;font-weight:700;line-height:1;font-family:'IBM Plex Mono',monospace;color:var(--text);}
+.stat-value.big{font-size:20px;}
+.stat-sub{font-size:10px;color:var(--muted);margin-top:4px;}
+.stat-icon{position:absolute;right:14px;top:14px;font-size:22px;opacity:.18;}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;}
+th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.3px;white-space:nowrap;position:sticky;top:0;z-index:2;}
+td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+tr:hover td{background:rgba(21,101,192,.04);}
+tr:nth-child(even) td{background:rgba(0,0,0,.018);}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:600;white-space:nowrap;}
+.badge-green{background:#E8F5E9;color:#1B5E20;}
+.badge-blue{background:#E3F2FD;color:#0D47A1;}
+.badge-yellow{background:#FFFDE7;color:#F57F17;}
+.badge-orange{background:#FFF3E0;color:#E65100;}
+.badge-red{background:#FFEBEE;color:#B71C1C;}
+.badge-grey{background:#ECEFF1;color:#37474F;}
+.badge-purple{background:#F3E5F5;color:#4A148C;}
+.badge-teal{background:#E0F2F1;color:#00695C;}
+.progress{background:var(--border);border-radius:6px;height:7px;overflow:hidden;min-width:80px;}
+.progress-fill{height:100%;border-radius:6px;transition:width .4s ease;}
+.section-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.section-hdr h2{font-size:15px;font-weight:700;}
+.section-hdr .count{background:var(--blue);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+.filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
+.filter-bar input,.filter-bar select{padding:7px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:12px;font-family:'IBM Plex Sans',sans-serif;outline:none;}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--blue);}
+.filter-bar input{min-width:220px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border-radius:12px;width:680px;max-width:96vw;max-height:90vh;overflow:auto;box-shadow:var(--shadow2);animation:slideUp .2s ease;}
+.modal.wide{width:900px;}
+@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-header{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;}
+.modal-header h3{flex:1;font-size:15px;font-weight:700;}
+.modal-close{cursor:pointer;font-size:20px;color:var(--muted);background:none;border:none;padding:2px 6px;}
+.modal-body{padding:20px;}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+.form-row{margin-bottom:14px;}
+.form-row label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:12.5px;font-family:'IBM Plex Sans',sans-serif;outline:none;}
+.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,101,192,.1);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.loading{text-align:center;padding:48px;color:var(--muted);}
+.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{padding:12px 18px;border-radius:8px;color:#fff;font-size:12.5px;font-weight:600;box-shadow:var(--shadow2);animation:toastIn .25s ease;max-width:340px;}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.toast.success{background:var(--teal);}
+.toast.error{background:var(--red);}
+.toast.info{background:var(--blue);}
+.toast.warning{background:var(--orange);}
+.empty{text-align:center;padding:48px 24px;color:var(--muted);}
+.empty .icon{font-size:40px;margin-bottom:10px;opacity:.5;}
+.empty h4{font-size:14px;margin-bottom:6px;color:var(--text);}
+.mono{font-family:'IBM Plex Mono',monospace;}
+.text-right{text-align:right;}
+.text-center{text-align:center;}
+.ml-auto{margin-left:auto;}
+.bold{font-weight:700;}
+.muted{color:var(--muted);}
+.edit-btn{padding:2px 8px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--card);cursor:pointer;color:var(--blue);font-weight:600;transition:all .15s;white-space:nowrap;}
+.edit-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+.sort-btn{cursor:pointer;user-select:none;}
+.sort-btn:hover{color:var(--gold);}
+/* BOM Status Bar */
+.status-bar{display:flex;height:10px;border-radius:6px;overflow:hidden;margin:4px 0;}
+.status-bar-seg{transition:width .4s ease;}
+.po-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+/* Sync indicator */
+#sync-indicator{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);}
+#sync-indicator.syncing::before{content:'';width:8px;height:8px;border:2px solid var(--blue);border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;}
+#sync-indicator.ok::before{content:'●';color:#4CAF50;}
 </style>
 </head>
 <body>
 
-<!-- ═══ SIDEBAR ═══════════════════════════════════════════ -->
 <nav id="sidebar">
   <div class="sidebar-logo">
     <div class="brand">⚡ EPSI</div>
     <div class="sub">Procurement Command Center</div>
-    <div class="ver">v8 · live sync</div>
+    <div class="ver">v9 · live sync</div>
   </div>
   <div class="sidebar-nav">
     <div class="nav-section">Procurement</div>
-    <a class="nav-item active" onclick="navigate('dashboard')">
-      <span class="icon">📊</span> Dashboard
-    </a>
-    <a class="nav-item" onclick="navigate('bom')">
-      <span class="icon">📦</span> BOM / Client View
-    </a>
-    <a class="nav-item" onclick="navigate('mrs')">
-      <span class="icon">📝</span> MRS
-      <span class="badge yellow" id="badge-mrs">...</span>
-    </a>
-    <a class="nav-item" onclick="navigate('po')">
-      <span class="icon">🛒</span> Purchase Orders
-      <span class="badge" id="badge-po">...</span>
-    </a>
-    <a class="nav-item" onclick="navigate('wh')">
-      <span class="icon">🏭</span> WH Incoming
-      <span class="badge" id="badge-wh">...</span>
-    </a>
-    <a class="nav-item" onclick="navigate('payable')">
-      <span class="icon">💰</span> Vendor Bill
-      <span class="badge" id="badge-pay">...</span>
-    </a>
-    <a class="nav-item" onclick="navigate('history')">
-      <span class="icon">📊</span> Item History
-    </a>
-    <a class="nav-item" onclick="navigate('alerts')">
-      <span class="icon">🚨</span> Alerts
-      <span class="badge" id="badge-alert">...</span>
-    </a>
-
+    <a class="nav-item active" onclick="navigate('dashboard')"><span class="icon">📊</span>Dashboard</a>
+    <a class="nav-item" onclick="navigate('bom')"><span class="icon">📦</span>BOM / Client View</a>
+    <a class="nav-item" onclick="navigate('mrs')"><span class="icon">📝</span>MRS<span class="nav-badge yellow" id="badge-mrs">…</span></a>
+    <a class="nav-item" onclick="navigate('po')"><span class="icon">🛒</span>Purchase Orders<span class="nav-badge" id="badge-po">…</span></a>
+    <a class="nav-item" onclick="navigate('wh')"><span class="icon">🏭</span>WH Incoming<span class="nav-badge" id="badge-wh">…</span></a>
+    <a class="nav-item" onclick="navigate('payable')"><span class="icon">💰</span>Vendor Bill<span class="nav-badge" id="badge-pay">…</span></a>
+    <a class="nav-item" onclick="navigate('history')"><span class="icon">📊</span>Item History</a>
+    <a class="nav-item" onclick="navigate('alerts')"><span class="icon">🚨</span>Alerts<span class="nav-badge" id="badge-alert">…</span></a>
     <div class="nav-section">Projects</div>
-    <a class="nav-item" onclick="navigate('internal')">
-      <span class="icon">🏢</span> Internal Request
-      <span class="badge orange" id="badge-ir">...</span>
-    </a>
-    <a class="nav-item" onclick="navigate('progress')">
-      <span class="icon">📈</span> Project Progress
-    </a>
-    <a class="nav-item" onclick="navigate('budget')">
-      <span class="icon">💹</span> Budget & Spending
-    </a>
-    <a class="nav-item" onclick="navigate('weekly')">
-      <span class="icon">📢</span> Weekly Review
-    </a>
-
+    <a class="nav-item" onclick="navigate('internal')"><span class="icon">🏢</span>Internal Request<span class="nav-badge orange" id="badge-ir">…</span></a>
+    <a class="nav-item" onclick="navigate('progress')"><span class="icon">📈</span>Project Progress</a>
+    <a class="nav-item" onclick="navigate('budget')"><span class="icon">💹</span>Budget & Spending</a>
+    <a class="nav-item" onclick="navigate('weekly')"><span class="icon">📢</span>Weekly Review</a>
     <div class="nav-section">Equipment</div>
-    <a class="nav-item" onclick="navigate('machinelist')">
-      <span class="icon">🔧</span> Machine List
-    </a>
-    <a class="nav-item" onclick="navigate('machinelog')">
-      <span class="icon">🛠️</span> Machine Log
-    </a>
-    <a class="nav-item" onclick="navigate('testequip')">
-      <span class="icon">🔬</span> Test Equipment
-    </a>
-
+    <a class="nav-item" onclick="navigate('machinelist')"><span class="icon">🔧</span>Machine List</a>
+    <a class="nav-item" onclick="navigate('machinelog')"><span class="icon">🛠️</span>Machine Log</a>
+    <a class="nav-item" onclick="navigate('testequip')"><span class="icon">🔬</span>Test Equipment</a>
     <div class="nav-section">Actions</div>
-    <a class="nav-item" onclick="openAddModal()">
-      <span class="icon">➕</span> Add New Entry
-    </a>
-    <a class="nav-item" onclick="refreshAll()">
-      <span class="icon">↻</span> Refresh All
-    </a>
+    <a class="nav-item" onclick="openAddModal()"><span class="icon">➕</span>Add New Entry</a>
+    <a class="nav-item" onclick="openNewClientModal()"><span class="icon">🏗️</span>New Client BOM</a>
+    <a class="nav-item" onclick="refreshAll()"><span class="icon">↻</span>Refresh All</a>
   </div>
   <div class="sidebar-footer">
     <div class="live-dot" id="live-status">live sync active</div>
   </div>
 </nav>
 
-<!-- ═══ HEADER ════════════════════════════════════════════ -->
 <header id="header">
-  <div id="page-title">Dashboard <span id="page-sub">Overview</span></div>
+  <div id="page-title">Dashboard <span id="page-sub"></span></div>
+  <div id="sync-indicator" class="ok">synced</div>
   <span id="sync-time">–</span>
   <button class="hdr-btn" onclick="refreshAll()">↻ Refresh</button>
   <button class="hdr-btn primary" onclick="openAddModal()" id="add-btn">➕ Add</button>
   <button id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
 </header>
 
-<!-- ═══ MAIN CONTENT ══════════════════════════════════════ -->
 <main id="main">
 
-<!-- ── DASHBOARD ── -->
+<!-- DASHBOARD -->
 <div id="page-dashboard" class="page active">
-  <div class="stats-grid" id="dash-stats">
-    <div class="loading"><div class="spinner"></div>Loading dashboard...</div>
-  </div>
+  <div class="stats-grid" id="dash-stats"><div class="loading"><div class="spinner"></div>Loading dashboard…</div></div>
   <div class="grid-2" id="dash-charts">
     <div class="card">
-      <div class="card-header"><h3>📦 BOM Status Summary</h3></div>
+      <div class="card-header"><h3>📦 BOM Projects</h3><button class="hdr-btn" style="font-size:11px;padding:3px 10px" onclick="openNewClientModal()">+ New Client</button></div>
       <div class="card-body" id="bom-summary-list"><div class="loading"><div class="spinner"></div></div></div>
     </div>
     <div class="card">
-      <div class="card-header"><h3>🚨 Shortage & Dead Stock</h3></div>
+      <div class="card-header"><h3>🚨 Shortage & Alerts</h3></div>
       <div class="card-body" id="shortage-summary"></div>
     </div>
   </div>
 </div>
 
-<!-- ── BOM ── -->
+<!-- BOM -->
 <div id="page-bom" class="page">
   <div class="section-hdr">
     <h2>📦 Bill of Materials — Client View</h2>
-    <div class="ml-auto filter-bar">
-      <select id="bom-project-select" onchange="loadBOMProject()">
-        <option value="">Select Project...</option>
-      </select>
+    <div class="ml-auto filter-bar" style="margin-bottom:0">
+      <select id="bom-project-select" onchange="loadBOMProject()"><option value="">Select Project…</option></select>
+    </div>
+  </div>
+  <!-- BOM Status Summary Bar -->
+  <div id="bom-progress-card" style="display:none;margin-bottom:16px">
+    <div class="card">
+      <div class="card-body" style="padding:12px 18px">
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+          <div style="font-size:12px;font-weight:700;min-width:100px">📊 Progress</div>
+          <div id="bom-status-bar" class="status-bar" style="flex:1;min-width:200px"></div>
+          <div id="bom-pct-label" style="font-size:14px;font-weight:700;font-family:'IBM Plex Mono',monospace;min-width:48px;text-align:right"></div>
+        </div>
+        <div id="bom-status-legend" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:10px"></div>
+      </div>
     </div>
   </div>
   <div class="card">
     <div class="card-header">
       <h3 id="bom-sheet-title">Select a project above</h3>
       <div class="subtitle" id="bom-count"></div>
+      <button class="hdr-btn primary" id="bom-add-btn" style="display:none;font-size:11px;padding:4px 12px" onclick="openBOMAddModal()">➕ Add Item</button>
     </div>
     <div class="tbl-wrap">
       <table id="bom-table">
         <thead><tr>
           <th>#</th><th>Category</th><th>Part Description</th><th>Part No.</th>
-          <th>Qty</th><th>Unit</th><th>Budget (₱)</th><th>Status</th>
+          <th>Qty</th><th>Unit</th><th>Budget (₱)</th><th>WH Stock</th><th>Status</th>
           <th>Vendor</th><th>PO #</th><th>Unit Price (₱)</th>
-          <th>🏭 WH</th><th>💰 Pay</th>
+          <th>🏭 WH</th><th>Del</th><th>Bal</th><th>Act. Date</th><th>✏️</th>
         </tr></thead>
         <tbody id="bom-tbody"></tbody>
       </table>
@@ -418,25 +254,30 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── MRS ── -->
+<!-- MRS -->
 <div id="page-mrs" class="page">
   <div class="section-hdr"><h2>📝 Material Requisition Slips</h2><div class="count" id="mrs-count">0</div></div>
   <div class="filter-bar">
-    <input type="text" id="mrs-search" placeholder="🔍 Search description, project, PO#..." oninput="filterTable('mrs-tbody','mrs-search')">
+    <input type="text" id="mrs-search" placeholder="🔍 Search description, project, PO#…" oninput="filterMRSLive()">
     <select id="mrs-status-filter" onchange="filterMRS()">
       <option value="">All Status</option>
       <option>✅ PO Issued</option><option>🟡 For Canvass</option>
       <option>🏭 Warehouse Stock</option><option>🟢 Ready for PO</option>
+    </select>
+    <select id="mrs-sort" onchange="filterMRS()">
+      <option value="">Sort: Default</option>
+      <option value="date-desc">Date: Newest First</option>
+      <option value="date-asc">Date: Oldest First</option>
+      <option value="mrs">Group by MRS#</option>
     </select>
   </div>
   <div class="card">
     <div class="tbl-wrap" style="max-height:70vh;overflow-y:auto">
       <table>
         <thead><tr>
-          <th>#</th><th>Project / SO</th><th>Category</th><th>Part Description</th>
+          <th>MRS #</th><th>Date</th><th>Project / SO</th><th>Type</th><th>Category</th><th>Part Description</th>
           <th>Qty</th><th>Unit</th><th>Prev Price (₱)</th><th>Status</th>
-          <th>Vendor</th><th>PO #</th><th>Unit Price (₱)</th><th>PO Date</th>
-          <th>Savings %</th>
+          <th>Vendor</th><th>PO #</th><th>Unit Price (₱)</th><th>PO Date</th><th>✏️</th>
         </tr></thead>
         <tbody id="mrs-tbody"></tbody>
       </table>
@@ -444,11 +285,11 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── PURCHASE ORDERS ── -->
+<!-- PURCHASE ORDERS -->
 <div id="page-po" class="page">
   <div class="section-hdr"><h2>🛒 Purchase Orders</h2><div class="count" id="po-count">0</div></div>
   <div class="filter-bar">
-    <input type="text" id="po-search" placeholder="🔍 Search PO#, supplier, project..." oninput="filterTable('po-tbody','po-search')">
+    <input type="text" id="po-search" placeholder="🔍 Search PO#, supplier, project…" oninput="filterTable('po-tbody','po-search')">
     <select id="po-status-filter" onchange="filterPO()">
       <option value="">All Status</option>
       <option>⬜ Pending</option><option>✅ Delivered</option><option>❌ Cancelled</option>
@@ -461,7 +302,7 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
           <th>#</th><th>PO #</th><th>Project</th><th>Part Description</th>
           <th>Part No.</th><th>Supplier</th><th>Unit</th>
           <th>Ord. Qty</th><th>Unit Price (₱)</th><th>Line Total (₱)</th>
-          <th>PO Date</th><th>Status</th><th>Remarks</th>
+          <th>PO Date</th><th>Status</th><th>Remarks</th><th>✏️</th>
         </tr></thead>
         <tbody id="po-tbody"></tbody>
       </table>
@@ -469,11 +310,11 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── WH INCOMING ── -->
+<!-- WH INCOMING -->
 <div id="page-wh" class="page">
   <div class="section-hdr"><h2>🏭 WH Incoming — Delivery Tracking</h2><div class="count" id="wh-count">0</div></div>
   <div class="filter-bar">
-    <input type="text" id="wh-search" placeholder="🔍 Search PO#, supplier, project..." oninput="filterTable('wh-tbody','wh-search')">
+    <input type="text" id="wh-search" placeholder="🔍 Search PO#, supplier, project…" oninput="filterTable('wh-tbody','wh-search')">
     <select onchange="filterWH(this.value)">
       <option value="">All Status</option>
       <option>✅ Complete</option><option>⬜ Pending</option><option>🚚 Partial</option>
@@ -484,8 +325,8 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
       <table>
         <thead><tr>
           <th>PO #</th><th>Project</th><th>Part Description</th><th>Supplier</th>
-          <th>Unit</th><th>PO Qty</th><th>Del. Qty</th><th>Cancel Qty</th>
-          <th>Balance</th><th>Actual Date</th><th>Expected</th><th>Days Var</th><th>Status</th>
+          <th>Unit</th><th>PO Qty</th><th>Del. Qty</th><th>Cancel</th>
+          <th>Balance</th><th>Actual Date</th><th>Expected</th><th>Days Var</th><th>Status</th><th>✏️</th>
         </tr></thead>
         <tbody id="wh-tbody"></tbody>
       </table>
@@ -493,11 +334,11 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── VENDOR PAYABLE ── -->
+<!-- VENDOR PAYABLE -->
 <div id="page-payable" class="page">
   <div class="section-hdr"><h2>💰 Vendor Payable Monitoring</h2><div class="count" id="pay-count">0</div></div>
   <div class="filter-bar">
-    <input type="text" id="pay-search" placeholder="🔍 Search PO#, supplier..." oninput="filterTable('pay-tbody','pay-search')">
+    <input type="text" id="pay-search" placeholder="🔍 Search PO#, supplier…" oninput="filterTable('pay-tbody','pay-search')">
     <select onchange="filterPayable(this.value)">
       <option value="">All</option><option>⬜ Unpaid</option><option>✅ Paid</option>
     </select>
@@ -509,7 +350,7 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
           <th>#</th><th>PO #</th><th>Project</th><th>Supplier</th>
           <th>Part Description</th><th>Del. Qty</th><th>Unit Price (₱)</th>
           <th>Amount (₱)</th><th>Billing Date</th><th>Invoice #</th>
-          <th>Due Date</th><th>Pay Status</th><th>Amt Paid (₱)</th><th>Bal. Due (₱)</th>
+          <th>Due Date</th><th>Pay Status</th><th>Amt Paid (₱)</th><th>Bal. Due (₱)</th><th>✏️</th>
         </tr></thead>
         <tbody id="pay-tbody"></tbody>
       </table>
@@ -517,13 +358,15 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── ITEM HISTORY ── -->
+<!-- ITEM HISTORY -->
 <div id="page-history" class="page">
   <div class="section-hdr"><h2>📊 Item Price History</h2><div class="count" id="hist-count">0</div></div>
   <div class="filter-bar">
-    <input type="text" id="hist-search" placeholder="🔍 Search part no., description..." oninput="filterTable('hist-tbody','hist-search')">
-    <select id="hist-cat" onchange="filterHistory()">
-      <option value="">All Categories</option>
+    <input type="text" id="hist-search" placeholder="🔍 Search part no., description…" oninput="filterTable('hist-tbody','hist-search')">
+    <select id="hist-cat" onchange="filterHistory()"><option value="">All Categories</option></select>
+    <select id="hist-sort" onchange="filterHistory()">
+      <option value="desc">Date: Newest First</option>
+      <option value="asc">Date: Oldest First</option>
     </select>
   </div>
   <div class="card">
@@ -531,9 +374,8 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
       <table>
         <thead><tr>
           <th>Cat No / Part No.</th><th>Description</th><th>Category</th>
-          <th>PO #</th><th>PO Date</th><th>Supplier</th>
-          <th>Unit Price (₱)</th><th>Prev Price (₱)</th><th>Change (₱)</th><th>% Change</th>
-          <th>Project</th>
+          <th class="sort-btn" onclick="toggleHistSort()">PO Date ↕</th><th>PO #</th><th>Supplier</th>
+          <th>Unit Price (₱)</th><th>Prev Price (₱)</th><th>Change (₱)</th><th>% Change</th><th>Project</th>
         </tr></thead>
         <tbody id="hist-tbody"></tbody>
       </table>
@@ -541,14 +383,14 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── ALERTS ── -->
+<!-- ALERTS -->
 <div id="page-alerts" class="page">
   <div class="section-hdr"><h2>🚨 Material Shortage Alerts</h2></div>
   <div class="grid-2">
     <div class="card">
       <div class="card-header" style="background:#B71C1C;border:none"><h3 style="color:#fff">🔴 Critical & Warning Items</h3></div>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>Item Code</th><th>Description</th><th>Stock</th><th>Min</th><th>Demand</th><th>After Demand</th><th>Risk</th></tr></thead>
+        <thead><tr><th>Item Code</th><th>Description</th><th>Stock</th><th>Min</th><th>Demand</th><th>After</th><th>Risk</th></tr></thead>
         <tbody id="shortage-tbody"></tbody>
       </table></div>
     </div>
@@ -569,18 +411,16 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── INTERNAL REQUEST ── -->
+<!-- INTERNAL REQUEST -->
 <div id="page-internal" class="page">
   <div class="section-hdr">
     <h2>🏢 Internal Request Tracker</h2>
     <div class="count" id="ir-count">0</div>
-    <div class="ml-auto">
-      <button class="hdr-btn primary" onclick="openIRModal()">➕ New Request</button>
-    </div>
+    <div class="ml-auto"><button class="hdr-btn primary" onclick="openIRModal()">➕ New Request</button></div>
   </div>
   <div class="stats-grid" id="ir-stats"></div>
   <div class="filter-bar">
-    <input type="text" id="ir-search" placeholder="🔍 Search item, supplier, category..." oninput="filterTable('ir-tbody','ir-search')">
+    <input type="text" id="ir-search" placeholder="🔍 Search item, supplier, category…" oninput="filterTable('ir-tbody','ir-search')">
     <select id="ir-cat-filter" onchange="filterIR()">
       <option value="">All Categories</option>
       <option>🔧 Machine Repair</option><option>🔨 Tools</option>
@@ -594,14 +434,13 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
     </select>
   </div>
   <div class="card">
-    <div class="tbl-wrap" style="max-height:60vh;overflow-y:auto">
+    <div class="tbl-wrap" style="max-height:62vh;overflow-y:auto">
       <table>
         <thead><tr>
           <th>#</th><th>Date</th><th>Category</th><th>Equipment / Item</th>
-          <th>Description</th><th>Qty</th><th>Unit</th>
-          <th>Unit Price (₱)</th><th>Total (₱)</th><th>Requested By</th>
-          <th>Supplier</th><th>PO #</th><th>Status</th>
-          <th>Delivery Date</th><th>Amt Paid (₱)</th><th>Notes</th>
+          <th>Qty</th><th>Unit</th><th>Unit Price (₱)</th><th>Total (₱)</th>
+          <th>Requested By</th><th>Supplier</th><th>PO #</th><th>Status</th>
+          <th>Delivery</th><th>Amt Paid (₱)</th><th>Notes</th><th>✏️</th>
         </tr></thead>
         <tbody id="ir-tbody"></tbody>
       </table>
@@ -609,18 +448,16 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── PROJECT PROGRESS ── -->
+<!-- PROJECT PROGRESS -->
 <div id="page-progress" class="page">
   <div class="section-hdr">
     <h2>📈 Project Progress Tracker</h2>
     <div class="count" id="pp-count">0</div>
-    <div class="ml-auto">
-      <button class="hdr-btn primary" onclick="openPPModal()">➕ New Project</button>
-    </div>
+    <div class="ml-auto"><button class="hdr-btn primary" onclick="openPPModal()">➕ New Project</button></div>
   </div>
   <div class="stats-grid" id="pp-stats"></div>
   <div class="filter-bar">
-    <input type="text" id="pp-search" placeholder="🔍 Search SO#, client, project..." oninput="filterTable('pp-tbody','pp-search')">
+    <input type="text" id="pp-search" placeholder="🔍 Search SO#, client, project…" oninput="filterTable('pp-tbody','pp-search')">
     <select id="pp-stat-filter" onchange="filterPP()">
       <option value="">All Status</option>
       <option>🔄 In Progress</option><option>✅ Completed</option>
@@ -632,13 +469,13 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
     </select>
   </div>
   <div class="card">
-    <div class="tbl-wrap" style="max-height:62vh;overflow-y:auto">
+    <div class="tbl-wrap" style="max-height:65vh;overflow-y:auto">
       <table>
         <thead><tr>
           <th>#</th><th>SO #</th><th>Client</th><th>Description</th>
           <th>Target Date</th><th>Contract (₱)</th><th>Budget (₱)</th>
-          <th>Spend (₱)</th><th>Variance (₱)</th><th>% Done</th>
-          <th>Status</th><th>Priority</th><th>Phase</th><th>Engineer</th><th>Issues</th>
+          <th>Spend (₱)</th><th>Variance</th><th>% Done (BOM)</th>
+          <th>BOM Status</th><th>Status</th><th>Priority</th><th>Phase</th><th>Engineer</th><th>✏️</th>
         </tr></thead>
         <tbody id="pp-tbody"></tbody>
       </table>
@@ -646,56 +483,55 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── BUDGET & SPENDING ── -->
+<!-- BUDGET & SPENDING -->
 <div id="page-budget" class="page">
   <div class="section-hdr"><h2>💹 Budget & Spending Report</h2></div>
   <div class="stats-grid" id="budget-stats"></div>
+  <!-- Category comparison -->
   <div class="card" style="margin-bottom:16px">
-    <div class="card-header" style="background:var(--blue)">
-      <h3 style="color:#fff">📦 Section A: Project Budget vs Actual</h3>
-    </div>
+    <div class="card-header"><h3>🏷️ Spending by Internal Request Category</h3></div>
+    <div class="card-body" id="budget-category-chart" style="padding:12px 18px"></div>
+  </div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header" style="background:var(--blue)"><h3 style="color:#fff">📦 Section A: Project Budget vs Actual</h3></div>
     <div class="tbl-wrap"><table>
       <thead><tr>
         <th>SO #</th><th>Client</th><th>Contract (₱)</th><th>Budget (₱)</th>
-        <th>Spend (₱)</th><th>Remaining (₱)</th><th>% Used</th><th>Status</th>
+        <th>Spend (₱)</th><th>Remaining (₱)</th><th>% Used</th><th>Status</th><th>✏️</th>
       </tr></thead>
       <tbody id="budget-proj-tbody"></tbody>
     </table></div>
   </div>
   <div class="grid-2">
     <div class="card">
-      <div class="card-header" style="background:var(--orange)">
-        <h3 style="color:#fff">🔧 Section B: Machine Spending</h3>
-      </div>
+      <div class="card-header" style="background:var(--orange)"><h3 style="color:#fff">🔧 Section B: Machine Spending</h3></div>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>Equipment</th><th>Model</th><th>Repair (₱)</th><th>Parts (₱)</th><th>Tools (₱)</th><th>Calib (₱)</th><th>Total (₱)</th><th>Works</th><th>Status</th></tr></thead>
+        <thead><tr><th>Equipment</th><th>Model</th><th>Repair</th><th>Parts</th><th>Tools</th><th>Calib</th><th>Total (₱)</th><th>Works</th></tr></thead>
         <tbody id="budget-mach-tbody"></tbody>
       </table></div>
     </div>
     <div class="card">
-      <div class="card-header" style="background:var(--purple)">
-        <h3 style="color:#fff">🔬 Section C: Test Equipment Calibration</h3>
-      </div>
+      <div class="card-header" style="background:var(--purple)"><h3 style="color:#fff">🔬 Section C: Test Equipment</h3></div>
       <div class="tbl-wrap"><table>
-        <thead><tr><th>Equipment</th><th>Model</th><th>2022 (₱)</th><th>2023 (₱)</th><th>2024 (₱)</th><th>Total (₱)</th><th>Last Calib</th><th>Next Due</th><th>Status</th></tr></thead>
+        <thead><tr><th>Equipment</th><th>2022</th><th>2023</th><th>2024</th><th>Total (₱)</th><th>Last Calib</th><th>Next Due</th></tr></thead>
         <tbody id="budget-te-tbody"></tbody>
       </table></div>
     </div>
   </div>
 </div>
 
-<!-- ── WEEKLY REVIEW ── -->
+<!-- WEEKLY REVIEW -->
 <div id="page-weekly" class="page">
   <div class="section-hdr"><h2>📢 Weekly Project Review</h2></div>
   <div class="card">
     <div class="tbl-wrap"><table>
-      <thead><tr><th>SO #</th><th>Client</th><th>Project</th><th>Target Date</th><th>Status</th><th>Priority</th><th>Remarks / Action Items</th></tr></thead>
+      <thead><tr><th>SO #</th><th>Client</th><th>Project</th><th>Target Date</th><th>Status</th><th>Priority</th><th>Remarks</th><th>✏️</th></tr></thead>
       <tbody id="weekly-tbody"></tbody>
     </table></div>
   </div>
 </div>
 
-<!-- ── MACHINE LIST ── -->
+<!-- MACHINE LIST -->
 <div id="page-machinelist" class="page">
   <div class="section-hdr"><h2>🔧 Machine & Equipment Asset Register</h2></div>
   <div class="card">
@@ -710,37 +546,36 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-<!-- ── MACHINE LOG ── -->
+<!-- MACHINE LOG -->
 <div id="page-machinelog" class="page">
   <div class="section-hdr"><h2>🛠️ Machine Maintenance & Repair Log</h2><div class="count" id="mlog-count">0</div></div>
   <div class="filter-bar">
-    <input type="text" id="mlog-search" placeholder="🔍 Search equipment, PO#..." oninput="filterTable('mlog-tbody','mlog-search')">
+    <input type="text" id="mlog-search" placeholder="🔍 Search equipment, PO#…" oninput="filterTable('mlog-tbody','mlog-search')">
     <select onchange="filterMLog(this.value)">
       <option value="">All Types</option>
-      <option>Repair</option><option>Parts</option><option>Tools</option>
-      <option>Calibration</option><option>Preventive</option>
+      <option>Repair</option><option>Parts</option><option>Tools</option><option>Calibration</option><option>Preventive</option>
     </select>
   </div>
   <div class="card">
     <div class="tbl-wrap" style="max-height:68vh;overflow-y:auto"><table>
       <thead><tr>
         <th>Date</th><th>Equipment</th><th>Type</th><th>Problem</th>
-        <th>Scope of Work</th><th>Parts Used</th><th>Status</th>
-        <th>PO #</th><th>Qty</th><th>Unit Price (₱)</th><th>Total (₱)</th><th>Supplier</th>
+        <th>Scope</th><th>Parts Used</th><th>Status</th>
+        <th>PO #</th><th>Qty</th><th>Unit Price</th><th>Total (₱)</th><th>Supplier</th>
       </tr></thead>
       <tbody id="mlog-tbody"></tbody>
     </table></div>
   </div>
 </div>
 
-<!-- ── TEST EQUIPMENT ── -->
+<!-- TEST EQUIPMENT -->
 <div id="page-testequip" class="page">
   <div class="section-hdr"><h2>🔬 Test Equipment Calibration Log</h2><div class="count" id="te-count">0</div></div>
   <div class="card">
     <div class="tbl-wrap" style="max-height:68vh;overflow-y:auto"><table>
       <thead><tr>
         <th>Date</th><th>Equipment</th><th>Type</th><th>Problem</th>
-        <th>Scope of Work</th><th>Recommendations</th><th>Parts Used</th>
+        <th>Scope</th><th>Recommendations</th><th>Parts</th>
         <th>Status</th><th>PO #</th><th>Qty</th><th>Total (₱)</th><th>Supplier</th>
       </tr></thead>
       <tbody id="te-tbody"></tbody>
@@ -748,56 +583,32 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
   </div>
 </div>
 
-</main><!-- end #main -->
+</main>
 
-<!-- ═══ MODALS ════════════════════════════════════════════ -->
+<!-- ══════════════════════ MODALS ══════════════════════ -->
 
-<!-- Add Internal Request Modal -->
+<!-- Internal Request Modal -->
 <div class="modal-overlay" id="modal-ir">
   <div class="modal">
-    <div class="modal-header">
-      <h3>🏢 New Internal Request</h3>
-      <button class="modal-close" onclick="closeModal('modal-ir')">✕</button>
-    </div>
+    <div class="modal-header"><h3 id="modal-ir-title">🏢 New Internal Request</h3><button class="modal-close" onclick="closeModal('modal-ir')">✕</button></div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-row">
-          <label>Date *</label>
-          <input type="date" id="ir-date">
-        </div>
-        <div class="form-row">
-          <label>Category *</label>
+        <div class="form-row"><label>Date *</label><input type="date" id="ir-date"></div>
+        <div class="form-row"><label>Category *</label>
           <select id="ir-cat-inp">
             <option>🔧 Machine Repair</option><option>🔨 Tools</option>
             <option>🧪 Test Equipment</option><option>🖊️ Office Supplies</option>
-            <option>🧹 Sanitary Supplies</option><option>🚗 Vehicle Maintenance</option>
-            <option>📦 Other</option>
+            <option>🧹 Sanitary Supplies</option><option>🚗 Vehicle Maintenance</option><option>📦 Other</option>
           </select>
         </div>
       </div>
-      <div class="form-row">
-        <label>Equipment / Item Name *</label>
-        <input type="text" id="ir-item" placeholder="e.g. V-Belt for CNC Machine">
-      </div>
-      <div class="form-row">
-        <label>Description</label>
-        <input type="text" id="ir-desc" placeholder="Detailed description or specifications">
-      </div>
+      <div class="form-row"><label>Equipment / Item Name *</label><input type="text" id="ir-item" placeholder="e.g. V-Belt for CNC Machine"></div>
+      <div class="form-row"><label>Description</label><input type="text" id="ir-desc" placeholder="Detailed description or specifications"></div>
       <div class="form-grid">
-        <div class="form-row">
-          <label>Qty *</label>
-          <input type="number" id="ir-qty" placeholder="0" min="0">
-        </div>
-        <div class="form-row">
-          <label>Unit</label>
-          <input type="text" id="ir-unit" placeholder="pcs / lot / svc / set">
-        </div>
-        <div class="form-row">
-          <label>Unit Price (₱)</label>
-          <input type="number" id="ir-price" placeholder="0.00">
-        </div>
-        <div class="form-row">
-          <label>Status</label>
+        <div class="form-row"><label>Qty *</label><input type="number" id="ir-qty" placeholder="0" min="0"></div>
+        <div class="form-row"><label>Unit</label><input type="text" id="ir-unit" placeholder="pcs / lot / svc / set"></div>
+        <div class="form-row"><label>Unit Price (₱)</label><input type="number" id="ir-price" placeholder="0.00"></div>
+        <div class="form-row"><label>Status</label>
           <select id="ir-stat-inp">
             <option>⬜ Pending</option><option>🟡 For Canvass</option>
             <option>✅ PO Issued</option><option>🚚 In Transit</option><option>✅ Complete</option>
@@ -805,126 +616,159 @@ hr.divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
         </div>
       </div>
       <div class="form-grid">
-        <div class="form-row">
-          <label>Requested By</label>
-          <input type="text" id="ir-reqby" placeholder="Name">
-        </div>
-        <div class="form-row">
-          <label>Supplier</label>
-          <input type="text" id="ir-supplier" placeholder="Vendor name">
-        </div>
+        <div class="form-row"><label>Requested By</label><input type="text" id="ir-reqby" placeholder="Name"></div>
+        <div class="form-row"><label>Supplier</label><input type="text" id="ir-supplier" placeholder="Vendor name"></div>
+        <div class="form-row"><label>PO #</label><input type="text" id="ir-pono" placeholder="e.g. P14540"></div>
+        <div class="form-row"><label>Delivery Date</label><input type="date" id="ir-deldate"></div>
       </div>
-      <div class="form-row">
-        <label>Notes</label>
-        <textarea id="ir-notes" rows="2" placeholder="Additional notes or remarks"></textarea>
-      </div>
+      <div class="form-row"><label>Notes</label><textarea id="ir-notes" rows="2" placeholder="Additional notes"></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="hdr-btn" onclick="closeModal('modal-ir')">Cancel</button>
-      <button class="hdr-btn primary" onclick="submitIR()">💾 Save Request</button>
+      <button class="hdr-btn primary" id="ir-save-btn" onclick="submitIR()">💾 Save Request</button>
     </div>
   </div>
 </div>
 
-<!-- Add Project Progress Modal -->
+<!-- Project Progress Modal -->
 <div class="modal-overlay" id="modal-pp">
   <div class="modal">
-    <div class="modal-header">
-      <h3>📈 Add Project to Progress Tracker</h3>
-      <button class="modal-close" onclick="closeModal('modal-pp')">✕</button>
-    </div>
+    <div class="modal-header"><h3 id="modal-pp-title">📈 Add Project</h3><button class="modal-close" onclick="closeModal('modal-pp')">✕</button></div>
     <div class="modal-body">
       <div class="form-grid">
-        <div class="form-row">
-          <label>SO # *</label>
-          <input type="text" id="pp-so" placeholder="e.g. S13479">
-        </div>
-        <div class="form-row">
-          <label>Client *</label>
-          <input type="text" id="pp-client" placeholder="Client name">
-        </div>
+        <div class="form-row"><label>SO # *</label><input type="text" id="pp-so" placeholder="e.g. S13479"></div>
+        <div class="form-row"><label>Client *</label><input type="text" id="pp-client" placeholder="Client name"></div>
       </div>
-      <div class="form-row">
-        <label>Project Description *</label>
-        <input type="text" id="pp-desc" placeholder="Brief project description">
-      </div>
+      <div class="form-row"><label>Project Description *</label><input type="text" id="pp-desc" placeholder="Brief project description"></div>
       <div class="form-grid">
-        <div class="form-row">
-          <label>Start Date</label>
-          <input type="date" id="pp-start">
-        </div>
-        <div class="form-row">
-          <label>Target Date *</label>
-          <input type="date" id="pp-target">
-        </div>
-        <div class="form-row">
-          <label>Contract Value (₱)</label>
-          <input type="number" id="pp-contract" placeholder="0">
-        </div>
-        <div class="form-row">
-          <label>BOM Budget (₱)</label>
-          <input type="number" id="pp-budget" placeholder="0">
-        </div>
-        <div class="form-row">
-          <label>Actual Spend (₱)</label>
-          <input type="number" id="pp-spend" placeholder="0">
-        </div>
-        <div class="form-row">
-          <label>% Done</label>
-          <input type="number" id="pp-pct" placeholder="0" min="0" max="100">
-        </div>
-        <div class="form-row">
-          <label>Status</label>
+        <div class="form-row"><label>Start Date</label><input type="date" id="pp-start"></div>
+        <div class="form-row"><label>Target Date *</label><input type="date" id="pp-target"></div>
+        <div class="form-row"><label>Contract Value (₱)</label><input type="number" id="pp-contract" placeholder="0"></div>
+        <div class="form-row"><label>BOM Budget (₱)</label><input type="number" id="pp-budget" placeholder="0"></div>
+        <div class="form-row"><label>Actual Spend (₱)</label><input type="number" id="pp-spend" placeholder="0"></div>
+        <div class="form-row"><label>% Done (manual override)</label><input type="number" id="pp-pct" placeholder="0" min="0" max="100"></div>
+        <div class="form-row"><label>Status</label>
           <select id="pp-stat-inp">
             <option>📋 Planning</option><option>🔄 In Progress</option>
-            <option>⚠️ At Risk</option><option>⏸️ On Hold</option>
-            <option>✅ Completed</option>
+            <option>⚠️ At Risk</option><option>⏸️ On Hold</option><option>✅ Completed</option>
           </select>
         </div>
-        <div class="form-row">
-          <label>Priority</label>
-          <select id="pp-prio-inp">
-            <option>🔴 High</option><option>🟡 Normal</option><option>🟢 Low</option>
-          </select>
+        <div class="form-row"><label>Priority</label>
+          <select id="pp-prio-inp"><option>🔴 High</option><option>🟡 Normal</option><option>🟢 Low</option></select>
         </div>
-      </div>
-      <div class="form-grid">
-        <div class="form-row">
-          <label>Phase</label>
+        <div class="form-row"><label>Phase</label>
           <select id="pp-phase-inp">
-            <option>Engineering</option><option>Procurement</option>
-            <option>Fabrication</option><option>Assembly</option>
-            <option>Testing</option><option>Delivery</option><option>Completed</option>
+            <option>Engineering</option><option>Procurement</option><option>Fabrication</option>
+            <option>Assembly</option><option>Testing</option><option>Delivery</option><option>Completed</option>
           </select>
         </div>
-        <div class="form-row">
-          <label>Engineer In Charge</label>
-          <input type="text" id="pp-engr" placeholder="Engineer name">
-        </div>
+        <div class="form-row"><label>Engineer In Charge</label><input type="text" id="pp-engr" placeholder="Engineer name"></div>
       </div>
-      <div class="form-row">
-        <label>Issues / Remarks</label>
-        <textarea id="pp-issues" rows="2" placeholder="Current issues or remarks"></textarea>
-      </div>
+      <div class="form-row"><label>Issues / Remarks</label><textarea id="pp-issues" rows="2" placeholder="Current issues or remarks"></textarea></div>
     </div>
     <div class="modal-footer">
       <button class="hdr-btn" onclick="closeModal('modal-pp')">Cancel</button>
-      <button class="hdr-btn primary" onclick="submitPP()">💾 Save Project</button>
+      <button class="hdr-btn primary" id="pp-save-btn" onclick="submitPP()">💾 Save Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal (generic) -->
+<div class="modal-overlay" id="modal-edit">
+  <div class="modal">
+    <div class="modal-header"><h3 id="modal-edit-title">✏️ Edit Record</h3><button class="modal-close" onclick="closeModal('modal-edit')">✕</button></div>
+    <div class="modal-body" id="modal-edit-body"></div>
+    <div class="modal-footer">
+      <button class="hdr-btn" onclick="closeModal('modal-edit')">Cancel</button>
+      <button class="hdr-btn primary" id="edit-save-btn" onclick="submitEdit()">💾 Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- PO Breakdown Modal -->
+<div class="modal-overlay" id="modal-po-detail">
+  <div class="modal wide">
+    <div class="modal-header"><h3 id="po-detail-title">📋 PO Summary</h3><button class="modal-close" onclick="closeModal('modal-po-detail')">✕</button></div>
+    <div class="modal-body" id="po-detail-body"></div>
+  </div>
+</div>
+
+<!-- BOM Add Item Modal -->
+<div class="modal-overlay" id="modal-bom-add">
+  <div class="modal">
+    <div class="modal-header"><h3>➕ Add BOM Item</h3><button class="modal-close" onclick="closeModal('modal-bom-add')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-row"><label>MRF No</label><input type="text" id="bom-add-mrf" placeholder="e.g. MRF-S13479-001"></div>
+        <div class="form-row"><label>Category</label>
+          <select id="bom-add-cat">
+            <option>⚡ Electrical</option><option>🔩 Mechanical</option><option>🖥️ Electronics</option>
+            <option>🔧 Tools & Equipment</option><option>🏗️ Structural</option><option>🧰 Hardware</option>
+            <option>🧪 Chemicals</option><option>📦 Consumables</option><option>🚗 Vehicle Parts</option><option>📋 Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row"><label>Description *</label><input type="text" id="bom-add-desc" placeholder="Full description of item"></div>
+      <div class="form-row"><label>Part No.</label><input type="text" id="bom-add-partno" placeholder="e.g. DX10A12TWB"></div>
+      <div class="form-grid">
+        <div class="form-row"><label>Qty *</label><input type="number" id="bom-add-qty" placeholder="0"></div>
+        <div class="form-row"><label>Unit</label>
+          <select id="bom-add-unit"><option>pcs</option><option>lot</option><option>set</option><option>meter</option><option>kg</option><option>liter</option><option>box</option><option>roll</option><option>sheet</option><option>pair</option><option>unit</option><option>svc</option></select>
+        </div>
+        <div class="form-row"><label>Budget (₱)</label><input type="number" id="bom-add-budget" placeholder="0"></div>
+        <div class="form-row"><label>Status</label>
+          <select id="bom-add-status">
+            <option>📋 For Canvass</option><option>🔍 Canvassed</option><option>📄 For PO</option>
+            <option>✅ PO Issued</option><option>🚚 Partial Delivery</option><option>📦 Fully Delivered</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="hdr-btn" onclick="closeModal('modal-bom-add')">Cancel</button>
+      <button class="hdr-btn primary" onclick="submitBOMAdd()">💾 Add Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Client BOM Modal -->
+<div class="modal-overlay" id="modal-new-client">
+  <div class="modal">
+    <div class="modal-header"><h3>🏗️ Create New Client BOM Tab</h3><button class="modal-close" onclick="closeModal('modal-new-client')">✕</button></div>
+    <div class="modal-body">
+      <div class="form-row"><label>SO Number *</label><input type="text" id="nc-so" placeholder="e.g. S13500"></div>
+      <div class="form-row"><label>Client Name *</label><input type="text" id="nc-client" placeholder="e.g. DaniloSoChan"></div>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">This will create a new 📦 tab in Google Sheet with the standard BOM layout, columns, dropdowns, and formatting.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="hdr-btn" onclick="closeModal('modal-new-client')">Cancel</button>
+      <button class="hdr-btn primary" onclick="submitNewClient()">🏗️ Create BOM Tab</button>
     </div>
   </div>
 </div>
 
 <div id="toast-container"></div>
 
-<!-- ═══ JAVASCRIPT ════════════════════════════════════════ -->
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
 
-// ─── STATE ────────────────────────────────────────────────
+const BOM_STATUS_COLORS = {
+  '📋 For Canvass':      '#ECEFF1',
+  '🔍 Canvassed':        '#BBDEFB',
+  '📄 For PO':           '#E1BEE7',
+  '✅ PO Issued':        '#C8E6C9',
+  '🚚 Partial Delivery': '#FFF9C4',
+  '📦 Fully Delivered':  '#1B5E20',
+};
+
 const state = {
   currentPage: 'dashboard',
   data: {},
   theme: localStorage.getItem('epsi-theme') || 'light',
+  editContext: null,
+  currentBOMSheet: null,
+  histSortDir: 'desc',
+  autoRefreshTimer: null,
 };
 
 // ─── INIT ─────────────────────────────────────────────────
@@ -934,30 +778,45 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('pp-start').value = today();
   loadDashboard();
   loadBOMSheets();
+  startAutoRefresh();
 });
 
-function today() {
-  return new Date().toISOString().split('T')[0];
+function today() { return new Date().toISOString().split('T')[0]; }
+
+function startAutoRefresh() {
+  // Auto-refresh every 2 minutes
+  state.autoRefreshTimer = setInterval(() => {
+    const page = state.currentPage;
+    const loaders = {
+      dashboard: loadDashboard, bom: () => { if (state.currentBOMSheet) loadBOMDirect(state.currentBOMSheet); },
+      mrs: loadMRS, po: loadPO, wh: loadWH, payable: loadPayable,
+      history: loadHistory, internal: loadInternalRequests,
+      progress: loadProjectProgress, budget: loadBudgetSpending,
+    };
+    if (loaders[page]) {
+      setSyncStatus('syncing');
+      state.data[page] = null;
+      loaders[page]().then ? loaders[page]().then(() => setSyncStatus('ok')) : setSyncStatus('ok');
+    }
+  }, 120000);
+}
+
+function setSyncStatus(status) {
+  const el = document.getElementById('sync-indicator');
+  el.className = 'sync-indicator ' + status;
+  el.textContent = status === 'syncing' ? 'syncing…' : 'synced';
 }
 
 // ─── NAVIGATION ───────────────────────────────────────────
-// FIX: Removed dependency on event.currentTarget — now uses page ID to find nav item
 function navigate(page) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
   const pageEl = document.getElementById('page-' + page);
   if (pageEl) pageEl.classList.add('active');
-
-  // Find matching nav item by its onclick attribute instead of relying on event
   document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') === "navigate('" + page + "')") {
-      n.classList.add('active');
-    }
+    if (n.getAttribute('onclick') === "navigate('" + page + "')") n.classList.add('active');
   });
-
   state.currentPage = page;
-
   const titles = {
     dashboard:'Dashboard', bom:'BOM / Client View', mrs:'Material Requisition Slips',
     po:'Purchase Orders', wh:'WH Incoming', payable:'Vendor Payable',
@@ -966,12 +825,10 @@ function navigate(page) {
     budget:'Budget & Spending', weekly:'Weekly Review',
     machinelist:'Machine List', machinelog:'Machine Log', testequip:'Test Equipment',
   };
-
-  const titleEl = document.getElementById('page-title');
-  const subEl = document.getElementById('page-sub');
-  if (titleEl) titleEl.textContent = titles[page] || page;
-  if (subEl) subEl.textContent = '';
-
+  const t = document.getElementById('page-title');
+  const s = document.getElementById('page-sub');
+  if (t) t.textContent = titles[page] || page;
+  if (s) s.textContent = '';
   const loaders = {
     mrs: loadMRS, po: loadPO, wh: loadWH, payable: loadPayable,
     history: loadHistory, alerts: loadAlerts, internal: loadInternalRequests,
@@ -982,7 +839,7 @@ function navigate(page) {
   if (loaders[page] && !state.data[page]) loaders[page]();
 }
 
-// ─── API FETCH ─────────────────────────────────────────────
+// ─── API ──────────────────────────────────────────────────
 async function api(action, params = {}) {
   const qs = new URLSearchParams({ action, ...params }).toString();
   const res = await fetch(`${API}?${qs}`);
@@ -990,94 +847,70 @@ async function api(action, params = {}) {
 }
 
 async function apiPost(payload) {
-  const res = await fetch(API, {
-    method: 'POST',
-    body: JSON.stringify(payload),
-  });
+  setSyncStatus('syncing');
+  const res = await fetch(API, { method: 'POST', body: JSON.stringify(payload) });
+  setSyncStatus('ok');
   return res.json();
 }
 
 // ─── DASHBOARD ────────────────────────────────────────────
 async function loadDashboard() {
-  setLoading('dash-stats', 'Loading dashboard...');
+  setLoading('dash-stats', 'Loading dashboard…');
   const d = await api('getDashboard');
   state.data.dashboard = d;
-
   const stats = [
-    { label:'Total POs', value: d.po?.total || 0, sub:`₱${fmt(d.po?.totalValue)} total value`, color:'blue', icon:'🛒' },
-    { label:'Pending Delivery', value: d.wh?.pending || 0, sub:`${d.wh?.complete || 0} completed`, color:'orange', icon:'🏭' },
-    { label:'Unpaid Invoices', value: d.payable?.unpaid || 0, sub:`₱${fmt(d.payable?.totalDue)} due`, color:'red', icon:'💰' },
-    { label:'Critical Shortages', value: d.shortage?.critical || 0, sub:`${d.shortage?.warning || 0} warnings`, color:'red', icon:'🚨' },
-    { label:'Active Projects', value: d.projects?.inProgress || 0, sub:`${d.projects?.completed || 0} completed`, color:'teal', icon:'📈' },
-    { label:'Internal Requests', value: d.internalRequests?.total || 0, sub:`${d.internalRequests?.pending || 0} pending`, color:'purple', icon:'🏢' },
-    { label:'Total Contract', value: '₱' + shortNum(d.projects?.totalContract || 0), sub:`₱${shortNum(d.projects?.totalSpend || 0)} spent`, color:'gold', icon:'💹' },
-    { label:'On-Time Delivery', value: pct(d.kpi?.['Supplier On-Time %'] || 0), sub:'supplier performance', color:'green', icon:'⭐' },
+    { label:'Total POs', value: d.po?.total||0, sub:`₱${fmt(d.po?.totalValue)} total`, color:'blue', icon:'🛒' },
+    { label:'Pending Delivery', value: d.wh?.pending||0, sub:`${d.wh?.complete||0} completed`, color:'orange', icon:'🏭' },
+    { label:'Unpaid Invoices', value: d.payable?.unpaid||0, sub:`₱${fmt(d.payable?.totalDue)} due`, color:'red', icon:'💰' },
+    { label:'Critical Shortages', value: d.shortage?.critical||0, sub:`${d.shortage?.warning||0} warnings`, color:'red', icon:'🚨' },
+    { label:'Active Projects', value: d.projects?.inProgress||0, sub:`${d.projects?.completed||0} completed`, color:'teal', icon:'📈' },
+    { label:'Internal Requests', value: d.internalRequests?.total||0, sub:`${d.internalRequests?.pending||0} pending`, color:'purple', icon:'🏢' },
+    { label:'Total Contract', value:'₱'+shortNum(d.projects?.totalContract||0), sub:`₱${shortNum(d.projects?.totalSpend||0)} spent`, color:'gold', icon:'💹' },
+    { label:'On-Time %', value: pctFmt(d.kpi?.['Supplier On-Time %']||0), sub:'supplier performance', color:'green', icon:'⭐' },
   ];
-
   document.getElementById('dash-stats').innerHTML = stats.map(s => `
     <div class="stat-card ${s.color}">
       <div class="stat-icon">${s.icon}</div>
       <div class="stat-label">${s.label}</div>
-      <div class="stat-value ${typeof s.value === 'string' ? 'big' : ''}">${s.value}</div>
+      <div class="stat-value ${typeof s.value==='string'?'big':''}">${s.value}</div>
       <div class="stat-sub">${s.sub}</div>
-    </div>
-  `).join('');
+    </div>`).join('');
 
-  // BOM summary
   const bomSheets = await api('getBOMSheets');
   document.getElementById('bom-summary-list').innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:6px">
-      ${(bomSheets.sheets || []).map(s => `
-        <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:11px;font-weight:600;flex:1">${s.displayName}</span>
-          <button class="hdr-btn" style="padding:3px 10px;font-size:11px" onclick="loadBOMDirect('${s.name}')">View</button>
-        </div>
-      `).join('')}
-    </div>
-  `;
+    <div style="display:flex;flex-direction:column;gap:8px">
+      ${(bomSheets.sheets||[]).map(s => `
+        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;font-weight:600;flex:1">📦 ${s.displayName}</span>
+          <button class="edit-btn" onclick="loadBOMDirect('${s.name}')">View BOM</button>
+        </div>`).join('')}
+    </div>`;
 
-  // Shortage summary
-  const shortage = d.shortage || {};
+  const sh = d.shortage||{};
   document.getElementById('shortage-summary').innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:14px">
-      <div class="stat-card red" style="border-radius:8px">
-        <div class="stat-label">🔴 Critical Items</div>
-        <div class="stat-value">${shortage.critical || 0}</div>
-        <div class="stat-sub">Below minimum stock level</div>
-      </div>
-      <div class="stat-card orange" style="border-radius:8px">
-        <div class="stat-label">🟡 Warning Items</div>
-        <div class="stat-value">${shortage.warning || 0}</div>
-        <div class="stat-sub">Approaching minimum</div>
-      </div>
-      <div class="stat-card green" style="border-radius:8px">
-        <div class="stat-label">🟢 OK Items</div>
-        <div class="stat-value">${shortage.ok || 0}</div>
-        <div class="stat-sub">Stock sufficient</div>
-      </div>
-    </div>
-  `;
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="stat-card red" style="border-radius:8px"><div class="stat-label">🔴 Critical</div><div class="stat-value">${sh.critical||0}</div><div class="stat-sub">Below minimum stock</div></div>
+      <div class="stat-card orange" style="border-radius:8px"><div class="stat-label">🟡 Warning</div><div class="stat-value">${sh.warning||0}</div><div class="stat-sub">Approaching minimum</div></div>
+      <div class="stat-card green" style="border-radius:8px"><div class="stat-label">🟢 OK</div><div class="stat-value">${sh.ok||0}</div><div class="stat-sub">Stock sufficient</div></div>
+    </div>`;
   updateSyncTime();
   updateBadges(d);
 }
 
 function updateBadges(d) {
-  const set = (id, val, cls) => {
-    const el = document.getElementById(id);
-    if (el) { el.textContent = val; if (cls) el.className = `badge ${cls}`; }
-  };
-  set('badge-po',  d.po?.pending || 0, d.po?.pending > 0 ? 'red' : 'green');
-  set('badge-wh',  d.wh?.pending || 0, d.wh?.pending > 0 ? 'yellow' : 'green');
-  set('badge-pay', d.payable?.unpaid || 0, d.payable?.unpaid > 0 ? 'red' : 'green');
-  set('badge-alert', d.shortage?.critical || 0, d.shortage?.critical > 0 ? 'red' : 'green');
-  set('badge-ir', d.internalRequests?.pending || 0, 'orange');
+  const set = (id, val, cls) => { const el=document.getElementById(id); if(el){el.textContent=val;if(cls)el.className=`nav-badge ${cls}`;} };
+  set('badge-po', d.po?.pending||0, d.po?.pending>0?'':'green');
+  set('badge-wh', d.wh?.pending||0, d.wh?.pending>0?'yellow':'green');
+  set('badge-pay', d.payable?.unpaid||0, d.payable?.unpaid>0?'':'green');
+  set('badge-alert', d.shortage?.critical||0, d.shortage?.critical>0?'':'green');
+  set('badge-ir', d.internalRequests?.pending||0, 'orange');
 }
 
 // ─── BOM ──────────────────────────────────────────────────
 async function loadBOMSheets() {
   const data = await api('getBOMSheets');
   const sel = document.getElementById('bom-project-select');
-  (data.sheets || []).forEach(s => {
+  (data.sheets||[]).forEach(s => {
     const opt = document.createElement('option');
     opt.value = s.name; opt.textContent = s.displayName;
     sel.appendChild(opt);
@@ -1090,9 +923,8 @@ async function loadBOMProject() {
   await loadBOMDirect(sheet);
 }
 
-// FIX: No longer calls navigate() — directly switches page to avoid event dependency crash
 async function loadBOMDirect(sheetName) {
-  // Switch to BOM page directly without relying on event context
+  // Switch to BOM page
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-bom').classList.add('active');
@@ -1100,82 +932,186 @@ async function loadBOMDirect(sheetName) {
     if (n.getAttribute('onclick') === "navigate('bom')") n.classList.add('active');
   });
   state.currentPage = 'bom';
-  const titleEl = document.getElementById('page-title');
-  const subEl = document.getElementById('page-sub');
-  if (titleEl) titleEl.textContent = 'BOM / Client View';
-  if (subEl) subEl.textContent = '';
+  state.currentBOMSheet = sheetName;
+  const t = document.getElementById('page-title');
+  const s = document.getElementById('page-sub');
+  if (t) t.textContent = 'BOM / Client View';
+  if (s) s.textContent = '';
 
-  // Set dropdown selection
   const sel = document.getElementById('bom-project-select');
   if (sel) sel.value = sheetName;
 
-  // Show loading state
-  const titleDisplay = document.getElementById('bom-sheet-title');
+  const titleEl = document.getElementById('bom-sheet-title');
   const tbody = document.getElementById('bom-tbody');
   const countEl = document.getElementById('bom-count');
-  if (titleDisplay) titleDisplay.textContent = '⏳ Loading...';
-  if (tbody) tbody.innerHTML = `<tr><td colspan="13"><div class="loading"><div class="spinner"></div></div></td></tr>`;
+  if (titleEl) titleEl.textContent = '⏳ Loading…';
+  if (tbody) tbody.innerHTML = `<tr><td colspan="17"><div class="loading"><div class="spinner"></div></div></td></tr>`;
+  document.getElementById('bom-progress-card').style.display = 'none';
+  document.getElementById('bom-add-btn').style.display = 'none';
 
-  // Fetch data
-  const data = await api('getBOMByProject', { project: encodeURIComponent(sheetName) });
+  const data = await api('getBOMByProject', { project: sheetName });
   const rows = data.data || [];
 
-  if (titleDisplay) titleDisplay.textContent = sheetName.replace('📦 ','').replace('📦','');
+  if (titleEl) titleEl.textContent = sheetName.replace('📦 ','').replace('📦','');
   if (countEl) countEl.textContent = rows.length + ' items';
+  document.getElementById('bom-add-btn').style.display = '';
+
+  // Status breakdown bar
+  if (rows.length > 0 && data.statusBreakdown) {
+    document.getElementById('bom-progress-card').style.display = '';
+    renderBOMStatusBar(data.statusBreakdown, rows.length, data.pctComplete || 0);
+  }
+
   if (tbody) tbody.innerHTML = rows.map(r => `
     <tr>
       <td class="mono">${r.num}</td>
-      <td>${r.category || ''}</td>
-      <td style="max-width:260px">${r.description || ''}</td>
-      <td class="mono" style="font-size:10px">${r.partNo || ''}</td>
-      <td class="text-right">${r.qty || ''}</td>
-      <td>${r.unit || ''}</td>
-      <td class="text-right mono">${r.budget ? '₱'+fmt(r.budget) : ''}</td>
-      <td>${statusBadge(r.status)}</td>
-      <td style="font-size:11px">${r.vendor || ''}</td>
-      <td class="mono" style="font-size:11px">${r.poNo || ''}</td>
-      <td class="text-right mono">${r.unitPrice ? '₱'+fmt(r.unitPrice) : ''}</td>
+      <td>${r.category||''}</td>
+      <td style="max-width:240px;font-weight:500">${r.description||''}</td>
+      <td class="mono" style="font-size:10px">${r.partNo||''}</td>
+      <td class="text-right">${r.qty||''}</td>
+      <td>${r.unit||''}</td>
+      <td class="text-right mono">${r.budget?'₱'+fmt(r.budget):''}</td>
+      <td class="text-center">${r.whStock||''}</td>
+      <td>${bomStatusBadge(r.status)}</td>
+      <td style="font-size:11px">${r.vendor||''}</td>
+      <td class="mono" style="font-size:11px">${r.poNo||''}</td>
+      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
       <td>${whBadge(r.whStatus)}</td>
-      <td>${payBadge(r.payStatus)}</td>
-    </tr>
-  `).join('') || `<tr><td colspan="13"><div class="empty"><div class="icon">📭</div><h4>No data found</h4></div></td></tr>`;
+      <td class="text-right">${r.delQty||''}</td>
+      <td class="text-right">${r.balQty||''}</td>
+      <td>${r.actDate||''}</td>
+      <td><button class="edit-btn" onclick="openBOMEditModal(${JSON.stringify(r).replace(/"/g,'&quot;')})">✏️</button></td>
+    </tr>`).join('') || `<tr><td colspan="17"><div class="empty"><div class="icon">📭</div><h4>No data found</h4><p style="font-size:11px;margin-top:6px">Make sure the BOM sheet has data starting from row 5</p></div></td></tr>`;
+}
+
+function renderBOMStatusBar(breakdown, total, pctComplete) {
+  const bar = document.getElementById('bom-status-bar');
+  const legend = document.getElementById('bom-status-legend');
+  const pctLabel = document.getElementById('bom-pct-label');
+  const statuses = Object.keys(BOM_STATUS_COLORS);
+  bar.innerHTML = statuses.map(s => {
+    const count = breakdown[s] || 0;
+    const width = total > 0 ? (count / total * 100) : 0;
+    return width > 0 ? `<div class="status-bar-seg" style="width:${width}%;background:${BOM_STATUS_COLORS[s]}" title="${s}: ${count}"></div>` : '';
+  }).join('');
+  legend.innerHTML = statuses.map(s => {
+    const count = breakdown[s] || 0;
+    if (!count) return '';
+    return `<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:${BOM_STATUS_COLORS[s]};display:inline-block;border:1px solid rgba(0,0,0,.1)"></span>${s.split(' ').slice(1).join(' ')}: <b>${count}</b></span>`;
+  }).filter(Boolean).join('');
+  pctLabel.textContent = Math.round(pctComplete * 100) + '%';
+  pctLabel.style.color = pctComplete >= 0.8 ? 'var(--green)' : pctComplete >= 0.5 ? 'var(--orange)' : 'var(--blue)';
+}
+
+function openBOMAddModal() {
+  document.getElementById('modal-bom-add').classList.add('open');
+}
+
+async function submitBOMAdd() {
+  if (!state.currentBOMSheet) return;
+  const data = {
+    mrfNo: document.getElementById('bom-add-mrf').value,
+    category: document.getElementById('bom-add-cat').value,
+    description: document.getElementById('bom-add-desc').value,
+    partNo: document.getElementById('bom-add-partno').value,
+    qty: parseFloat(document.getElementById('bom-add-qty').value) || 0,
+    unit: document.getElementById('bom-add-unit').value,
+    budget: parseFloat(document.getElementById('bom-add-budget').value) || 0,
+    status: document.getElementById('bom-add-status').value,
+    date: today(),
+  };
+  if (!data.description) { toast('⚠️ Description required.', 'error'); return; }
+  // For BOM add, we post directly — needs a new Apps Script action
+  // For now, show instructions
+  toast('ℹ️ Please add items directly in Google Sheet, then refresh.', 'info');
+  closeModal('modal-bom-add');
+}
+
+function openBOMEditModal(r) {
+  state.editContext = { type: 'bom', sheet: state.currentBOMSheet, row: r.rowIndex, data: r };
+  document.getElementById('modal-edit-title').textContent = '✏️ Edit BOM Item — ' + (r.description || '');
+  document.getElementById('modal-edit-body').innerHTML = `
+    <div class="form-grid">
+      <div class="form-row"><label>Status</label>
+        <select id="edit-bom-status">
+          ${['📋 For Canvass','🔍 Canvassed','📄 For PO','✅ PO Issued','🚚 Partial Delivery','📦 Fully Delivered']
+            .map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row"><label>Vendor</label><input type="text" id="edit-bom-vendor" value="${r.vendor||''}"></div>
+      <div class="form-row"><label>PO #</label><input type="text" id="edit-bom-pono" value="${r.poNo||''}"></div>
+      <div class="form-row"><label>Unit Price (₱)</label><input type="number" id="edit-bom-price" value="${r.unitPrice||''}"></div>
+      <div class="form-row"><label>PO Date</label><input type="date" id="edit-bom-podate" value="${r.poDate||''}"></div>
+      <div class="form-row"><label>WH Status</label>
+        <select id="edit-bom-whstatus">
+          ${['⬜ Pending','🚚 Partial','✅ Complete'].map(s=>`<option${s===r.whStatus?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-row"><label>Del Qty</label><input type="number" id="edit-bom-delqty" value="${r.delQty||''}"></div>
+      <div class="form-row"><label>Cancel Qty</label><input type="number" id="edit-bom-cancelqty" value="${r.cancelQty||''}"></div>
+      <div class="form-row"><label>Expected Date</label><input type="date" id="edit-bom-expdate" value="${r.expDate||''}"></div>
+      <div class="form-row"><label>Actual Date</label><input type="date" id="edit-bom-actdate" value="${r.actDate||''}"></div>
+    </div>
+    <div class="form-row"><label>Best Price (₱)</label><input type="number" id="edit-bom-bestprice" value="${r.bestPrice||''}"></div>`;
+  document.getElementById('modal-edit').classList.add('open');
 }
 
 // ─── MRS ──────────────────────────────────────────────────
 async function loadMRS() {
-  setLoading('mrs-tbody', 'Loading MRS data...');
+  setLoading('mrs-tbody', 'Loading MRS data…');
   const d = await api('getMRS');
   state.data.mrs = d.data || [];
   renderMRS(state.data.mrs);
   document.getElementById('mrs-count').textContent = d.count || 0;
-  document.getElementById('badge-mrs').textContent = state.data.mrs.filter(r => r.status === '🟡 For Canvass').length;
+  const badge = document.getElementById('badge-mrs');
+  if (badge) badge.textContent = state.data.mrs.filter(r => r.status === '🟡 For Canvass').length;
 }
 
 function renderMRS(rows) {
-  document.getElementById('mrs-tbody').innerHTML = rows.map(r => `
-    <tr>
-      <td class="mono">${r.num}</td>
-      <td style="font-size:11px">${r.project || ''}</td>
-      <td>${r.category || ''}</td>
-      <td style="max-width:240px">${r.description || ''}</td>
-      <td class="text-right">${r.qty || ''}</td>
-      <td>${r.unit || ''}</td>
-      <td class="text-right mono">${r.prevPrice ? '₱'+fmt(r.prevPrice) : ''}</td>
+  const sort = document.getElementById('mrs-sort')?.value || '';
+  let sorted = [...rows];
+  if (sort === 'date-desc') sorted.sort((a,b) => (b.mrsDate||'').localeCompare(a.mrsDate||''));
+  else if (sort === 'date-asc') sorted.sort((a,b) => (a.mrsDate||'').localeCompare(b.mrsDate||''));
+  else if (sort === 'mrs') sorted.sort((a,b) => (a.mrsHeader||'').localeCompare(b.mrsHeader||''));
+
+  // Group by MRS header
+  let lastMRS = '';
+  document.getElementById('mrs-tbody').innerHTML = sorted.map(r => {
+    let groupRow = '';
+    if (r.mrsHeader && r.mrsHeader !== lastMRS) {
+      lastMRS = r.mrsHeader;
+      const mrsLabel = r.mrsHeader.replace('▶ MRS NO.','').trim() || r.mrsHeader;
+      groupRow = `<tr style="background:var(--navy2)"><td colspan="15" style="color:var(--gold);font-weight:700;font-size:11px;padding:6px 12px;font-family:'IBM Plex Mono',monospace">▶ ${mrsLabel}</td></tr>`;
+    }
+    return groupRow + `<tr>
+      <td class="mono" style="font-size:10px">${r.mrsHeader?.match(/\d{4}-\d+/)?.[0]||r.num}</td>
+      <td>${r.mrsDate||''}</td>
+      <td style="font-size:11px">${r.project||''}</td>
+      <td><span class="badge badge-grey" style="font-size:9px">${r.type||'MRS'}</span></td>
+      <td>${r.category||''}</td>
+      <td style="max-width:220px;font-weight:500">${r.description||''}</td>
+      <td class="text-right">${r.qty||''}</td>
+      <td>${r.unit||''}</td>
+      <td class="text-right mono">${r.prevPrice?'₱'+fmt(r.prevPrice):''}</td>
       <td>${statusBadge(r.status)}</td>
-      <td style="font-size:11px">${r.vendor || ''}</td>
-      <td class="mono">${r.poNo || ''}</td>
-      <td class="text-right mono">${r.unitPrice ? '₱'+fmt(r.unitPrice) : ''}</td>
-      <td>${r.poDate || ''}</td>
-      <td class="text-right ${r.savings < 0 ? 'badge-red' : ''}">${r.savings ? pct(r.savings) : ''}</td>
-    </tr>
-  `).join('') || emptyRow(13, 'No MRS data');
+      <td style="font-size:11px">${r.vendor||''}</td>
+      <td class="mono">${r.poNo||''}</td>
+      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
+      <td>${r.poDate||''}</td>
+      <td><button class="edit-btn" onclick="openGenericEdit('mrs',${r.rowIndex},'MRS Item','${r.description?.substring(0,30)||''}',[['status','Status','select',['✅ PO Issued','🟡 For Canvass','🏭 Warehouse Stock','🟢 Ready for PO']],['vendor','Vendor','text'],['poNo','PO #','text'],['unitPrice','Unit Price','number'],['poDate','PO Date','date']])">✏️</button></td>
+    </tr>`;
+  }).join('') || emptyRow(15, 'No MRS data');
 }
 
-function filterMRS() {
-  const stat = document.getElementById('mrs-status-filter').value;
-  let rows = state.data.mrs || [];
-  if (stat) rows = rows.filter(r => r.status === stat);
-  renderMRS(rows);
+function filterMRS() { renderMRS(applyMRSFilter(state.data.mrs||[])); }
+function filterMRSLive() {
+  const q = document.getElementById('mrs-search').value.toLowerCase();
+  const filtered = (state.data.mrs||[]).filter(r => JSON.stringify(r).toLowerCase().includes(q));
+  renderMRS(applyMRSFilter(filtered));
+}
+function applyMRSFilter(rows) {
+  const stat = document.getElementById('mrs-status-filter')?.value || '';
+  return stat ? rows.filter(r => r.status === stat) : rows;
 }
 
 // ─── PURCHASE ORDERS ──────────────────────────────────────
@@ -1188,30 +1124,67 @@ async function loadPO() {
 }
 
 function renderPO(rows) {
+  // Group by PO# for summary
+  const poGroups = {};
+  rows.forEach(r => {
+    if (!poGroups[r.poNo]) poGroups[r.poNo] = [];
+    poGroups[r.poNo].push(r);
+  });
+
   document.getElementById('po-tbody').innerHTML = rows.map(r => `
     <tr>
       <td class="mono">${r.num}</td>
-      <td class="mono bold">${r.poNo || ''}</td>
-      <td style="font-size:11px">${r.project || ''}</td>
-      <td style="max-width:220px">${r.description || ''}</td>
-      <td class="mono" style="font-size:10px">${r.partNo || ''}</td>
-      <td style="font-size:11px">${r.supplier || ''}</td>
-      <td>${r.unit || ''}</td>
-      <td class="text-right">${r.ordQty || ''}</td>
-      <td class="text-right mono">${r.unitPrice ? '₱'+fmt(r.unitPrice) : ''}</td>
-      <td class="text-right mono bold">${r.lineTotal ? '₱'+fmt(r.lineTotal) : ''}</td>
-      <td>${r.poDate || ''}</td>
+      <td class="mono bold" style="cursor:pointer;color:var(--blue)" onclick="showPODetail('${r.poNo}')">${r.poNo||''}</td>
+      <td style="font-size:11px">${r.project||''}</td>
+      <td style="max-width:200px">${r.description||''}</td>
+      <td class="mono" style="font-size:10px">${r.partNo||''}</td>
+      <td style="font-size:11px">${r.supplier||''}</td>
+      <td>${r.unit||''}</td>
+      <td class="text-right">${r.ordQty||''}</td>
+      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
+      <td class="text-right mono bold">${r.lineTotal?'₱'+fmt(r.lineTotal):''}</td>
+      <td>${r.poDate||''}</td>
       <td>${statusBadge(r.status)}</td>
-      <td style="font-size:11px">${r.remarks || ''}</td>
-    </tr>
-  `).join('') || emptyRow(13, 'No PO data');
+      <td style="font-size:11px">${r.remarks||''}</td>
+      <td><button class="edit-btn" onclick="openGenericEdit('po',${r.rowIndex},'PO #${r.poNo}','${r.supplier||''}',[['status','Status','select',['⬜ Pending','✅ Delivered','❌ Cancelled']],['remarks','Remarks','text']])">✏️</button></td>
+    </tr>`).join('') || emptyRow(14, 'No PO data');
+}
+
+function showPODetail(poNo) {
+  const rows = (state.data.po||[]).filter(r => r.poNo === poNo);
+  if (!rows.length) return;
+  const total = rows.reduce((s,r) => s+(Number(r.lineTotal)||0), 0);
+  document.getElementById('po-detail-title').textContent = `📋 PO Summary — ${poNo}`;
+  document.getElementById('po-detail-body').innerHTML = `
+    <div class="po-summary-grid">
+      <div class="stat-card blue" style="border-radius:8px"><div class="stat-label">Supplier</div><div style="font-weight:700;font-size:14px">${rows[0].supplier||'—'}</div></div>
+      <div class="stat-card teal" style="border-radius:8px"><div class="stat-label">PO Date</div><div style="font-weight:700;font-size:14px">${rows[0].poDate||'—'}</div></div>
+      <div class="stat-card green" style="border-radius:8px"><div class="stat-label">Total Items</div><div class="stat-value">${rows.length}</div></div>
+      <div class="stat-card gold" style="border-radius:8px"><div class="stat-label">Total Value</div><div class="stat-value big">₱${fmt(total)}</div></div>
+    </div>
+    <div style="font-weight:700;margin-bottom:8px;font-size:13px">Line Items:</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>#</th><th>Description</th><th>Part No.</th><th>Qty</th><th>Unit</th><th>Unit Price</th><th>Line Total</th><th>Status</th></tr></thead>
+      <tbody>${rows.map(r=>`<tr>
+        <td>${r.num}</td>
+        <td>${r.description||''}</td>
+        <td class="mono" style="font-size:10px">${r.partNo||''}</td>
+        <td class="text-right">${r.ordQty||''}</td>
+        <td>${r.unit||''}</td>
+        <td class="text-right mono">₱${fmt(r.unitPrice||0)}</td>
+        <td class="text-right mono bold">₱${fmt(r.lineTotal||0)}</td>
+        <td>${statusBadge(r.status)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+    <div style="margin-top:12px;text-align:right;font-size:13px;font-weight:700">
+      Grand Total: <span class="mono" style="font-size:16px;color:var(--blue)">₱${fmt(total)}</span>
+    </div>`;
+  document.getElementById('modal-po-detail').classList.add('open');
 }
 
 function filterPO() {
   const stat = document.getElementById('po-status-filter').value;
-  let rows = state.data.po || [];
-  if (stat) rows = rows.filter(r => r.status === stat);
-  renderPO(rows);
+  renderPO(stat ? (state.data.po||[]).filter(r=>r.status===stat) : state.data.po||[]);
 }
 
 // ─── WH INCOMING ──────────────────────────────────────────
@@ -1226,28 +1199,27 @@ async function loadWH() {
 function renderWH(rows) {
   document.getElementById('wh-tbody').innerHTML = rows.map(r => {
     const overdue = r.status !== '✅ Complete' && r.daysVar && r.daysVar > 0;
-    return `<tr${overdue ? ' style="background:#FFEBEE"' : ''}>
-      <td class="mono bold">${r.poNo || ''}</td>
-      <td style="font-size:11px">${r.project || ''}</td>
-      <td style="max-width:220px">${r.description || ''}</td>
-      <td style="font-size:11px">${r.supplier || ''}</td>
-      <td>${r.unit || ''}</td>
-      <td class="text-right">${r.poQty || ''}</td>
-      <td class="text-right bold">${r.delQty || ''}</td>
-      <td class="text-right">${r.cancelQty || ''}</td>
-      <td class="text-right">${r.balQty || ''}</td>
-      <td>${r.actDate || ''}</td>
-      <td>${r.expDate || ''}</td>
-      <td class="text-right ${overdue ? 'badge-red' : ''}">${r.daysVar || ''}</td>
+    return `<tr${overdue?' style="background:#FFEBEE"':''}>
+      <td class="mono bold">${r.poNo||''}</td>
+      <td style="font-size:11px">${r.project||''}</td>
+      <td style="max-width:200px">${r.description||''}</td>
+      <td style="font-size:11px">${r.supplier||''}</td>
+      <td>${r.unit||''}</td>
+      <td class="text-right">${r.poQty||''}</td>
+      <td class="text-right bold">${r.delQty||''}</td>
+      <td class="text-right">${r.cancelQty||''}</td>
+      <td class="text-right">${r.balQty||''}</td>
+      <td>${r.actDate||''}</td>
+      <td>${r.expDate||''}</td>
+      <td class="text-right ${overdue?'badge-red':''}">${r.daysVar||''}</td>
       <td>${statusBadge(r.status)}</td>
+      <td><button class="edit-btn" onclick="openGenericEdit('wh',${r.rowIndex},'WH ${r.poNo}','${r.supplier||''}',[['status','Status','select',['⬜ Pending','🚚 Partial','✅ Complete']],['delQty','Del Qty','number'],['cancelQty','Cancel Qty','number'],['actDate','Actual Date','date']])">✏️</button></td>
     </tr>`;
-  }).join('') || emptyRow(13, 'No WH data');
+  }).join('') || emptyRow(14, 'No WH data');
 }
 
 function filterWH(val) {
-  let rows = state.data.wh || [];
-  if (val) rows = rows.filter(r => r.status === val);
-  renderWH(rows);
+  renderWH(val ? (state.data.wh||[]).filter(r=>r.status===val) : state.data.wh||[]);
 }
 
 // ─── VENDOR PAYABLE ───────────────────────────────────────
@@ -1263,27 +1235,25 @@ function renderPayable(rows) {
   document.getElementById('pay-tbody').innerHTML = rows.map(r => `
     <tr>
       <td class="mono">${r.num}</td>
-      <td class="mono bold">${r.poNo || ''}</td>
-      <td style="font-size:11px">${r.project || ''}</td>
-      <td style="font-size:11px">${r.supplier || ''}</td>
-      <td style="max-width:200px">${r.description || ''}</td>
-      <td class="text-right">${r.delQty || ''}</td>
-      <td class="text-right mono">${r.unitPrice ? '₱'+fmt(r.unitPrice) : ''}</td>
-      <td class="text-right mono bold">${r.amount ? '₱'+fmt(r.amount) : ''}</td>
-      <td>${r.billingDate || ''}</td>
-      <td class="mono">${r.invoiceNo || ''}</td>
-      <td>${r.dueDate || ''}</td>
+      <td class="mono bold">${r.poNo||''}</td>
+      <td style="font-size:11px">${r.project||''}</td>
+      <td style="font-size:11px">${r.supplier||''}</td>
+      <td style="max-width:180px">${r.description||''}</td>
+      <td class="text-right">${r.delQty||''}</td>
+      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
+      <td class="text-right mono bold">${r.amount?'₱'+fmt(r.amount):''}</td>
+      <td>${r.billingDate||''}</td>
+      <td class="mono">${r.invoiceNo||''}</td>
+      <td>${r.dueDate||''}</td>
       <td>${payBadge(r.payStatus)}</td>
-      <td class="text-right mono">${r.amtPaid ? '₱'+fmt(r.amtPaid) : ''}</td>
-      <td class="text-right mono bold ${r.balDue > 0 ? 'badge-red' : ''}">${r.balDue ? '₱'+fmt(r.balDue) : ''}</td>
-    </tr>
-  `).join('') || emptyRow(14, 'No payable data');
+      <td class="text-right mono">${r.amtPaid?'₱'+fmt(r.amtPaid):''}</td>
+      <td class="text-right mono bold ${r.balDue>0?'':'badge-green'}">${r.balDue?'₱'+fmt(r.balDue):''}</td>
+      <td><button class="edit-btn" onclick="openGenericEdit('payable',${r.rowIndex},'Bill PO#${r.poNo}','${r.supplier||''}',[['payStatus','Pay Status','select',['⬜ Unpaid','✅ Paid','🔄 Partial']],['invoiceNo','Invoice #','text'],['amtPaid','Amt Paid','number'],['dueDate','Due Date','date']])">✏️</button></td>
+    </tr>`).join('') || emptyRow(15, 'No payable data');
 }
 
 function filterPayable(val) {
-  let rows = state.data.payable || [];
-  if (val) rows = rows.filter(r => r.payStatus === val);
-  renderPayable(rows);
+  renderPayable(val ? (state.data.payable||[]).filter(r=>r.payStatus===val) : state.data.payable||[]);
 }
 
 // ─── ITEM HISTORY ─────────────────────────────────────────
@@ -1291,29 +1261,40 @@ async function loadHistory() {
   setLoading('hist-tbody');
   const d = await api('getItemHistory');
   state.data.history = d.data || [];
-  const cats = [...new Set(state.data.history.map(r => r.category).filter(Boolean))];
+  const cats = [...new Set(state.data.history.map(r=>r.category).filter(Boolean))];
   const sel = document.getElementById('hist-cat');
-  cats.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; sel.appendChild(o); });
+  cats.forEach(c => { const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o); });
   renderHistory(state.data.history);
   document.getElementById('hist-count').textContent = d.count || 0;
 }
 
+function toggleHistSort() {
+  state.histSortDir = state.histSortDir === 'desc' ? 'asc' : 'desc';
+  document.getElementById('hist-sort').value = state.histSortDir;
+  filterHistory();
+}
+
 function renderHistory(rows) {
-  document.getElementById('hist-tbody').innerHTML = rows.slice(0, 500).map(r => {
-    const chg = Number(r.priceChange) || 0;
-    const pctChg = Number(r.pctChange) || 0;
+  const dir = document.getElementById('hist-sort')?.value || 'desc';
+  const sorted = [...rows].sort((a,b) => {
+    const da = a.poDate||'', db = b.poDate||'';
+    return dir === 'desc' ? db.localeCompare(da) : da.localeCompare(db);
+  });
+  document.getElementById('hist-tbody').innerHTML = sorted.slice(0,500).map(r => {
+    const chg = Number(r.priceChange)||0;
+    const pctChg = Number(r.pctChange)||0;
     return `<tr>
-      <td class="mono" style="font-size:10px">${r.catNo || ''}</td>
-      <td style="max-width:220px">${r.description || ''}</td>
-      <td>${r.category || ''}</td>
-      <td class="mono">${r.poNo || ''}</td>
-      <td>${r.poDate || ''}</td>
-      <td style="font-size:11px">${r.supplier || ''}</td>
-      <td class="text-right mono bold">₱${fmt(r.unitPrice || 0)}</td>
-      <td class="text-right mono">₱${fmt(r.prevPrice || 0)}</td>
-      <td class="text-right mono ${chg > 0 ? 'badge-red' : chg < 0 ? 'badge-green' : ''}">${chg ? (chg > 0 ? '+' : '') + '₱'+fmt(chg) : ''}</td>
-      <td class="text-right mono ${pctChg > 0 ? 'badge-red' : pctChg < 0 ? 'badge-green' : ''}">${pctChg ? (pctChg > 0?'+':'')+pct(pctChg) : ''}</td>
-      <td style="font-size:11px">${r.project || ''}</td>
+      <td class="mono" style="font-size:10px">${r.catNo||''}</td>
+      <td style="max-width:220px">${r.description||''}</td>
+      <td>${r.category||''}</td>
+      <td>${r.poDate||''}</td>
+      <td class="mono">${r.poNo||''}</td>
+      <td style="font-size:11px">${r.supplier||''}</td>
+      <td class="text-right mono bold">₱${fmt(r.unitPrice||0)}</td>
+      <td class="text-right mono">₱${fmt(r.prevPrice||0)}</td>
+      <td class="text-right mono ${chg>0?'badge-red':chg<0?'badge-green':''}">${chg?(chg>0?'+':'')+' ₱'+fmt(chg):''}</td>
+      <td class="text-right mono ${pctChg>0?'badge-red':pctChg<0?'badge-green':''}">${pctChg?(pctChg>0?'+':'')+pctFmt(pctChg):''}</td>
+      <td style="font-size:11px">${r.project||''}</td>
     </tr>`;
   }).join('') || emptyRow(11, 'No history data');
 }
@@ -1321,148 +1302,136 @@ function renderHistory(rows) {
 function filterHistory() {
   const cat = document.getElementById('hist-cat').value;
   let rows = state.data.history || [];
-  if (cat) rows = rows.filter(r => r.category === cat);
+  if (cat) rows = rows.filter(r=>r.category===cat);
   renderHistory(rows);
 }
 
 // ─── ALERTS ───────────────────────────────────────────────
 async function loadAlerts() {
-  const [sht, dead, action] = await Promise.all([
-    api('getShortage'), api('getDeadStock'), api('getActionItems')
-  ]);
-  state.data.shortage = sht.data || [];
-  state.data.dead = dead.data || [];
-  state.data.action = action.data || [];
+  const [sht, dead, action] = await Promise.all([api('getShortage'),api('getDeadStock'),api('getActionItems')]);
+  state.data.shortage = sht.data||[];
+  state.data.dead = dead.data||[];
+  state.data.action = action.data||[];
   renderAlerts();
 }
 
 function renderAlerts() {
-  document.getElementById('shortage-tbody').innerHTML = (state.data.shortage || []).map(r => `
-    <tr>
-      <td class="mono">${r.itemCode}</td>
-      <td>${r.description}</td>
-      <td class="text-right bold">${r.currentStock}</td>
-      <td class="text-right">${r.minLevel}</td>
-      <td class="text-right">${r.productionDemand}</td>
-      <td class="text-right bold ${Number(r.stockAfterDemand)<0?'badge-red':''}">${r.stockAfterDemand}</td>
-      <td>${riskBadge(r.riskLevel)}</td>
-    </tr>
-  `).join('') || emptyRow(7, 'No shortage data');
-  document.getElementById('dead-tbody').innerHTML = (state.data.dead || []).map(r => `
-    <tr>
-      <td class="mono">${r.itemCode}</td>
-      <td>${r.description}</td>
-      <td>${r.lastMovement}</td>
-      <td class="text-right">${r.quantity}</td>
-      <td class="text-right mono">₱${fmt(r.inventoryValue||0)}</td>
-      <td class="text-right bold badge-red">${r.daysWithoutMovement}</td>
-      <td>${statusBadge(r.status)}</td>
-    </tr>
-  `).join('') || emptyRow(7, 'No dead stock');
-  document.getElementById('action-tbody').innerHTML = (state.data.action || []).map(r => `
-    <tr>
-      <td>${r.client}</td>
-      <td style="font-size:11px">${r.project}</td>
-      <td class="mono" style="font-size:10px">${r.catNo}</td>
-      <td style="max-width:220px">${r.description}</td>
-      <td class="text-right">${r.qty}</td>
-      <td>${r.unit}</td>
-      <td class="text-right mono">${r.budget ? '₱'+fmt(r.budget) : ''}</td>
-      <td>${r.category}</td>
-    </tr>
-  `).join('') || emptyRow(8, 'No action items');
-  document.getElementById('badge-alert').textContent = (state.data.shortage||[]).filter(r=>String(r.riskLevel).includes('CRITICAL')).length;
+  document.getElementById('shortage-tbody').innerHTML = (state.data.shortage||[]).map(r=>`
+    <tr><td class="mono">${r.itemCode}</td><td>${r.description}</td>
+    <td class="text-right bold">${r.currentStock}</td><td class="text-right">${r.minLevel}</td>
+    <td class="text-right">${r.productionDemand}</td>
+    <td class="text-right bold ${Number(r.stockAfterDemand)<0?'badge-red':''}">${r.stockAfterDemand}</td>
+    <td>${riskBadge(r.riskLevel)}</td></tr>`).join('') || emptyRow(7,'No shortage data');
+  document.getElementById('dead-tbody').innerHTML = (state.data.dead||[]).map(r=>`
+    <tr><td class="mono">${r.itemCode}</td><td>${r.description}</td>
+    <td>${r.lastMovement}</td><td class="text-right">${r.quantity}</td>
+    <td class="text-right mono">₱${fmt(r.inventoryValue||0)}</td>
+    <td class="text-right bold badge-red">${r.daysWithoutMovement}</td>
+    <td>${statusBadge(r.status)}</td></tr>`).join('') || emptyRow(7,'No dead stock');
+  document.getElementById('action-tbody').innerHTML = (state.data.action||[]).map(r=>`
+    <tr><td>${r.client}</td><td style="font-size:11px">${r.project}</td>
+    <td class="mono" style="font-size:10px">${r.catNo}</td>
+    <td style="max-width:200px">${r.description}</td>
+    <td class="text-right">${r.qty}</td><td>${r.unit}</td>
+    <td class="text-right mono">${r.budget?'₱'+fmt(r.budget):''}</td>
+    <td>${r.category}</td></tr>`).join('') || emptyRow(8,'No action items');
+  const badge = document.getElementById('badge-alert');
+  if (badge) badge.textContent = (state.data.shortage||[]).filter(r=>String(r.riskLevel).includes('CRITICAL')).length;
 }
 
 // ─── INTERNAL REQUESTS ────────────────────────────────────
 async function loadInternalRequests() {
-  setLoading('ir-tbody', 'Loading internal requests...');
+  setLoading('ir-tbody','Loading internal requests…');
   const d = await api('getInternalReq');
-  if (d.error) {
-    document.getElementById('ir-tbody').innerHTML = `<tr><td colspan="16" style="padding:20px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;
-    return;
-  }
-  state.data.ir = d.data || [];
+  if (d.error) { document.getElementById('ir-tbody').innerHTML=`<tr><td colspan="16" style="padding:20px;color:#B71C1C">⚠️ ${d.error}</td></tr>`; return; }
+  state.data.ir = d.data||[];
   renderIR(state.data.ir);
-  renderIRStats(d.summary || {});
-  document.getElementById('ir-count').textContent = d.count || 0;
-  document.getElementById('badge-ir').textContent = (d.summary?.pending || 0);
+  renderIRStats(d.summary||{});
+  document.getElementById('ir-count').textContent = d.count||0;
+  const badge = document.getElementById('badge-ir');
+  if (badge) badge.textContent = d.summary?.pending||0;
 }
 
 function renderIR(rows) {
-  document.getElementById('ir-tbody').innerHTML = rows.map(r => `
+  document.getElementById('ir-tbody').innerHTML = rows.map(r=>`
     <tr>
       <td class="mono">${r.num}</td>
-      <td>${r.date || ''}</td>
-      <td>${r.category || ''}</td>
-      <td style="max-width:220px;font-weight:600">${r.item || ''}</td>
-      <td style="font-size:11px;max-width:180px">${r.description || ''}</td>
-      <td class="text-right">${r.qty || ''}</td>
-      <td>${r.unit || ''}</td>
+      <td>${r.date||''}</td>
+      <td>${r.category||''}</td>
+      <td style="max-width:200px;font-weight:600">${r.item||''}</td>
+      <td class="text-right">${r.qty||''}</td>
+      <td>${r.unit||''}</td>
       <td class="text-right mono">₱${fmt(r.unitPrice||0)}</td>
       <td class="text-right mono bold">₱${fmt(r.total||0)}</td>
-      <td style="font-size:11px">${r.requestedBy || ''}</td>
-      <td style="font-size:11px">${r.supplier || ''}</td>
-      <td class="mono">${r.poNo || ''}</td>
+      <td style="font-size:11px">${r.requestedBy||''}</td>
+      <td style="font-size:11px">${r.supplier||''}</td>
+      <td class="mono">${r.poNo||''}</td>
       <td>${statusBadge(r.status)}</td>
-      <td>${r.deliveryDate || ''}</td>
-      <td class="text-right mono">${r.amtPaid ? '₱'+fmt(r.amtPaid) : ''}</td>
-      <td style="font-size:11px">${r.notes || ''}</td>
-    </tr>
-  `).join('') || emptyRow(16, 'No internal request data. Make sure the sheet exists in Google Sheets.');
+      <td>${r.deliveryDate||''}</td>
+      <td class="text-right mono">${r.amtPaid?'₱'+fmt(r.amtPaid):''}</td>
+      <td style="font-size:11px;max-width:140px">${r.notes||''}</td>
+      <td><button class="edit-btn" onclick="openGenericEdit('ir',${r.rowIndex},'IR #${r.num}','${(r.item||'').substring(0,20)}',[['status','Status','select',['⬜ Pending','🟡 For Canvass','✅ PO Issued','🚚 In Transit','✅ Complete','❌ Cancelled']],['supplier','Supplier','text'],['poNo','PO #','text'],['unitPrice','Unit Price (₱)','number'],['deliveryDate','Delivery Date','date'],['amtPaid','Amt Paid (₱)','number'],['notes','Notes','text']])">✏️</button></td>
+    </tr>`).join('') || emptyRow(16,'No data. Make sure 🏢 Internal Request sheet exists.');
 }
 
 function renderIRStats(s) {
   document.getElementById('ir-stats').innerHTML = [
-    { label:'Total Requests', value: s.total || 0, color:'blue', icon:'📋' },
-    { label:'✅ Completed', value: s.complete || 0, color:'green', icon:'✅' },
-    { label:'⬜ Pending / Canvass', value: s.pending || 0, color:'orange', icon:'🟡' },
-    { label:'🚚 In Transit', value: s.inTransit || 0, color:'teal', icon:'🚚' },
-    { label:'Total Spend', value: '₱'+shortNum(s.totalSpend||0), color:'purple', icon:'💵' },
-    { label:'Total Paid', value: '₱'+shortNum(s.totalPaid||0), color:'teal', icon:'💳' },
-  ].map(s => `
-    <div class="stat-card ${s.color}">
-      <div class="stat-icon">${s.icon}</div>
-      <div class="stat-label">${s.label}</div>
-      <div class="stat-value big">${s.value}</div>
-    </div>
-  `).join('');
+    {label:'Total',value:s.total||0,color:'blue',icon:'📋'},
+    {label:'✅ Complete',value:s.complete||0,color:'green',icon:'✅'},
+    {label:'⬜ Pending',value:s.pending||0,color:'orange',icon:'🟡'},
+    {label:'🚚 In Transit',value:s.inTransit||0,color:'teal',icon:'🚚'},
+    {label:'Total Spend',value:'₱'+shortNum(s.totalSpend||0),color:'purple',icon:'💵'},
+    {label:'Total Paid',value:'₱'+shortNum(s.totalPaid||0),color:'teal',icon:'💳'},
+  ].map(s=>`<div class="stat-card ${s.color}"><div class="stat-icon">${s.icon}</div><div class="stat-label">${s.label}</div><div class="stat-value big">${s.value}</div></div>`).join('');
 }
 
 function filterIR() {
   const cat = document.getElementById('ir-cat-filter').value;
   const stat = document.getElementById('ir-stat-filter').value;
-  let rows = state.data.ir || [];
-  if (cat)  rows = rows.filter(r => r.category === cat);
-  if (stat) rows = rows.filter(r => r.status === stat);
+  let rows = state.data.ir||[];
+  if (cat) rows = rows.filter(r=>r.category===cat);
+  if (stat) rows = rows.filter(r=>r.status===stat);
   renderIR(rows);
 }
 
 // ─── PROJECT PROGRESS ─────────────────────────────────────
 async function loadProjectProgress() {
-  setLoading('pp-tbody', 'Loading project progress...');
+  setLoading('pp-tbody','Loading project progress…');
   const d = await api('getProjectProg');
-  if (d.error) {
-    document.getElementById('pp-tbody').innerHTML = `<tr><td colspan="15" style="padding:20px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;
-    return;
-  }
-  state.data.pp = d.data || [];
+  if (d.error) { document.getElementById('pp-tbody').innerHTML=`<tr><td colspan="16" style="padding:20px;color:#B71C1C">⚠️ ${d.error}</td></tr>`; return; }
+  state.data.pp = d.data||[];
   renderPP(state.data.pp);
-  renderPPStats(d.summary || {});
-  document.getElementById('pp-count').textContent = d.count || 0;
+  renderPPStats(d.summary||{});
+  document.getElementById('pp-count').textContent = d.count||0;
 }
 
 function renderPP(rows) {
   document.getElementById('pp-tbody').innerHTML = rows.map(r => {
-    const pct_ = Number(r.pctDone) || 0;
-    const pctDisp = pct_ > 1 ? Math.round(pct_) : Math.round(pct_*100);
-    const barColor = pct_ >= 1 ? '#1B5E20' : pct_ >= 0.85 ? '#E65100' : '#1565C0';
+    // Use BOM-calculated % if available, otherwise manual
+    const bomPct = r.pctDoneCalc !== undefined ? r.pctDoneCalc : (Number(r.pctDone)||0);
+    const pctDisp = Math.round(bomPct * 100);
+    const barColor = pctDisp>=80?'#1B5E20':pctDisp>=50?'#E65100':'#1565C0';
+
+    // BOM status mini-bar
+    let bomBar = '';
+    if (r.bomBreakdown) {
+      const bd = r.bomBreakdown;
+      const statuses = Object.keys(BOM_STATUS_COLORS);
+      bomBar = `<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;min-width:80px;border:1px solid var(--border)">
+        ${statuses.map(s=>{
+          const cnt = bd.statusCounts[s]||0;
+          const w = bd.total>0?(cnt/bd.total*100):0;
+          return w>0?`<div style="width:${w}%;background:${BOM_STATUS_COLORS[s]}" title="${s}:${cnt}"></div>`:'';
+        }).join('')}
+      </div>`;
+    }
+
     return `<tr>
       <td class="mono">${r.num}</td>
-      <td class="mono bold">${r.so || ''}</td>
-      <td style="font-weight:600">${r.client || ''}</td>
-      <td style="font-size:11px;max-width:200px">${r.description || ''}</td>
-      <td>${r.targetDate || ''}</td>
+      <td class="mono bold">${r.so||''}</td>
+      <td style="font-weight:600">${r.client||''}</td>
+      <td style="font-size:11px;max-width:180px">${r.description||''}</td>
+      <td>${r.targetDate||''}</td>
       <td class="text-right mono">₱${fmt(r.contractValue||0)}</td>
       <td class="text-right mono">₱${fmt(r.bomBudget||0)}</td>
       <td class="text-right mono">₱${fmt(r.actualSpend||0)}</td>
@@ -1473,38 +1442,33 @@ function renderPP(rows) {
           <span class="mono" style="font-size:10px;min-width:30px">${pctDisp}%</span>
         </div>
       </td>
+      <td>${bomBar || '<span class="muted" style="font-size:10px">No BOM</span>'}</td>
       <td>${statusBadge(r.status)}</td>
       <td>${prioBadge(r.priority)}</td>
-      <td style="font-size:11px">${r.phase || ''}</td>
-      <td style="font-size:11px">${r.engineer || ''}</td>
-      <td style="font-size:11px;max-width:180px">${r.issues || ''}</td>
+      <td style="font-size:11px">${r.phase||''}</td>
+      <td style="font-size:11px">${r.engineer||''}</td>
+      <td><button class="edit-btn" onclick="openGenericEdit('pp',${r.rowIndex},'SO ${r.so||''}','${r.client||''}',[['status','Status','select',['📋 Planning','🔄 In Progress','⚠️ At Risk','⏸️ On Hold','✅ Completed','❌ Cancelled']],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['phase','Phase','select',['Engineering','Procurement','Fabrication','Assembly','Testing','Delivery','Completed']],['actualSpend','Actual Spend (₱)','number'],['pctDone','% Done (0-100)','number'],['issues','Issues/Remarks','text'],['engineer','Engineer','text'],['actualDate','Actual Completion','date']])">✏️</button></td>
     </tr>`;
-  }).join('') || emptyRow(15, 'No project data. Make sure 📈 Project Progress sheet exists.');
+  }).join('') || emptyRow(16,'No project data.');
 }
 
 function renderPPStats(s) {
   document.getElementById('pp-stats').innerHTML = [
-    { label:'Total Projects', value: s.total || 0, color:'blue', icon:'📋' },
-    { label:'🔄 In Progress', value: s.inProgress || 0, color:'teal', icon:'🔄' },
-    { label:'✅ Completed', value: s.completed || 0, color:'green', icon:'✅' },
-    { label:'⚠️ At Risk', value: s.atRisk || 0, color:'red', icon:'⚠️' },
-    { label:'Total Contract', value: '₱'+shortNum(s.totalContract||0), color:'purple', icon:'💰' },
-    { label:'Total Spend', value: '₱'+shortNum(s.totalSpend||0), color:'orange', icon:'💸' },
-  ].map(s => `
-    <div class="stat-card ${s.color}">
-      <div class="stat-icon">${s.icon}</div>
-      <div class="stat-label">${s.label}</div>
-      <div class="stat-value big">${s.value}</div>
-    </div>
-  `).join('');
+    {label:'Total',value:s.total||0,color:'blue',icon:'📋'},
+    {label:'🔄 In Progress',value:s.inProgress||0,color:'teal',icon:'🔄'},
+    {label:'✅ Completed',value:s.completed||0,color:'green',icon:'✅'},
+    {label:'⚠️ At Risk',value:s.atRisk||0,color:'red',icon:'⚠️'},
+    {label:'Total Contract',value:'₱'+shortNum(s.totalContract||0),color:'purple',icon:'💰'},
+    {label:'Total Spend',value:'₱'+shortNum(s.totalSpend||0),color:'orange',icon:'💸'},
+  ].map(s=>`<div class="stat-card ${s.color}"><div class="stat-icon">${s.icon}</div><div class="stat-label">${s.label}</div><div class="stat-value big">${s.value}</div></div>`).join('');
 }
 
 function filterPP() {
   const stat = document.getElementById('pp-stat-filter').value;
   const prio = document.getElementById('pp-prio-filter').value;
-  let rows = state.data.pp || [];
-  if (stat) rows = rows.filter(r => r.status === stat);
-  if (prio) rows = rows.filter(r => r.priority === prio);
+  let rows = state.data.pp||[];
+  if (stat) rows = rows.filter(r=>r.status===stat);
+  if (prio) rows = rows.filter(r=>r.priority===prio);
   renderPP(rows);
 }
 
@@ -1516,27 +1480,37 @@ async function loadBudgetSpending() {
 }
 
 function renderBudget(d) {
-  const projects = d.projects || [];
-  const totalContract = projects.reduce((s,r) => s+(Number(r.contract)||0), 0);
-  const totalBudget   = projects.reduce((s,r) => s+(Number(r.budget)||0), 0);
-  const totalSpend    = projects.reduce((s,r) => s+(Number(r.spend)||0), 0);
+  const projects = d.projects||[];
+  const totalContract = projects.reduce((s,r)=>s+(Number(r.contract)||0),0);
+  const totalBudget = projects.reduce((s,r)=>s+(Number(r.budget)||0),0);
+  const totalSpend = projects.reduce((s,r)=>s+(Number(r.spend)||0),0);
 
   document.getElementById('budget-stats').innerHTML = [
-    { label:'Total Contract Value', value: '₱'+shortNum(totalContract), color:'blue', icon:'💰' },
-    { label:'Total BOM Budget', value: '₱'+shortNum(totalBudget), color:'teal', icon:'📦' },
-    { label:'Total Actual Spend', value: '₱'+shortNum(totalSpend), color:'orange', icon:'💸' },
-    { label:'% Budget Consumed', value: totalBudget ? pct(totalSpend/totalBudget) : '0%', color: totalSpend/totalBudget > 0.9 ? 'red' : 'green', icon:'📊' },
-  ].map(s => `
-    <div class="stat-card ${s.color}">
-      <div class="stat-icon">${s.icon}</div>
-      <div class="stat-label">${s.label}</div>
-      <div class="stat-value big">${s.value}</div>
-    </div>
-  `).join('');
+    {label:'Total Contract',value:'₱'+shortNum(totalContract),color:'blue',icon:'💰'},
+    {label:'Total BOM Budget',value:'₱'+shortNum(totalBudget),color:'teal',icon:'📦'},
+    {label:'Total Actual Spend',value:'₱'+shortNum(totalSpend),color:'orange',icon:'💸'},
+    {label:'Budget Used',value:totalBudget?pctFmt(totalSpend/totalBudget):'0%',color:totalSpend/totalBudget>0.9?'red':'green',icon:'📊'},
+  ].map(s=>`<div class="stat-card ${s.color}"><div class="stat-icon">${s.icon}</div><div class="stat-label">${s.label}</div><div class="stat-value big">${s.value}</div></div>`).join('');
 
-  document.getElementById('budget-proj-tbody').innerHTML = projects.map(r => {
-    const pctUsed = Number(r.pctUsed) || 0;
-    const barColor = pctUsed > 1 ? '#B71C1C' : pctUsed > 0.85 ? '#E65100' : '#1B5E20';
+  // Category totals chart
+  const cats = d.categoryTotals || {};
+  const catArr = Object.entries(cats).sort((a,b)=>b[1].spend-a[1].spend);
+  const maxSpend = catArr.length ? catArr[0][1].spend : 1;
+  document.getElementById('budget-category-chart').innerHTML = catArr.length ?
+    catArr.map(([cat, info]) => `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div style="font-size:11px;min-width:200px">${cat}</div>
+        <div style="flex:1;background:var(--border);border-radius:4px;height:14px;overflow:hidden">
+          <div style="width:${(info.spend/maxSpend*100).toFixed(1)}%;height:100%;background:var(--blue);border-radius:4px"></div>
+        </div>
+        <div class="mono" style="font-size:11px;min-width:80px;text-align:right">₱${fmt(info.spend)}</div>
+        <div class="muted" style="font-size:10px;min-width:40px">${info.count} req</div>
+      </div>`).join('') :
+    '<div class="muted" style="text-align:center;padding:16px">No internal request data</div>';
+
+  document.getElementById('budget-proj-tbody').innerHTML = projects.map(r=>{
+    const pctUsed = Number(r.pctUsed)||0;
+    const barColor = pctUsed>1?'#B71C1C':pctUsed>0.85?'#E65100':'#1B5E20';
     return `<tr>
       <td class="mono bold">${r.so||''}</td>
       <td style="font-weight:600">${r.client||''}</td>
@@ -1547,16 +1521,17 @@ function renderBudget(d) {
       <td>
         <div style="display:flex;align-items:center;gap:6px">
           <div class="progress"><div class="progress-fill" style="width:${Math.min(pctUsed*100,100)}%;background:${barColor}"></div></div>
-          <span class="mono" style="font-size:10px">${pct(pctUsed)}</span>
+          <span class="mono" style="font-size:10px">${pctFmt(pctUsed)}</span>
         </div>
       </td>
       <td>${budgetStatusBadge(r.status)}</td>
+      <td><button class="edit-btn" onclick="openGenericEdit('budget',${r.rowIndex},'Budget SO${r.so}','${r.client||''}',[['spend','Actual Spend (₱)','number'],['materials','Materials (₱)','number'],['labor','Labor (₱)','number'],['overhead','Overhead (₱)','number']])">✏️</button></td>
     </tr>`;
-  }).join('') || emptyRow(8, 'No project budget data. Make sure 💰 Budget & Spending sheet exists.');
+  }).join('') || emptyRow(9,'No budget data.');
 
-  document.getElementById('budget-mach-tbody').innerHTML = (d.machines||[]).map(r => `
+  document.getElementById('budget-mach-tbody').innerHTML = (d.machines||[]).map(r=>`
     <tr>
-      <td style="font-weight:600;max-width:180px">${r.name||''}</td>
+      <td style="font-weight:600;max-width:160px">${r.name||''}</td>
       <td style="font-size:11px">${r.model||''}</td>
       <td class="text-right mono">₱${fmt(r.repair||0)}</td>
       <td class="text-right mono">₱${fmt(r.parts||0)}</td>
@@ -1564,13 +1539,11 @@ function renderBudget(d) {
       <td class="text-right mono">₱${fmt(r.calib||0)}</td>
       <td class="text-right mono bold">₱${fmt(r.total||0)}</td>
       <td class="text-right">${r.works||0}</td>
-      <td>${r.status||''}</td>
-    </tr>
-  `).join('') || emptyRow(9, 'No machine data');
+    </tr>`).join('') || emptyRow(8,'No machine data');
 
-  document.getElementById('budget-te-tbody').innerHTML = (d.testEquip||[]).map(r => `
+  document.getElementById('budget-te-tbody').innerHTML = (d.testEquip||[]).map(r=>`
     <tr>
-      <td style="font-weight:600;max-width:180px">${r.name||''}</td>
+      <td style="font-weight:600;max-width:160px">${r.name||''}</td>
       <td style="font-size:11px">${r.model||''}</td>
       <td class="text-right mono">₱${fmt(r.y2022||0)}</td>
       <td class="text-right mono">₱${fmt(r.y2023||0)}</td>
@@ -1578,262 +1551,351 @@ function renderBudget(d) {
       <td class="text-right mono bold">₱${fmt(r.total||0)}</td>
       <td>${r.lastCalib||''}</td>
       <td>${r.nextDue||''}</td>
-      <td>${statusBadge(r.status)}</td>
-    </tr>
-  `).join('') || emptyRow(9, 'No test equipment data');
+    </tr>`).join('') || emptyRow(8,'No test equip data');
 }
 
-// ─── WEEKLY REVIEW ────────────────────────────────────────
+// ─── WEEKLY, MACHINE, TEST EQUIP ──────────────────────────
 async function loadWeeklyReview() {
   const d = await api('getWeeklyReview');
-  document.getElementById('weekly-tbody').innerHTML = (d.data||[]).map(r => `
+  document.getElementById('weekly-tbody').innerHTML = (d.data||[]).map(r=>`
     <tr>
-      <td class="mono bold">${r.so||''}</td>
-      <td style="font-weight:600">${r.client||''}</td>
-      <td>${r.project||''}</td>
-      <td>${r.targetDate||''}</td>
-      <td>${statusBadge(r.status)}</td>
-      <td>${prioBadge(r.priority)}</td>
+      <td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td>
+      <td>${r.project||''}</td><td>${r.targetDate||''}</td>
+      <td>${statusBadge(r.status)}</td><td>${prioBadge(r.priority)}</td>
       <td style="font-size:11px">${r.remarks||''}</td>
-    </tr>
-  `).join('') || emptyRow(7, 'No weekly review data');
+      <td><button class="edit-btn" onclick="openGenericEdit('weekly',${r.rowIndex},'Weekly ${r.so}','${r.client||''}',[['status','Status','text'],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['remarks','Remarks','text']])">✏️</button></td>
+    </tr>`).join('') || emptyRow(8,'No weekly review data');
 }
 
-// ─── MACHINE LIST ─────────────────────────────────────────
 async function loadMachineList() {
   const d = await api('getMachineList');
-  document.getElementById('ml-tbody').innerHTML = (d.data||[]).map(r => `
+  document.getElementById('ml-tbody').innerHTML = (d.data||[]).map(r=>`
     <tr>
-      <td style="font-weight:600;max-width:220px">${r.name||''}</td>
-      <td>${r.brand||''}</td>
-      <td class="mono">${r.model||''}</td>
-      <td class="mono">${r.serialNo||''}</td>
-      <td class="mono">${r.exelonCode||''}</td>
-      <td class="text-right mono">${r.unitCost ? '₱'+fmt(r.unitCost) : ''}</td>
-      <td style="font-size:11px">${r.supplier||''}</td>
-      <td>${r.datePurchased||''}</td>
-      <td class="mono">${r.po||''}</td>
-      <td style="font-size:11px">${r.remarks||''}</td>
+      <td style="font-weight:600;max-width:200px">${r.name||''}</td><td>${r.brand||''}</td>
+      <td class="mono">${r.model||''}</td><td class="mono">${r.serialNo||''}</td>
+      <td class="mono">${r.exelonCode||''}</td><td class="text-right mono">${r.unitCost?'₱'+fmt(r.unitCost):''}</td>
+      <td style="font-size:11px">${r.supplier||''}</td><td>${r.datePurchased||''}</td>
+      <td class="mono">${r.po||''}</td><td style="font-size:11px">${r.remarks||''}</td>
       <td><span class="badge ${r.status==='ACTIVE'?'badge-green':'badge-red'}">${r.status||''}</span></td>
-    </tr>
-  `).join('') || emptyRow(11, 'No machine data');
+    </tr>`).join('') || emptyRow(11,'No machine data');
 }
 
-// ─── MACHINE LOG ──────────────────────────────────────────
 async function loadMachineLog() {
   setLoading('mlog-tbody');
   const d = await api('getMachineLog');
-  state.data.mlog = d.data || [];
+  state.data.mlog = d.data||[];
   renderMLog(state.data.mlog);
-  document.getElementById('mlog-count').textContent = d.count || 0;
+  document.getElementById('mlog-count').textContent = d.count||0;
 }
 
 function renderMLog(rows) {
-  document.getElementById('mlog-tbody').innerHTML = rows.map(r => `
+  document.getElementById('mlog-tbody').innerHTML = rows.map(r=>`
     <tr>
-      <td>${r.date||''}</td>
-      <td style="font-weight:600;max-width:180px">${r.equipmentName||''}</td>
+      <td>${r.date||''}</td><td style="font-weight:600;max-width:160px">${r.equipmentName||''}</td>
       <td><span class="badge badge-blue">${r.transactionType||''}</span></td>
-      <td style="font-size:11px">${r.problem||''}</td>
-      <td style="font-size:11px;max-width:160px">${r.scopeOfWork||''}</td>
-      <td style="font-size:11px">${r.partsUsed||''}</td>
-      <td><span class="badge badge-green">${r.status||''}</span></td>
-      <td class="mono">${r.poNo||''}</td>
-      <td class="text-right">${r.qty||''}</td>
-      <td class="text-right mono">${r.unitPrice ? '₱'+fmt(r.unitPrice) : ''}</td>
-      <td class="text-right mono bold">${r.totalPrice ? '₱'+fmt(r.totalPrice) : ''}</td>
+      <td style="font-size:11px">${r.problem||''}</td><td style="font-size:11px;max-width:140px">${r.scopeOfWork||''}</td>
+      <td style="font-size:11px">${r.partsUsed||''}</td><td><span class="badge badge-green">${r.status||''}</span></td>
+      <td class="mono">${r.poNo||''}</td><td class="text-right">${r.qty||''}</td>
+      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
+      <td class="text-right mono bold">${r.totalPrice?'₱'+fmt(r.totalPrice):''}</td>
       <td style="font-size:11px">${r.supplier||''}</td>
-    </tr>
-  `).join('') || emptyRow(12, 'No machine log data');
+    </tr>`).join('') || emptyRow(12,'No machine log data');
 }
 
 function filterMLog(type) {
-  let rows = state.data.mlog || [];
-  if (type) rows = rows.filter(r => r.transactionType === type);
-  renderMLog(rows);
+  renderMLog(type ? (state.data.mlog||[]).filter(r=>r.transactionType===type) : state.data.mlog||[]);
 }
 
-// ─── TEST EQUIPMENT ───────────────────────────────────────
 async function loadTestEquip() {
   setLoading('te-tbody');
   const d = await api('getTestEquip');
-  state.data.te = d.data || [];
+  state.data.te = d.data||[];
   renderTE(state.data.te);
-  document.getElementById('te-count').textContent = d.count || 0;
+  document.getElementById('te-count').textContent = d.count||0;
 }
 
 function renderTE(rows) {
-  document.getElementById('te-tbody').innerHTML = rows.map(r => `
+  document.getElementById('te-tbody').innerHTML = rows.map(r=>`
     <tr>
-      <td>${r.date||''}</td>
-      <td style="font-weight:600;max-width:200px">${r.equipmentName||''}</td>
+      <td>${r.date||''}</td><td style="font-weight:600;max-width:180px">${r.equipmentName||''}</td>
       <td><span class="badge badge-purple">${r.transactionType||''}</span></td>
-      <td style="font-size:11px">${r.problem||''}</td>
-      <td style="font-size:11px">${r.scopeOfWork||''}</td>
-      <td style="font-size:11px">${r.recommendations||''}</td>
-      <td style="font-size:11px">${r.partsUsed||''}</td>
+      <td style="font-size:11px">${r.problem||''}</td><td style="font-size:11px">${r.scopeOfWork||''}</td>
+      <td style="font-size:11px">${r.recommendations||''}</td><td style="font-size:11px">${r.partsUsed||''}</td>
       <td><span class="badge badge-green">${r.status||''}</span></td>
-      <td class="mono">${r.poNo||''}</td>
-      <td class="text-right">${r.qty||''}</td>
-      <td class="text-right mono bold">${r.totalPrice ? '₱'+fmt(r.totalPrice) : ''}</td>
+      <td class="mono">${r.poNo||''}</td><td class="text-right">${r.qty||''}</td>
+      <td class="text-right mono bold">${r.totalPrice?'₱'+fmt(r.totalPrice):''}</td>
       <td style="font-size:11px">${r.supplier||''}</td>
-    </tr>
-  `).join('') || emptyRow(12, 'No test equipment data');
+    </tr>`).join('') || emptyRow(12,'No test equipment data');
 }
 
-// ─── SUBMIT MODALS ────────────────────────────────────────
+// ─── GENERIC EDIT MODAL ───────────────────────────────────
+// fields format: [[key, label, type, options?], ...]
+function openGenericEdit(section, rowIndex, title, subtitle, fields) {
+  state.editContext = { section, rowIndex, fields };
+  document.getElementById('modal-edit-title').textContent = `✏️ Edit — ${title}`;
+  document.getElementById('modal-edit-body').innerHTML = `
+    <p style="font-size:11px;color:var(--muted);margin-bottom:16px">${subtitle}</p>
+    <div class="form-grid">
+      ${fields.map(([key, label, type, opts]) => `
+        <div class="form-row">
+          <label>${label}</label>
+          ${type === 'select'
+            ? `<select id="ef-${key}">${(opts||[]).map(o=>`<option>${o}</option>`).join('')}</select>`
+            : `<input type="${type==='number'?'number':type==='date'?'date':'text'}" id="ef-${key}" placeholder="${label}">`
+          }
+        </div>`).join('')}
+    </div>`;
+  document.getElementById('modal-edit').classList.add('open');
+}
+
+async function submitEdit() {
+  const ctx = state.editContext;
+  if (!ctx) return;
+
+  let payload = {};
+
+  if (ctx.type === 'bom') {
+    // BOM edit
+    payload = {
+      action: 'updateBOMItem',
+      sheet: ctx.sheet,
+      row: ctx.row,
+      data: {
+        status: document.getElementById('edit-bom-status')?.value,
+        vendor: document.getElementById('edit-bom-vendor')?.value,
+        poNo: document.getElementById('edit-bom-pono')?.value,
+        unitPrice: parseFloat(document.getElementById('edit-bom-price')?.value)||0,
+        poDate: document.getElementById('edit-bom-podate')?.value,
+        whStatus: document.getElementById('edit-bom-whstatus')?.value,
+        delQty: parseFloat(document.getElementById('edit-bom-delqty')?.value)||0,
+        cancelQty: parseFloat(document.getElementById('edit-bom-cancelqty')?.value)||0,
+        expDate: document.getElementById('edit-bom-expdate')?.value,
+        actDate: document.getElementById('edit-bom-actdate')?.value,
+        bestPrice: parseFloat(document.getElementById('edit-bom-bestprice')?.value)||0,
+      }
+    };
+  } else {
+    // Generic edit
+    const data = {};
+    ctx.fields.forEach(([key]) => {
+      const el = document.getElementById(`ef-${key}`);
+      if (el) data[key] = el.type === 'number' ? (parseFloat(el.value)||0) : el.value;
+    });
+
+    const actionMap = {
+      ir: 'updateInternalRequest',
+      pp: 'updateProjectProgress',
+      po: 'updatePORow',
+      wh: 'updateWHRow',
+      payable: 'updatePayableRow',
+      weekly: 'updateWeeklyRow',
+      budget: 'updateBudgetRow',
+    };
+
+    payload = {
+      action: actionMap[ctx.section] || 'updateGenericRow',
+      row: ctx.rowIndex,
+      data
+    };
+  }
+
+  const btn = document.getElementById('edit-save-btn');
+  btn.textContent = '⏳ Saving…'; btn.disabled = true;
+  const res = await apiPost(payload);
+  btn.textContent = '💾 Save Changes'; btn.disabled = false;
+
+  if (res.success !== false && !res.error) {
+    toast('✅ Saved!', 'success');
+    closeModal('modal-edit');
+    // Reload current tab data
+    state.data[state.currentPage] = null;
+    const loaders = {
+      bom: ()=>loadBOMDirect(state.currentBOMSheet),
+      mrs:loadMRS, po:loadPO, wh:loadWH, payable:loadPayable,
+      internal:loadInternalRequests, progress:loadProjectProgress,
+      budget:loadBudgetSpending, weekly:loadWeeklyReview,
+    };
+    if (loaders[ctx.section]) loaders[ctx.section]();
+    else if (loaders[state.currentPage]) loaders[state.currentPage]();
+  } else {
+    toast('❌ Error: '+(res.error||'Unknown'), 'error');
+  }
+}
+
+// ─── INTERNAL REQUEST SUBMIT ──────────────────────────────
 function openIRModal() {
+  state.editContext = null;
+  document.getElementById('modal-ir-title').textContent = '🏢 New Internal Request';
+  document.getElementById('ir-save-btn').textContent = '💾 Save Request';
+  document.getElementById('ir-save-btn').onclick = submitIR;
   document.getElementById('ir-date').value = today();
+  document.getElementById('ir-item').value = '';
+  document.getElementById('ir-desc').value = '';
+  document.getElementById('ir-qty').value = '';
+  document.getElementById('ir-unit').value = '';
+  document.getElementById('ir-price').value = '';
+  document.getElementById('ir-reqby').value = '';
+  document.getElementById('ir-supplier').value = '';
+  document.getElementById('ir-pono').value = '';
+  document.getElementById('ir-notes').value = '';
   document.getElementById('modal-ir').classList.add('open');
-}
-
-function openPPModal() {
-  document.getElementById('pp-start').value = today();
-  document.getElementById('modal-pp').classList.add('open');
-}
-
-function openAddModal() {
-  const page = state.currentPage;
-  if (page === 'internal') openIRModal();
-  else if (page === 'progress') openPPModal();
-  else toast('ℹ️ Navigate to Internal Request or Project Progress to add entries.', 'info');
-}
-
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
 }
 
 async function submitIR() {
   const data = {
-    date:        document.getElementById('ir-date').value,
-    category:    document.getElementById('ir-cat-inp').value,
-    item:        document.getElementById('ir-item').value,
+    date: document.getElementById('ir-date').value,
+    category: document.getElementById('ir-cat-inp').value,
+    item: document.getElementById('ir-item').value,
     description: document.getElementById('ir-desc').value,
-    qty:         parseFloat(document.getElementById('ir-qty').value) || 0,
-    unit:        document.getElementById('ir-unit').value,
-    unitPrice:   parseFloat(document.getElementById('ir-price').value) || 0,
-    status:      document.getElementById('ir-stat-inp').value,
+    qty: parseFloat(document.getElementById('ir-qty').value)||0,
+    unit: document.getElementById('ir-unit').value,
+    unitPrice: parseFloat(document.getElementById('ir-price').value)||0,
+    status: document.getElementById('ir-stat-inp').value,
     requestedBy: document.getElementById('ir-reqby').value,
-    supplier:    document.getElementById('ir-supplier').value,
-    notes:       document.getElementById('ir-notes').value,
+    supplier: document.getElementById('ir-supplier').value,
+    poNo: document.getElementById('ir-pono').value,
+    deliveryDate: document.getElementById('ir-deldate').value,
+    notes: document.getElementById('ir-notes').value,
   };
-  if (!data.item) { toast('⚠️ Item name is required.', 'error'); return; }
-  const btn = document.querySelector('#modal-ir .primary');
-  btn.textContent = '⏳ Saving...'; btn.disabled = true;
-  const res = await apiPost({ action: 'addInternalRequest', data });
-  btn.textContent = '💾 Save Request'; btn.disabled = false;
-  if (res.success) {
-    toast('✅ Internal request saved!', 'success');
-    closeModal('modal-ir');
-    state.data.ir = null;
-    loadInternalRequests();
-  } else {
-    toast('❌ Error: ' + (res.error || 'Unknown'), 'error');
-  }
+  if (!data.item) { toast('⚠️ Item name required.','error'); return; }
+  const btn = document.getElementById('ir-save-btn');
+  btn.textContent='⏳ Saving…'; btn.disabled=true;
+  const res = await apiPost({action:'addInternalRequest', data});
+  btn.textContent='💾 Save Request'; btn.disabled=false;
+  if (res.success) { toast('✅ Request saved!','success'); closeModal('modal-ir'); state.data.ir=null; loadInternalRequests(); }
+  else toast('❌ Error: '+(res.error||'Unknown'),'error');
+}
+
+// ─── PROJECT PROGRESS SUBMIT ──────────────────────────────
+function openPPModal() {
+  document.getElementById('modal-pp-title').textContent = '📈 Add Project';
+  document.getElementById('pp-save-btn').textContent = '💾 Save Project';
+  document.getElementById('pp-start').value = today();
+  document.getElementById('modal-pp').classList.add('open');
 }
 
 async function submitPP() {
-  const pct_ = parseFloat(document.getElementById('pp-pct').value) || 0;
+  const pct_ = parseFloat(document.getElementById('pp-pct').value)||0;
   const data = {
-    so:            document.getElementById('pp-so').value,
-    client:        document.getElementById('pp-client').value,
-    description:   document.getElementById('pp-desc').value,
-    startDate:     document.getElementById('pp-start').value,
-    targetDate:    document.getElementById('pp-target').value,
-    contractValue: parseFloat(document.getElementById('pp-contract').value) || 0,
-    bomBudget:     parseFloat(document.getElementById('pp-budget').value) || 0,
-    actualSpend:   parseFloat(document.getElementById('pp-spend').value) || 0,
-    pctDone:       pct_ > 1 ? pct_/100 : pct_,
-    status:        document.getElementById('pp-stat-inp').value,
-    priority:      document.getElementById('pp-prio-inp').value,
-    phase:         document.getElementById('pp-phase-inp').value,
-    engineer:      document.getElementById('pp-engr').value,
-    issues:        document.getElementById('pp-issues').value,
+    so: document.getElementById('pp-so').value,
+    client: document.getElementById('pp-client').value,
+    description: document.getElementById('pp-desc').value,
+    startDate: document.getElementById('pp-start').value,
+    targetDate: document.getElementById('pp-target').value,
+    contractValue: parseFloat(document.getElementById('pp-contract').value)||0,
+    bomBudget: parseFloat(document.getElementById('pp-budget').value)||0,
+    actualSpend: parseFloat(document.getElementById('pp-spend').value)||0,
+    pctDone: pct_>1?pct_/100:pct_,
+    status: document.getElementById('pp-stat-inp').value,
+    priority: document.getElementById('pp-prio-inp').value,
+    phase: document.getElementById('pp-phase-inp').value,
+    engineer: document.getElementById('pp-engr').value,
+    issues: document.getElementById('pp-issues').value,
   };
-  if (!data.so || !data.client) { toast('⚠️ SO# and Client are required.', 'error'); return; }
-  const btn = document.querySelector('#modal-pp .primary');
-  btn.textContent = '⏳ Saving...'; btn.disabled = true;
-  const res = await apiPost({ action: 'addProjectProgress', data });
-  btn.textContent = '💾 Save Project'; btn.disabled = false;
-  if (res.success) {
-    toast('✅ Project added to tracker!', 'success');
-    closeModal('modal-pp');
-    state.data.pp = null;
-    loadProjectProgress();
-  } else {
-    toast('❌ Error: ' + (res.error || 'Unknown'), 'error');
-  }
+  if (!data.so||!data.client) { toast('⚠️ SO# and Client required.','error'); return; }
+  const btn = document.getElementById('pp-save-btn');
+  btn.textContent='⏳ Saving…'; btn.disabled=true;
+  const res = await apiPost({action:'addProjectProgress', data});
+  btn.textContent='💾 Save Project'; btn.disabled=false;
+  if (res.success) { toast('✅ Project added!','success'); closeModal('modal-pp'); state.data.pp=null; loadProjectProgress(); }
+  else toast('❌ Error: '+(res.error||'Unknown'),'error');
 }
+
+// ─── NEW CLIENT BOM ───────────────────────────────────────
+function openNewClientModal() {
+  document.getElementById('nc-so').value = '';
+  document.getElementById('nc-client').value = '';
+  document.getElementById('modal-new-client').classList.add('open');
+}
+
+async function submitNewClient() {
+  const so = document.getElementById('nc-so').value.trim();
+  const client = document.getElementById('nc-client').value.trim();
+  if (!so||!client) { toast('⚠️ SO# and Client required.','error'); return; }
+  toast('⏳ Creating BOM tab…','info');
+  const res = await apiPost({action:'createClientBOM', so, client});
+  if (res.success) {
+    toast('✅ BOM tab created: 📦 '+client,'success');
+    closeModal('modal-new-client');
+    // Refresh BOM dropdown
+    const sel = document.getElementById('bom-project-select');
+    const opt = document.createElement('option');
+    opt.value = '📦 '+client; opt.textContent = client;
+    sel.appendChild(opt);
+  } else toast('❌ Error: '+(res.error||'Unknown'),'error');
+}
+
+// ─── OPEN ADD MODAL (context-aware) ───────────────────────
+function openAddModal() {
+  const page = state.currentPage;
+  if (page==='internal') openIRModal();
+  else if (page==='progress') openPPModal();
+  else if (page==='bom') openBOMAddModal();
+  else toast('ℹ️ Navigate to a tab that supports adding entries.','info');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
 // ─── UTILITIES ────────────────────────────────────────────
 function refreshAll() {
-  Object.keys(state.data).forEach(k => state.data[k] = null);
+  Object.keys(state.data).forEach(k=>state.data[k]=null);
   const page = state.currentPage;
-  if (page === 'dashboard') loadDashboard();
+  if (page==='dashboard') loadDashboard();
   else navigate(page);
-  toast('↻ Refreshing data...', 'info');
+  toast('↻ Refreshing…','info');
 }
 
 function filterTable(tbodyId, searchId) {
   const q = document.getElementById(searchId).value.toLowerCase();
-  const rows = document.getElementById(tbodyId).querySelectorAll('tr');
-  rows.forEach(row => {
-    row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+  document.getElementById(tbodyId).querySelectorAll('tr').forEach(row=>{
+    row.style.display = row.textContent.toLowerCase().includes(q)?'':'none';
   });
 }
 
-function setLoading(id, msg = '') {
+function setLoading(id, msg='') {
   const el = document.getElementById(id);
   if (!el) return;
-  if (el.tagName === 'TBODY') {
-    const cols = el.closest('table')?.querySelectorAll('th').length || 6;
-    el.innerHTML = `<tr><td colspan="${cols}"><div class="loading"><div class="spinner"></div>${msg || 'Loading...'}</div></td></tr>`;
+  if (el.tagName==='TBODY') {
+    const cols = el.closest('table')?.querySelectorAll('th').length||6;
+    el.innerHTML=`<tr><td colspan="${cols}"><div class="loading"><div class="spinner"></div>${msg||'Loading…'}</div></td></tr>`;
   } else {
-    el.innerHTML = `<div class="loading"><div class="spinner"></div>${msg || 'Loading...'}</div>`;
+    el.innerHTML=`<div class="loading"><div class="spinner"></div>${msg||'Loading…'}</div>`;
   }
 }
 
 function updateSyncTime() {
-  document.getElementById('sync-time').textContent = 'synced ' + new Date().toLocaleTimeString();
+  document.getElementById('sync-time').textContent = 'synced '+new Date().toLocaleTimeString();
+  setSyncStatus('ok');
 }
 
-function toast(msg, type = 'info') {
+function toast(msg, type='info') {
   const el = document.createElement('div');
-  el.className = `toast ${type}`;
-  el.textContent = msg;
+  el.className=`toast ${type}`; el.textContent=msg;
   document.getElementById('toast-container').appendChild(el);
-  setTimeout(() => el.remove(), 3500);
+  setTimeout(()=>el.remove(), 3500);
 }
 
 function toggleTheme() {
-  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  state.theme = state.theme==='light'?'dark':'light';
   localStorage.setItem('epsi-theme', state.theme);
   applyTheme();
 }
 
 function applyTheme() {
   document.documentElement.setAttribute('data-theme', state.theme);
-  document.getElementById('theme-toggle').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  document.getElementById('theme-toggle').textContent = state.theme==='dark'?'☀️':'🌙';
 }
 
 // ─── FORMATTERS ───────────────────────────────────────────
-function fmt(n) {
-  const num = Number(n) || 0;
-  return num.toLocaleString('en-PH', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-}
-
+function fmt(n) { return (Number(n)||0).toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:2}); }
 function shortNum(n) {
-  const num = Number(n) || 0;
-  if (num >= 1e9) return (num/1e9).toFixed(1) + 'B';
-  if (num >= 1e6) return (num/1e6).toFixed(1) + 'M';
-  if (num >= 1e3) return (num/1e3).toFixed(1) + 'K';
-  return num.toFixed(0);
+  const v=Number(n)||0;
+  if(v>=1e9)return(v/1e9).toFixed(1)+'B';
+  if(v>=1e6)return(v/1e6).toFixed(1)+'M';
+  if(v>=1e3)return(v/1e3).toFixed(1)+'K';
+  return v.toFixed(0);
 }
-
-function pct(n) {
-  return (Number(n)*100).toFixed(1) + '%';
-}
-
+function pctFmt(n) { return ((Number(n)||0)*100).toFixed(1)+'%'; }
 function emptyRow(cols, msg) {
   return `<tr><td colspan="${cols}"><div class="empty"><div class="icon">📭</div><h4>${msg}</h4></div></td></tr>`;
 }
@@ -1841,38 +1903,35 @@ function emptyRow(cols, msg) {
 // ─── BADGE HELPERS ────────────────────────────────────────
 function statusBadge(s) {
   if (!s) return '';
-  const map = {
-    '✅': 'green', '🟢': 'green', '🏭': 'teal',
-    '🟡': 'yellow', '⬜': 'grey', '❌': 'red',
-    '🚚': 'teal', '🔄': 'blue', '⚠️': 'orange', '⏸️': 'grey',
-  };
-  const first = Object.keys(map).find(k => String(s).startsWith(k));
-  return `<span class="badge badge-${map[first] || 'grey'}">${s}</span>`;
+  const map={'✅':'green','🟢':'green','🏭':'teal','🟡':'yellow','⬜':'grey','❌':'red','🚚':'teal','🔄':'blue','⚠️':'orange','⏸️':'grey','📋':'grey'};
+  const first = Object.keys(map).find(k=>String(s).startsWith(k));
+  return `<span class="badge badge-${map[first]||'grey'}">${s}</span>`;
 }
-
+function bomStatusBadge(s) {
+  if (!s) return '<span class="badge badge-grey">📋 For Canvass</span>';
+  const map={'📋':'grey','🔍':'blue','📄':'purple','✅':'green','🚚':'yellow','📦':'teal'};
+  const first = Object.keys(map).find(k=>String(s).startsWith(k));
+  return `<span class="badge badge-${map[first]||'grey'}">${s}</span>`;
+}
 function whBadge(s) {
   if (!s) return '<span class="badge badge-grey">⬜ Pending</span>';
-  return `<span class="badge ${s.includes('✅') ? 'badge-green' : s.includes('🚚') ? 'badge-teal' : 'badge-grey'}">${s}</span>`;
+  return `<span class="badge ${s.includes('✅')?'badge-green':s.includes('🚚')?'badge-teal':'badge-grey'}">${s}</span>`;
 }
-
 function payBadge(s) {
   if (!s) return '<span class="badge badge-grey">⬜ Unpaid</span>';
-  return `<span class="badge ${s.includes('✅') ? 'badge-green' : 'badge-orange'}">${s}</span>`;
+  return `<span class="badge ${s.includes('✅')?'badge-green':'badge-orange'}">${s}</span>`;
 }
-
 function riskBadge(s) {
   if (!s) return '';
-  return `<span class="badge ${s.includes('CRITICAL') ? 'badge-red' : s.includes('WARNING') ? 'badge-yellow' : 'badge-green'}">${s}</span>`;
+  return `<span class="badge ${s.includes('CRITICAL')?'badge-red':s.includes('WARNING')?'badge-yellow':'badge-green'}">${s}</span>`;
 }
-
 function prioBadge(s) {
   if (!s) return '';
-  return `<span class="badge ${s.includes('🔴') ? 'badge-red' : s.includes('🟡') ? 'badge-yellow' : 'badge-green'}">${s}</span>`;
+  return `<span class="badge ${s.includes('🔴')?'badge-red':s.includes('🟡')?'badge-yellow':'badge-green'}">${s}</span>`;
 }
-
 function budgetStatusBadge(s) {
   if (!s) return '';
-  return `<span class="badge ${s.includes('🔴') ? 'badge-red' : s.includes('🟡') ? 'badge-yellow' : 'badge-green'}">${s}</span>`;
+  return `<span class="badge ${s.includes('🔴')?'badge-red':s.includes('🟡')?'badge-yellow':'badge-green'}">${s}</span>`;
 }
 </script>
 </body>
