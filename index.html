@@ -2,253 +2,291 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>EPSI Procurement</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
+/* ─── THEMES ─────────────────────────────────────────────── */
+:root{
   --navy:#0A1628;--navy2:#0F2044;--blue:#1565C0;--blue-lt:#1976D2;
   --teal:#00695C;--orange:#E65100;--purple:#4A148C;--green:#1B5E20;
   --red:#B71C1C;--gold:#FFD600;--gold2:#FFC107;
   --bg:#F0F4F8;--card:#FFFFFF;--border:#DDE3EA;--text:#1A2332;--muted:#6B7A8D;
-  --sidebar-w:232px;--hdr-h:54px;--radius:10px;
+  --sidebar-bg:#0A1628;--sidebar-active:rgba(21,101,192,.25);
+  --sidebar-w:236px;--hdr-h:54px;--radius:10px;
   --shadow:0 2px 12px rgba(10,22,40,.10);--shadow2:0 6px 28px rgba(10,22,40,.16);
 }
-[data-theme="dark"]{--bg:#0D1117;--card:#161B22;--border:#2D3748;--text:#E2E8F0;--muted:#8B9AB0;--navy:#0D1117;--navy2:#161B22;}
+[data-theme="dark"]{--bg:#0D1117;--card:#161B22;--border:#2D3748;--text:#E2E8F0;--muted:#8B9AB0;--sidebar-bg:#0D1117;}
+[data-theme="ocean"]{--bg:#E0F2FE;--card:#fff;--border:#BAE6FD;--text:#0C4A6E;--muted:#0369A1;--navy:#0C4A6E;--navy2:#075985;--blue:#0284C7;--sidebar-bg:#0C4A6E;--sidebar-active:rgba(2,132,199,.3);}
+[data-theme="forest"]{--bg:#F0FDF4;--card:#fff;--border:#BBF7D0;--text:#14532D;--muted:#166534;--navy:#14532D;--navy2:#166534;--blue:#16A34A;--sidebar-bg:#14532D;--sidebar-active:rgba(22,163,74,.3);}
+[data-theme="sunset"]{--bg:#FFF7ED;--card:#fff;--border:#FED7AA;--text:#7C2D12;--muted:#9A3412;--navy:#7C2D12;--navy2:#9A3412;--blue:#EA580C;--sidebar-bg:#7C2D12;--sidebar-active:rgba(234,88,12,.3);}
+[data-theme="lavender"]{--bg:#FAF5FF;--card:#fff;--border:#E9D5FF;--text:#3B0764;--muted:#7E22CE;--navy:#3B0764;--navy2:#4C1D95;--blue:#7C3AED;--sidebar-bg:#3B0764;--sidebar-active:rgba(124,58,237,.3);}
+[data-theme="earthy"]{--bg:#FEFCE8;--card:#fff;--border:#FEF08A;--text:#713F12;--muted:#A16207;--navy:#713F12;--navy2:#854D0E;--blue:#CA8A04;--sidebar-bg:#713F12;--sidebar-active:rgba(202,138,4,.3);}
+[data-theme="sakura"]{--bg:#FFF1F2;--card:#fff;--border:#FECDD3;--text:#881337;--muted:#BE123C;--navy:#881337;--navy2:#9F1239;--blue:#E11D48;--sidebar-bg:#881337;--sidebar-active:rgba(225,29,72,.3);}
+
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px;}
-#sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100%;background:var(--navy);display:flex;flex-direction:column;z-index:200;border-right:1px solid rgba(255,255,255,.06);}
-.sidebar-logo{padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);}
-.sidebar-logo .brand{font-size:15px;font-weight:700;color:#fff;}
-.sidebar-logo .sub{font-size:10px;color:rgba(255,255,255,.42);letter-spacing:1px;text-transform:uppercase;}
-.sidebar-logo .ver{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);margin-top:2px;}
-.sidebar-nav{flex:1;overflow-y:auto;padding:8px 0 16px;}
-.sidebar-nav::-webkit-scrollbar{width:3px;}
-.sidebar-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px;}
-.nav-section{padding:14px 16px 4px;font-size:9px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.28);}
-.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;color:rgba(255,255,255,.60);font-size:12.5px;border-left:3px solid transparent;transition:all .15s;text-decoration:none;}
-.nav-item:hover{background:rgba(255,255,255,.06);color:#fff;border-left-color:rgba(255,255,255,.2);}
-.nav-item.active{background:rgba(21,101,192,.25);color:#fff;border-left-color:var(--gold);font-weight:600;}
-.nav-item .icon{font-size:14px;flex-shrink:0;width:18px;text-align:center;}
-.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;font-family:'IBM Plex Mono',monospace;}
-.nav-badge.yellow{background:var(--gold2);color:#000;}
-.nav-badge.green{background:var(--teal);}
-.nav-badge.orange{background:var(--orange);}
-.sidebar-footer{padding:12px 16px;border-top:1px solid rgba(255,255,255,.07);}
-.live-dot{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.4);}
-.live-dot::before{content:'';width:6px;height:6px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite;}
+
+/* ─── SIDEBAR ─────────────────────────────────────────────── */
+#sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100%;background:var(--sidebar-bg);display:flex;flex-direction:column;z-index:200;border-right:1px solid rgba(255,255,255,.06);transition:background .3s;}
+.sb-logo{padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sb-logo .brand{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.2px;}
+.sb-logo .sub{font-size:9.5px;color:rgba(255,255,255,.4);letter-spacing:.8px;text-transform:uppercase;}
+.sb-logo .ver{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);margin-top:3px;}
+.sb-nav{flex:1;overflow-y:auto;padding:6px 0 16px;}
+.sb-nav::-webkit-scrollbar{width:3px;}
+.sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:2px;}
+.nav-grp{padding:13px 16px 3px;font-size:9px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.26);}
+.nav-item{display:flex;align-items:center;gap:9px;padding:7px 16px;cursor:pointer;color:rgba(255,255,255,.58);font-size:12.5px;border-left:3px solid transparent;transition:all .14s;text-decoration:none;}
+.nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+.nav-item.active{background:var(--sidebar-active);color:#fff;border-left-color:var(--gold);font-weight:600;}
+.nav-item .ico{font-size:13px;width:18px;text-align:center;flex-shrink:0;}
+.nb{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:10px;}
+.nb.y{background:var(--gold2);color:#000;} .nb.g{background:var(--teal);} .nb.o{background:var(--orange);}
+.sb-foot{padding:11px 16px;border-top:1px solid rgba(255,255,255,.07);}
+.live{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.38);}
+.live::before{content:'';width:6px;height:6px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-#header{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--hdr-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
-#page-title{font-size:16px;font-weight:700;color:var(--text);flex:1;}
-#page-title span{color:var(--muted);font-weight:400;font-size:13px;margin-left:8px;}
-.hdr-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:12px;font-family:'IBM Plex Sans',sans-serif;font-weight:500;display:flex;align-items:center;gap:6px;transition:all .15s;}
-.hdr-btn:hover{background:var(--bg);border-color:var(--blue);color:var(--blue);}
-.hdr-btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
-.hdr-btn.primary:hover{background:var(--blue-lt);}
-.hdr-btn.danger{background:var(--red);color:#fff;border-color:var(--red);}
-#sync-time{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
-#theme-toggle{cursor:pointer;font-size:18px;background:none;border:none;padding:4px;}
-#main{margin-left:var(--sidebar-w);margin-top:var(--hdr-h);padding:22px 24px;min-height:calc(100vh - var(--hdr-h));}
+
+/* ─── HEADER ──────────────────────────────────────────────── */
+#header{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--hdr-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:10px;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+#pg-title{font-size:16px;font-weight:700;flex:1;}
+#pg-sub{color:var(--muted);font-weight:400;font-size:12px;margin-left:8px;}
+.hbtn{padding:5px 13px;border-radius:6px;border:1px solid var(--border);background:var(--card);color:var(--text);cursor:pointer;font-size:12px;font-family:'IBM Plex Sans',sans-serif;font-weight:500;display:flex;align-items:center;gap:5px;transition:all .14s;white-space:nowrap;}
+.hbtn:hover{background:var(--bg);border-color:var(--blue);color:var(--blue);}
+.hbtn.p{background:var(--blue);color:#fff;border-color:var(--blue);}
+.hbtn.p:hover{filter:brightness(1.1);}
+#sync-t{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
+
+/* ─── MAIN ────────────────────────────────────────────────── */
+#main{margin-left:var(--sidebar-w);margin-top:var(--hdr-h);padding:20px 22px;min-height:calc(100vh - var(--hdr-h));}
 .page{display:none;}
-.page.active{display:block;animation:fadeIn .2s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.page.active{display:block;animation:fi .18s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── CARDS & LAYOUT ─────────────────────────────────────── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
-.card-header{padding:14px 18px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
-.card-header h3{font-size:13.5px;font-weight:700;flex:1;}
-.card-header .subtitle{font-size:11px;color:var(--muted);}
-.card-body{padding:16px 18px;}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:14px;margin-bottom:20px;}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;transition:box-shadow .15s;}
-.stat-card:hover{box-shadow:var(--shadow2);}
-.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
-.stat-card.blue::before{background:var(--blue);}
-.stat-card.teal::before{background:var(--teal);}
-.stat-card.orange::before{background:var(--orange);}
-.stat-card.purple::before{background:var(--purple);}
-.stat-card.green::before{background:var(--green);}
-.stat-card.red::before{background:var(--red);}
-.stat-card.gold::before{background:var(--gold2);}
-.stat-label{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;}
-.stat-value{font-size:26px;font-weight:700;line-height:1;font-family:'IBM Plex Mono',monospace;color:var(--text);}
-.stat-value.big{font-size:20px;}
-.stat-sub{font-size:10px;color:var(--muted);margin-top:4px;}
-.stat-icon{position:absolute;right:14px;top:14px;font-size:22px;opacity:.18;}
-.tbl-wrap{overflow-x:auto;}
+.ch{padding:13px 17px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;}
+.ch h3{font-size:13.5px;font-weight:700;flex:1;}
+.cb{padding:15px 17px;}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:13px;margin-bottom:18px;}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:15px;position:relative;overflow:hidden;transition:box-shadow .14s;}
+.sc:hover{box-shadow:var(--shadow2);}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.sc.blue::before{background:var(--blue);} .sc.teal::before{background:var(--teal);}
+.sc.orange::before{background:var(--orange);} .sc.purple::before{background:var(--purple);}
+.sc.green::before{background:var(--green);} .sc.red::before{background:var(--red);}
+.sc.gold::before{background:var(--gold2);}
+.sl{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px;}
+.sv{font-size:25px;font-weight:700;line-height:1;font-family:'IBM Plex Mono',monospace;}
+.sv.b{font-size:18px;} .ss{font-size:10px;color:var(--muted);margin-top:4px;}
+.si{position:absolute;right:13px;top:13px;font-size:21px;opacity:.17;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:15px;}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr;}}
+.sh{display:flex;align-items:center;gap:11px;margin-bottom:15px;padding-bottom:9px;border-bottom:1px solid var(--border);}
+.sh h2{font-size:15px;font-weight:700;}
+.cnt{background:var(--blue);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;}
+.mla{margin-left:auto;}
+
+/* ─── TABLE ────────────────────────────────────────────────── */
+.tw{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:12px;}
-th{background:var(--navy);color:#fff;padding:9px 12px;text-align:left;font-weight:600;font-size:11px;letter-spacing:.3px;white-space:nowrap;position:sticky;top:0;z-index:2;}
-td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:middle;}
+th{background:var(--navy);color:#fff;padding:8px 11px;text-align:left;font-weight:600;font-size:11px;white-space:nowrap;position:sticky;top:0;z-index:2;}
+td{padding:7px 11px;border-bottom:1px solid var(--border);vertical-align:middle;}
 tr:hover td{background:rgba(21,101,192,.04);}
-tr:nth-child(even) td{background:rgba(0,0,0,.018);}
+tr:nth-child(even) td{background:rgba(0,0,0,.016);}
+
+/* ─── BADGES ──────────────────────────────────────────────── */
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:600;white-space:nowrap;}
-.badge-green{background:#E8F5E9;color:#1B5E20;}
-.badge-blue{background:#E3F2FD;color:#0D47A1;}
-.badge-yellow{background:#FFFDE7;color:#F57F17;}
-.badge-orange{background:#FFF3E0;color:#E65100;}
-.badge-red{background:#FFEBEE;color:#B71C1C;}
-.badge-grey{background:#ECEFF1;color:#37474F;}
-.badge-purple{background:#F3E5F5;color:#4A148C;}
-.badge-teal{background:#E0F2F1;color:#00695C;}
-.progress{background:var(--border);border-radius:6px;height:7px;overflow:hidden;min-width:80px;}
-.progress-fill{height:100%;border-radius:6px;transition:width .4s ease;}
-.section-hdr{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border);}
-.section-hdr h2{font-size:15px;font-weight:700;}
-.section-hdr .count{background:var(--blue);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
-@media(max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
-.filter-bar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center;}
-.filter-bar input,.filter-bar select{padding:7px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:12px;font-family:'IBM Plex Sans',sans-serif;outline:none;}
-.filter-bar input:focus,.filter-bar select:focus{border-color:var(--blue);}
-.filter-bar input{min-width:220px;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;z-index:1000;align-items:center;justify-content:center;}
-.modal-overlay.open{display:flex;}
-.modal{background:var(--card);border-radius:12px;width:680px;max-width:96vw;max-height:90vh;overflow:auto;box-shadow:var(--shadow2);animation:slideUp .2s ease;}
-.modal.wide{width:900px;}
-@keyframes slideUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal-header{padding:18px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;}
-.modal-header h3{flex:1;font-size:15px;font-weight:700;}
-.modal-close{cursor:pointer;font-size:20px;color:var(--muted);background:none;border:none;padding:2px 6px;}
-.modal-body{padding:20px;}
-.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
-.form-row{margin-bottom:14px;}
-.form-row label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
-.form-row input,.form-row select,.form-row textarea{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:12.5px;font-family:'IBM Plex Sans',sans-serif;outline:none;}
-.form-row input:focus,.form-row select:focus,.form-row textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,101,192,.1);}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
-.loading{text-align:center;padding:48px;color:var(--muted);}
-.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 12px;}
+.bg{background:#E8F5E9;color:#1B5E20;} .bb{background:#E3F2FD;color:#0D47A1;}
+.by{background:#FFFDE7;color:#F57F17;} .bo{background:#FFF3E0;color:#E65100;}
+.br{background:#FFEBEE;color:#B71C1C;} .bgr{background:#ECEFF1;color:#37474F;}
+.bp{background:#F3E5F5;color:#4A148C;} .bt{background:#E0F2F1;color:#00695C;}
+
+/* ─── PROGRESS BAR ───────────────────────────────────────── */
+.pbar{background:var(--border);border-radius:6px;height:7px;overflow:hidden;min-width:70px;}
+.pfill{height:100%;border-radius:6px;transition:width .4s;}
+
+/* ─── FILTER BAR ──────────────────────────────────────────── */
+.fb{display:flex;gap:9px;margin-bottom:15px;flex-wrap:wrap;align-items:center;}
+.fb input,.fb select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:12px;font-family:'IBM Plex Sans',sans-serif;outline:none;}
+.fb input:focus,.fb select:focus{border-color:var(--blue);}
+.fb input{min-width:195px;}
+
+/* ─── MODALS ──────────────────────────────────────────────── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.52);display:none;z-index:1000;align-items:center;justify-content:center;}
+.mo.open{display:flex;}
+.md{background:var(--card);border-radius:12px;width:700px;max-width:96vw;max-height:92vh;overflow:auto;box-shadow:var(--shadow2);animation:su .18s ease;}
+.md.w{width:960px;} .md.sm{width:480px;}
+@keyframes su{from{transform:translateY(18px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mh{padding:17px 20px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;}
+.mh h3{flex:1;font-size:15px;font-weight:700;}
+.mc{cursor:pointer;font-size:20px;color:var(--muted);background:none;border:none;padding:2px 8px;}
+.mb{padding:20px;}
+.mf{padding:13px 20px;border-top:1px solid var(--border);display:flex;gap:9px;justify-content:flex-end;}
+.fr{margin-bottom:13px;}
+.fr label{display:block;font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.4px;}
+.fr input,.fr select,.fr textarea{width:100%;padding:7px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:12.5px;font-family:'IBM Plex Sans',sans-serif;outline:none;}
+.fr input:focus,.fr select:focus,.fr textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,101,192,.08);}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;}
+
+/* ─── MISC ────────────────────────────────────────────────── */
+.loading{text-align:center;padding:44px;color:var(--muted);}
+.spinner{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 11px;}
 @keyframes spin{to{transform:rotate(360deg)}}
-#toast-container{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
-.toast{padding:12px 18px;border-radius:8px;color:#fff;font-size:12.5px;font-weight:600;box-shadow:var(--shadow2);animation:toastIn .25s ease;max-width:340px;}
-@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
-.toast.success{background:var(--teal);}
-.toast.error{background:var(--red);}
-.toast.info{background:var(--blue);}
-.toast.warning{background:var(--orange);}
-.empty{text-align:center;padding:48px 24px;color:var(--muted);}
-.empty .icon{font-size:40px;margin-bottom:10px;opacity:.5;}
-.empty h4{font-size:14px;margin-bottom:6px;color:var(--text);}
+#toasts{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:7px;}
+.toast{padding:11px 17px;border-radius:8px;color:#fff;font-size:12.5px;font-weight:600;box-shadow:var(--shadow2);animation:ti .22s ease;max-width:330px;}
+@keyframes ti{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:translateX(0)}}
+.ts{background:var(--teal);} .te{background:var(--red);}
+.ti{background:var(--blue);} .tw2{background:var(--orange);}
+.empty{text-align:center;padding:44px 20px;color:var(--muted);}
+.empty .ei{font-size:36px;margin-bottom:9px;opacity:.5;}
 .mono{font-family:'IBM Plex Mono',monospace;}
-.text-right{text-align:right;}
-.text-center{text-align:center;}
-.ml-auto{margin-left:auto;}
-.bold{font-weight:700;}
-.muted{color:var(--muted);}
-.edit-btn{padding:2px 8px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--card);cursor:pointer;color:var(--blue);font-weight:600;transition:all .15s;white-space:nowrap;}
-.edit-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
-.sort-btn{cursor:pointer;user-select:none;}
-.sort-btn:hover{color:var(--gold);}
-/* BOM Status Bar */
-.status-bar{display:flex;height:10px;border-radius:6px;overflow:hidden;margin:4px 0;}
-.status-bar-seg{transition:width .4s ease;}
-.po-summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
-/* Sync indicator */
-#sync-indicator{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);}
-#sync-indicator.syncing::before{content:'';width:8px;height:8px;border:2px solid var(--blue);border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;display:inline-block;}
-#sync-indicator.ok::before{content:'●';color:#4CAF50;}
+.tr{text-align:right;} .tc{text-align:center;} .bold{font-weight:700;} .mu{color:var(--muted);}
+.eb{padding:2px 8px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--card);cursor:pointer;color:var(--blue);font-weight:600;transition:all .14s;}
+.eb:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+/* ─── ALERT CARDS ─────────────────────────────────────────── */
+.ac{border-radius:8px;padding:11px 13px;margin-bottom:7px;cursor:pointer;transition:all .14s;border:1px solid var(--border);display:flex;align-items:flex-start;gap:9px;}
+.ac:hover{box-shadow:var(--shadow2);transform:translateY(-1px);}
+.ac.cv{background:#FFF8E1;border-left:4px solid #F57F17;}
+.ac.fp{background:#F3E5F5;border-left:4px solid #7B1FA2;}
+.ac.dl{background:#E3F2FD;border-left:4px solid #1565C0;}
+.ac .act{font-weight:700;font-size:12px;}
+.ac .acs{font-size:10.5px;color:var(--muted);margin-top:2px;}
+
+/* ─── BOM STATUS BAR ──────────────────────────────────────── */
+.sbar{display:flex;height:9px;border-radius:5px;overflow:hidden;}
+.sbseg{transition:width .4s;}
+
+/* ─── THEME GRID ──────────────────────────────────────────── */
+.tg{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
+.to{border:2px solid var(--border);border-radius:8px;padding:9px 7px;cursor:pointer;text-align:center;transition:all .14s;}
+.to:hover{border-color:var(--blue);}
+.to.sel{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,101,192,.14);}
+.tsw{height:26px;border-radius:5px;margin-bottom:5px;}
+.tn{font-size:11px;font-weight:600;}
+
+/* ─── BATCH BOM ROWS ─────────────────────────────────────── */
+.br-row{display:grid;grid-template-columns:28px 2fr 60px 60px 90px 1fr 110px;gap:5px;margin-bottom:5px;align-items:center;}
+.br-row input,.br-row select{padding:5px 7px;border:1px solid var(--border);border-radius:5px;font-size:11px;background:var(--card);color:var(--text);}
 </style>
 </head>
 <body>
 
+<!-- ══════════ SIDEBAR ══════════ -->
 <nav id="sidebar">
-  <div class="sidebar-logo">
+  <div class="sb-logo">
     <div class="brand">⚡ EPSI</div>
     <div class="sub">Procurement Command Center</div>
-    <div class="ver">v9 · live sync</div>
+    <div class="ver">v3 · 2021–2026</div>
   </div>
-  <div class="sidebar-nav">
-    <div class="nav-section">Procurement</div>
-    <a class="nav-item active" onclick="navigate('dashboard')"><span class="icon">📊</span>Dashboard</a>
-    <a class="nav-item" onclick="navigate('bom')"><span class="icon">📦</span>BOM / Client View</a>
-    <a class="nav-item" onclick="navigate('mrs')"><span class="icon">📝</span>MRS<span class="nav-badge yellow" id="badge-mrs">…</span></a>
-    <a class="nav-item" onclick="navigate('po')"><span class="icon">🛒</span>Purchase Orders<span class="nav-badge" id="badge-po">…</span></a>
-    <a class="nav-item" onclick="navigate('wh')"><span class="icon">🏭</span>WH Incoming<span class="nav-badge" id="badge-wh">…</span></a>
-    <a class="nav-item" onclick="navigate('payable')"><span class="icon">💰</span>Vendor Bill<span class="nav-badge" id="badge-pay">…</span></a>
-    <a class="nav-item" onclick="navigate('history')"><span class="icon">📊</span>Item History</a>
-    <a class="nav-item" onclick="navigate('alerts')"><span class="icon">🚨</span>Alerts<span class="nav-badge" id="badge-alert">…</span></a>
-    <div class="nav-section">Projects</div>
-    <a class="nav-item" onclick="navigate('internal')"><span class="icon">🏢</span>Internal Request<span class="nav-badge orange" id="badge-ir">…</span></a>
-    <a class="nav-item" onclick="navigate('progress')"><span class="icon">📈</span>Project Progress</a>
-    <a class="nav-item" onclick="navigate('budget')"><span class="icon">💹</span>Budget & Spending</a>
-    <a class="nav-item" onclick="navigate('weekly')"><span class="icon">📢</span>Weekly Review</a>
-    <div class="nav-section">Equipment</div>
-    <a class="nav-item" onclick="navigate('machinelist')"><span class="icon">🔧</span>Machine List</a>
-    <a class="nav-item" onclick="navigate('machinelog')"><span class="icon">🛠️</span>Machine Log</a>
-    <a class="nav-item" onclick="navigate('testequip')"><span class="icon">🔬</span>Test Equipment</a>
-    <div class="nav-section">Actions</div>
-    <a class="nav-item" onclick="openAddModal()"><span class="icon">➕</span>Add New Entry</a>
-    <a class="nav-item" onclick="openNewClientModal()"><span class="icon">🏗️</span>New Client BOM</a>
-    <a class="nav-item" onclick="refreshAll()"><span class="icon">↻</span>Refresh All</a>
+  <div class="sb-nav">
+    <div class="nav-grp">📋 Procurement</div>
+    <a class="nav-item active" onclick="go('dashboard')"><span class="ico">📊</span>Dashboard</a>
+    <a class="nav-item" onclick="go('alerts')"><span class="ico">🔔</span>BOM Alerts<span class="nb" id="nb-alert">…</span></a>
+    <a class="nav-item" onclick="go('bom')"><span class="ico">📦</span>BOM / Projects</a>
+    <a class="nav-item" onclick="go('mrs')"><span class="ico">📝</span>MRS<span class="nb y" id="nb-mrs">…</span></a>
+    <a class="nav-item" onclick="go('po')"><span class="ico">🛒</span>Purchase Orders<span class="nb" id="nb-po">…</span></a>
+    <a class="nav-item" onclick="go('wh')"><span class="ico">🏭</span>WH Incoming<span class="nb y" id="nb-wh">…</span></a>
+    <a class="nav-item" onclick="go('payable')"><span class="ico">💰</span>Vendor Bill<span class="nb" id="nb-pay">…</span></a>
+    <a class="nav-item" onclick="go('history')"><span class="ico">📊</span>Item History</a>
+    <div class="nav-grp">📁 Projects</div>
+    <a class="nav-item" onclick="go('internal')"><span class="ico">🏢</span>Internal Request<span class="nb o" id="nb-ir">…</span></a>
+    <a class="nav-item" onclick="go('progress')"><span class="ico">📈</span>Project Progress</a>
+    <a class="nav-item" onclick="go('budget')"><span class="ico">💹</span>Budget & Spending</a>
+    <a class="nav-item" onclick="go('weekly')"><span class="ico">📢</span>Weekly Review</a>
+    <div class="nav-grp">🔧 Equipment</div>
+    <a class="nav-item" onclick="go('machinelist')"><span class="ico">🔧</span>Machine Assets</a>
+    <a class="nav-item" onclick="go('machinelog')"><span class="ico">🛠️</span>Machine Log</a>
+    <a class="nav-item" onclick="go('testequip')"><span class="ico">🔬</span>Test Equipment</a>
+    <div class="nav-grp">⚙️ Actions</div>
+    <a class="nav-item" onclick="addEntry()"><span class="ico">➕</span>Add Entry</a>
+    <a class="nav-item" onclick="openModal('m-client')"><span class="ico">🏗️</span>New Client BOM</a>
+    <a class="nav-item" onclick="refreshAll()"><span class="ico">↻</span>Refresh All</a>
+    <a class="nav-item" onclick="openThemePicker()"><span class="ico">🎨</span>Change Theme</a>
   </div>
-  <div class="sidebar-footer">
-    <div class="live-dot" id="live-status">live sync active</div>
-  </div>
+  <div class="sb-foot"><div class="live">live sync active</div></div>
 </nav>
 
+<!-- ══════════ HEADER ══════════ -->
 <header id="header">
-  <div id="page-title">Dashboard <span id="page-sub"></span></div>
-  <div id="sync-indicator" class="ok">synced</div>
-  <span id="sync-time">–</span>
-  <button class="hdr-btn" onclick="refreshAll()">↻ Refresh</button>
-  <button class="hdr-btn primary" onclick="openAddModal()" id="add-btn">➕ Add</button>
-  <button id="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
+  <div id="pg-title">Dashboard</div><span id="pg-sub"></span>
+  <div style="flex:1"></div>
+  <span id="sync-t">–</span>
+  <button class="hbtn" onclick="refreshAll()">↻ Refresh</button>
+  <button class="hbtn p" onclick="addEntry()" id="add-btn">➕ Add</button>
+  <button class="hbtn" onclick="openThemePicker()" style="font-size:15px;padding:5px 9px">🎨</button>
 </header>
 
+<!-- ══════════ PAGES ══════════ -->
 <main id="main">
 
 <!-- DASHBOARD -->
 <div id="page-dashboard" class="page active">
-  <div class="stats-grid" id="dash-stats"><div class="loading"><div class="spinner"></div>Loading dashboard…</div></div>
-  <div class="grid-2" id="dash-charts">
+  <div class="stats-grid" id="dash-stats"><div class="loading"><div class="spinner"></div>Loading…</div></div>
+  <div class="g2">
     <div class="card">
-      <div class="card-header"><h3>📦 BOM Projects</h3><button class="hdr-btn" style="font-size:11px;padding:3px 10px" onclick="openNewClientModal()">+ New Client</button></div>
-      <div class="card-body" id="bom-summary-list"><div class="loading"><div class="spinner"></div></div></div>
+      <div class="ch"><h3>🔔 BOM Alerts — Action Needed</h3><button class="hbtn" style="font-size:11px;padding:3px 10px" onclick="go('alerts')">View All →</button></div>
+      <div class="cb" id="dash-alerts"><div class="loading"><div class="spinner"></div></div></div>
     </div>
     <div class="card">
-      <div class="card-header"><h3>🚨 Shortage & Alerts</h3></div>
-      <div class="card-body" id="shortage-summary"></div>
+      <div class="ch"><h3>📦 Client BOM Projects</h3><button class="hbtn" style="font-size:11px;padding:3px 10px" onclick="openModal('m-client')">+ New Client</button></div>
+      <div class="cb" id="dash-bom-list"><div class="loading"><div class="spinner"></div></div></div>
     </div>
   </div>
 </div>
 
+<!-- ALERTS PAGE -->
+<div id="page-alerts" class="page">
+  <div class="sh">
+    <h2>🔔 BOM Action Alerts</h2><div class="cnt" id="cnt-alert">0</div>
+    <div class="mla fb" style="margin-bottom:0">
+      <select id="af-status" onchange="renderAlerts()"><option value="">All</option><option value="📋 For Canvass">📋 For Canvass</option><option value="📄 For PO">📄 For PO</option><option value="🚚 Partial Delivery">🚚 Partial Delivery</option></select>
+      <input id="af-q" placeholder="🔍 Search project, item…" oninput="renderAlerts()" style="min-width:170px">
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--muted);margin-bottom:12px">Click any card → jumps to BOM and highlights that row.</p>
+  <div class="g3" id="alert-stats" style="margin-bottom:15px"></div>
+  <div id="alert-list"></div>
+</div>
+
 <!-- BOM -->
 <div id="page-bom" class="page">
-  <div class="section-hdr">
-    <h2>📦 Bill of Materials — Client View</h2>
-    <div class="ml-auto filter-bar" style="margin-bottom:0">
-      <select id="bom-project-select" onchange="loadBOMProject()"><option value="">Select Project…</option></select>
+  <div class="sh">
+    <h2>📦 Bill of Materials</h2>
+    <div class="mla fb" style="margin-bottom:0">
+      <select id="bom-sel" onchange="loadBOMProject()"><option value="">Select Client / Project…</option></select>
     </div>
   </div>
-  <!-- BOM Status Summary Bar -->
-  <div id="bom-progress-card" style="display:none;margin-bottom:16px">
-    <div class="card">
-      <div class="card-body" style="padding:12px 18px">
-        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-          <div style="font-size:12px;font-weight:700;min-width:100px">📊 Progress</div>
-          <div id="bom-status-bar" class="status-bar" style="flex:1;min-width:200px"></div>
-          <div id="bom-pct-label" style="font-size:14px;font-weight:700;font-family:'IBM Plex Mono',monospace;min-width:48px;text-align:right"></div>
-        </div>
-        <div id="bom-status-legend" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:10px"></div>
+  <div id="bom-prog-wrap" style="display:none;margin-bottom:13px">
+    <div class="card"><div class="cb" style="padding:11px 17px">
+      <div style="display:flex;align-items:center;gap:13px;flex-wrap:wrap">
+        <span style="font-size:12px;font-weight:700;min-width:80px">📊 Progress</span>
+        <div id="bom-sbar" class="sbar" style="flex:1;min-width:140px;border:1px solid var(--border)"></div>
+        <span id="bom-pct" class="mono" style="font-size:14px;font-weight:700;min-width:44px;text-align:right"></span>
       </div>
-    </div>
+      <div id="bom-legend" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:7px;font-size:10px"></div>
+    </div></div>
   </div>
   <div class="card">
-    <div class="card-header">
-      <h3 id="bom-sheet-title">Select a project above</h3>
-      <div class="subtitle" id="bom-count"></div>
-      <button class="hdr-btn primary" id="bom-add-btn" style="display:none;font-size:11px;padding:4px 12px" onclick="openBOMAddModal()">➕ Add Item</button>
+    <div class="ch">
+      <h3 id="bom-title">Select a project above</h3>
+      <span class="mu" id="bom-cnt" style="font-size:11px"></span>
+      <div class="mla" style="display:flex;gap:7px">
+        <button class="hbtn p" id="bom-add-btn" style="display:none;font-size:11px;padding:4px 11px" onclick="openModal('m-bom-batch')">➕ Add Items</button>
+      </div>
     </div>
-    <div class="tbl-wrap">
-      <table id="bom-table">
-        <thead><tr>
-          <th>#</th><th>Category</th><th>Part Description</th><th>Part No.</th>
-          <th>Qty</th><th>Unit</th><th>Budget (₱)</th><th>WH Stock</th><th>Status</th>
-          <th>Vendor</th><th>PO #</th><th>Unit Price (₱)</th>
-          <th>🏭 WH</th><th>Del</th><th>Bal</th><th>Act. Date</th><th>✏️</th>
-        </tr></thead>
-        <tbody id="bom-tbody"></tbody>
+    <div class="tw" style="max-height:68vh;overflow-y:auto">
+      <table id="bom-tbl">
+        <thead><tr><th>#</th><th>Category</th><th>Description</th><th>Part No.</th>
+        <th>Qty</th><th>Unit</th><th>Budget (₱)</th><th>WH Stock</th>
+        <th>Status</th><th>Vendor</th><th>PO #</th><th>Unit Price (₱)</th>
+        <th>WH Status</th><th>Del</th><th>Bal</th><th>Act. Date</th><th>✏️</th></tr></thead>
+        <tbody id="bom-body"></tbody>
       </table>
     </div>
   </div>
@@ -256,1683 +294,895 @@ tr:nth-child(even) td{background:rgba(0,0,0,.018);}
 
 <!-- MRS -->
 <div id="page-mrs" class="page">
-  <div class="section-hdr"><h2>📝 Material Requisition Slips</h2><div class="count" id="mrs-count">0</div></div>
-  <div class="filter-bar">
-    <input type="text" id="mrs-search" placeholder="🔍 Search description, project, PO#…" oninput="filterMRSLive()">
-    <select id="mrs-status-filter" onchange="filterMRS()">
-      <option value="">All Status</option>
-      <option>✅ PO Issued</option><option>🟡 For Canvass</option>
-      <option>🏭 Warehouse Stock</option><option>🟢 Ready for PO</option>
-    </select>
-    <select id="mrs-sort" onchange="filterMRS()">
-      <option value="">Sort: Default</option>
-      <option value="date-desc">Date: Newest First</option>
-      <option value="date-asc">Date: Oldest First</option>
-      <option value="mrs">Group by MRS#</option>
-    </select>
+  <div class="sh"><h2>📝 MRS</h2><div class="cnt" id="cnt-mrs">0</div></div>
+  <div class="fb">
+    <input id="mrs-q" placeholder="🔍 Search…" oninput="filterMRSLive()">
+    <select id="mrs-sf" onchange="filterMRS()"><option value="">All Status</option><option>✅ PO Issued</option><option>🟡 For Canvass</option><option>🏭 Warehouse Stock</option></select>
+    <select id="mrs-sort" onchange="filterMRS()"><option value="">Sort: Default</option><option value="date-desc">Date: Newest</option><option value="date-asc">Date: Oldest</option></select>
   </div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:70vh;overflow-y:auto">
-      <table>
-        <thead><tr>
-          <th>MRS #</th><th>Date</th><th>Project / SO</th><th>Type</th><th>Category</th><th>Part Description</th>
-          <th>Qty</th><th>Unit</th><th>Prev Price (₱)</th><th>Status</th>
-          <th>Vendor</th><th>PO #</th><th>Unit Price (₱)</th><th>PO Date</th><th>✏️</th>
-        </tr></thead>
-        <tbody id="mrs-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+  <div class="card"><div class="tw" style="max-height:70vh;overflow-y:auto">
+    <table><thead><tr><th>MRS #</th><th>Date</th><th>Project</th><th>Type</th><th>Category</th><th>Description</th><th>Qty</th><th>Unit</th><th>Prev Price</th><th>Status</th><th>Vendor</th><th>PO #</th><th>Unit Price</th><th>PO Date</th><th>✏️</th></tr></thead>
+    <tbody id="mrs-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- PURCHASE ORDERS -->
 <div id="page-po" class="page">
-  <div class="section-hdr"><h2>🛒 Purchase Orders</h2><div class="count" id="po-count">0</div></div>
-  <div class="filter-bar">
-    <input type="text" id="po-search" placeholder="🔍 Search PO#, supplier, project…" oninput="filterTable('po-tbody','po-search')">
-    <select id="po-status-filter" onchange="filterPO()">
-      <option value="">All Status</option>
-      <option>⬜ Pending</option><option>✅ Delivered</option><option>❌ Cancelled</option>
-    </select>
+  <div class="sh"><h2>🛒 Purchase Orders</h2><div class="cnt" id="cnt-po">0</div></div>
+  <div class="fb">
+    <input id="po-q" placeholder="🔍 Search PO#, supplier, project…" oninput="filterTable('po-body','po-q')">
+    <select id="po-sf" onchange="filterPO()"><option value="">All Status</option><option>⬜ Pending</option><option>✅ Delivered</option><option>❌ Cancelled</option></select>
   </div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:70vh;overflow-y:auto">
-      <table>
-        <thead><tr>
-          <th>#</th><th>PO #</th><th>Project</th><th>Part Description</th>
-          <th>Part No.</th><th>Supplier</th><th>Unit</th>
-          <th>Ord. Qty</th><th>Unit Price (₱)</th><th>Line Total (₱)</th>
-          <th>PO Date</th><th>Status</th><th>Remarks</th><th>✏️</th>
-        </tr></thead>
-        <tbody id="po-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+  <div class="card"><div class="tw" style="max-height:70vh;overflow-y:auto">
+    <table><thead><tr><th>#</th><th>PO #</th><th>Project</th><th>Description</th><th>Part No.</th><th>Supplier</th><th>Unit</th><th>Qty</th><th>Unit Price (₱)</th><th>Line Total (₱)</th><th>PO Date</th><th>Status</th><th>Remarks</th><th>✏️</th></tr></thead>
+    <tbody id="po-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- WH INCOMING -->
 <div id="page-wh" class="page">
-  <div class="section-hdr"><h2>🏭 WH Incoming — Delivery Tracking</h2><div class="count" id="wh-count">0</div></div>
-  <div class="filter-bar">
-    <input type="text" id="wh-search" placeholder="🔍 Search PO#, supplier, project…" oninput="filterTable('wh-tbody','wh-search')">
-    <select onchange="filterWH(this.value)">
-      <option value="">All Status</option>
-      <option>✅ Complete</option><option>⬜ Pending</option><option>🚚 Partial</option>
-    </select>
+  <div class="sh"><h2>🏭 WH Incoming</h2><div class="cnt" id="cnt-wh">0</div></div>
+  <div class="fb">
+    <input id="wh-q" placeholder="🔍 Search PO#, supplier…" oninput="filterTable('wh-body','wh-q')">
+    <select onchange="filterWH(this.value)"><option value="">All Status</option><option>✅ Complete</option><option>⬜ Pending</option><option>🚚 Partial</option></select>
   </div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:70vh;overflow-y:auto">
-      <table>
-        <thead><tr>
-          <th>PO #</th><th>Project</th><th>Part Description</th><th>Supplier</th>
-          <th>Unit</th><th>PO Qty</th><th>Del. Qty</th><th>Cancel</th>
-          <th>Balance</th><th>Actual Date</th><th>Expected</th><th>Days Var</th><th>Status</th><th>✏️</th>
-        </tr></thead>
-        <tbody id="wh-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+  <div class="card"><div class="tw" style="max-height:70vh;overflow-y:auto">
+    <table><thead><tr><th>PO #</th><th>Project</th><th>Description</th><th>Supplier</th><th>Unit</th><th>PO Qty</th><th>Del Qty</th><th>Cancel</th><th>Balance</th><th>Actual Date</th><th>Expected</th><th>Days Var</th><th>Status</th><th>✏️</th></tr></thead>
+    <tbody id="wh-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- VENDOR PAYABLE -->
 <div id="page-payable" class="page">
-  <div class="section-hdr"><h2>💰 Vendor Payable Monitoring</h2><div class="count" id="pay-count">0</div></div>
-  <div class="filter-bar">
-    <input type="text" id="pay-search" placeholder="🔍 Search PO#, supplier…" oninput="filterTable('pay-tbody','pay-search')">
-    <select onchange="filterPayable(this.value)">
-      <option value="">All</option><option>⬜ Unpaid</option><option>✅ Paid</option>
-    </select>
+  <div class="sh"><h2>💰 Vendor Payable</h2><div class="cnt" id="cnt-pay">0</div></div>
+  <div class="fb">
+    <input id="pay-q" placeholder="🔍 Search PO#, supplier…" oninput="filterTable('pay-body','pay-q')">
+    <select onchange="filterPayable(this.value)"><option value="">All</option><option>⬜ Unpaid</option><option>✅ Paid</option></select>
   </div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:70vh;overflow-y:auto">
-      <table>
-        <thead><tr>
-          <th>#</th><th>PO #</th><th>Project</th><th>Supplier</th>
-          <th>Part Description</th><th>Del. Qty</th><th>Unit Price (₱)</th>
-          <th>Amount (₱)</th><th>Billing Date</th><th>Invoice #</th>
-          <th>Due Date</th><th>Pay Status</th><th>Amt Paid (₱)</th><th>Bal. Due (₱)</th><th>✏️</th>
-        </tr></thead>
-        <tbody id="pay-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+  <div class="card"><div class="tw" style="max-height:70vh;overflow-y:auto">
+    <table><thead><tr><th>#</th><th>PO #</th><th>Project</th><th>Supplier</th><th>Description</th><th>Del Qty</th><th>Unit Price (₱)</th><th>Amount (₱)</th><th>Billing Date</th><th>Invoice #</th><th>Due Date</th><th>Pay Status</th><th>Amt Paid (₱)</th><th>Bal Due (₱)</th><th>✏️</th></tr></thead>
+    <tbody id="pay-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- ITEM HISTORY -->
 <div id="page-history" class="page">
-  <div class="section-hdr"><h2>📊 Item Price History</h2><div class="count" id="hist-count">0</div></div>
-  <div class="filter-bar">
-    <input type="text" id="hist-search" placeholder="🔍 Search part no., description…" oninput="filterTable('hist-tbody','hist-search')">
+  <div class="sh"><h2>📊 Item Price History</h2><div class="cnt" id="cnt-hist">0</div></div>
+  <div class="fb">
+    <input id="hist-q" placeholder="🔍 Search part no., description…" oninput="filterHistory()">
     <select id="hist-cat" onchange="filterHistory()"><option value="">All Categories</option></select>
-    <select id="hist-sort" onchange="filterHistory()">
-      <option value="desc">Date: Newest First</option>
-      <option value="asc">Date: Oldest First</option>
-    </select>
+    <select id="hist-src" onchange="filterHistory()"><option value="">All Sources</option><option value="Item History">📊 History Tab</option><option value="PO">🛒 PO Tab</option><option value="MRS">📝 MRS Tab</option></select>
+    <select id="hist-sort" onchange="filterHistory()"><option value="desc">Newest First</option><option value="asc">Oldest First</option></select>
   </div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:70vh;overflow-y:auto">
-      <table>
-        <thead><tr>
-          <th>Cat No / Part No.</th><th>Description</th><th>Category</th>
-          <th class="sort-btn" onclick="toggleHistSort()">PO Date ↕</th><th>PO #</th><th>Supplier</th>
-          <th>Unit Price (₱)</th><th>Prev Price (₱)</th><th>Change (₱)</th><th>% Change</th><th>Project</th>
-        </tr></thead>
-        <tbody id="hist-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ALERTS -->
-<div id="page-alerts" class="page">
-  <div class="section-hdr"><h2>🚨 Material Shortage Alerts</h2></div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-header" style="background:#B71C1C;border:none"><h3 style="color:#fff">🔴 Critical & Warning Items</h3></div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Item Code</th><th>Description</th><th>Stock</th><th>Min</th><th>Demand</th><th>After</th><th>Risk</th></tr></thead>
-        <tbody id="shortage-tbody"></tbody>
-      </table></div>
-    </div>
-    <div class="card">
-      <div class="card-header" style="background:#E65100;border:none"><h3 style="color:#fff">⚠️ Dead Stock (180+ days)</h3></div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Item Code</th><th>Description</th><th>Last Movement</th><th>Qty</th><th>Value (₱)</th><th>Days</th><th>Status</th></tr></thead>
-        <tbody id="dead-tbody"></tbody>
-      </table></div>
-    </div>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <div class="card-header"><h3>📋 Action Required Items</h3></div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>Client</th><th>Project</th><th>Cat No</th><th>Description</th><th>Qty</th><th>Unit</th><th>Budget</th><th>Category</th></tr></thead>
-      <tbody id="action-tbody"></tbody>
-    </table></div>
-  </div>
+  <div class="card"><div class="tw" style="max-height:70vh;overflow-y:auto">
+    <table><thead><tr><th>Part No./Cat No.</th><th>Description</th><th>Category</th><th>PO Date</th><th>PO #</th><th>Supplier</th><th>Unit Price (₱)</th><th>Prev Price (₱)</th><th>Change (₱)</th><th>% Change</th><th>Project</th><th>Source</th></tr></thead>
+    <tbody id="hist-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- INTERNAL REQUEST -->
 <div id="page-internal" class="page">
-  <div class="section-hdr">
-    <h2>🏢 Internal Request Tracker</h2>
-    <div class="count" id="ir-count">0</div>
-    <div class="ml-auto"><button class="hdr-btn primary" onclick="openIRModal()">➕ New Request</button></div>
+  <div class="sh"><h2>🏢 Internal Request</h2><div class="cnt" id="cnt-ir">0</div>
+    <div class="mla"><button class="hbtn p" onclick="openIRModal()">➕ New Request</button></div>
   </div>
   <div class="stats-grid" id="ir-stats"></div>
-  <div class="filter-bar">
-    <input type="text" id="ir-search" placeholder="🔍 Search item, supplier, category…" oninput="filterTable('ir-tbody','ir-search')">
-    <select id="ir-cat-filter" onchange="filterIR()">
-      <option value="">All Categories</option>
-      <option>🔧 Machine Repair</option><option>🔨 Tools</option>
-      <option>🧪 Test Equipment</option><option>🖊️ Office Supplies</option>
-      <option>🧹 Sanitary Supplies</option><option>🚗 Vehicle Maintenance</option>
-    </select>
-    <select id="ir-stat-filter" onchange="filterIR()">
-      <option value="">All Status</option>
-      <option>✅ Complete</option><option>🚚 In Transit</option>
-      <option>✅ PO Issued</option><option>🟡 For Canvass</option><option>⬜ Pending</option>
-    </select>
+  <div class="fb">
+    <input id="ir-q" placeholder="🔍 Search item, supplier…" oninput="filterTable('ir-body','ir-q')">
+    <select id="ir-cf" onchange="filterIR()"><option value="">All Categories</option><option>🔧 Machine Repair</option><option>🔨 Tools</option><option>🧪 Test Equipment</option><option>🖊️ Office Supplies</option><option>🧹 Sanitary Supplies</option><option>🚗 Vehicle Maintenance</option></select>
+    <select id="ir-sf" onchange="filterIR()"><option value="">All Status</option><option>✅ Complete</option><option>🚚 In Transit</option><option>✅ PO Issued</option><option>🟡 For Canvass</option><option>⬜ Pending</option></select>
   </div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:62vh;overflow-y:auto">
-      <table>
-        <thead><tr>
-          <th>#</th><th>Date</th><th>Category</th><th>Equipment / Item</th>
-          <th>Qty</th><th>Unit</th><th>Unit Price (₱)</th><th>Total (₱)</th>
-          <th>Requested By</th><th>Supplier</th><th>PO #</th><th>Status</th>
-          <th>Delivery</th><th>Amt Paid (₱)</th><th>Notes</th><th>✏️</th>
-        </tr></thead>
-        <tbody id="ir-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+  <div class="card"><div class="tw" style="max-height:62vh;overflow-y:auto">
+    <table><thead><tr><th>#</th><th>Date</th><th>Category</th><th>Equipment / Item</th><th>Qty</th><th>Unit</th><th>Unit Price (₱)</th><th>Total (₱)</th><th>Requested By</th><th>Supplier</th><th>PO #</th><th>Status</th><th>Delivery</th><th>Amt Paid (₱)</th><th>Notes</th><th>✏️</th></tr></thead>
+    <tbody id="ir-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- PROJECT PROGRESS -->
 <div id="page-progress" class="page">
-  <div class="section-hdr">
-    <h2>📈 Project Progress Tracker</h2>
-    <div class="count" id="pp-count">0</div>
-    <div class="ml-auto"><button class="hdr-btn primary" onclick="openPPModal()">➕ New Project</button></div>
+  <div class="sh"><h2>📈 Project Progress</h2><div class="cnt" id="cnt-pp">0</div>
+    <div class="mla"><button class="hbtn p" onclick="openPPModal()">➕ New Project</button></div>
   </div>
   <div class="stats-grid" id="pp-stats"></div>
-  <div class="filter-bar">
-    <input type="text" id="pp-search" placeholder="🔍 Search SO#, client, project…" oninput="filterTable('pp-tbody','pp-search')">
-    <select id="pp-stat-filter" onchange="filterPP()">
-      <option value="">All Status</option>
-      <option>🔄 In Progress</option><option>✅ Completed</option>
-      <option>⚠️ At Risk</option><option>⏸️ On Hold</option>
-    </select>
-    <select id="pp-prio-filter" onchange="filterPP()">
-      <option value="">All Priority</option>
-      <option>🔴 High</option><option>🟡 Normal</option><option>🟢 Low</option>
-    </select>
+  <div class="fb">
+    <input id="pp-q" placeholder="🔍 Search SO#, client…" oninput="filterTable('pp-body','pp-q')">
+    <select id="pp-sf" onchange="filterPP()"><option value="">All Status</option><option>🔄 In Progress</option><option>✅ Completed</option><option>⚠️ At Risk</option><option>⏸️ On Hold</option></select>
   </div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:65vh;overflow-y:auto">
-      <table>
-        <thead><tr>
-          <th>#</th><th>SO #</th><th>Client</th><th>Description</th>
-          <th>Target Date</th><th>Contract (₱)</th><th>Budget (₱)</th>
-          <th>Spend (₱)</th><th>Variance</th><th>% Done (BOM)</th>
-          <th>BOM Status</th><th>Status</th><th>Priority</th><th>Phase</th><th>Engineer</th><th>✏️</th>
-        </tr></thead>
-        <tbody id="pp-tbody"></tbody>
-      </table>
-    </div>
-  </div>
+  <div class="card"><div class="tw" style="max-height:65vh;overflow-y:auto">
+    <table><thead><tr><th>#</th><th>SO #</th><th>Client</th><th>Description</th><th>Target</th><th>Contract (₱)</th><th>Budget (₱)</th><th>Spend (₱)</th><th>Variance</th><th>% Done</th><th>BOM Status</th><th>Status</th><th>Priority</th><th>Phase</th><th>✏️</th></tr></thead>
+    <tbody id="pp-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- BUDGET & SPENDING -->
 <div id="page-budget" class="page">
-  <div class="section-hdr"><h2>💹 Budget & Spending Report</h2></div>
+  <div class="sh"><h2>💹 Budget & Spending</h2></div>
   <div class="stats-grid" id="budget-stats"></div>
-  <!-- Category comparison -->
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-header"><h3>🏷️ Spending by Internal Request Category</h3></div>
-    <div class="card-body" id="budget-category-chart" style="padding:12px 18px"></div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="ch"><h3>🏷️ Internal Request Spend by Category</h3></div>
+    <div class="cb" id="budget-cat"></div>
   </div>
-  <div class="card" style="margin-bottom:16px">
-    <div class="card-header" style="background:var(--blue)"><h3 style="color:#fff">📦 Section A: Project Budget vs Actual</h3></div>
-    <div class="tbl-wrap"><table>
-      <thead><tr>
-        <th>SO #</th><th>Client</th><th>Contract (₱)</th><th>Budget (₱)</th>
-        <th>Spend (₱)</th><th>Remaining (₱)</th><th>% Used</th><th>Status</th><th>✏️</th>
-      </tr></thead>
-      <tbody id="budget-proj-tbody"></tbody>
-    </table></div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="ch" style="background:var(--blue)"><h3 style="color:#fff">📦 Project Budget vs Actual</h3></div>
+    <div class="tw"><table><thead><tr><th>SO #</th><th>Client</th><th>Contract (₱)</th><th>Budget (₱)</th><th>Spend (₱)</th><th>Remaining (₱)</th><th>% Used</th><th>Status</th></tr></thead>
+    <tbody id="bg-proj"></tbody></table></div>
   </div>
-  <div class="grid-2">
-    <div class="card">
-      <div class="card-header" style="background:var(--orange)"><h3 style="color:#fff">🔧 Section B: Machine Spending</h3></div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Equipment</th><th>Model</th><th>Repair</th><th>Parts</th><th>Tools</th><th>Calib</th><th>Total (₱)</th><th>Works</th></tr></thead>
-        <tbody id="budget-mach-tbody"></tbody>
-      </table></div>
+  <div class="g2">
+    <div class="card"><div class="ch" style="background:var(--orange)"><h3 style="color:#fff">🔧 Machine Spending</h3></div>
+      <div class="tw"><table><thead><tr><th>Equipment</th><th>Model</th><th>Repair</th><th>Parts</th><th>Tools</th><th>Total (₱)</th></tr></thead><tbody id="bg-mach"></tbody></table></div>
     </div>
-    <div class="card">
-      <div class="card-header" style="background:var(--purple)"><h3 style="color:#fff">🔬 Section C: Test Equipment</h3></div>
-      <div class="tbl-wrap"><table>
-        <thead><tr><th>Equipment</th><th>2022</th><th>2023</th><th>2024</th><th>Total (₱)</th><th>Last Calib</th><th>Next Due</th></tr></thead>
-        <tbody id="budget-te-tbody"></tbody>
-      </table></div>
+    <div class="card"><div class="ch" style="background:var(--purple)"><h3 style="color:#fff">🔬 Test Equipment</h3></div>
+      <div class="tw"><table><thead><tr><th>Equipment</th><th>2022</th><th>2023</th><th>2024</th><th>Total (₱)</th><th>Last Calib</th><th>Next Due</th></tr></thead><tbody id="bg-te"></tbody></table></div>
     </div>
   </div>
 </div>
 
 <!-- WEEKLY REVIEW -->
 <div id="page-weekly" class="page">
-  <div class="section-hdr"><h2>📢 Weekly Project Review</h2></div>
-  <div class="card">
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>SO #</th><th>Client</th><th>Project</th><th>Target Date</th><th>Status</th><th>Priority</th><th>Remarks</th><th>✏️</th></tr></thead>
-      <tbody id="weekly-tbody"></tbody>
-    </table></div>
+  <div class="sh"><h2>📢 Weekly Review</h2><div class="cnt" id="cnt-wr">0</div>
+    <div class="mla"><button class="hbtn p" onclick="openWRModal()">➕ Add Entry</button></div>
   </div>
+  <div class="fb">
+    <input id="wr-q" placeholder="🔍 Search SO#, client, notes…" oninput="filterTable('wr-body','wr-q')">
+    <select onchange="filterWR(this.value)"><option value="">All</option><option>🔄 In Progress</option><option>✅ On Track</option><option>⚠️ At Risk</option><option>⏸️ On Hold</option></select>
+  </div>
+  <div class="card"><div class="tw" style="max-height:70vh;overflow-y:auto">
+    <table><thead><tr><th>#</th><th>Date</th><th>SO #</th><th>Client</th><th>Project</th><th>Target</th><th>Status</th><th>Priority</th><th>Notes / Updates</th><th>Updated By</th><th>Next Action</th><th>✏️</th></tr></thead>
+    <tbody id="wr-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- MACHINE LIST -->
 <div id="page-machinelist" class="page">
-  <div class="section-hdr"><h2>🔧 Machine & Equipment Asset Register</h2></div>
-  <div class="card">
-    <div class="tbl-wrap"><table>
-      <thead><tr>
-        <th>Equipment Name</th><th>Brand</th><th>Model</th><th>Serial No.</th>
-        <th>Exelon Code</th><th>Unit Cost (₱)</th><th>Supplier</th>
-        <th>Date Purchased</th><th>PO</th><th>Remarks</th><th>Status</th>
-      </tr></thead>
-      <tbody id="ml-tbody"></tbody>
-    </table></div>
-  </div>
+  <div class="sh"><h2>🔧 Machine Asset Register</h2></div>
+  <div class="card"><div class="tw">
+    <table><thead><tr><th>Equipment Name</th><th>Brand</th><th>Model</th><th>Serial No.</th><th>Exelon Code</th><th>Unit Cost (₱)</th><th>Supplier</th><th>Date Purchased</th><th>PO</th><th>Remarks</th><th>Status</th></tr></thead>
+    <tbody id="ml-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- MACHINE LOG -->
 <div id="page-machinelog" class="page">
-  <div class="section-hdr"><h2>🛠️ Machine Maintenance & Repair Log</h2><div class="count" id="mlog-count">0</div></div>
-  <div class="filter-bar">
-    <input type="text" id="mlog-search" placeholder="🔍 Search equipment, PO#…" oninput="filterTable('mlog-tbody','mlog-search')">
-    <select onchange="filterMLog(this.value)">
-      <option value="">All Types</option>
-      <option>Repair</option><option>Parts</option><option>Tools</option><option>Calibration</option><option>Preventive</option>
-    </select>
+  <div class="sh"><h2>🛠️ Machine Log</h2><div class="cnt" id="cnt-mlog">0</div></div>
+  <div class="fb">
+    <input id="mlog-q" placeholder="🔍 Search equipment, PO#…" oninput="filterTable('mlog-body','mlog-q')">
+    <select onchange="filterMLog(this.value)"><option value="">All Types</option><option>Repair</option><option>Parts</option><option>Tools</option><option>Calibration</option></select>
   </div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:68vh;overflow-y:auto"><table>
-      <thead><tr>
-        <th>Date</th><th>Equipment</th><th>Type</th><th>Problem</th>
-        <th>Scope</th><th>Parts Used</th><th>Status</th>
-        <th>PO #</th><th>Qty</th><th>Unit Price</th><th>Total (₱)</th><th>Supplier</th>
-      </tr></thead>
-      <tbody id="mlog-tbody"></tbody>
-    </table></div>
-  </div>
+  <div class="card"><div class="tw" style="max-height:68vh;overflow-y:auto">
+    <table><thead><tr><th>Date</th><th>Equipment</th><th>Brand/Model</th><th>Type</th><th>Problem</th><th>Scope of Work</th><th>Parts Used</th><th>Status</th><th>PO #</th><th>Qty</th><th>Unit Price</th><th>Total (₱)</th><th>Supplier</th></tr></thead>
+    <tbody id="mlog-body"></tbody></table>
+  </div></div>
 </div>
 
 <!-- TEST EQUIPMENT -->
 <div id="page-testequip" class="page">
-  <div class="section-hdr"><h2>🔬 Test Equipment Calibration Log</h2><div class="count" id="te-count">0</div></div>
-  <div class="card">
-    <div class="tbl-wrap" style="max-height:68vh;overflow-y:auto"><table>
-      <thead><tr>
-        <th>Date</th><th>Equipment</th><th>Type</th><th>Problem</th>
-        <th>Scope</th><th>Recommendations</th><th>Parts</th>
-        <th>Status</th><th>PO #</th><th>Qty</th><th>Total (₱)</th><th>Supplier</th>
-      </tr></thead>
-      <tbody id="te-tbody"></tbody>
-    </table></div>
+  <div class="sh"><h2>🔬 Test Equipment Log</h2><div class="cnt" id="cnt-te">0</div></div>
+  <div class="card"><div class="tw" style="max-height:68vh;overflow-y:auto">
+    <table><thead><tr><th>Date</th><th>Equipment</th><th>Brand/Model</th><th>Type</th><th>Problem</th><th>Scope</th><th>Recommendations</th><th>Parts</th><th>Status</th><th>PO #</th><th>Total (₱)</th><th>Supplier</th></tr></thead>
+    <tbody id="te-body"></tbody></table>
+  </div></div>
+</div>
+
+</main><!-- end main -->
+
+<!-- ════════ MODALS ════════ -->
+
+<!-- Internal Request -->
+<div class="mo" id="m-ir">
+  <div class="md">
+    <div class="mh"><h3 id="ir-modal-title">🏢 New Internal Request</h3><button class="mc" onclick="closeModal('m-ir')">✕</button></div>
+    <div class="mb">
+      <div class="fg"><div class="fr"><label>Date *</label><input type="date" id="ir-date"></div>
+        <div class="fr"><label>Category *</label><select id="ir-cat"><option>🔧 Machine Repair</option><option>🔨 Tools</option><option>🧪 Test Equipment</option><option>🖊️ Office Supplies</option><option>🧹 Sanitary Supplies</option><option>🚗 Vehicle Maintenance</option><option>📦 Other</option></select></div>
+      </div>
+      <div class="fr"><label>Equipment / Item Name *</label><input type="text" id="ir-item" placeholder="e.g. V-Belt for CNC Machine"></div>
+      <div class="fr"><label>Description</label><input type="text" id="ir-desc"></div>
+      <div class="fg">
+        <div class="fr"><label>Qty *</label><input type="number" id="ir-qty"></div>
+        <div class="fr"><label>Unit</label><input type="text" id="ir-unit" placeholder="pcs / lot / svc"></div>
+        <div class="fr"><label>Unit Price (₱)</label><input type="number" id="ir-price"></div>
+        <div class="fr"><label>Status</label><select id="ir-stat"><option>⬜ Pending</option><option>🟡 For Canvass</option><option>✅ PO Issued</option><option>🚚 In Transit</option><option>✅ Complete</option></select></div>
+        <div class="fr"><label>Requested By</label><input type="text" id="ir-reqby"></div>
+        <div class="fr"><label>Supplier</label><input type="text" id="ir-supp"></div>
+        <div class="fr"><label>PO #</label><input type="text" id="ir-pono"></div>
+        <div class="fr"><label>Delivery Date</label><input type="date" id="ir-del"></div>
+      </div>
+      <div class="fr"><label>Notes</label><textarea id="ir-notes" rows="2"></textarea></div>
+    </div>
+    <div class="mf"><button class="hbtn" onclick="closeModal('m-ir')">Cancel</button><button class="hbtn p" id="ir-sbtn" onclick="submitIR()">💾 Save</button></div>
   </div>
 </div>
 
-</main>
-
-<!-- ══════════════════════ MODALS ══════════════════════ -->
-
-<!-- Internal Request Modal -->
-<div class="modal-overlay" id="modal-ir">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modal-ir-title">🏢 New Internal Request</h3><button class="modal-close" onclick="closeModal('modal-ir')">✕</button></div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-row"><label>Date *</label><input type="date" id="ir-date"></div>
-        <div class="form-row"><label>Category *</label>
-          <select id="ir-cat-inp">
-            <option>🔧 Machine Repair</option><option>🔨 Tools</option>
-            <option>🧪 Test Equipment</option><option>🖊️ Office Supplies</option>
-            <option>🧹 Sanitary Supplies</option><option>🚗 Vehicle Maintenance</option><option>📦 Other</option>
-          </select>
-        </div>
+<!-- Project Progress -->
+<div class="mo" id="m-pp">
+  <div class="md">
+    <div class="mh"><h3>📈 Add Project</h3><button class="mc" onclick="closeModal('m-pp')">✕</button></div>
+    <div class="mb">
+      <div class="fg">
+        <div class="fr"><label>SO # *</label><input type="text" id="pp-so"></div>
+        <div class="fr"><label>Client *</label><input type="text" id="pp-client"></div>
       </div>
-      <div class="form-row"><label>Equipment / Item Name *</label><input type="text" id="ir-item" placeholder="e.g. V-Belt for CNC Machine"></div>
-      <div class="form-row"><label>Description</label><input type="text" id="ir-desc" placeholder="Detailed description or specifications"></div>
-      <div class="form-grid">
-        <div class="form-row"><label>Qty *</label><input type="number" id="ir-qty" placeholder="0" min="0"></div>
-        <div class="form-row"><label>Unit</label><input type="text" id="ir-unit" placeholder="pcs / lot / svc / set"></div>
-        <div class="form-row"><label>Unit Price (₱)</label><input type="number" id="ir-price" placeholder="0.00"></div>
-        <div class="form-row"><label>Status</label>
-          <select id="ir-stat-inp">
-            <option>⬜ Pending</option><option>🟡 For Canvass</option>
-            <option>✅ PO Issued</option><option>🚚 In Transit</option><option>✅ Complete</option>
-          </select>
-        </div>
+      <div class="fr"><label>Project Description *</label><input type="text" id="pp-desc"></div>
+      <div class="fg">
+        <div class="fr"><label>Start Date</label><input type="date" id="pp-start"></div>
+        <div class="fr"><label>Target Date *</label><input type="date" id="pp-target"></div>
+        <div class="fr"><label>Contract Value (₱)</label><input type="number" id="pp-contract"></div>
+        <div class="fr"><label>BOM Budget (₱)</label><input type="number" id="pp-budget"></div>
+        <div class="fr"><label>Status</label><select id="pp-stat"><option>📋 Planning</option><option>🔄 In Progress</option><option>⚠️ At Risk</option><option>⏸️ On Hold</option><option>✅ Completed</option></select></div>
+        <div class="fr"><label>Priority</label><select id="pp-prio"><option>🔴 High</option><option>🟡 Normal</option><option>🟢 Low</option></select></div>
+        <div class="fr"><label>Phase</label><select id="pp-phase"><option>Engineering</option><option>Procurement</option><option>Fabrication</option><option>Assembly</option><option>Testing</option><option>Delivery</option></select></div>
+        <div class="fr"><label>Engineer</label><input type="text" id="pp-engr"></div>
       </div>
-      <div class="form-grid">
-        <div class="form-row"><label>Requested By</label><input type="text" id="ir-reqby" placeholder="Name"></div>
-        <div class="form-row"><label>Supplier</label><input type="text" id="ir-supplier" placeholder="Vendor name"></div>
-        <div class="form-row"><label>PO #</label><input type="text" id="ir-pono" placeholder="e.g. P14540"></div>
-        <div class="form-row"><label>Delivery Date</label><input type="date" id="ir-deldate"></div>
-      </div>
-      <div class="form-row"><label>Notes</label><textarea id="ir-notes" rows="2" placeholder="Additional notes"></textarea></div>
+      <div class="fr"><label>Issues / Remarks</label><textarea id="pp-issues" rows="2"></textarea></div>
     </div>
-    <div class="modal-footer">
-      <button class="hdr-btn" onclick="closeModal('modal-ir')">Cancel</button>
-      <button class="hdr-btn primary" id="ir-save-btn" onclick="submitIR()">💾 Save Request</button>
-    </div>
+    <div class="mf"><button class="hbtn" onclick="closeModal('m-pp')">Cancel</button><button class="hbtn p" id="pp-sbtn" onclick="submitPP()">💾 Save</button></div>
   </div>
 </div>
 
-<!-- Project Progress Modal -->
-<div class="modal-overlay" id="modal-pp">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modal-pp-title">📈 Add Project</h3><button class="modal-close" onclick="closeModal('modal-pp')">✕</button></div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-row"><label>SO # *</label><input type="text" id="pp-so" placeholder="e.g. S13479"></div>
-        <div class="form-row"><label>Client *</label><input type="text" id="pp-client" placeholder="Client name"></div>
+<!-- Weekly Review -->
+<div class="mo" id="m-wr">
+  <div class="md sm">
+    <div class="mh"><h3>📢 Add Review Entry</h3><button class="mc" onclick="closeModal('m-wr')">✕</button></div>
+    <div class="mb">
+      <div class="fg">
+        <div class="fr"><label>Review Date *</label><input type="date" id="wr-date"></div>
+        <div class="fr"><label>SO #</label><input type="text" id="wr-so" placeholder="e.g. S13479"></div>
+        <div class="fr"><label>Client</label><input type="text" id="wr-client"></div>
+        <div class="fr"><label>Target Date</label><input type="date" id="wr-target"></div>
+        <div class="fr"><label>Status</label><select id="wr-stat"><option>🔄 In Progress</option><option>✅ On Track</option><option>⚠️ At Risk</option><option>⏸️ On Hold</option><option>✅ Completed</option></select></div>
+        <div class="fr"><label>Priority</label><select id="wr-prio"><option>🔴 High</option><option>🟡 Normal</option><option>🟢 Low</option></select></div>
       </div>
-      <div class="form-row"><label>Project Description *</label><input type="text" id="pp-desc" placeholder="Brief project description"></div>
-      <div class="form-grid">
-        <div class="form-row"><label>Start Date</label><input type="date" id="pp-start"></div>
-        <div class="form-row"><label>Target Date *</label><input type="date" id="pp-target"></div>
-        <div class="form-row"><label>Contract Value (₱)</label><input type="number" id="pp-contract" placeholder="0"></div>
-        <div class="form-row"><label>BOM Budget (₱)</label><input type="number" id="pp-budget" placeholder="0"></div>
-        <div class="form-row"><label>Actual Spend (₱)</label><input type="number" id="pp-spend" placeholder="0"></div>
-        <div class="form-row"><label>% Done (manual override)</label><input type="number" id="pp-pct" placeholder="0" min="0" max="100"></div>
-        <div class="form-row"><label>Status</label>
-          <select id="pp-stat-inp">
-            <option>📋 Planning</option><option>🔄 In Progress</option>
-            <option>⚠️ At Risk</option><option>⏸️ On Hold</option><option>✅ Completed</option>
-          </select>
-        </div>
-        <div class="form-row"><label>Priority</label>
-          <select id="pp-prio-inp"><option>🔴 High</option><option>🟡 Normal</option><option>🟢 Low</option></select>
-        </div>
-        <div class="form-row"><label>Phase</label>
-          <select id="pp-phase-inp">
-            <option>Engineering</option><option>Procurement</option><option>Fabrication</option>
-            <option>Assembly</option><option>Testing</option><option>Delivery</option><option>Completed</option>
-          </select>
-        </div>
-        <div class="form-row"><label>Engineer In Charge</label><input type="text" id="pp-engr" placeholder="Engineer name"></div>
-      </div>
-      <div class="form-row"><label>Issues / Remarks</label><textarea id="pp-issues" rows="2" placeholder="Current issues or remarks"></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="hdr-btn" onclick="closeModal('modal-pp')">Cancel</button>
-      <button class="hdr-btn primary" id="pp-save-btn" onclick="submitPP()">💾 Save Project</button>
-    </div>
-  </div>
-</div>
-
-<!-- Edit Modal (generic) -->
-<div class="modal-overlay" id="modal-edit">
-  <div class="modal">
-    <div class="modal-header"><h3 id="modal-edit-title">✏️ Edit Record</h3><button class="modal-close" onclick="closeModal('modal-edit')">✕</button></div>
-    <div class="modal-body" id="modal-edit-body"></div>
-    <div class="modal-footer">
-      <button class="hdr-btn" onclick="closeModal('modal-edit')">Cancel</button>
-      <button class="hdr-btn primary" id="edit-save-btn" onclick="submitEdit()">💾 Save Changes</button>
-    </div>
-  </div>
-</div>
-
-<!-- PO Breakdown Modal -->
-<div class="modal-overlay" id="modal-po-detail">
-  <div class="modal wide">
-    <div class="modal-header"><h3 id="po-detail-title">📋 PO Summary</h3><button class="modal-close" onclick="closeModal('modal-po-detail')">✕</button></div>
-    <div class="modal-body" id="po-detail-body"></div>
-  </div>
-</div>
-
-<!-- BOM Add Item Modal -->
-<div class="modal-overlay" id="modal-bom-add">
-  <div class="modal">
-    <div class="modal-header"><h3>➕ Add BOM Item</h3><button class="modal-close" onclick="closeModal('modal-bom-add')">✕</button></div>
-    <div class="modal-body">
-      <div class="form-grid">
-        <div class="form-row"><label>MRF No</label><input type="text" id="bom-add-mrf" placeholder="e.g. MRF-S13479-001"></div>
-        <div class="form-row"><label>Category</label>
-          <select id="bom-add-cat">
-            <option>⚡ Electrical</option><option>🔩 Mechanical</option><option>🖥️ Electronics</option>
-            <option>🔧 Tools & Equipment</option><option>🏗️ Structural</option><option>🧰 Hardware</option>
-            <option>🧪 Chemicals</option><option>📦 Consumables</option><option>🚗 Vehicle Parts</option><option>📋 Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row"><label>Description *</label><input type="text" id="bom-add-desc" placeholder="Full description of item"></div>
-      <div class="form-row"><label>Part No.</label><input type="text" id="bom-add-partno" placeholder="e.g. DX10A12TWB"></div>
-      <div class="form-grid">
-        <div class="form-row"><label>Qty *</label><input type="number" id="bom-add-qty" placeholder="0"></div>
-        <div class="form-row"><label>Unit</label>
-          <select id="bom-add-unit"><option>pcs</option><option>lot</option><option>set</option><option>meter</option><option>kg</option><option>liter</option><option>box</option><option>roll</option><option>sheet</option><option>pair</option><option>unit</option><option>svc</option></select>
-        </div>
-        <div class="form-row"><label>Budget (₱)</label><input type="number" id="bom-add-budget" placeholder="0"></div>
-        <div class="form-row"><label>Status</label>
-          <select id="bom-add-status">
-            <option>📋 For Canvass</option><option>🔍 Canvassed</option><option>📄 For PO</option>
-            <option>✅ PO Issued</option><option>🚚 Partial Delivery</option><option>📦 Fully Delivered</option>
-          </select>
-        </div>
+      <div class="fr"><label>Project Description</label><input type="text" id="wr-proj"></div>
+      <div class="fr"><label>Notes / Updates *</label><textarea id="wr-notes" rows="3" placeholder="What happened this week? Issues? Progress update?"></textarea></div>
+      <div class="fg">
+        <div class="fr"><label>Updated By</label><input type="text" id="wr-by"></div>
+        <div class="fr"><label>Next Action</label><input type="text" id="wr-next" placeholder="What needs to happen next?"></div>
       </div>
     </div>
-    <div class="modal-footer">
-      <button class="hdr-btn" onclick="closeModal('modal-bom-add')">Cancel</button>
-      <button class="hdr-btn primary" onclick="submitBOMAdd()">💾 Add Item</button>
-    </div>
+    <div class="mf"><button class="hbtn" onclick="closeModal('m-wr')">Cancel</button><button class="hbtn p" id="wr-sbtn" onclick="submitWR()">💾 Save</button></div>
   </div>
 </div>
 
-<!-- New Client BOM Modal -->
-<div class="modal-overlay" id="modal-new-client">
-  <div class="modal">
-    <div class="modal-header"><h3>🏗️ Create New Client BOM Tab</h3><button class="modal-close" onclick="closeModal('modal-new-client')">✕</button></div>
-    <div class="modal-body">
-      <div class="form-row"><label>SO Number *</label><input type="text" id="nc-so" placeholder="e.g. S13500"></div>
-      <div class="form-row"><label>Client Name *</label><input type="text" id="nc-client" placeholder="e.g. DaniloSoChan"></div>
-      <p style="font-size:11px;color:var(--muted);margin-top:8px">This will create a new 📦 tab in Google Sheet with the standard BOM layout, columns, dropdowns, and formatting.</p>
-    </div>
-    <div class="modal-footer">
-      <button class="hdr-btn" onclick="closeModal('modal-new-client')">Cancel</button>
-      <button class="hdr-btn primary" onclick="submitNewClient()">🏗️ Create BOM Tab</button>
-    </div>
+<!-- Generic Edit -->
+<div class="mo" id="m-edit">
+  <div class="md">
+    <div class="mh"><h3 id="edit-title">✏️ Edit Record</h3><button class="mc" onclick="closeModal('m-edit')">✕</button></div>
+    <div class="mb" id="edit-body"></div>
+    <div class="mf"><button class="hbtn" onclick="closeModal('m-edit')">Cancel</button><button class="hbtn p" id="edit-sbtn" onclick="submitEdit()">💾 Save Changes</button></div>
   </div>
 </div>
 
-<div id="toast-container"></div>
+<!-- PO Detail -->
+<div class="mo" id="m-po-detail">
+  <div class="md w">
+    <div class="mh"><h3 id="pod-title">📋 PO Summary</h3><button class="mc" onclick="closeModal('m-po-detail')">✕</button></div>
+    <div class="mb" id="pod-body"></div>
+  </div>
+</div>
 
+<!-- BOM Batch Add -->
+<div class="mo" id="m-bom-batch">
+  <div class="md w">
+    <div class="mh"><h3>➕ Add Multiple BOM Items</h3><button class="mc" onclick="closeModal('m-bom-batch')">✕</button></div>
+    <div class="mb">
+      <p style="font-size:11px;color:var(--muted);margin-bottom:11px">Fill rows below. Leave blank to skip. Note: saves directly to Google Sheet via Apps Script.</p>
+      <div style="display:grid;grid-template-columns:28px 2fr 60px 60px 90px 1fr 110px;gap:5px;margin-bottom:7px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px">
+        <div>#</div><div>Description *</div><div>Qty</div><div>Unit</div><div>Budget (₱)</div><div>Category</div><div>Status</div>
+      </div>
+      <div id="batch-rows"></div>
+      <button class="hbtn" style="width:100%;margin-top:8px" onclick="addBatchRow()">➕ Add Row</button>
+    </div>
+    <div class="mf"><button class="hbtn" onclick="closeModal('m-bom-batch')">Cancel</button><button class="hbtn p" onclick="submitBatch()">💾 Save All Items</button></div>
+  </div>
+</div>
+
+<!-- New Client BOM — SO# + Client Name ONLY -->
+<div class="mo" id="m-client">
+  <div class="md sm">
+    <div class="mh"><h3>🏗️ New Client BOM Tab</h3><button class="mc" onclick="closeModal('m-client')">✕</button></div>
+    <div class="mb">
+      <div class="fr"><label>SO Number *</label><input type="text" id="nc-so" placeholder="e.g. S13500"></div>
+      <div class="fr"><label>Client Name *</label><input type="text" id="nc-client" placeholder="e.g. JuanDelaCruz"></div>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px">Creates a new <b>📦 [ClientName]</b> tab in Google Sheets with complete BOM layout, dropdowns, and formatting.<br><br>Project description and other details are entered directly in the sheet.</p>
+    </div>
+    <div class="mf"><button class="hbtn" onclick="closeModal('m-client')">Cancel</button><button class="hbtn p" onclick="submitNewClient()">🏗️ Create BOM Tab</button></div>
+  </div>
+</div>
+
+<!-- Theme Picker -->
+<div class="mo" id="m-theme">
+  <div class="md sm">
+    <div class="mh"><h3>🎨 Choose Theme</h3><button class="mc" onclick="closeModal('m-theme')">✕</button></div>
+    <div class="mb"><div class="tg" id="theme-grid"></div></div>
+    <div class="mf"><button class="hbtn" onclick="closeModal('m-theme')">Close</button></div>
+  </div>
+</div>
+
+<div id="toasts"></div>
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
+const API='https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
+const SC={'📋 For Canvass':'#FFA726','🔍 Canvassed':'#42A5F5','📄 For PO':'#AB47BC','✅ PO Issued':'#66BB6A','🚚 Partial Delivery':'#FFCA28','📦 Fully Delivered':'#26A69A'};
+const THEMES=[
+  {id:'light',    name:'Classic',   ico:'🏢', navy:'#0A1628',accent:'#1565C0',bg:'#F0F4F8'},
+  {id:'dark',     name:'Midnight',  ico:'🌙', navy:'#0D1117',accent:'#238636',bg:'#0D1117'},
+  {id:'ocean',    name:'Ocean',     ico:'🌊', navy:'#0C4A6E',accent:'#0284C7',bg:'#E0F2FE'},
+  {id:'forest',   name:'Forest',    ico:'🌿', navy:'#14532D',accent:'#16A34A',bg:'#F0FDF4'},
+  {id:'sunset',   name:'Sunset',    ico:'🌅', navy:'#7C2D12',accent:'#EA580C',bg:'#FFF7ED'},
+  {id:'lavender', name:'Lavender',  ico:'💜', navy:'#3B0764',accent:'#7C3AED',bg:'#FAF5FF'},
+  {id:'earthy',   name:'Earthy',    ico:'🌍', navy:'#713F12',accent:'#CA8A04',bg:'#FEFCE8'},
+  {id:'sakura',   name:'Sakura',    ico:'🌸', navy:'#881337',accent:'#E11D48',bg:'#FFF1F2'},
+];
+const S={page:'dashboard',data:{},theme:'light',editCtx:null,bomSheet:null,batchN:0,hlRow:null};
 
-const BOM_STATUS_COLORS = {
-  '📋 For Canvass':      '#ECEFF1',
-  '🔍 Canvassed':        '#BBDEFB',
-  '📄 For PO':           '#E1BEE7',
-  '✅ PO Issued':        '#C8E6C9',
-  '🚚 Partial Delivery': '#FFF9C4',
-  '📦 Fully Delivered':  '#1B5E20',
-};
-
-const state = {
-  currentPage: 'dashboard',
-  data: {},
-  theme: localStorage.getItem('epsi-theme') || 'light',
-  editContext: null,
-  currentBOMSheet: null,
-  histSortDir: 'desc',
-  autoRefreshTimer: null,
-};
-
-// ─── INIT ─────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  applyTheme();
-  document.getElementById('ir-date').value = today();
-  document.getElementById('pp-start').value = today();
+document.addEventListener('DOMContentLoaded',()=>{
+  S.theme=localStorage.getItem('epsi-theme')||'light';
+  applyTheme(S.theme);
+  document.getElementById('ir-date').value=td();
+  document.getElementById('wr-date').value=td();
+  document.getElementById('pp-start').value=td();
   loadDashboard();
   loadBOMSheets();
-  startAutoRefresh();
+  setInterval(autoRefresh,120000);
 });
 
-function today() { return new Date().toISOString().split('T')[0]; }
-
-function startAutoRefresh() {
-  // Auto-refresh every 2 minutes
-  state.autoRefreshTimer = setInterval(() => {
-    const page = state.currentPage;
-    const loaders = {
-      dashboard: loadDashboard, bom: () => { if (state.currentBOMSheet) loadBOMDirect(state.currentBOMSheet); },
-      mrs: loadMRS, po: loadPO, wh: loadWH, payable: loadPayable,
-      history: loadHistory, internal: loadInternalRequests,
-      progress: loadProjectProgress, budget: loadBudgetSpending,
-    };
-    if (loaders[page]) {
-      setSyncStatus('syncing');
-      state.data[page] = null;
-      loaders[page]().then ? loaders[page]().then(() => setSyncStatus('ok')) : setSyncStatus('ok');
-    }
-  }, 120000);
+function td(){return new Date().toISOString().split('T')[0];}
+function autoRefresh(){
+  const L={dashboard:loadDashboard,bom:()=>{if(S.bomSheet)loadBOMDirect(S.bomSheet,false);},alerts:loadAlerts,mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,history:loadHistory,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly};
+  const fn=L[S.page];if(fn){S.data[S.page]=null;fn();}
 }
 
-function setSyncStatus(status) {
-  const el = document.getElementById('sync-indicator');
-  el.className = 'sync-indicator ' + status;
-  el.textContent = status === 'syncing' ? 'syncing…' : 'synced';
+// ─── NAVIGATION ──────────────────────────────────────────
+function go(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const el=document.getElementById('page-'+page);if(el)el.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')==="go('"+page+"')")n.classList.add('active');});
+  S.page=page;
+  const T={dashboard:'Dashboard',bom:'BOM / Projects',alerts:'BOM Alerts',mrs:'MRS',po:'Purchase Orders',wh:'WH Incoming',payable:'Vendor Payable',history:'Item Price History',internal:'Internal Request',progress:'Project Progress',budget:'Budget & Spending',weekly:'Weekly Review',machinelist:'Machine Assets',machinelog:'Machine Log',testequip:'Test Equipment'};
+  document.getElementById('pg-title').textContent=T[page]||page;
+  document.getElementById('pg-sub').textContent='';
+  const L={mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,history:loadHistory,alerts:loadAlerts,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly,machinelist:loadMachineList,machinelog:loadMachineLog,testequip:loadTestEquip};
+  if(L[page]&&!S.data[page])L[page]();
 }
+function addEntry(){const M={internal:'m-ir',progress:'m-pp',weekly:'m-wr',bom:'m-bom-batch'};if(M[S.page])openModal(M[S.page]);else toast('Navigate to a section that supports adding entries.','i');}
 
-// ─── NAVIGATION ───────────────────────────────────────────
-function navigate(page) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const pageEl = document.getElementById('page-' + page);
-  if (pageEl) pageEl.classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') === "navigate('" + page + "')") n.classList.add('active');
-  });
-  state.currentPage = page;
-  const titles = {
-    dashboard:'Dashboard', bom:'BOM / Client View', mrs:'Material Requisition Slips',
-    po:'Purchase Orders', wh:'WH Incoming', payable:'Vendor Payable',
-    history:'Item Price History', alerts:'Alerts & Shortages',
-    internal:'Internal Request Tracker', progress:'Project Progress',
-    budget:'Budget & Spending', weekly:'Weekly Review',
-    machinelist:'Machine List', machinelog:'Machine Log', testequip:'Test Equipment',
-  };
-  const t = document.getElementById('page-title');
-  const s = document.getElementById('page-sub');
-  if (t) t.textContent = titles[page] || page;
-  if (s) s.textContent = '';
-  const loaders = {
-    mrs: loadMRS, po: loadPO, wh: loadWH, payable: loadPayable,
-    history: loadHistory, alerts: loadAlerts, internal: loadInternalRequests,
-    progress: loadProjectProgress, budget: loadBudgetSpending,
-    weekly: loadWeeklyReview, machinelist: loadMachineList,
-    machinelog: loadMachineLog, testequip: loadTestEquip,
-  };
-  if (loaders[page] && !state.data[page]) loaders[page]();
-}
+// ─── API ─────────────────────────────────────────────────
+async function api(action,params={}){const qs=new URLSearchParams({action,...params}).toString();const r=await fetch(`${API}?${qs}`);return r.json();}
+async function apiPost(payload){const r=await fetch(API,{method:'POST',body:JSON.stringify(payload)});return r.json();}
 
-// ─── API ──────────────────────────────────────────────────
-async function api(action, params = {}) {
-  const qs = new URLSearchParams({ action, ...params }).toString();
-  const res = await fetch(`${API}?${qs}`);
-  return res.json();
-}
-
-async function apiPost(payload) {
-  setSyncStatus('syncing');
-  const res = await fetch(API, { method: 'POST', body: JSON.stringify(payload) });
-  setSyncStatus('ok');
-  return res.json();
-}
-
-// ─── DASHBOARD ────────────────────────────────────────────
-async function loadDashboard() {
-  setLoading('dash-stats', 'Loading dashboard…');
-  const d = await api('getDashboard');
-  state.data.dashboard = d;
-  const stats = [
-    { label:'Total POs', value: d.po?.total||0, sub:`₱${fmt(d.po?.totalValue)} total`, color:'blue', icon:'🛒' },
-    { label:'Pending Delivery', value: d.wh?.pending||0, sub:`${d.wh?.complete||0} completed`, color:'orange', icon:'🏭' },
-    { label:'Unpaid Invoices', value: d.payable?.unpaid||0, sub:`₱${fmt(d.payable?.totalDue)} due`, color:'red', icon:'💰' },
-    { label:'Critical Shortages', value: d.shortage?.critical||0, sub:`${d.shortage?.warning||0} warnings`, color:'red', icon:'🚨' },
-    { label:'Active Projects', value: d.projects?.inProgress||0, sub:`${d.projects?.completed||0} completed`, color:'teal', icon:'📈' },
-    { label:'Internal Requests', value: d.internalRequests?.total||0, sub:`${d.internalRequests?.pending||0} pending`, color:'purple', icon:'🏢' },
-    { label:'Total Contract', value:'₱'+shortNum(d.projects?.totalContract||0), sub:`₱${shortNum(d.projects?.totalSpend||0)} spent`, color:'gold', icon:'💹' },
-    { label:'On-Time %', value: pctFmt(d.kpi?.['Supplier On-Time %']||0), sub:'supplier performance', color:'green', icon:'⭐' },
+// ─── DASHBOARD ───────────────────────────────────────────
+async function loadDashboard(){
+  setLoad('dash-stats');
+  const d=await api('getDashboard');
+  S.data.dashboard=d;
+  const al=d.bomAlerts||{};
+  const stats=[
+    {l:'Total POs',v:d.po?.total||0,s:'₱'+sn(d.po?.totalValue),c:'blue',i:'🛒'},
+    {l:'Pending Delivery',v:d.wh?.pending||0,s:(d.wh?.complete||0)+' completed',c:'orange',i:'🏭'},
+    {l:'Unpaid Bills',v:d.payable?.unpaid||0,s:'₱'+sn(d.payable?.totalDue)+' due',c:'red',i:'💰'},
+    {l:'📋 For Canvass',v:al.forCanvass||0,s:'BOM items need quotes',c:'orange',i:'📋'},
+    {l:'📄 For PO',v:al.forPO||0,s:'BOM items ready for PO',c:'purple',i:'📄'},
+    {l:'🚚 Partial Delivery',v:al.forDelivery||0,s:'awaiting balance',c:'teal',i:'🚚'},
+    {l:'Active Projects',v:d.projects?.inProgress||0,s:(d.projects?.completed||0)+' completed',c:'green',i:'📈'},
+    {l:'Contract Value',v:'₱'+sn(d.projects?.totalContract||0),s:'₱'+sn(d.projects?.totalSpend||0)+' spent',c:'gold',i:'💹'},
   ];
-  document.getElementById('dash-stats').innerHTML = stats.map(s => `
-    <div class="stat-card ${s.color}">
-      <div class="stat-icon">${s.icon}</div>
-      <div class="stat-label">${s.label}</div>
-      <div class="stat-value ${typeof s.value==='string'?'big':''}">${s.value}</div>
-      <div class="stat-sub">${s.sub}</div>
-    </div>`).join('');
+  document.getElementById('dash-stats').innerHTML=stats.map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv ${typeof s.v==='string'?'b':''}">${s.v}</div><div class="ss">${s.s||''}</div></div>`).join('');
 
-  const bomSheets = await api('getBOMSheets');
-  document.getElementById('bom-summary-list').innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:8px">
-      ${(bomSheets.sheets||[]).map(s => `
-        <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:12px;font-weight:600;flex:1">📦 ${s.displayName}</span>
-          <button class="edit-btn" onclick="loadBOMDirect('${s.name}')">View BOM</button>
-        </div>`).join('')}
-    </div>`;
+  S.data.alerts=d.bomAlerts;
+  // Dash BOM alerts (top 8)
+  const items=(al.alerts||[]).slice(0,8);
+  document.getElementById('dash-alerts').innerHTML=items.length?items.map(a=>aCard(a)).join(''):'<div class="empty" style="padding:20px"><div class="ei">✅</div><h4>No pending alerts</h4></div>';
 
-  const sh = d.shortage||{};
-  document.getElementById('shortage-summary').innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:12px">
-      <div class="stat-card red" style="border-radius:8px"><div class="stat-label">🔴 Critical</div><div class="stat-value">${sh.critical||0}</div><div class="stat-sub">Below minimum stock</div></div>
-      <div class="stat-card orange" style="border-radius:8px"><div class="stat-label">🟡 Warning</div><div class="stat-value">${sh.warning||0}</div><div class="stat-sub">Approaching minimum</div></div>
-      <div class="stat-card green" style="border-radius:8px"><div class="stat-label">🟢 OK</div><div class="stat-value">${sh.ok||0}</div><div class="stat-sub">Stock sufficient</div></div>
-    </div>`;
-  updateSyncTime();
-  updateBadges(d);
+  const bs=await api('getBOMSheets');
+  document.getElementById('dash-bom-list').innerHTML=`<div style="display:flex;flex-direction:column;gap:7px">${(bs.sheets||[]).map(s=>`<div style="display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;font-weight:600;flex:1">📦 ${s.displayName}</span><button class="eb" onclick="loadBOMDirect('${s.name}',true)">View →</button></div>`).join('')}</div>`;
+
+  setBadges(d,al);
+  document.getElementById('sync-t').textContent='synced '+new Date().toLocaleTimeString();
 }
 
-function updateBadges(d) {
-  const set = (id, val, cls) => { const el=document.getElementById(id); if(el){el.textContent=val;if(cls)el.className=`nav-badge ${cls}`;} };
-  set('badge-po', d.po?.pending||0, d.po?.pending>0?'':'green');
-  set('badge-wh', d.wh?.pending||0, d.wh?.pending>0?'yellow':'green');
-  set('badge-pay', d.payable?.unpaid||0, d.payable?.unpaid>0?'':'green');
-  set('badge-alert', d.shortage?.critical||0, d.shortage?.critical>0?'':'green');
-  set('badge-ir', d.internalRequests?.pending||0, 'orange');
-}
-
-// ─── BOM ──────────────────────────────────────────────────
-async function loadBOMSheets() {
-  const data = await api('getBOMSheets');
-  const sel = document.getElementById('bom-project-select');
-  (data.sheets||[]).forEach(s => {
-    const opt = document.createElement('option');
-    opt.value = s.name; opt.textContent = s.displayName;
-    sel.appendChild(opt);
-  });
-}
-
-async function loadBOMProject() {
-  const sheet = document.getElementById('bom-project-select').value;
-  if (!sheet) return;
-  await loadBOMDirect(sheet);
-}
-
-async function loadBOMDirect(sheetName) {
-  // Switch to BOM page
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-bom').classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') === "navigate('bom')") n.classList.add('active');
-  });
-  state.currentPage = 'bom';
-  state.currentBOMSheet = sheetName;
-  const t = document.getElementById('page-title');
-  const s = document.getElementById('page-sub');
-  if (t) t.textContent = 'BOM / Client View';
-  if (s) s.textContent = '';
-
-  const sel = document.getElementById('bom-project-select');
-  if (sel) sel.value = sheetName;
-
-  const titleEl = document.getElementById('bom-sheet-title');
-  const tbody = document.getElementById('bom-tbody');
-  const countEl = document.getElementById('bom-count');
-  if (titleEl) titleEl.textContent = '⏳ Loading…';
-  if (tbody) tbody.innerHTML = `<tr><td colspan="17"><div class="loading"><div class="spinner"></div></div></td></tr>`;
-  document.getElementById('bom-progress-card').style.display = 'none';
-  document.getElementById('bom-add-btn').style.display = 'none';
-
-  const data = await api('getBOMByProject', { project: sheetName });
-  const rows = data.data || [];
-
-  if (titleEl) titleEl.textContent = sheetName.replace('📦 ','').replace('📦','');
-  if (countEl) countEl.textContent = rows.length + ' items';
-  document.getElementById('bom-add-btn').style.display = '';
-
-  // Status breakdown bar
-  if (rows.length > 0 && data.statusBreakdown) {
-    document.getElementById('bom-progress-card').style.display = '';
-    renderBOMStatusBar(data.statusBreakdown, rows.length, data.pctComplete || 0);
-  }
-
-  if (tbody) tbody.innerHTML = rows.map(r => `
-    <tr>
-      <td class="mono">${r.num}</td>
-      <td>${r.category||''}</td>
-      <td style="max-width:240px;font-weight:500">${r.description||''}</td>
-      <td class="mono" style="font-size:10px">${r.partNo||''}</td>
-      <td class="text-right">${r.qty||''}</td>
-      <td>${r.unit||''}</td>
-      <td class="text-right mono">${r.budget?'₱'+fmt(r.budget):''}</td>
-      <td class="text-center">${r.whStock||''}</td>
-      <td>${bomStatusBadge(r.status)}</td>
-      <td style="font-size:11px">${r.vendor||''}</td>
-      <td class="mono" style="font-size:11px">${r.poNo||''}</td>
-      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
-      <td>${whBadge(r.whStatus)}</td>
-      <td class="text-right">${r.delQty||''}</td>
-      <td class="text-right">${r.balQty||''}</td>
-      <td>${r.actDate||''}</td>
-      <td><button class="edit-btn" onclick="openBOMEditModal(${JSON.stringify(r).replace(/"/g,'&quot;')})">✏️</button></td>
-    </tr>`).join('') || `<tr><td colspan="17"><div class="empty"><div class="icon">📭</div><h4>No data found</h4><p style="font-size:11px;margin-top:6px">Make sure the BOM sheet has data starting from row 5</p></div></td></tr>`;
-}
-
-function renderBOMStatusBar(breakdown, total, pctComplete) {
-  const bar = document.getElementById('bom-status-bar');
-  const legend = document.getElementById('bom-status-legend');
-  const pctLabel = document.getElementById('bom-pct-label');
-  const statuses = Object.keys(BOM_STATUS_COLORS);
-  bar.innerHTML = statuses.map(s => {
-    const count = breakdown[s] || 0;
-    const width = total > 0 ? (count / total * 100) : 0;
-    return width > 0 ? `<div class="status-bar-seg" style="width:${width}%;background:${BOM_STATUS_COLORS[s]}" title="${s}: ${count}"></div>` : '';
-  }).join('');
-  legend.innerHTML = statuses.map(s => {
-    const count = breakdown[s] || 0;
-    if (!count) return '';
-    return `<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:${BOM_STATUS_COLORS[s]};display:inline-block;border:1px solid rgba(0,0,0,.1)"></span>${s.split(' ').slice(1).join(' ')}: <b>${count}</b></span>`;
-  }).filter(Boolean).join('');
-  pctLabel.textContent = Math.round(pctComplete * 100) + '%';
-  pctLabel.style.color = pctComplete >= 0.8 ? 'var(--green)' : pctComplete >= 0.5 ? 'var(--orange)' : 'var(--blue)';
-}
-
-function openBOMAddModal() {
-  document.getElementById('modal-bom-add').classList.add('open');
-}
-
-async function submitBOMAdd() {
-  if (!state.currentBOMSheet) return;
-  const data = {
-    mrfNo: document.getElementById('bom-add-mrf').value,
-    category: document.getElementById('bom-add-cat').value,
-    description: document.getElementById('bom-add-desc').value,
-    partNo: document.getElementById('bom-add-partno').value,
-    qty: parseFloat(document.getElementById('bom-add-qty').value) || 0,
-    unit: document.getElementById('bom-add-unit').value,
-    budget: parseFloat(document.getElementById('bom-add-budget').value) || 0,
-    status: document.getElementById('bom-add-status').value,
-    date: today(),
-  };
-  if (!data.description) { toast('⚠️ Description required.', 'error'); return; }
-  // For BOM add, we post directly — needs a new Apps Script action
-  // For now, show instructions
-  toast('ℹ️ Please add items directly in Google Sheet, then refresh.', 'info');
-  closeModal('modal-bom-add');
-}
-
-function openBOMEditModal(r) {
-  state.editContext = { type: 'bom', sheet: state.currentBOMSheet, row: r.rowIndex, data: r };
-  document.getElementById('modal-edit-title').textContent = '✏️ Edit BOM Item — ' + (r.description || '');
-  document.getElementById('modal-edit-body').innerHTML = `
-    <div class="form-grid">
-      <div class="form-row"><label>Status</label>
-        <select id="edit-bom-status">
-          ${['📋 For Canvass','🔍 Canvassed','📄 For PO','✅ PO Issued','🚚 Partial Delivery','📦 Fully Delivered']
-            .map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}
-        </select>
-      </div>
-      <div class="form-row"><label>Vendor</label><input type="text" id="edit-bom-vendor" value="${r.vendor||''}"></div>
-      <div class="form-row"><label>PO #</label><input type="text" id="edit-bom-pono" value="${r.poNo||''}"></div>
-      <div class="form-row"><label>Unit Price (₱)</label><input type="number" id="edit-bom-price" value="${r.unitPrice||''}"></div>
-      <div class="form-row"><label>PO Date</label><input type="date" id="edit-bom-podate" value="${r.poDate||''}"></div>
-      <div class="form-row"><label>WH Status</label>
-        <select id="edit-bom-whstatus">
-          ${['⬜ Pending','🚚 Partial','✅ Complete'].map(s=>`<option${s===r.whStatus?' selected':''}>${s}</option>`).join('')}
-        </select>
-      </div>
-      <div class="form-row"><label>Del Qty</label><input type="number" id="edit-bom-delqty" value="${r.delQty||''}"></div>
-      <div class="form-row"><label>Cancel Qty</label><input type="number" id="edit-bom-cancelqty" value="${r.cancelQty||''}"></div>
-      <div class="form-row"><label>Expected Date</label><input type="date" id="edit-bom-expdate" value="${r.expDate||''}"></div>
-      <div class="form-row"><label>Actual Date</label><input type="date" id="edit-bom-actdate" value="${r.actDate||''}"></div>
+function aCard(a){
+  const cls=a.status.includes('For Canvass')?'cv':a.status.includes('For PO')?'fp':'dl';
+  const bc=cls==='cv'?'by':cls==='fp'?'bp':'bb';
+  return `<div class="ac ${cls}" onclick="goBOMRow('${a.sheetName.replace(/'/g,"\\'")}',${a.rowIndex})">
+    <div style="flex:1">
+      <div class="act">📦 ${a.displayName} <span style="font-weight:400;color:var(--muted)">— ${(a.description||'').substring(0,50)}${(a.description||'').length>50?'…':''}</span></div>
+      <div class="acs"><span class="badge ${bc}" style="font-size:9px">${a.status}</span>&nbsp;Qty: <b>${a.qty} ${a.unit||''}</b>${a.vendor?' | '+a.vendor:''}${a.expDate?' | Due: '+a.expDate:''}</div>
     </div>
-    <div class="form-row"><label>Best Price (₱)</label><input type="number" id="edit-bom-bestprice" value="${r.bestPrice||''}"></div>`;
-  document.getElementById('modal-edit').classList.add('open');
+    <span style="font-size:10px;color:var(--muted);white-space:nowrap">→ BOM</span>
+  </div>`;
 }
 
-// ─── MRS ──────────────────────────────────────────────────
-async function loadMRS() {
-  setLoading('mrs-tbody', 'Loading MRS data…');
-  const d = await api('getMRS');
-  state.data.mrs = d.data || [];
-  renderMRS(state.data.mrs);
-  document.getElementById('mrs-count').textContent = d.count || 0;
-  const badge = document.getElementById('badge-mrs');
-  if (badge) badge.textContent = state.data.mrs.filter(r => r.status === '🟡 For Canvass').length;
+async function goBOMRow(sheetName,rowIndex){
+  S.hlRow=rowIndex;
+  await loadBOMDirect(sheetName,true);
+  setTimeout(()=>{
+    const tr=document.querySelector(`#bom-body tr[data-r="${rowIndex}"]`);
+    if(tr){tr.style.background='#FFF9C4';tr.style.outline='2px solid #F57F17';tr.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(()=>{tr.style.background='';tr.style.outline='';},3000);}
+  },900);
 }
 
-function renderMRS(rows) {
-  const sort = document.getElementById('mrs-sort')?.value || '';
-  let sorted = [...rows];
-  if (sort === 'date-desc') sorted.sort((a,b) => (b.mrsDate||'').localeCompare(a.mrsDate||''));
-  else if (sort === 'date-asc') sorted.sort((a,b) => (a.mrsDate||'').localeCompare(b.mrsDate||''));
-  else if (sort === 'mrs') sorted.sort((a,b) => (a.mrsHeader||'').localeCompare(b.mrsHeader||''));
+function setBadges(d,al){
+  const s=(id,v,c)=>{const e=document.getElementById(id);if(e){e.textContent=v;if(c)e.className='nb '+c;}};
+  s('nb-alert',al?.count||0,(al?.count||0)>0?'':'g');
+  s('nb-po',d.po?.pending||0,d.po?.pending>0?'':'g');
+  s('nb-wh',d.wh?.pending||0,d.wh?.pending>0?'y':'g');
+  s('nb-pay',d.payable?.unpaid||0,d.payable?.unpaid>0?'':'g');
+  s('nb-ir',d.internalRequests?.pending||0,'o');
+  s('nb-mrs',d.po?.pending||0,'y');
+}
 
-  // Group by MRS header
-  let lastMRS = '';
-  document.getElementById('mrs-tbody').innerHTML = sorted.map(r => {
-    let groupRow = '';
-    if (r.mrsHeader && r.mrsHeader !== lastMRS) {
-      lastMRS = r.mrsHeader;
-      const mrsLabel = r.mrsHeader.replace('▶ MRS NO.','').trim() || r.mrsHeader;
-      groupRow = `<tr style="background:var(--navy2)"><td colspan="15" style="color:var(--gold);font-weight:700;font-size:11px;padding:6px 12px;font-family:'IBM Plex Mono',monospace">▶ ${mrsLabel}</td></tr>`;
-    }
-    return groupRow + `<tr>
-      <td class="mono" style="font-size:10px">${r.mrsHeader?.match(/\d{4}-\d+/)?.[0]||r.num}</td>
-      <td>${r.mrsDate||''}</td>
-      <td style="font-size:11px">${r.project||''}</td>
-      <td><span class="badge badge-grey" style="font-size:9px">${r.type||'MRS'}</span></td>
-      <td>${r.category||''}</td>
+// ─── BOM ALERTS ──────────────────────────────────────────
+async function loadAlerts(){
+  document.getElementById('alert-list').innerHTML='<div class="loading"><div class="spinner"></div>Loading alerts…</div>';
+  const d=await api('getBOMAlerts');
+  S.data.alerts=d;
+  const el=document.getElementById('cnt-alert');if(el)el.textContent=d.count||0;
+  document.getElementById('alert-stats').innerHTML=[
+    {l:'📋 For Canvass',v:d.forCanvass||0,c:'orange',i:'📋',s:'Need vendor quotes'},
+    {l:'📄 For PO',v:d.forPO||0,c:'purple',i:'📄',s:'Ready to issue PO'},
+    {l:'🚚 Partial Delivery',v:d.forDelivery||0,c:'teal',i:'🚚',s:'Balance delivery pending'},
+  ].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div><div class="ss">${s.s}</div></div>`).join('');
+  renderAlerts();
+}
+
+function renderAlerts(){
+  const d=S.data.alerts;if(!d)return;
+  const sf=document.getElementById('af-status')?.value||'';
+  const q=(document.getElementById('af-q')?.value||'').toLowerCase();
+  let items=d.alerts||[];
+  if(sf)items=items.filter(a=>a.status===sf);
+  if(q)items=items.filter(a=>JSON.stringify(a).toLowerCase().includes(q));
+  if(!items.length){document.getElementById('alert-list').innerHTML='<div class="empty"><div class="ei">✅</div><h4>No alerts found</h4></div>';return;}
+  const grps={'📋 For Canvass':[],'📄 For PO':[],'🚚 Partial Delivery':[]};
+  items.forEach(a=>{if(grps[a.status])grps[a.status].push(a);});
+  let html='';
+  Object.entries(grps).forEach(([status,list])=>{
+    if(!list.length)return;
+    const cls=status.includes('For Canvass')?'cv':status.includes('For PO')?'fp':'dl';
+    const bg=cls==='cv'?'#FFF8E1':cls==='fp'?'#F3E5F5':'#E3F2FD';
+    html+=`<div style="margin-bottom:18px"><div style="font-size:12px;font-weight:700;margin-bottom:7px;padding:5px 11px;border-radius:6px;background:${bg}">${status} — ${list.length} items</div>${list.map(a=>aCard(a)).join('')}</div>`;
+  });
+  document.getElementById('alert-list').innerHTML=html;
+}
+
+// ─── BOM ─────────────────────────────────────────────────
+async function loadBOMSheets(){
+  const d=await api('getBOMSheets');
+  const sel=document.getElementById('bom-sel');
+  (d.sheets||[]).forEach(s=>{const o=document.createElement('option');o.value=s.name;o.textContent=s.displayName;sel.appendChild(o);});
+}
+function loadBOMProject(){const v=document.getElementById('bom-sel').value;if(v)loadBOMDirect(v,true);}
+
+async function loadBOMDirect(sheetName,switchPg=true){
+  if(switchPg){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    document.getElementById('page-bom').classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')==="go('bom')")n.classList.add('active');});
+    S.page='bom';document.getElementById('pg-title').textContent='BOM / Projects';document.getElementById('pg-sub').textContent='';
+  }
+  S.bomSheet=sheetName;
+  const sel=document.getElementById('bom-sel');if(sel)sel.value=sheetName;
+  document.getElementById('bom-title').textContent='⏳ Loading…';
+  document.getElementById('bom-body').innerHTML='<tr><td colspan="17"><div class="loading"><div class="spinner"></div></div></td></tr>';
+  document.getElementById('bom-prog-wrap').style.display='none';
+  document.getElementById('bom-add-btn').style.display='none';
+
+  const d=await api('getBOMByProject',{project:sheetName});
+  const rows=d.data||[];
+  document.getElementById('bom-title').textContent=sheetName.replace('📦 ','').replace('📦','').trim();
+  document.getElementById('bom-cnt').textContent=rows.length+' items';
+  document.getElementById('bom-add-btn').style.display='';
+
+  if(rows.length&&d.statusBreakdown){document.getElementById('bom-prog-wrap').style.display='';renderBOMBar(d.statusBreakdown,rows.length,d.pctComplete||0);}
+
+  document.getElementById('bom-body').innerHTML=rows.length?rows.map(r=>`
+    <tr data-r="${r.rowIndex}" style="transition:background .3s">
+      <td class="mono">${r.num}</td>
+      <td style="font-size:11px">${r.category||''}</td>
       <td style="max-width:220px;font-weight:500">${r.description||''}</td>
-      <td class="text-right">${r.qty||''}</td>
-      <td>${r.unit||''}</td>
-      <td class="text-right mono">${r.prevPrice?'₱'+fmt(r.prevPrice):''}</td>
-      <td>${statusBadge(r.status)}</td>
+      <td class="mono" style="font-size:10px">${r.partNo||''}</td>
+      <td class="tr">${r.qty||''}</td><td>${r.unit||''}</td>
+      <td class="tr mono">${r.budget?'₱'+fmt(r.budget):''}</td>
+      <td class="tc">${r.whStock||''}</td>
+      <td>${bomBadge(r.status)}</td>
+      <td style="font-size:11px">${r.vendor||''}</td>
+      <td class="mono" style="font-size:10px">${r.poNo||''}</td>
+      <td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
+      <td>${whBadge(r.whStatus)}</td>
+      <td class="tr">${r.delQty||''}</td>
+      <td class="tr">${r.balQty||''}</td>
+      <td>${r.actDate||''}</td>
+      <td><button class="eb" onclick='openBOMEdit(${JSON.stringify(r).replace(/'/g,"&#39;")})'>✏️</button></td>
+    </tr>`).join(''):emr(17,'No data. Run ⚡ EXELON Tools → Detect Old BOM Format Sheets if data exists.');
+}
+
+function renderBOMBar(bd,total,pct){
+  const sts=Object.keys(SC);
+  document.getElementById('bom-sbar').innerHTML=sts.map(s=>{const w=total>0?((bd[s]||0)/total*100).toFixed(1):0;return w>0?`<div class="sbseg" style="width:${w}%;background:${SC[s]}" title="${s}: ${bd[s]||0}"></div>`:'';}).join('');
+  document.getElementById('bom-legend').innerHTML=sts.map(s=>{const c=bd[s]||0;if(!c)return'';return`<span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:${SC[s]};display:inline-block;border:1px solid rgba(0,0,0,.1)"></span>${s.replace(/^[^\s]+\s/,'')}: <b>${c}</b></span>`;}).filter(Boolean).join('');
+  const p=Math.round(pct*100);
+  const pl=document.getElementById('bom-pct');pl.textContent=p+'%';
+  pl.style.color=p>=80?'var(--green)':p>=50?'var(--orange)':'var(--blue)';
+}
+
+function openBOMEdit(r){
+  S.editCtx={type:'bom',sheet:S.bomSheet,row:r.rowIndex,data:r};
+  document.getElementById('edit-title').textContent='✏️ Edit BOM — '+(r.description||'').substring(0,40);
+  document.getElementById('edit-body').innerHTML=`
+    <div class="fg">
+      <div class="fr"><label>Status</label><select id="eb-stat">${['📋 For Canvass','🔍 Canvassed','📄 For PO','✅ PO Issued','🚚 Partial Delivery','📦 Fully Delivered'].map(s=>`<option${s===r.status?' selected':''}>${s}</option>`).join('')}</select></div>
+      <div class="fr"><label>Vendor</label><input type="text" id="eb-vendor" value="${r.vendor||''}"></div>
+      <div class="fr"><label>PO #</label><input type="text" id="eb-pono" value="${r.poNo||''}"></div>
+      <div class="fr"><label>Unit Price (₱)</label><input type="number" id="eb-price" value="${r.unitPrice||''}"></div>
+      <div class="fr"><label>PO Date</label><input type="date" id="eb-podate" value="${r.poDate||''}"></div>
+      <div class="fr"><label>WH Status</label><select id="eb-whstat">${['⬜ Pending','🚚 Partial','✅ Complete'].map(s=>`<option${s===r.whStatus?' selected':''}>${s}</option>`).join('')}</select></div>
+      <div class="fr"><label>Del Qty</label><input type="number" id="eb-del" value="${r.delQty||''}"></div>
+      <div class="fr"><label>Cancel Qty</label><input type="number" id="eb-cancel" value="${r.cancelQty||''}"></div>
+      <div class="fr"><label>Expected Date</label><input type="date" id="eb-exp" value="${r.expDate||''}"></div>
+      <div class="fr"><label>Actual Date</label><input type="date" id="eb-act" value="${r.actDate||''}"></div>
+    </div>`;
+  openModal('m-edit');
+}
+
+// Batch BOM add
+function openBOMBatch(){S.batchN=0;document.getElementById('batch-rows').innerHTML='';for(let i=0;i<3;i++)addBatchRow();openModal('m-bom-batch');}
+function addBatchRow(){
+  S.batchN++;const n=S.batchN;
+  const d=document.createElement('div');d.className='br-row';d.id='br-'+n;
+  d.innerHTML=`<span class="mono" style="font-size:11px;text-align:center">${n}</span>
+    <input type="text" id="bd-d-${n}" placeholder="Description *">
+    <input type="number" id="bd-q-${n}" placeholder="Qty">
+    <select id="bd-u-${n}"><option>pcs</option><option>lot</option><option>set</option><option>meter</option><option>kg</option><option>liter</option><option>box</option></select>
+    <input type="number" id="bd-b-${n}" placeholder="0">
+    <select id="bd-c-${n}"><option>⚡ Electrical</option><option>🔩 Mechanical</option><option>🖥️ Electronics</option><option>🔧 Tools & Equipment</option><option>🏗️ Structural</option><option>🧰 Hardware</option><option>📦 Consumables</option><option>📋 Other</option></select>
+    <select id="bd-s-${n}"><option>📋 For Canvass</option><option>🔍 Canvassed</option><option>📄 For PO</option><option>✅ PO Issued</option></select>`;
+  document.getElementById('batch-rows').appendChild(d);
+}
+async function submitBatch(){
+  if(!S.bomSheet){toast('No BOM project selected.','e');return;}
+  const items=[];
+  document.querySelectorAll('#batch-rows .br-row').forEach(row=>{
+    const n=row.id.replace('br-','');
+    const desc=document.getElementById('bd-d-'+n)?.value?.trim();
+    if(desc)items.push({description:desc,qty:parseFloat(document.getElementById('bd-q-'+n)?.value)||0,unit:document.getElementById('bd-u-'+n)?.value||'pcs',budget:parseFloat(document.getElementById('bd-b-'+n)?.value)||0,category:document.getElementById('bd-c-'+n)?.value||'📋 Other',status:document.getElementById('bd-s-'+n)?.value||'📋 For Canvass'});
+  });
+  if(!items.length){toast('No items filled in.','e');return;}
+  toast(`ℹ️ ${items.length} items ready. Please add these directly in the 📦 Google Sheet, then Refresh. (API batch-write coming in next update)`,'i');
+  closeModal('m-bom-batch');
+}
+
+// ─── MRS ─────────────────────────────────────────────────
+async function loadMRS(){setLoad('mrs-body');const d=await api('getMRS');S.data.mrs=d.data||[];renderMRS(S.data.mrs);const e=document.getElementById('cnt-mrs');if(e)e.textContent=d.count||0;}
+function renderMRS(rows){
+  const sort=document.getElementById('mrs-sort')?.value||'';
+  let s=[...rows];
+  if(sort==='date-desc')s.sort((a,b)=>(b.mrsDate||'').localeCompare(a.mrsDate||''));
+  else if(sort==='date-asc')s.sort((a,b)=>(a.mrsDate||'').localeCompare(b.mrsDate||''));
+  let lastM='';
+  document.getElementById('mrs-body').innerHTML=s.map(r=>{
+    let gr='';
+    if(r.mrsHeader&&r.mrsHeader!==lastM){lastM=r.mrsHeader;gr=`<tr style="background:var(--navy)"><td colspan="15" style="color:var(--gold);font-weight:700;font-size:11px;padding:5px 11px;font-family:'IBM Plex Mono',monospace">▶ ${r.mrsHeader.replace('▶ MRS NO.','').trim()}</td></tr>`;}
+    return gr+`<tr>
+      <td class="mono" style="font-size:10px">${r.mrsHeader?.match(/\d{4}-\d+/)?.[0]||r.num}</td>
+      <td>${r.mrsDate||''}</td><td style="font-size:11px">${r.project||''}</td>
+      <td><span class="badge bgr" style="font-size:9px">${r.type||'MRS'}</span></td>
+      <td style="font-size:11px">${r.category||''}</td>
+      <td style="max-width:210px;font-weight:500">${r.description||''}</td>
+      <td class="tr">${r.qty||''}</td><td>${r.unit||''}</td>
+      <td class="tr mono">${r.prevPrice?'₱'+fmt(r.prevPrice):''}</td>
+      <td>${sBadge(r.status)}</td>
       <td style="font-size:11px">${r.vendor||''}</td>
       <td class="mono">${r.poNo||''}</td>
-      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
+      <td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
       <td>${r.poDate||''}</td>
-      <td><button class="edit-btn" onclick="openGenericEdit('mrs',${r.rowIndex},'MRS Item','${r.description?.substring(0,30)||''}',[['status','Status','select',['✅ PO Issued','🟡 For Canvass','🏭 Warehouse Stock','🟢 Ready for PO']],['vendor','Vendor','text'],['poNo','PO #','text'],['unitPrice','Unit Price','number'],['poDate','PO Date','date']])">✏️</button></td>
-    </tr>`;
-  }).join('') || emptyRow(15, 'No MRS data');
+      <td><button class="eb" onclick="openGenEdit('mrs',${r.rowIndex},'MRS','${(r.description||'').substring(0,25).replace(/'/g,"&#39;")}'",[['status','Status','select',['✅ PO Issued','🟡 For Canvass','🏭 Warehouse Stock']],['vendor','Vendor','text'],['poNo','PO #','text'],['unitPrice','Unit Price','number'],['poDate','PO Date','date']])">✏️</button></td>
+    </tr>`;}).join('')||emr(15,'No MRS data');
 }
+function filterMRS(){const sf=document.getElementById('mrs-sf').value;renderMRS((S.data.mrs||[]).filter(r=>!sf||r.status===sf));}
+function filterMRSLive(){const q=document.getElementById('mrs-q').value.toLowerCase();renderMRS((S.data.mrs||[]).filter(r=>JSON.stringify(r).toLowerCase().includes(q)));}
 
-function filterMRS() { renderMRS(applyMRSFilter(state.data.mrs||[])); }
-function filterMRSLive() {
-  const q = document.getElementById('mrs-search').value.toLowerCase();
-  const filtered = (state.data.mrs||[]).filter(r => JSON.stringify(r).toLowerCase().includes(q));
-  renderMRS(applyMRSFilter(filtered));
-}
-function applyMRSFilter(rows) {
-  const stat = document.getElementById('mrs-status-filter')?.value || '';
-  return stat ? rows.filter(r => r.status === stat) : rows;
-}
-
-// ─── PURCHASE ORDERS ──────────────────────────────────────
-async function loadPO() {
-  setLoading('po-tbody');
-  const d = await api('getPO');
-  state.data.po = d.data || [];
-  renderPO(state.data.po);
-  document.getElementById('po-count').textContent = d.count || 0;
-}
-
-function renderPO(rows) {
-  // Group by PO# for summary
-  const poGroups = {};
-  rows.forEach(r => {
-    if (!poGroups[r.poNo]) poGroups[r.poNo] = [];
-    poGroups[r.poNo].push(r);
-  });
-
-  document.getElementById('po-tbody').innerHTML = rows.map(r => `
+// ─── PO ──────────────────────────────────────────────────
+async function loadPO(){setLoad('po-body');const d=await api('getPO');S.data.po=d.data||[];renderPO(S.data.po);const e=document.getElementById('cnt-po');if(e)e.textContent=d.count||0;}
+function renderPO(rows){
+  document.getElementById('po-body').innerHTML=rows.map(r=>`
     <tr>
       <td class="mono">${r.num}</td>
       <td class="mono bold" style="cursor:pointer;color:var(--blue)" onclick="showPODetail('${r.poNo}')">${r.poNo||''}</td>
       <td style="font-size:11px">${r.project||''}</td>
-      <td style="max-width:200px">${r.description||''}</td>
+      <td style="max-width:180px">${r.description||''}</td>
       <td class="mono" style="font-size:10px">${r.partNo||''}</td>
       <td style="font-size:11px">${r.supplier||''}</td>
       <td>${r.unit||''}</td>
-      <td class="text-right">${r.ordQty||''}</td>
-      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
-      <td class="text-right mono bold">${r.lineTotal?'₱'+fmt(r.lineTotal):''}</td>
-      <td>${r.poDate||''}</td>
-      <td>${statusBadge(r.status)}</td>
+      <td class="tr">${r.ordQty||''}</td>
+      <td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
+      <td class="tr mono bold">${r.lineTotal?'₱'+fmt(r.lineTotal):''}</td>
+      <td>${r.poDate||''}</td><td>${sBadge(r.status)}</td>
       <td style="font-size:11px">${r.remarks||''}</td>
-      <td><button class="edit-btn" onclick="openGenericEdit('po',${r.rowIndex},'PO #${r.poNo}','${r.supplier||''}',[['status','Status','select',['⬜ Pending','✅ Delivered','❌ Cancelled']],['remarks','Remarks','text']])">✏️</button></td>
-    </tr>`).join('') || emptyRow(14, 'No PO data');
+      <td><button class="eb" onclick="openGenEdit('po',${r.rowIndex},'PO ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}'",[['status','Status','select',['⬜ Pending','✅ Delivered','❌ Cancelled']],['remarks','Remarks','text']])">✏️</button></td>
+    </tr>`).join('')||emr(14,'No PO data');
 }
-
-function showPODetail(poNo) {
-  const rows = (state.data.po||[]).filter(r => r.poNo === poNo);
-  if (!rows.length) return;
-  const total = rows.reduce((s,r) => s+(Number(r.lineTotal)||0), 0);
-  document.getElementById('po-detail-title').textContent = `📋 PO Summary — ${poNo}`;
-  document.getElementById('po-detail-body').innerHTML = `
-    <div class="po-summary-grid">
-      <div class="stat-card blue" style="border-radius:8px"><div class="stat-label">Supplier</div><div style="font-weight:700;font-size:14px">${rows[0].supplier||'—'}</div></div>
-      <div class="stat-card teal" style="border-radius:8px"><div class="stat-label">PO Date</div><div style="font-weight:700;font-size:14px">${rows[0].poDate||'—'}</div></div>
-      <div class="stat-card green" style="border-radius:8px"><div class="stat-label">Total Items</div><div class="stat-value">${rows.length}</div></div>
-      <div class="stat-card gold" style="border-radius:8px"><div class="stat-label">Total Value</div><div class="stat-value big">₱${fmt(total)}</div></div>
+function showPODetail(poNo){
+  const rows=(S.data.po||[]).filter(r=>r.poNo===poNo);if(!rows.length)return;
+  const total=rows.reduce((s,r)=>s+(Number(r.lineTotal)||0),0);
+  document.getElementById('pod-title').textContent='📋 PO Summary — '+poNo;
+  document.getElementById('pod-body').innerHTML=`
+    <div class="g2" style="margin-bottom:14px">
+      <div class="sc blue" style="border-radius:8px"><div class="sl">Supplier</div><div style="font-weight:700;font-size:13px">${rows[0].supplier||'—'}</div></div>
+      <div class="sc teal" style="border-radius:8px"><div class="sl">PO Date</div><div style="font-weight:700;font-size:13px">${rows[0].poDate||'—'}</div></div>
+      <div class="sc green" style="border-radius:8px"><div class="sl">Items</div><div class="sv">${rows.length}</div></div>
+      <div class="sc gold" style="border-radius:8px"><div class="sl">Total Value</div><div class="sv b">₱${fmt(total)}</div></div>
     </div>
-    <div style="font-weight:700;margin-bottom:8px;font-size:13px">Line Items:</div>
-    <div class="tbl-wrap"><table>
-      <thead><tr><th>#</th><th>Description</th><th>Part No.</th><th>Qty</th><th>Unit</th><th>Unit Price</th><th>Line Total</th><th>Status</th></tr></thead>
-      <tbody>${rows.map(r=>`<tr>
-        <td>${r.num}</td>
-        <td>${r.description||''}</td>
-        <td class="mono" style="font-size:10px">${r.partNo||''}</td>
-        <td class="text-right">${r.ordQty||''}</td>
-        <td>${r.unit||''}</td>
-        <td class="text-right mono">₱${fmt(r.unitPrice||0)}</td>
-        <td class="text-right mono bold">₱${fmt(r.lineTotal||0)}</td>
-        <td>${statusBadge(r.status)}</td>
-      </tr>`).join('')}</tbody>
-    </table></div>
-    <div style="margin-top:12px;text-align:right;font-size:13px;font-weight:700">
-      Grand Total: <span class="mono" style="font-size:16px;color:var(--blue)">₱${fmt(total)}</span>
-    </div>`;
-  document.getElementById('modal-po-detail').classList.add('open');
+    <div class="tw"><table><thead><tr><th>Description</th><th>Part No.</th><th>Qty</th><th>Unit Price</th><th>Line Total</th><th>Status</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr><td>${r.description||''}</td><td class="mono" style="font-size:10px">${r.partNo||''}</td><td class="tr">${r.ordQty||''}</td><td class="tr mono">₱${fmt(r.unitPrice||0)}</td><td class="tr mono bold">₱${fmt(r.lineTotal||0)}</td><td>${sBadge(r.status)}</td></tr>`).join('')}</tbody></table></div>
+    <div style="margin-top:11px;text-align:right;font-weight:700">Grand Total: <span class="mono" style="font-size:16px;color:var(--blue)">₱${fmt(total)}</span></div>`;
+  openModal('m-po-detail');
 }
+function filterPO(){const v=document.getElementById('po-sf').value;renderPO(v?(S.data.po||[]).filter(r=>r.status===v):S.data.po||[]);}
 
-function filterPO() {
-  const stat = document.getElementById('po-status-filter').value;
-  renderPO(stat ? (state.data.po||[]).filter(r=>r.status===stat) : state.data.po||[]);
+// ─── WH ──────────────────────────────────────────────────
+async function loadWH(){setLoad('wh-body');const d=await api('getWH');S.data.wh=d.data||[];renderWH(S.data.wh);const e=document.getElementById('cnt-wh');if(e)e.textContent=d.count||0;}
+function renderWH(rows){
+  document.getElementById('wh-body').innerHTML=rows.map(r=>{
+    const ov=r.status!=='✅ Complete'&&r.daysVar&&r.daysVar>0;
+    return`<tr${ov?' style="background:#FFEBEE"':''}><td class="mono bold">${r.poNo||''}</td><td style="font-size:11px">${r.project||''}</td><td style="max-width:170px">${r.description||''}</td><td style="font-size:11px">${r.supplier||''}</td><td>${r.unit||''}</td><td class="tr">${r.poQty||''}</td><td class="tr bold">${r.delQty||''}</td><td class="tr">${r.cancelQty||''}</td><td class="tr">${r.balQty||''}</td><td>${r.actDate||''}</td><td>${r.expDate||''}</td><td class="tr ${ov?'badge br':''}">${r.daysVar||''}</td><td>${sBadge(r.status)}</td>
+    <td><button class="eb" onclick="openGenEdit('wh',${r.rowIndex},'WH ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}'",[['status','Status','select',['⬜ Pending','🚚 Partial','✅ Complete']],['delQty','Del Qty','number'],['cancelQty','Cancel Qty','number'],['actDate','Actual Date','date']])">✏️</button></td></tr>`;
+  }).join('')||emr(14,'No WH data');
 }
+function filterWH(v){renderWH(v?(S.data.wh||[]).filter(r=>r.status===v):S.data.wh||[]);}
 
-// ─── WH INCOMING ──────────────────────────────────────────
-async function loadWH() {
-  setLoading('wh-tbody');
-  const d = await api('getWH');
-  state.data.wh = d.data || [];
-  renderWH(state.data.wh);
-  document.getElementById('wh-count').textContent = d.count || 0;
+// ─── PAYABLE ─────────────────────────────────────────────
+async function loadPayable(){setLoad('pay-body');const d=await api('getPayable');S.data.payable=d.data||[];renderPayable(S.data.payable);const e=document.getElementById('cnt-pay');if(e)e.textContent=d.count||0;}
+function renderPayable(rows){
+  document.getElementById('pay-body').innerHTML=rows.map(r=>`
+    <tr><td class="mono">${r.num}</td><td class="mono bold">${r.poNo||''}</td><td style="font-size:11px">${r.project||''}</td><td style="font-size:11px">${r.supplier||''}</td><td style="max-width:150px">${r.description||''}</td><td class="tr">${r.delQty||''}</td><td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td><td class="tr mono bold">${r.amount?'₱'+fmt(r.amount):''}</td><td>${r.billingDate||''}</td><td class="mono">${r.invoiceNo||''}</td><td>${r.dueDate||''}</td><td>${payBadge(r.payStatus)}</td><td class="tr mono">${r.amtPaid?'₱'+fmt(r.amtPaid):''}</td><td class="tr mono bold">${r.balDue?'₱'+fmt(r.balDue):''}</td>
+    <td><button class="eb" onclick="openGenEdit('payable',${r.rowIndex},'Bill ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}'",[['payStatus','Pay Status','select',['⬜ Unpaid','✅ Paid','🔄 Partial']],['invoiceNo','Invoice #','text'],['amtPaid','Amt Paid','number'],['dueDate','Due Date','date']])">✏️</button></td>
+    </tr>`).join('')||emr(15,'No payable data');
 }
-
-function renderWH(rows) {
-  document.getElementById('wh-tbody').innerHTML = rows.map(r => {
-    const overdue = r.status !== '✅ Complete' && r.daysVar && r.daysVar > 0;
-    return `<tr${overdue?' style="background:#FFEBEE"':''}>
-      <td class="mono bold">${r.poNo||''}</td>
-      <td style="font-size:11px">${r.project||''}</td>
-      <td style="max-width:200px">${r.description||''}</td>
-      <td style="font-size:11px">${r.supplier||''}</td>
-      <td>${r.unit||''}</td>
-      <td class="text-right">${r.poQty||''}</td>
-      <td class="text-right bold">${r.delQty||''}</td>
-      <td class="text-right">${r.cancelQty||''}</td>
-      <td class="text-right">${r.balQty||''}</td>
-      <td>${r.actDate||''}</td>
-      <td>${r.expDate||''}</td>
-      <td class="text-right ${overdue?'badge-red':''}">${r.daysVar||''}</td>
-      <td>${statusBadge(r.status)}</td>
-      <td><button class="edit-btn" onclick="openGenericEdit('wh',${r.rowIndex},'WH ${r.poNo}','${r.supplier||''}',[['status','Status','select',['⬜ Pending','🚚 Partial','✅ Complete']],['delQty','Del Qty','number'],['cancelQty','Cancel Qty','number'],['actDate','Actual Date','date']])">✏️</button></td>
-    </tr>`;
-  }).join('') || emptyRow(14, 'No WH data');
-}
-
-function filterWH(val) {
-  renderWH(val ? (state.data.wh||[]).filter(r=>r.status===val) : state.data.wh||[]);
-}
-
-// ─── VENDOR PAYABLE ───────────────────────────────────────
-async function loadPayable() {
-  setLoading('pay-tbody');
-  const d = await api('getPayable');
-  state.data.payable = d.data || [];
-  renderPayable(state.data.payable);
-  document.getElementById('pay-count').textContent = d.count || 0;
-}
-
-function renderPayable(rows) {
-  document.getElementById('pay-tbody').innerHTML = rows.map(r => `
-    <tr>
-      <td class="mono">${r.num}</td>
-      <td class="mono bold">${r.poNo||''}</td>
-      <td style="font-size:11px">${r.project||''}</td>
-      <td style="font-size:11px">${r.supplier||''}</td>
-      <td style="max-width:180px">${r.description||''}</td>
-      <td class="text-right">${r.delQty||''}</td>
-      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
-      <td class="text-right mono bold">${r.amount?'₱'+fmt(r.amount):''}</td>
-      <td>${r.billingDate||''}</td>
-      <td class="mono">${r.invoiceNo||''}</td>
-      <td>${r.dueDate||''}</td>
-      <td>${payBadge(r.payStatus)}</td>
-      <td class="text-right mono">${r.amtPaid?'₱'+fmt(r.amtPaid):''}</td>
-      <td class="text-right mono bold ${r.balDue>0?'':'badge-green'}">${r.balDue?'₱'+fmt(r.balDue):''}</td>
-      <td><button class="edit-btn" onclick="openGenericEdit('payable',${r.rowIndex},'Bill PO#${r.poNo}','${r.supplier||''}',[['payStatus','Pay Status','select',['⬜ Unpaid','✅ Paid','🔄 Partial']],['invoiceNo','Invoice #','text'],['amtPaid','Amt Paid','number'],['dueDate','Due Date','date']])">✏️</button></td>
-    </tr>`).join('') || emptyRow(15, 'No payable data');
-}
-
-function filterPayable(val) {
-  renderPayable(val ? (state.data.payable||[]).filter(r=>r.payStatus===val) : state.data.payable||[]);
-}
+function filterPayable(v){renderPayable(v?(S.data.payable||[]).filter(r=>r.payStatus===v):S.data.payable||[]);}
 
 // ─── ITEM HISTORY ─────────────────────────────────────────
-async function loadHistory() {
-  setLoading('hist-tbody');
-  const d = await api('getItemHistory');
-  state.data.history = d.data || [];
-  const cats = [...new Set(state.data.history.map(r=>r.category).filter(Boolean))];
-  const sel = document.getElementById('hist-cat');
-  cats.forEach(c => { const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o); });
-  renderHistory(state.data.history);
-  document.getElementById('hist-count').textContent = d.count || 0;
+async function loadHistory(){
+  setLoad('hist-body');
+  const d=await api('getItemHistory');
+  S.data.history=d.data||[];
+  const cats=[...new Set(S.data.history.map(r=>r.category).filter(Boolean))];
+  const sel=document.getElementById('hist-cat');sel.innerHTML='<option value="">All Categories</option>';
+  cats.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
+  renderHistory(S.data.history);
+  const e=document.getElementById('cnt-hist');if(e)e.textContent=d.count||0;
 }
-
-function toggleHistSort() {
-  state.histSortDir = state.histSortDir === 'desc' ? 'asc' : 'desc';
-  document.getElementById('hist-sort').value = state.histSortDir;
-  filterHistory();
-}
-
-function renderHistory(rows) {
-  const dir = document.getElementById('hist-sort')?.value || 'desc';
-  const sorted = [...rows].sort((a,b) => {
-    const da = a.poDate||'', db = b.poDate||'';
-    return dir === 'desc' ? db.localeCompare(da) : da.localeCompare(db);
-  });
-  document.getElementById('hist-tbody').innerHTML = sorted.slice(0,500).map(r => {
-    const chg = Number(r.priceChange)||0;
-    const pctChg = Number(r.pctChange)||0;
-    return `<tr>
+function renderHistory(rows){
+  const dir=document.getElementById('hist-sort')?.value||'desc';
+  const s=[...rows].sort((a,b)=>dir==='desc'?(b.poDate||'').localeCompare(a.poDate||''):(a.poDate||'').localeCompare(b.poDate||''));
+  document.getElementById('hist-body').innerHTML=s.slice(0,1000).map(r=>{
+    const chg=Number(r.priceChange)||0,pct=Number(r.pctChange)||0;
+    const src=r.source||'';
+    return`<tr>
       <td class="mono" style="font-size:10px">${r.catNo||''}</td>
-      <td style="max-width:220px">${r.description||''}</td>
-      <td>${r.category||''}</td>
-      <td>${r.poDate||''}</td>
-      <td class="mono">${r.poNo||''}</td>
+      <td style="max-width:210px">${r.description||''}</td>
+      <td style="font-size:11px">${r.category||''}</td>
+      <td>${r.poDate||''}</td><td class="mono">${r.poNo||''}</td>
       <td style="font-size:11px">${r.supplier||''}</td>
-      <td class="text-right mono bold">₱${fmt(r.unitPrice||0)}</td>
-      <td class="text-right mono">₱${fmt(r.prevPrice||0)}</td>
-      <td class="text-right mono ${chg>0?'badge-red':chg<0?'badge-green':''}">${chg?(chg>0?'+':'')+' ₱'+fmt(chg):''}</td>
-      <td class="text-right mono ${pctChg>0?'badge-red':pctChg<0?'badge-green':''}">${pctChg?(pctChg>0?'+':'')+pctFmt(pctChg):''}</td>
+      <td class="tr mono bold">₱${fmt(r.unitPrice||0)}</td>
+      <td class="tr mono">₱${fmt(r.prevPrice||0)}</td>
+      <td class="tr mono ${chg>0?'badge br':chg<0?'badge bg':''}">${chg?(chg>0?'+':'')+' ₱'+fmt(chg):''}</td>
+      <td class="tr mono ${pct>0?'badge br':pct<0?'badge bg':''}">${pct?(pct>0?'+':'')+pctF(pct):''}</td>
       <td style="font-size:11px">${r.project||''}</td>
+      <td><span class="badge ${src.includes('MRS')?'bb':src.includes('PO')?'bt':'bgr'}" style="font-size:9px">${src}</span></td>
     </tr>`;
-  }).join('') || emptyRow(11, 'No history data');
+  }).join('')||emr(12,'No item history. Check: 1) 📊 Item History tab has data in row 2+, 2) MRS/PO tabs have Unit Price filled.');
 }
-
-function filterHistory() {
-  const cat = document.getElementById('hist-cat').value;
-  let rows = state.data.history || [];
-  if (cat) rows = rows.filter(r=>r.category===cat);
+function filterHistory(){
+  const cat=document.getElementById('hist-cat').value,src=document.getElementById('hist-src').value;
+  let rows=S.data.history||[];
+  if(cat)rows=rows.filter(r=>r.category===cat);
+  if(src)rows=rows.filter(r=>(r.source||'').includes(src));
   renderHistory(rows);
 }
 
-// ─── ALERTS ───────────────────────────────────────────────
-async function loadAlerts() {
-  const [sht, dead, action] = await Promise.all([api('getShortage'),api('getDeadStock'),api('getActionItems')]);
-  state.data.shortage = sht.data||[];
-  state.data.dead = dead.data||[];
-  state.data.action = action.data||[];
-  renderAlerts();
+// ─── INTERNAL REQ ────────────────────────────────────────
+async function loadInternalReqs(){
+  setLoad('ir-body');const d=await api('getInternalReq');
+  if(d.error){document.getElementById('ir-body').innerHTML=`<tr><td colspan="16" style="padding:18px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;return;}
+  S.data.internal=d.data||[];renderIR(S.data.internal);renderIRStats(d.summary||{});
+  const e=document.getElementById('cnt-ir');if(e)e.textContent=d.count||0;
+  const nb=document.getElementById('nb-ir');if(nb)nb.textContent=d.summary?.pending||0;
+}
+function renderIR(rows){
+  document.getElementById('ir-body').innerHTML=rows.map(r=>`
+    <tr><td class="mono">${r.num}</td><td>${r.date||''}</td><td style="font-size:11px">${r.category||''}</td><td style="max-width:180px;font-weight:600">${r.item||''}</td><td class="tr">${r.qty||''}</td><td>${r.unit||''}</td><td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td><td class="tr mono bold">${r.total?'₱'+fmt(r.total):''}</td><td style="font-size:11px">${r.requestedBy||''}</td><td style="font-size:11px">${r.supplier||''}</td><td class="mono">${r.poNo||''}</td><td>${sBadge(r.status)}</td><td>${r.deliveryDate||''}</td><td class="tr mono">${r.amtPaid?'₱'+fmt(r.amtPaid):''}</td><td style="font-size:11px;max-width:120px">${r.notes||''}</td>
+    <td><button class="eb" onclick="openGenEdit('ir',${r.rowIndex},'IR#${r.num}','${(r.item||'').substring(0,20).replace(/'/g,"&#39;")}'",[['status','Status','select',['⬜ Pending','🟡 For Canvass','✅ PO Issued','🚚 In Transit','✅ Complete','❌ Cancelled']],['supplier','Supplier','text'],['poNo','PO#','text'],['unitPrice','Unit Price','number'],['deliveryDate','Del Date','date'],['amtPaid','Amt Paid','number'],['notes','Notes','text']])">✏️</button></td>
+    </tr>`).join('')||emr(16,'No data.');
+}
+function renderIRStats(s){document.getElementById('ir-stats').innerHTML=[{l:'Total',v:s.total||0,c:'blue',i:'📋'},{l:'Complete',v:s.complete||0,c:'green',i:'✅'},{l:'Pending',v:s.pending||0,c:'orange',i:'⬜'},{l:'In Transit',v:s.inTransit||0,c:'teal',i:'🚚'},{l:'Total Spend',v:'₱'+sn(s.totalSpend||0),c:'purple',i:'💵'},{l:'Total Paid',v:'₱'+sn(s.totalPaid||0),c:'teal',i:'💳'}].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');}
+function filterIR(){const cat=document.getElementById('ir-cf').value,sf=document.getElementById('ir-sf').value;let rows=S.data.internal||[];if(cat)rows=rows.filter(r=>r.category===cat);if(sf)rows=rows.filter(r=>r.status===sf);renderIR(rows);}
+
+// ─── PROJECT PROGRESS ────────────────────────────────────
+async function loadProjectProg(){
+  setLoad('pp-body');const d=await api('getProjectProg');
+  if(d.error){document.getElementById('pp-body').innerHTML=`<tr><td colspan="15" style="padding:18px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;return;}
+  S.data.progress=d.data||[];renderPP(S.data.progress);renderPPStats(d.summary||{});
+  const e=document.getElementById('cnt-pp');if(e)e.textContent=d.count||0;
+}
+function renderPP(rows){
+  document.getElementById('pp-body').innerHTML=rows.map(r=>{
+    const pct=Math.round(((r.pctDoneCalc!==undefined?r.pctDoneCalc:Number(r.pctDone))||0)*100);
+    const bc=pct>=80?'var(--green)':pct>=50?'var(--orange)':'var(--blue)';
+    let bar='';
+    if(r.bomBreakdown){const bd=r.bomBreakdown;bar=`<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;min-width:60px;border:1px solid var(--border)">${Object.keys(SC).map(s=>{const w=bd.total>0?((bd.statusCounts[s]||0)/bd.total*100):0;return w>0?`<div style="width:${w}%;background:${SC[s]}" title="${s}: ${bd.statusCounts[s]||0}"></div>`:'';}).join('')}</div>`;}
+    return`<tr><td class="mono">${r.num}</td><td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td><td style="font-size:11px;max-width:150px">${r.description||''}</td><td>${r.targetDate||''}</td><td class="tr mono">₱${fmt(r.contractValue||0)}</td><td class="tr mono">₱${fmt(r.bomBudget||0)}</td><td class="tr mono">₱${fmt(r.actualSpend||0)}</td><td class="tr mono ${Number(r.variance)<0?'badge br':'badge bg'}">₱${fmt(r.variance||0)}</td>
+    <td><div style="display:flex;align-items:center;gap:5px"><div class="pbar"><div class="pfill" style="width:${pct}%;background:${bc}"></div></div><span class="mono" style="font-size:10px">${pct}%</span></div></td>
+    <td>${bar||'<span class="mu" style="font-size:10px">—</span>'}</td><td>${sBadge(r.status)}</td><td>${prioBadge(r.priority)}</td><td style="font-size:11px">${r.phase||''}</td>
+    <td><button class="eb" onclick="openGenEdit('pp',${r.rowIndex},'SO ${r.so||''}','${(r.client||'').replace(/'/g,"&#39;")}'",[['status','Status','select',['📋 Planning','🔄 In Progress','⚠️ At Risk','⏸️ On Hold','✅ Completed']],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['phase','Phase','select',['Engineering','Procurement','Fabrication','Assembly','Testing','Delivery','Completed']],['actualSpend','Actual Spend','number'],['issues','Issues','text'],['engineer','Engineer','text'],['actualDate','Actual Compl.','date']])">✏️</button></td>
+    </tr>`;}).join('')||emr(15,'No project data. Run ⚡ EXELON Tools → Setup All New Sheets first.');
+}
+function renderPPStats(s){document.getElementById('pp-stats').innerHTML=[{l:'Total',v:s.total||0,c:'blue',i:'📋'},{l:'In Progress',v:s.inProgress||0,c:'teal',i:'🔄'},{l:'Completed',v:s.completed||0,c:'green',i:'✅'},{l:'At Risk',v:s.atRisk||0,c:'red',i:'⚠️'},{l:'Contract',v:'₱'+sn(s.totalContract||0),c:'purple',i:'💰'},{l:'Spend',v:'₱'+sn(s.totalSpend||0),c:'orange',i:'💸'}].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');}
+function filterPP(){const v=document.getElementById('pp-sf').value;renderPP(v?(S.data.progress||[]).filter(r=>r.status===v):S.data.progress||[]);}
+
+// ─── BUDGET ──────────────────────────────────────────────
+async function loadBudget(){
+  const d=await api('getBudgetSpend');S.data.budget=d;
+  if(d.error){toast('⚠️ '+d.error,'e');return;}
+  const ps=d.projects||[];
+  const tc=ps.reduce((s,r)=>s+(Number(r.contract)||0),0),tb=ps.reduce((s,r)=>s+(Number(r.budget)||0),0),ts=ps.reduce((s,r)=>s+(Number(r.spend)||0),0);
+  document.getElementById('budget-stats').innerHTML=[{l:'Total Contract',v:'₱'+sn(tc),c:'blue'},{l:'Total Budget',v:'₱'+sn(tb),c:'teal'},{l:'Total Spend',v:'₱'+sn(ts),c:'orange'},{l:'% Used',v:tb?pctF(ts/tb):'0%',c:ts/tb>0.9?'red':'green'}].map(s=>`<div class="sc ${s.c}"><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');
+  const cats=Object.entries(d.categoryTotals||{}).sort((a,b)=>b[1].spend-a[1].spend);const mx=cats.length?cats[0][1].spend:1;
+  document.getElementById('budget-cat').innerHTML=cats.length?cats.map(([cat,info])=>`<div style="display:flex;align-items:center;gap:9px;margin-bottom:6px"><div style="font-size:11px;min-width:195px">${cat}</div><div style="flex:1;background:var(--border);border-radius:4px;height:13px;overflow:hidden"><div style="width:${(info.spend/mx*100).toFixed(1)}%;height:100%;background:var(--blue);border-radius:4px"></div></div><div class="mono" style="font-size:11px;min-width:75px;text-align:right">₱${fmt(info.spend)}</div><div class="mu" style="font-size:10px;min-width:35px">${info.count}</div></div>`).join(''):'<div class="mu" style="padding:14px;text-align:center">No internal request data</div>';
+  document.getElementById('bg-proj').innerHTML=ps.map(r=>{const pct=Number(r.pctUsed)||0;const bc=pct>1?'#B71C1C':pct>0.85?'#E65100':'#1B5E20';return`<tr><td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td><td class="tr mono">₱${fmt(r.contract||0)}</td><td class="tr mono">₱${fmt(r.budget||0)}</td><td class="tr mono bold">₱${fmt(r.spend||0)}</td><td class="tr mono ${Number(r.remaining)<0?'badge br':''}">₱${fmt(r.remaining||0)}</td><td><div style="display:flex;align-items:center;gap:5px"><div class="pbar"><div class="pfill" style="width:${Math.min(pct*100,100)}%;background:${bc}"></div></div><span class="mono" style="font-size:10px">${pctF(pct)}</span></div></td><td>${bgBadge(r.status)}</td></tr>`;}).join('')||emr(8,'No budget data');
+  document.getElementById('bg-mach').innerHTML=(d.machines||[]).map(r=>`<tr><td style="max-width:150px;font-weight:600">${r.name||''}</td><td style="font-size:11px">${r.model||''}</td><td class="tr mono">₱${fmt(r.repair||0)}</td><td class="tr mono">₱${fmt(r.parts||0)}</td><td class="tr mono">₱${fmt(r.tools||0)}</td><td class="tr mono bold">₱${fmt(r.total||0)}</td></tr>`).join('')||emr(6,'No machine data');
+  document.getElementById('bg-te').innerHTML=(d.testEquip||[]).map(r=>`<tr><td style="max-width:150px;font-weight:600">${r.name||''}</td><td class="tr mono">₱${fmt(r.y2022||0)}</td><td class="tr mono">₱${fmt(r.y2023||0)}</td><td class="tr mono">₱${fmt(r.y2024||0)}</td><td class="tr mono bold">₱${fmt(r.total||0)}</td><td>${r.lastCalib||''}</td><td>${r.nextDue||''}</td></tr>`).join('')||emr(7,'No test equip data');
 }
 
-function renderAlerts() {
-  document.getElementById('shortage-tbody').innerHTML = (state.data.shortage||[]).map(r=>`
-    <tr><td class="mono">${r.itemCode}</td><td>${r.description}</td>
-    <td class="text-right bold">${r.currentStock}</td><td class="text-right">${r.minLevel}</td>
-    <td class="text-right">${r.productionDemand}</td>
-    <td class="text-right bold ${Number(r.stockAfterDemand)<0?'badge-red':''}">${r.stockAfterDemand}</td>
-    <td>${riskBadge(r.riskLevel)}</td></tr>`).join('') || emptyRow(7,'No shortage data');
-  document.getElementById('dead-tbody').innerHTML = (state.data.dead||[]).map(r=>`
-    <tr><td class="mono">${r.itemCode}</td><td>${r.description}</td>
-    <td>${r.lastMovement}</td><td class="text-right">${r.quantity}</td>
-    <td class="text-right mono">₱${fmt(r.inventoryValue||0)}</td>
-    <td class="text-right bold badge-red">${r.daysWithoutMovement}</td>
-    <td>${statusBadge(r.status)}</td></tr>`).join('') || emptyRow(7,'No dead stock');
-  document.getElementById('action-tbody').innerHTML = (state.data.action||[]).map(r=>`
-    <tr><td>${r.client}</td><td style="font-size:11px">${r.project}</td>
-    <td class="mono" style="font-size:10px">${r.catNo}</td>
-    <td style="max-width:200px">${r.description}</td>
-    <td class="text-right">${r.qty}</td><td>${r.unit}</td>
-    <td class="text-right mono">${r.budget?'₱'+fmt(r.budget):''}</td>
-    <td>${r.category}</td></tr>`).join('') || emptyRow(8,'No action items');
-  const badge = document.getElementById('badge-alert');
-  if (badge) badge.textContent = (state.data.shortage||[]).filter(r=>String(r.riskLevel).includes('CRITICAL')).length;
+// ─── WEEKLY REVIEW ───────────────────────────────────────
+async function loadWeekly(){
+  setLoad('wr-body');const d=await api('getWeeklyReview');
+  if(d.error){document.getElementById('wr-body').innerHTML=`<tr><td colspan="12" style="padding:18px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;return;}
+  S.data.weekly=d.data||[];renderWR(S.data.weekly);
+  const e=document.getElementById('cnt-wr');if(e)e.textContent=d.count||0;
+}
+function renderWR(rows){
+  document.getElementById('wr-body').innerHTML=rows.map(r=>`
+    <tr><td class="mono">${r.num}</td><td>${r.date||''}</td><td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td><td style="font-size:11px;max-width:160px">${r.project||''}</td><td>${r.targetDate||''}</td><td>${sBadge(r.status)}</td><td>${prioBadge(r.priority)}</td><td style="max-width:210px;font-size:11px">${r.notes||''}</td><td style="font-size:11px">${r.updatedBy||''}</td><td style="font-size:11px;max-width:150px">${r.nextAction||''}</td>
+    <td><button class="eb" onclick="openGenEdit('wr',${r.rowIndex},'WR#${r.num}','${(r.client||'').replace(/'/g,"&#39;")}'",[['status','Status','select',['🔄 In Progress','✅ On Track','⚠️ At Risk','⏸️ On Hold','✅ Completed']],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['notes','Notes/Updates','text'],['updatedBy','Updated By','text'],['nextAction','Next Action','text']])">✏️</button></td>
+    </tr>`).join('')||emr(12,'No weekly review data. Click ➕ Add Entry to start.');
+}
+function filterWR(v){renderWR(v?(S.data.weekly||[]).filter(r=>r.status===v):S.data.weekly||[]);}
+
+// ─── EQUIPMENT ───────────────────────────────────────────
+async function loadMachineList(){
+  const d=await api('getMachineList');
+  document.getElementById('ml-body').innerHTML=(d.data||[]).map(r=>`<tr><td style="font-weight:600;max-width:190px">${r.name||''}</td><td>${r.brand||''}</td><td class="mono">${r.model||''}</td><td class="mono">${r.serialNo||''}</td><td class="mono">${r.exelonCode||''}</td><td class="tr mono">${r.unitCost?'₱'+fmt(r.unitCost):''}</td><td style="font-size:11px">${r.supplier||''}</td><td>${r.datePurchased||''}</td><td class="mono">${r.po||''}</td><td style="font-size:11px">${r.remarks||''}</td><td><span class="badge ${!r.status||r.status==='ACTIVE'?'bg':'br'}">${r.status||'ACTIVE'}</span></td></tr>`).join('')||emr(11,d.error||'No machine data');
+}
+async function loadMachineLog(){
+  setLoad('mlog-body');const d=await api('getMachineLog');S.data.mlog=d.data||[];renderMLog(S.data.mlog);
+  const e=document.getElementById('cnt-mlog');if(e)e.textContent=d.count||0;
+  if(d.count===0&&!d.error)toast('Machine Log: 0 rows found. Check sheet column order: Date=col1, Equipment=col2, Brand=col3, etc.','w');
+}
+function renderMLog(rows){
+  document.getElementById('mlog-body').innerHTML=rows.map(r=>`
+    <tr><td>${r.date||''}</td><td style="font-weight:600;max-width:150px">${r.equipmentName||''}</td><td style="font-size:11px">${[r.brand,r.model].filter(Boolean).join(' ')}</td><td><span class="badge bb">${r.transactionType||''}</span></td><td style="font-size:11px;max-width:140px">${r.problem||''}</td><td style="font-size:11px;max-width:140px">${r.scopeOfWork||''}</td><td style="font-size:11px">${r.partsUsed||''}</td><td>${r.status?`<span class="badge bg">${r.status}</span>`:''}</td><td class="mono">${r.poNo||''}</td><td class="tr">${r.qty||''}</td><td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td><td class="tr mono bold">${r.totalPrice?'₱'+fmt(r.totalPrice):''}</td><td style="font-size:11px">${r.supplier||''}</td>
+    </tr>`).join('')||emr(13,'No machine log data');
+}
+function filterMLog(t){renderMLog(t?(S.data.mlog||[]).filter(r=>r.transactionType===t):S.data.mlog||[]);}
+async function loadTestEquip(){
+  setLoad('te-body');const d=await api('getTestEquip');S.data.te=d.data||[];
+  const e=document.getElementById('cnt-te');if(e)e.textContent=d.count||0;
+  document.getElementById('te-body').innerHTML=(d.data||[]).map(r=>`<tr><td>${r.date||''}</td><td style="font-weight:600;max-width:150px">${r.equipmentName||''}</td><td style="font-size:11px">${[r.brand,r.model].filter(Boolean).join(' ')}</td><td><span class="badge bp">${r.transactionType||''}</span></td><td style="font-size:11px;max-width:130px">${r.problem||''}</td><td style="font-size:11px;max-width:130px">${r.scopeOfWork||''}</td><td style="font-size:11px">${r.recommendations||''}</td><td style="font-size:11px">${r.partsUsed||''}</td><td>${r.status?`<span class="badge bg">${r.status}</span>`:''}</td><td class="mono">${r.poNo||''}</td><td class="tr mono bold">${r.totalPrice?'₱'+fmt(r.totalPrice):''}</td><td style="font-size:11px">${r.supplier||''}</td></tr>`).join('')||emr(12,d.error||'No test equip data');
 }
 
-// ─── INTERNAL REQUESTS ────────────────────────────────────
-async function loadInternalRequests() {
-  setLoading('ir-tbody','Loading internal requests…');
-  const d = await api('getInternalReq');
-  if (d.error) { document.getElementById('ir-tbody').innerHTML=`<tr><td colspan="16" style="padding:20px;color:#B71C1C">⚠️ ${d.error}</td></tr>`; return; }
-  state.data.ir = d.data||[];
-  renderIR(state.data.ir);
-  renderIRStats(d.summary||{});
-  document.getElementById('ir-count').textContent = d.count||0;
-  const badge = document.getElementById('badge-ir');
-  if (badge) badge.textContent = d.summary?.pending||0;
+// ─── EDIT MODAL ──────────────────────────────────────────
+function openGenEdit(section,rowIndex,title,subtitle,fields){
+  S.editCtx={section,rowIndex,fields};
+  document.getElementById('edit-title').textContent=`✏️ Edit — ${title}`;
+  document.getElementById('edit-body').innerHTML=`<p style="font-size:11px;color:var(--muted);margin-bottom:13px">${subtitle}</p><div class="fg">${fields.map(([key,label,type,opts])=>`<div class="fr"><label>${label}</label>${type==='select'?`<select id="ef-${key}">${(opts||[]).map(o=>`<option>${o}</option>`).join('')}</select>`:`<input type="${type==='number'?'number':type==='date'?'date':'text'}" id="ef-${key}" placeholder="${label}">`}</div>`).join('')}</div>`;
+  openModal('m-edit');
 }
-
-function renderIR(rows) {
-  document.getElementById('ir-tbody').innerHTML = rows.map(r=>`
-    <tr>
-      <td class="mono">${r.num}</td>
-      <td>${r.date||''}</td>
-      <td>${r.category||''}</td>
-      <td style="max-width:200px;font-weight:600">${r.item||''}</td>
-      <td class="text-right">${r.qty||''}</td>
-      <td>${r.unit||''}</td>
-      <td class="text-right mono">₱${fmt(r.unitPrice||0)}</td>
-      <td class="text-right mono bold">₱${fmt(r.total||0)}</td>
-      <td style="font-size:11px">${r.requestedBy||''}</td>
-      <td style="font-size:11px">${r.supplier||''}</td>
-      <td class="mono">${r.poNo||''}</td>
-      <td>${statusBadge(r.status)}</td>
-      <td>${r.deliveryDate||''}</td>
-      <td class="text-right mono">${r.amtPaid?'₱'+fmt(r.amtPaid):''}</td>
-      <td style="font-size:11px;max-width:140px">${r.notes||''}</td>
-      <td><button class="edit-btn" onclick="openGenericEdit('ir',${r.rowIndex},'IR #${r.num}','${(r.item||'').substring(0,20)}',[['status','Status','select',['⬜ Pending','🟡 For Canvass','✅ PO Issued','🚚 In Transit','✅ Complete','❌ Cancelled']],['supplier','Supplier','text'],['poNo','PO #','text'],['unitPrice','Unit Price (₱)','number'],['deliveryDate','Delivery Date','date'],['amtPaid','Amt Paid (₱)','number'],['notes','Notes','text']])">✏️</button></td>
-    </tr>`).join('') || emptyRow(16,'No data. Make sure 🏢 Internal Request sheet exists.');
-}
-
-function renderIRStats(s) {
-  document.getElementById('ir-stats').innerHTML = [
-    {label:'Total',value:s.total||0,color:'blue',icon:'📋'},
-    {label:'✅ Complete',value:s.complete||0,color:'green',icon:'✅'},
-    {label:'⬜ Pending',value:s.pending||0,color:'orange',icon:'🟡'},
-    {label:'🚚 In Transit',value:s.inTransit||0,color:'teal',icon:'🚚'},
-    {label:'Total Spend',value:'₱'+shortNum(s.totalSpend||0),color:'purple',icon:'💵'},
-    {label:'Total Paid',value:'₱'+shortNum(s.totalPaid||0),color:'teal',icon:'💳'},
-  ].map(s=>`<div class="stat-card ${s.color}"><div class="stat-icon">${s.icon}</div><div class="stat-label">${s.label}</div><div class="stat-value big">${s.value}</div></div>`).join('');
-}
-
-function filterIR() {
-  const cat = document.getElementById('ir-cat-filter').value;
-  const stat = document.getElementById('ir-stat-filter').value;
-  let rows = state.data.ir||[];
-  if (cat) rows = rows.filter(r=>r.category===cat);
-  if (stat) rows = rows.filter(r=>r.status===stat);
-  renderIR(rows);
-}
-
-// ─── PROJECT PROGRESS ─────────────────────────────────────
-async function loadProjectProgress() {
-  setLoading('pp-tbody','Loading project progress…');
-  const d = await api('getProjectProg');
-  if (d.error) { document.getElementById('pp-tbody').innerHTML=`<tr><td colspan="16" style="padding:20px;color:#B71C1C">⚠️ ${d.error}</td></tr>`; return; }
-  state.data.pp = d.data||[];
-  renderPP(state.data.pp);
-  renderPPStats(d.summary||{});
-  document.getElementById('pp-count').textContent = d.count||0;
-}
-
-function renderPP(rows) {
-  document.getElementById('pp-tbody').innerHTML = rows.map(r => {
-    // Use BOM-calculated % if available, otherwise manual
-    const bomPct = r.pctDoneCalc !== undefined ? r.pctDoneCalc : (Number(r.pctDone)||0);
-    const pctDisp = Math.round(bomPct * 100);
-    const barColor = pctDisp>=80?'#1B5E20':pctDisp>=50?'#E65100':'#1565C0';
-
-    // BOM status mini-bar
-    let bomBar = '';
-    if (r.bomBreakdown) {
-      const bd = r.bomBreakdown;
-      const statuses = Object.keys(BOM_STATUS_COLORS);
-      bomBar = `<div style="display:flex;height:6px;border-radius:3px;overflow:hidden;min-width:80px;border:1px solid var(--border)">
-        ${statuses.map(s=>{
-          const cnt = bd.statusCounts[s]||0;
-          const w = bd.total>0?(cnt/bd.total*100):0;
-          return w>0?`<div style="width:${w}%;background:${BOM_STATUS_COLORS[s]}" title="${s}:${cnt}"></div>`:'';
-        }).join('')}
-      </div>`;
-    }
-
-    return `<tr>
-      <td class="mono">${r.num}</td>
-      <td class="mono bold">${r.so||''}</td>
-      <td style="font-weight:600">${r.client||''}</td>
-      <td style="font-size:11px;max-width:180px">${r.description||''}</td>
-      <td>${r.targetDate||''}</td>
-      <td class="text-right mono">₱${fmt(r.contractValue||0)}</td>
-      <td class="text-right mono">₱${fmt(r.bomBudget||0)}</td>
-      <td class="text-right mono">₱${fmt(r.actualSpend||0)}</td>
-      <td class="text-right mono ${Number(r.variance)<0?'badge-red':'badge-green'}">₱${fmt(r.variance||0)}</td>
-      <td>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div class="progress"><div class="progress-fill" style="width:${pctDisp}%;background:${barColor}"></div></div>
-          <span class="mono" style="font-size:10px;min-width:30px">${pctDisp}%</span>
-        </div>
-      </td>
-      <td>${bomBar || '<span class="muted" style="font-size:10px">No BOM</span>'}</td>
-      <td>${statusBadge(r.status)}</td>
-      <td>${prioBadge(r.priority)}</td>
-      <td style="font-size:11px">${r.phase||''}</td>
-      <td style="font-size:11px">${r.engineer||''}</td>
-      <td><button class="edit-btn" onclick="openGenericEdit('pp',${r.rowIndex},'SO ${r.so||''}','${r.client||''}',[['status','Status','select',['📋 Planning','🔄 In Progress','⚠️ At Risk','⏸️ On Hold','✅ Completed','❌ Cancelled']],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['phase','Phase','select',['Engineering','Procurement','Fabrication','Assembly','Testing','Delivery','Completed']],['actualSpend','Actual Spend (₱)','number'],['pctDone','% Done (0-100)','number'],['issues','Issues/Remarks','text'],['engineer','Engineer','text'],['actualDate','Actual Completion','date']])">✏️</button></td>
-    </tr>`;
-  }).join('') || emptyRow(16,'No project data.');
-}
-
-function renderPPStats(s) {
-  document.getElementById('pp-stats').innerHTML = [
-    {label:'Total',value:s.total||0,color:'blue',icon:'📋'},
-    {label:'🔄 In Progress',value:s.inProgress||0,color:'teal',icon:'🔄'},
-    {label:'✅ Completed',value:s.completed||0,color:'green',icon:'✅'},
-    {label:'⚠️ At Risk',value:s.atRisk||0,color:'red',icon:'⚠️'},
-    {label:'Total Contract',value:'₱'+shortNum(s.totalContract||0),color:'purple',icon:'💰'},
-    {label:'Total Spend',value:'₱'+shortNum(s.totalSpend||0),color:'orange',icon:'💸'},
-  ].map(s=>`<div class="stat-card ${s.color}"><div class="stat-icon">${s.icon}</div><div class="stat-label">${s.label}</div><div class="stat-value big">${s.value}</div></div>`).join('');
-}
-
-function filterPP() {
-  const stat = document.getElementById('pp-stat-filter').value;
-  const prio = document.getElementById('pp-prio-filter').value;
-  let rows = state.data.pp||[];
-  if (stat) rows = rows.filter(r=>r.status===stat);
-  if (prio) rows = rows.filter(r=>r.priority===prio);
-  renderPP(rows);
-}
-
-// ─── BUDGET & SPENDING ────────────────────────────────────
-async function loadBudgetSpending() {
-  const d = await api('getBudgetSpend');
-  state.data.budget = d;
-  renderBudget(d);
-}
-
-function renderBudget(d) {
-  const projects = d.projects||[];
-  const totalContract = projects.reduce((s,r)=>s+(Number(r.contract)||0),0);
-  const totalBudget = projects.reduce((s,r)=>s+(Number(r.budget)||0),0);
-  const totalSpend = projects.reduce((s,r)=>s+(Number(r.spend)||0),0);
-
-  document.getElementById('budget-stats').innerHTML = [
-    {label:'Total Contract',value:'₱'+shortNum(totalContract),color:'blue',icon:'💰'},
-    {label:'Total BOM Budget',value:'₱'+shortNum(totalBudget),color:'teal',icon:'📦'},
-    {label:'Total Actual Spend',value:'₱'+shortNum(totalSpend),color:'orange',icon:'💸'},
-    {label:'Budget Used',value:totalBudget?pctFmt(totalSpend/totalBudget):'0%',color:totalSpend/totalBudget>0.9?'red':'green',icon:'📊'},
-  ].map(s=>`<div class="stat-card ${s.color}"><div class="stat-icon">${s.icon}</div><div class="stat-label">${s.label}</div><div class="stat-value big">${s.value}</div></div>`).join('');
-
-  // Category totals chart
-  const cats = d.categoryTotals || {};
-  const catArr = Object.entries(cats).sort((a,b)=>b[1].spend-a[1].spend);
-  const maxSpend = catArr.length ? catArr[0][1].spend : 1;
-  document.getElementById('budget-category-chart').innerHTML = catArr.length ?
-    catArr.map(([cat, info]) => `
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <div style="font-size:11px;min-width:200px">${cat}</div>
-        <div style="flex:1;background:var(--border);border-radius:4px;height:14px;overflow:hidden">
-          <div style="width:${(info.spend/maxSpend*100).toFixed(1)}%;height:100%;background:var(--blue);border-radius:4px"></div>
-        </div>
-        <div class="mono" style="font-size:11px;min-width:80px;text-align:right">₱${fmt(info.spend)}</div>
-        <div class="muted" style="font-size:10px;min-width:40px">${info.count} req</div>
-      </div>`).join('') :
-    '<div class="muted" style="text-align:center;padding:16px">No internal request data</div>';
-
-  document.getElementById('budget-proj-tbody').innerHTML = projects.map(r=>{
-    const pctUsed = Number(r.pctUsed)||0;
-    const barColor = pctUsed>1?'#B71C1C':pctUsed>0.85?'#E65100':'#1B5E20';
-    return `<tr>
-      <td class="mono bold">${r.so||''}</td>
-      <td style="font-weight:600">${r.client||''}</td>
-      <td class="text-right mono">₱${fmt(r.contract||0)}</td>
-      <td class="text-right mono">₱${fmt(r.budget||0)}</td>
-      <td class="text-right mono bold">₱${fmt(r.spend||0)}</td>
-      <td class="text-right mono ${Number(r.remaining)<0?'badge-red':''}">₱${fmt(r.remaining||0)}</td>
-      <td>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div class="progress"><div class="progress-fill" style="width:${Math.min(pctUsed*100,100)}%;background:${barColor}"></div></div>
-          <span class="mono" style="font-size:10px">${pctFmt(pctUsed)}</span>
-        </div>
-      </td>
-      <td>${budgetStatusBadge(r.status)}</td>
-      <td><button class="edit-btn" onclick="openGenericEdit('budget',${r.rowIndex},'Budget SO${r.so}','${r.client||''}',[['spend','Actual Spend (₱)','number'],['materials','Materials (₱)','number'],['labor','Labor (₱)','number'],['overhead','Overhead (₱)','number']])">✏️</button></td>
-    </tr>`;
-  }).join('') || emptyRow(9,'No budget data.');
-
-  document.getElementById('budget-mach-tbody').innerHTML = (d.machines||[]).map(r=>`
-    <tr>
-      <td style="font-weight:600;max-width:160px">${r.name||''}</td>
-      <td style="font-size:11px">${r.model||''}</td>
-      <td class="text-right mono">₱${fmt(r.repair||0)}</td>
-      <td class="text-right mono">₱${fmt(r.parts||0)}</td>
-      <td class="text-right mono">₱${fmt(r.tools||0)}</td>
-      <td class="text-right mono">₱${fmt(r.calib||0)}</td>
-      <td class="text-right mono bold">₱${fmt(r.total||0)}</td>
-      <td class="text-right">${r.works||0}</td>
-    </tr>`).join('') || emptyRow(8,'No machine data');
-
-  document.getElementById('budget-te-tbody').innerHTML = (d.testEquip||[]).map(r=>`
-    <tr>
-      <td style="font-weight:600;max-width:160px">${r.name||''}</td>
-      <td style="font-size:11px">${r.model||''}</td>
-      <td class="text-right mono">₱${fmt(r.y2022||0)}</td>
-      <td class="text-right mono">₱${fmt(r.y2023||0)}</td>
-      <td class="text-right mono">₱${fmt(r.y2024||0)}</td>
-      <td class="text-right mono bold">₱${fmt(r.total||0)}</td>
-      <td>${r.lastCalib||''}</td>
-      <td>${r.nextDue||''}</td>
-    </tr>`).join('') || emptyRow(8,'No test equip data');
-}
-
-// ─── WEEKLY, MACHINE, TEST EQUIP ──────────────────────────
-async function loadWeeklyReview() {
-  const d = await api('getWeeklyReview');
-  document.getElementById('weekly-tbody').innerHTML = (d.data||[]).map(r=>`
-    <tr>
-      <td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td>
-      <td>${r.project||''}</td><td>${r.targetDate||''}</td>
-      <td>${statusBadge(r.status)}</td><td>${prioBadge(r.priority)}</td>
-      <td style="font-size:11px">${r.remarks||''}</td>
-      <td><button class="edit-btn" onclick="openGenericEdit('weekly',${r.rowIndex},'Weekly ${r.so}','${r.client||''}',[['status','Status','text'],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['remarks','Remarks','text']])">✏️</button></td>
-    </tr>`).join('') || emptyRow(8,'No weekly review data');
-}
-
-async function loadMachineList() {
-  const d = await api('getMachineList');
-  document.getElementById('ml-tbody').innerHTML = (d.data||[]).map(r=>`
-    <tr>
-      <td style="font-weight:600;max-width:200px">${r.name||''}</td><td>${r.brand||''}</td>
-      <td class="mono">${r.model||''}</td><td class="mono">${r.serialNo||''}</td>
-      <td class="mono">${r.exelonCode||''}</td><td class="text-right mono">${r.unitCost?'₱'+fmt(r.unitCost):''}</td>
-      <td style="font-size:11px">${r.supplier||''}</td><td>${r.datePurchased||''}</td>
-      <td class="mono">${r.po||''}</td><td style="font-size:11px">${r.remarks||''}</td>
-      <td><span class="badge ${r.status==='ACTIVE'?'badge-green':'badge-red'}">${r.status||''}</span></td>
-    </tr>`).join('') || emptyRow(11,'No machine data');
-}
-
-async function loadMachineLog() {
-  setLoading('mlog-tbody');
-  const d = await api('getMachineLog');
-  state.data.mlog = d.data||[];
-  renderMLog(state.data.mlog);
-  document.getElementById('mlog-count').textContent = d.count||0;
-}
-
-function renderMLog(rows) {
-  document.getElementById('mlog-tbody').innerHTML = rows.map(r=>`
-    <tr>
-      <td>${r.date||''}</td><td style="font-weight:600;max-width:160px">${r.equipmentName||''}</td>
-      <td><span class="badge badge-blue">${r.transactionType||''}</span></td>
-      <td style="font-size:11px">${r.problem||''}</td><td style="font-size:11px;max-width:140px">${r.scopeOfWork||''}</td>
-      <td style="font-size:11px">${r.partsUsed||''}</td><td><span class="badge badge-green">${r.status||''}</span></td>
-      <td class="mono">${r.poNo||''}</td><td class="text-right">${r.qty||''}</td>
-      <td class="text-right mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
-      <td class="text-right mono bold">${r.totalPrice?'₱'+fmt(r.totalPrice):''}</td>
-      <td style="font-size:11px">${r.supplier||''}</td>
-    </tr>`).join('') || emptyRow(12,'No machine log data');
-}
-
-function filterMLog(type) {
-  renderMLog(type ? (state.data.mlog||[]).filter(r=>r.transactionType===type) : state.data.mlog||[]);
-}
-
-async function loadTestEquip() {
-  setLoading('te-tbody');
-  const d = await api('getTestEquip');
-  state.data.te = d.data||[];
-  renderTE(state.data.te);
-  document.getElementById('te-count').textContent = d.count||0;
-}
-
-function renderTE(rows) {
-  document.getElementById('te-tbody').innerHTML = rows.map(r=>`
-    <tr>
-      <td>${r.date||''}</td><td style="font-weight:600;max-width:180px">${r.equipmentName||''}</td>
-      <td><span class="badge badge-purple">${r.transactionType||''}</span></td>
-      <td style="font-size:11px">${r.problem||''}</td><td style="font-size:11px">${r.scopeOfWork||''}</td>
-      <td style="font-size:11px">${r.recommendations||''}</td><td style="font-size:11px">${r.partsUsed||''}</td>
-      <td><span class="badge badge-green">${r.status||''}</span></td>
-      <td class="mono">${r.poNo||''}</td><td class="text-right">${r.qty||''}</td>
-      <td class="text-right mono bold">${r.totalPrice?'₱'+fmt(r.totalPrice):''}</td>
-      <td style="font-size:11px">${r.supplier||''}</td>
-    </tr>`).join('') || emptyRow(12,'No test equipment data');
-}
-
-// ─── GENERIC EDIT MODAL ───────────────────────────────────
-// fields format: [[key, label, type, options?], ...]
-function openGenericEdit(section, rowIndex, title, subtitle, fields) {
-  state.editContext = { section, rowIndex, fields };
-  document.getElementById('modal-edit-title').textContent = `✏️ Edit — ${title}`;
-  document.getElementById('modal-edit-body').innerHTML = `
-    <p style="font-size:11px;color:var(--muted);margin-bottom:16px">${subtitle}</p>
-    <div class="form-grid">
-      ${fields.map(([key, label, type, opts]) => `
-        <div class="form-row">
-          <label>${label}</label>
-          ${type === 'select'
-            ? `<select id="ef-${key}">${(opts||[]).map(o=>`<option>${o}</option>`).join('')}</select>`
-            : `<input type="${type==='number'?'number':type==='date'?'date':'text'}" id="ef-${key}" placeholder="${label}">`
-          }
-        </div>`).join('')}
-    </div>`;
-  document.getElementById('modal-edit').classList.add('open');
-}
-
-async function submitEdit() {
-  const ctx = state.editContext;
-  if (!ctx) return;
-
-  let payload = {};
-
-  if (ctx.type === 'bom') {
-    // BOM edit
-    payload = {
-      action: 'updateBOMItem',
-      sheet: ctx.sheet,
-      row: ctx.row,
-      data: {
-        status: document.getElementById('edit-bom-status')?.value,
-        vendor: document.getElementById('edit-bom-vendor')?.value,
-        poNo: document.getElementById('edit-bom-pono')?.value,
-        unitPrice: parseFloat(document.getElementById('edit-bom-price')?.value)||0,
-        poDate: document.getElementById('edit-bom-podate')?.value,
-        whStatus: document.getElementById('edit-bom-whstatus')?.value,
-        delQty: parseFloat(document.getElementById('edit-bom-delqty')?.value)||0,
-        cancelQty: parseFloat(document.getElementById('edit-bom-cancelqty')?.value)||0,
-        expDate: document.getElementById('edit-bom-expdate')?.value,
-        actDate: document.getElementById('edit-bom-actdate')?.value,
-        bestPrice: parseFloat(document.getElementById('edit-bom-bestprice')?.value)||0,
-      }
-    };
-  } else {
-    // Generic edit
-    const data = {};
-    ctx.fields.forEach(([key]) => {
-      const el = document.getElementById(`ef-${key}`);
-      if (el) data[key] = el.type === 'number' ? (parseFloat(el.value)||0) : el.value;
-    });
-
-    const actionMap = {
-      ir: 'updateInternalRequest',
-      pp: 'updateProjectProgress',
-      po: 'updatePORow',
-      wh: 'updateWHRow',
-      payable: 'updatePayableRow',
-      weekly: 'updateWeeklyRow',
-      budget: 'updateBudgetRow',
-    };
-
-    payload = {
-      action: actionMap[ctx.section] || 'updateGenericRow',
-      row: ctx.rowIndex,
-      data
-    };
+async function submitEdit(){
+  const ctx=S.editCtx;if(!ctx)return;
+  let payload={};
+  if(ctx.type==='bom'){
+    payload={action:'updateBOMItem',sheet:ctx.sheet,row:ctx.row,data:{status:document.getElementById('eb-stat')?.value,vendor:document.getElementById('eb-vendor')?.value,poNo:document.getElementById('eb-pono')?.value,unitPrice:parseFloat(document.getElementById('eb-price')?.value)||0,poDate:document.getElementById('eb-podate')?.value,whStatus:document.getElementById('eb-whstat')?.value,delQty:parseFloat(document.getElementById('eb-del')?.value)||0,cancelQty:parseFloat(document.getElementById('eb-cancel')?.value)||0,expDate:document.getElementById('eb-exp')?.value,actDate:document.getElementById('eb-act')?.value}};
+  }else{
+    const data={};ctx.fields.forEach(([key])=>{const el=document.getElementById('ef-'+key);if(el)data[key]=el.type==='number'?parseFloat(el.value)||0:el.value;});
+    const AM={ir:'updateInternalRequest',pp:'updateProjectProgress',po:'updatePORow',wh:'updateWHRow',payable:'updatePayableRow',mrs:'updateMRSRow',wr:'updateWeeklyReview'};
+    payload={action:AM[ctx.section]||'updateGenericRow',row:ctx.rowIndex,data};
   }
-
-  const btn = document.getElementById('edit-save-btn');
-  btn.textContent = '⏳ Saving…'; btn.disabled = true;
-  const res = await apiPost(payload);
-  btn.textContent = '💾 Save Changes'; btn.disabled = false;
-
-  if (res.success !== false && !res.error) {
-    toast('✅ Saved!', 'success');
-    closeModal('modal-edit');
-    // Reload current tab data
-    state.data[state.currentPage] = null;
-    const loaders = {
-      bom: ()=>loadBOMDirect(state.currentBOMSheet),
-      mrs:loadMRS, po:loadPO, wh:loadWH, payable:loadPayable,
-      internal:loadInternalRequests, progress:loadProjectProgress,
-      budget:loadBudgetSpending, weekly:loadWeeklyReview,
-    };
-    if (loaders[ctx.section]) loaders[ctx.section]();
-    else if (loaders[state.currentPage]) loaders[state.currentPage]();
-  } else {
-    toast('❌ Error: '+(res.error||'Unknown'), 'error');
-  }
+  const btn=document.getElementById('edit-sbtn');btn.textContent='⏳…';btn.disabled=true;
+  const res=await apiPost(payload);
+  btn.textContent='💾 Save Changes';btn.disabled=false;
+  if(!res.error&&res.success!==false){
+    toast('✅ Saved!','s');closeModal('m-edit');
+    S.data[S.page]=null;
+    const L={bom:()=>loadBOMDirect(S.bomSheet,false),mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly};
+    const fn=L[ctx.type==='bom'?'bom':ctx.section];if(fn)fn();
+  }else toast('❌ '+(res.error||'Unknown error'),'e');
 }
 
-// ─── INTERNAL REQUEST SUBMIT ──────────────────────────────
-function openIRModal() {
-  state.editContext = null;
-  document.getElementById('modal-ir-title').textContent = '🏢 New Internal Request';
-  document.getElementById('ir-save-btn').textContent = '💾 Save Request';
-  document.getElementById('ir-save-btn').onclick = submitIR;
-  document.getElementById('ir-date').value = today();
-  document.getElementById('ir-item').value = '';
-  document.getElementById('ir-desc').value = '';
-  document.getElementById('ir-qty').value = '';
-  document.getElementById('ir-unit').value = '';
-  document.getElementById('ir-price').value = '';
-  document.getElementById('ir-reqby').value = '';
-  document.getElementById('ir-supplier').value = '';
-  document.getElementById('ir-pono').value = '';
-  document.getElementById('ir-notes').value = '';
-  document.getElementById('modal-ir').classList.add('open');
+// ─── FORM SUBMITS ────────────────────────────────────────
+function openIRModal(){
+  document.getElementById('ir-modal-title').textContent='🏢 New Internal Request';
+  document.getElementById('ir-date').value=td();
+  ['ir-item','ir-desc','ir-qty','ir-unit','ir-price','ir-reqby','ir-supp','ir-pono','ir-notes'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  openModal('m-ir');
+}
+async function submitIR(){
+  const data={date:document.getElementById('ir-date').value,category:document.getElementById('ir-cat').value,item:document.getElementById('ir-item').value,description:document.getElementById('ir-desc').value,qty:parseFloat(document.getElementById('ir-qty').value)||0,unit:document.getElementById('ir-unit').value,unitPrice:parseFloat(document.getElementById('ir-price').value)||0,status:document.getElementById('ir-stat').value,requestedBy:document.getElementById('ir-reqby').value,supplier:document.getElementById('ir-supp').value,poNo:document.getElementById('ir-pono').value,deliveryDate:document.getElementById('ir-del').value,notes:document.getElementById('ir-notes').value};
+  if(!data.item){toast('Item name required.','e');return;}
+  const btn=document.getElementById('ir-sbtn');btn.textContent='⏳…';btn.disabled=true;
+  const res=await apiPost({action:'addInternalRequest',data});
+  btn.textContent='💾 Save';btn.disabled=false;
+  if(res.success){toast('✅ Request saved!','s');closeModal('m-ir');S.data.internal=null;loadInternalReqs();}
+  else toast('❌ '+(res.error||'Unknown'),'e');
+}
+function openPPModal(){document.getElementById('pp-start').value=td();openModal('m-pp');}
+async function submitPP(){
+  const data={so:document.getElementById('pp-so').value,client:document.getElementById('pp-client').value,description:document.getElementById('pp-desc').value,startDate:document.getElementById('pp-start').value,targetDate:document.getElementById('pp-target').value,contractValue:parseFloat(document.getElementById('pp-contract').value)||0,bomBudget:parseFloat(document.getElementById('pp-budget').value)||0,status:document.getElementById('pp-stat').value,priority:document.getElementById('pp-prio').value,phase:document.getElementById('pp-phase').value,engineer:document.getElementById('pp-engr').value,issues:document.getElementById('pp-issues').value};
+  if(!data.so||!data.client){toast('SO# and Client required.','e');return;}
+  const btn=document.getElementById('pp-sbtn');btn.textContent='⏳…';btn.disabled=true;
+  const res=await apiPost({action:'addProjectProgress',data});
+  btn.textContent='💾 Save';btn.disabled=false;
+  if(res.success){toast('✅ Project added!','s');closeModal('m-pp');S.data.progress=null;loadProjectProg();}
+  else toast('❌ '+(res.error||'Unknown'),'e');
+}
+function openWRModal(){document.getElementById('wr-date').value=td();document.getElementById('wr-notes').value='';openModal('m-wr');}
+async function submitWR(){
+  const data={date:document.getElementById('wr-date').value,so:document.getElementById('wr-so').value,client:document.getElementById('wr-client').value,project:document.getElementById('wr-proj').value,targetDate:document.getElementById('wr-target').value,status:document.getElementById('wr-stat').value,priority:document.getElementById('wr-prio').value,notes:document.getElementById('wr-notes').value,updatedBy:document.getElementById('wr-by').value,nextAction:document.getElementById('wr-next').value};
+  if(!data.notes){toast('Notes required.','e');return;}
+  const btn=document.getElementById('wr-sbtn');btn.textContent='⏳…';btn.disabled=true;
+  const res=await apiPost({action:'addWeeklyReview',data});
+  btn.textContent='💾 Save';btn.disabled=false;
+  if(res.success){toast('✅ Saved!','s');closeModal('m-wr');S.data.weekly=null;loadWeekly();}
+  else toast('❌ '+(res.error||'Unknown'),'e');
+}
+async function submitNewClient(){
+  const so=document.getElementById('nc-so').value.trim(),client=document.getElementById('nc-client').value.trim();
+  if(!so||!client){toast('SO# and Client Name required.','e');return;}
+  toast('⏳ Creating BOM tab in Google Sheets…','i');
+  const res=await apiPost({action:'createClientBOM',so,client});
+  if(res.success){
+    toast('✅ Created: 📦 '+client,'s');closeModal('m-client');
+    const sel=document.getElementById('bom-sel');const o=document.createElement('option');o.value='📦 '+client;o.textContent=client;sel.appendChild(o);
+  }else toast('❌ '+(res.error||'Unknown'),'e');
 }
 
-async function submitIR() {
-  const data = {
-    date: document.getElementById('ir-date').value,
-    category: document.getElementById('ir-cat-inp').value,
-    item: document.getElementById('ir-item').value,
-    description: document.getElementById('ir-desc').value,
-    qty: parseFloat(document.getElementById('ir-qty').value)||0,
-    unit: document.getElementById('ir-unit').value,
-    unitPrice: parseFloat(document.getElementById('ir-price').value)||0,
-    status: document.getElementById('ir-stat-inp').value,
-    requestedBy: document.getElementById('ir-reqby').value,
-    supplier: document.getElementById('ir-supplier').value,
-    poNo: document.getElementById('ir-pono').value,
-    deliveryDate: document.getElementById('ir-deldate').value,
-    notes: document.getElementById('ir-notes').value,
-  };
-  if (!data.item) { toast('⚠️ Item name required.','error'); return; }
-  const btn = document.getElementById('ir-save-btn');
-  btn.textContent='⏳ Saving…'; btn.disabled=true;
-  const res = await apiPost({action:'addInternalRequest', data});
-  btn.textContent='💾 Save Request'; btn.disabled=false;
-  if (res.success) { toast('✅ Request saved!','success'); closeModal('modal-ir'); state.data.ir=null; loadInternalRequests(); }
-  else toast('❌ Error: '+(res.error||'Unknown'),'error');
+// ─── THEME ───────────────────────────────────────────────
+function openThemePicker(){
+  document.getElementById('theme-grid').innerHTML=THEMES.map(t=>`
+    <div class="to ${S.theme===t.id?'sel':''}" onclick="selectTheme('${t.id}')">
+      <div class="tsw" style="background:linear-gradient(135deg,${t.navy} 0%,${t.accent} 55%,${t.bg} 100%)"></div>
+      <div style="font-size:16px;margin-bottom:3px">${t.ico}</div>
+      <div class="tn">${t.name}</div>
+    </div>`).join('');
+  openModal('m-theme');
 }
+function selectTheme(id){
+  S.theme=id;localStorage.setItem('epsi-theme',id);applyTheme(id);
+  document.querySelectorAll('.to').forEach(e=>{e.classList.toggle('sel',e.getAttribute('onclick')===`selectTheme('${id}')`);});
+  toast('🎨 Theme changed to '+THEMES.find(t=>t.id===id)?.name,'s');
+}
+function applyTheme(id){document.documentElement.setAttribute('data-theme',id);}
 
-// ─── PROJECT PROGRESS SUBMIT ──────────────────────────────
-function openPPModal() {
-  document.getElementById('modal-pp-title').textContent = '📈 Add Project';
-  document.getElementById('pp-save-btn').textContent = '💾 Save Project';
-  document.getElementById('pp-start').value = today();
-  document.getElementById('modal-pp').classList.add('open');
-}
+// ─── MODAL HELPERS ───────────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
 
-async function submitPP() {
-  const pct_ = parseFloat(document.getElementById('pp-pct').value)||0;
-  const data = {
-    so: document.getElementById('pp-so').value,
-    client: document.getElementById('pp-client').value,
-    description: document.getElementById('pp-desc').value,
-    startDate: document.getElementById('pp-start').value,
-    targetDate: document.getElementById('pp-target').value,
-    contractValue: parseFloat(document.getElementById('pp-contract').value)||0,
-    bomBudget: parseFloat(document.getElementById('pp-budget').value)||0,
-    actualSpend: parseFloat(document.getElementById('pp-spend').value)||0,
-    pctDone: pct_>1?pct_/100:pct_,
-    status: document.getElementById('pp-stat-inp').value,
-    priority: document.getElementById('pp-prio-inp').value,
-    phase: document.getElementById('pp-phase-inp').value,
-    engineer: document.getElementById('pp-engr').value,
-    issues: document.getElementById('pp-issues').value,
-  };
-  if (!data.so||!data.client) { toast('⚠️ SO# and Client required.','error'); return; }
-  const btn = document.getElementById('pp-save-btn');
-  btn.textContent='⏳ Saving…'; btn.disabled=true;
-  const res = await apiPost({action:'addProjectProgress', data});
-  btn.textContent='💾 Save Project'; btn.disabled=false;
-  if (res.success) { toast('✅ Project added!','success'); closeModal('modal-pp'); state.data.pp=null; loadProjectProgress(); }
-  else toast('❌ Error: '+(res.error||'Unknown'),'error');
-}
-
-// ─── NEW CLIENT BOM ───────────────────────────────────────
-function openNewClientModal() {
-  document.getElementById('nc-so').value = '';
-  document.getElementById('nc-client').value = '';
-  document.getElementById('modal-new-client').classList.add('open');
-}
-
-async function submitNewClient() {
-  const so = document.getElementById('nc-so').value.trim();
-  const client = document.getElementById('nc-client').value.trim();
-  if (!so||!client) { toast('⚠️ SO# and Client required.','error'); return; }
-  toast('⏳ Creating BOM tab…','info');
-  const res = await apiPost({action:'createClientBOM', so, client});
-  if (res.success) {
-    toast('✅ BOM tab created: 📦 '+client,'success');
-    closeModal('modal-new-client');
-    // Refresh BOM dropdown
-    const sel = document.getElementById('bom-project-select');
-    const opt = document.createElement('option');
-    opt.value = '📦 '+client; opt.textContent = client;
-    sel.appendChild(opt);
-  } else toast('❌ Error: '+(res.error||'Unknown'),'error');
-}
-
-// ─── OPEN ADD MODAL (context-aware) ───────────────────────
-function openAddModal() {
-  const page = state.currentPage;
-  if (page==='internal') openIRModal();
-  else if (page==='progress') openPPModal();
-  else if (page==='bom') openBOMAddModal();
-  else toast('ℹ️ Navigate to a tab that supports adding entries.','info');
-}
-
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// ─── UTILITIES ────────────────────────────────────────────
-function refreshAll() {
-  Object.keys(state.data).forEach(k=>state.data[k]=null);
-  const page = state.currentPage;
-  if (page==='dashboard') loadDashboard();
-  else navigate(page);
-  toast('↻ Refreshing…','info');
-}
-
-function filterTable(tbodyId, searchId) {
-  const q = document.getElementById(searchId).value.toLowerCase();
-  document.getElementById(tbodyId).querySelectorAll('tr').forEach(row=>{
-    row.style.display = row.textContent.toLowerCase().includes(q)?'':'none';
-  });
-}
-
-function setLoading(id, msg='') {
-  const el = document.getElementById(id);
-  if (!el) return;
-  if (el.tagName==='TBODY') {
-    const cols = el.closest('table')?.querySelectorAll('th').length||6;
-    el.innerHTML=`<tr><td colspan="${cols}"><div class="loading"><div class="spinner"></div>${msg||'Loading…'}</div></td></tr>`;
-  } else {
-    el.innerHTML=`<div class="loading"><div class="spinner"></div>${msg||'Loading…'}</div>`;
-  }
-}
-
-function updateSyncTime() {
-  document.getElementById('sync-time').textContent = 'synced '+new Date().toLocaleTimeString();
-  setSyncStatus('ok');
-}
-
-function toast(msg, type='info') {
-  const el = document.createElement('div');
-  el.className=`toast ${type}`; el.textContent=msg;
-  document.getElementById('toast-container').appendChild(el);
-  setTimeout(()=>el.remove(), 3500);
-}
-
-function toggleTheme() {
-  state.theme = state.theme==='light'?'dark':'light';
-  localStorage.setItem('epsi-theme', state.theme);
-  applyTheme();
-}
-
-function applyTheme() {
-  document.documentElement.setAttribute('data-theme', state.theme);
-  document.getElementById('theme-toggle').textContent = state.theme==='dark'?'☀️':'🌙';
-}
-
-// ─── FORMATTERS ───────────────────────────────────────────
-function fmt(n) { return (Number(n)||0).toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:2}); }
-function shortNum(n) {
-  const v=Number(n)||0;
-  if(v>=1e9)return(v/1e9).toFixed(1)+'B';
-  if(v>=1e6)return(v/1e6).toFixed(1)+'M';
-  if(v>=1e3)return(v/1e3).toFixed(1)+'K';
-  return v.toFixed(0);
-}
-function pctFmt(n) { return ((Number(n)||0)*100).toFixed(1)+'%'; }
-function emptyRow(cols, msg) {
-  return `<tr><td colspan="${cols}"><div class="empty"><div class="icon">📭</div><h4>${msg}</h4></div></td></tr>`;
-}
+// ─── GENERAL HELPERS ─────────────────────────────────────
+function refreshAll(){Object.keys(S.data).forEach(k=>S.data[k]=null);const L={dashboard:loadDashboard,bom:()=>{if(S.bomSheet)loadBOMDirect(S.bomSheet,false);},alerts:loadAlerts,mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,history:loadHistory,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly,machinelist:loadMachineList,machinelog:loadMachineLog,testequip:loadTestEquip};const fn=L[S.page];if(fn)fn();toast('↻ Refreshing…','i');}
+function filterTable(bodyId,inputId){const q=document.getElementById(inputId).value.toLowerCase();document.getElementById(bodyId).querySelectorAll('tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'-');}
+function setLoad(id){const el=document.getElementById(id);if(!el)return;if(el.tagName==='TBODY'){const c=el.closest('table')?.querySelectorAll('th').length||6;el.innerHTML=`<tr><td colspan="${c}"><div class="loading"><div class="spinner"></div>Loading…</div></td></tr>`;}else el.innerHTML='<div class="loading"><div class="spinner"></div>Loading…</div>';}
+function toast(msg,type='i'){const el=document.createElement('div');el.className=`toast t${type}`;el.textContent=msg;document.getElementById('toasts').appendChild(el);setTimeout(()=>el.remove(),3500);}
+function fmt(n){return(Number(n)||0).toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:2});}
+function sn(n){const v=Number(n)||0;if(v>=1e9)return(v/1e9).toFixed(1)+'B';if(v>=1e6)return(v/1e6).toFixed(1)+'M';if(v>=1e3)return(v/1e3).toFixed(1)+'K';return v.toFixed(0);}
+function pctF(n){return((Number(n)||0)*100).toFixed(1)+'%';}
+function emr(c,msg){return`<tr><td colspan="${c}"><div class="empty"><div class="ei">📭</div><h4>${msg}</h4></div></td></tr>`;}
 
 // ─── BADGE HELPERS ────────────────────────────────────────
-function statusBadge(s) {
-  if (!s) return '';
-  const map={'✅':'green','🟢':'green','🏭':'teal','🟡':'yellow','⬜':'grey','❌':'red','🚚':'teal','🔄':'blue','⚠️':'orange','⏸️':'grey','📋':'grey'};
-  const first = Object.keys(map).find(k=>String(s).startsWith(k));
-  return `<span class="badge badge-${map[first]||'grey'}">${s}</span>`;
-}
-function bomStatusBadge(s) {
-  if (!s) return '<span class="badge badge-grey">📋 For Canvass</span>';
-  const map={'📋':'grey','🔍':'blue','📄':'purple','✅':'green','🚚':'yellow','📦':'teal'};
-  const first = Object.keys(map).find(k=>String(s).startsWith(k));
-  return `<span class="badge badge-${map[first]||'grey'}">${s}</span>`;
-}
-function whBadge(s) {
-  if (!s) return '<span class="badge badge-grey">⬜ Pending</span>';
-  return `<span class="badge ${s.includes('✅')?'badge-green':s.includes('🚚')?'badge-teal':'badge-grey'}">${s}</span>`;
-}
-function payBadge(s) {
-  if (!s) return '<span class="badge badge-grey">⬜ Unpaid</span>';
-  return `<span class="badge ${s.includes('✅')?'badge-green':'badge-orange'}">${s}</span>`;
-}
-function riskBadge(s) {
-  if (!s) return '';
-  return `<span class="badge ${s.includes('CRITICAL')?'badge-red':s.includes('WARNING')?'badge-yellow':'badge-green'}">${s}</span>`;
-}
-function prioBadge(s) {
-  if (!s) return '';
-  return `<span class="badge ${s.includes('🔴')?'badge-red':s.includes('🟡')?'badge-yellow':'badge-green'}">${s}</span>`;
-}
-function budgetStatusBadge(s) {
-  if (!s) return '';
-  return `<span class="badge ${s.includes('🔴')?'badge-red':s.includes('🟡')?'badge-yellow':'badge-green'}">${s}</span>`;
-}
+function sBadge(s){if(!s)return'';const m={'✅':'bg','🟢':'bg','🏭':'bt','🟡':'by','⬜':'bgr','❌':'br','🚚':'bt','🔄':'bb','⚠️':'bo','⏸️':'bgr','📋':'bgr'};const k=Object.keys(m).find(k=>String(s).startsWith(k));return`<span class="badge ${m[k]||'bgr'}">${s}</span>`;}
+function bomBadge(s){if(!s)return'<span class="badge bgr">📋 For Canvass</span>';const m={'📋':'bgr','🔍':'bb','📄':'bp','✅':'bg','🚚':'by','📦':'bt'};const k=Object.keys(m).find(k=>String(s).startsWith(k));return`<span class="badge ${m[k]||'bgr'}">${s}</span>`;}
+function whBadge(s){if(!s)return'<span class="badge bgr">⬜ Pending</span>';return`<span class="badge ${s.includes('✅')?'bg':s.includes('🚚')?'bt':'bgr'}">${s}</span>`;}
+function payBadge(s){if(!s)return'<span class="badge bgr">⬜ Unpaid</span>';return`<span class="badge ${s.includes('✅')?'bg':'bo'}">${s}</span>`;}
+function prioBadge(s){if(!s)return'';return`<span class="badge ${s.includes('🔴')?'br':s.includes('🟡')?'by':'bg'}">${s}</span>`;}
+function bgBadge(s){if(!s)return'';return`<span class="badge ${s.includes('🔴')?'br':s.includes('🟡')?'by':'bg'}">${s}</span>`;}
 </script>
 </body>
 </html>
