@@ -13,35 +13,40 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ── THEMES ─────────────────────────────── */
+/* ── DEFAULT: Forest Black (dark) ── */
 :root {
   --bg:#0A0C0A; --surf:#0f1a0f; --surf2:#172017;
   --bdr:rgba(255,255,255,0.09); --acc:#22C483; --acc2:#5ecfaa;
   --acc3:#F5D070; --acc4:#e07b8a; --txt:#FAF8F0;
   --mut:#3d5c3d; --mut2:#7aaa7a;
+  --nav-bg:#0f1a0f; --nav-bdr:rgba(255,255,255,0.09);
 }
+
+/* ── WARM CREAM (soft light) ── */
 [data-theme="light"]{
-  --bg:#FAF8F0; --surf:#ffffff; --surf2:#ede9df;
-  --bdr:rgba(10,12,10,0.08); --acc:#22C483; --acc2:#0A9C5A;
-  --acc3:#D4A017; --acc4:#d95f6e; --txt:#0A0C0A;
-  --mut:#7a9e7a; --mut2:#4d6b4d;
+  --bg:#FAF8F0; --surf:#ffffff; --surf2:#f2efe6;
+  --bdr:rgba(10,12,10,0.07); --acc:#22C483; --acc2:#0A9C5A;
+  --acc3:#C8860A; --acc4:#d95f6e; --txt:#1a1a0a;
+  --mut:#9a9a80; --mut2:#5a5a40;
+  --nav-bg:#ffffff; --nav-bdr:rgba(10,12,10,0.07);
 }
-[data-theme="purple"]{
-  --bg:#051a0a; --surf:#0a2410; --surf2:#102e16;
-  --bdr:rgba(255,255,255,0.08); --acc:#22C483; --acc2:#F5D070;
-  --acc3:#5ecfaa; --acc4:#f07070; --txt:#FAF8F0;
-  --mut:#2a5c2a; --mut2:#5a9a5a;
+
+/* ── SOFT SAGE (muted green light) ── */
+[data-theme="sage"]{
+  --bg:#f4f7f4; --surf:#ffffff; --surf2:#e8f0e8;
+  --bdr:rgba(0,0,0,0.06); --acc:#22C483; --acc2:#3a8a6a;
+  --acc3:#C8860A; --acc4:#c05a6a; --txt:#1a2a1a;
+  --mut:#8aaa8a; --mut2:#4a6a4a;
+  --nav-bg:#ffffff; --nav-bdr:rgba(0,0,0,0.06);
 }
-[data-theme="sunset"]{
-  --bg:#1a1400; --surf:#221c00; --surf2:#2e2600;
-  --bdr:rgba(255,255,255,0.08); --acc:#F5D070; --acc2:#22C483;
-  --acc3:#e8a24a; --acc4:#e86464; --txt:#FAF8F0;
-  --mut:#6a5800; --mut2:#c4a000;
-}
-[data-theme="navy"]{
-  --bg:#06100a; --surf:#0c1e12; --surf2:#12281a;
-  --bdr:rgba(255,255,255,0.07); --acc:#22C483; --acc2:#F5D070;
-  --acc3:#5ecfaa; --acc4:#e87a7a; --txt:#FAF8F0;
-  --mut:#1a4028; --mut2:#4a8a5a;
+
+/* ── IVORY GOLD (warm neutral light) ── */
+[data-theme="ivory"]{
+  --bg:#fdf6e8; --surf:#fffdf5; --surf2:#f5edd8;
+  --bdr:rgba(30,20,0,0.08); --acc:#22C483; --acc2:#0A9C5A;
+  --acc3:#b87020; --acc4:#c05060; --txt:#1a1400;
+  --mut:#a09060; --mut2:#6a5a30;
+  --nav-bg:#fffdf5; --nav-bdr:rgba(30,20,0,0.08);
 }
 
 /* ── BASE ───────────────────────────────── */
@@ -286,7 +291,7 @@ select.field-in{appearance:none}
 .user-btn:active{transform:scale(.95)}
 
 /* ── THEME PICKER ───────────────────────── */
-.theme-grid{display:flex;flex-wrap:wrap;gap:10px}
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .theme-card{width:calc(50% - 5px);border-radius:18px;border:2px solid transparent;padding:14px;cursor:pointer;position:relative;transition:all .2s}
 .theme-card:active{transform:scale(.96)}
 .theme-card.selected{border-color:var(--acc)}
@@ -403,9 +408,9 @@ h1, h2, h3, .section-title-syne { font-family: 'Syne', sans-serif !important; }
     justify-content: flex-start;
     gap: 2px;
     border-top: none;
-    border-right: 1px solid var(--bdr);
+    border-right: 1px solid var(--nav-bdr, var(--bdr));
     transform: none;
-    background: var(--surf);
+    background: var(--nav-bg, var(--surf));
     overflow-y: auto;
     z-index: 90;
   }
@@ -505,6 +510,24 @@ h1, h2, h3, .section-title-syne { font-family: 'Syne', sans-serif !important; }
   .logo-txt { font-size: 20px; }
 }
 
+
+/* Light themes — header and nav adjustments */
+[data-theme="light"] .hdr,
+[data-theme="sage"]  .hdr,
+[data-theme="ivory"] .hdr {
+  border-bottom: 1px solid var(--bdr);
+  box-shadow: 0 1px 12px rgba(0,0,0,.06);
+}
+[data-theme="light"] .nav,
+[data-theme="sage"]  .nav,
+[data-theme="ivory"] .nav {
+  box-shadow: 1px 0 12px rgba(0,0,0,.05);
+}
+[data-theme="light"] .logo-txt,
+[data-theme="sage"]  .logo-txt,
+[data-theme="ivory"] .logo-txt {
+  color: var(--txt);
+}
 </style>
 </head>
 <body>
@@ -1316,19 +1339,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('greet-date').textContent =
     new Date().toLocaleDateString('en-PH',{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+
+  // Load ALL data first
+  loadLocal();
+  scriptUrl = localStorage.getItem('fk-script-url') || '';
+
+  // Names already loaded above from localStorage — now render with correct names
   renderGreeting();
 
-  // Load saved settings
-  currentUser = localStorage.getItem('fk-user') || '';
-  loadLocal(); // restore persisted data
-  // Load saved user names
-  // Names already loaded at DOMContentLoaded — show onboarding if needed
-  if (!currentUser) {
+  // Show onboarding if no name saved
+  if (!currentUser && !user1Name) {
     setTimeout(() => document.getElementById('setup-modal').classList.add('open'), 600);
   }
-  scriptUrl   = localStorage.getItem('fk-script-url') || '';
-
-  // Onboarding handled above after name validation
+  // Onboarding handled above
 
   // Build dynamic grids
   buildCatGrid();
@@ -3214,15 +3237,20 @@ function clearUserFilter() {
 }
 
 function filterByUser(userNum) {
-  const name = userNum === 1 ? (currentUser || user1Name || 'User 1') : (user2Name || 'User 2');
-  // Open expenses screen and filter by user
+  const u1   = currentUser || user1Name || 'User 1';
+  const u2   = user2Name   || 'User 2';
+  const name = userNum === 1 ? u1 : u2;
   openScreen('expenses');
   setTimeout(() => {
-    // Set a special user filter
     expUserFilter = name;
+    // Reset category filter to all
+    expFilter = 'all';
+    document.querySelectorAll('#exp-filters .ftab').forEach(t => t.classList.remove('on'));
+    const allTab = document.querySelector('#exp-filters .ftab');
+    if (allTab) allTab.classList.add('on');
     renderExpenses();
-    toast('📊 Showing ' + name + '\'s expenses');
-  }, 100);
+    toast('📊 ' + name + '\'s expenses');
+  }, 150);
 }
 
 function toast(msg) {
