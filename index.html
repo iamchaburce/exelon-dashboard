@@ -2684,6 +2684,30 @@ const LOAN_TYPE_RATES = {
   business: {rate: 15,  label: 'Typical PH: 12–24% p.a.'},
 };
 
+function selRateType(type, el) {
+  rateType = type;
+  document.getElementById('rate-type-annual').classList.toggle('on',  type==='annual');
+  document.getElementById('rate-type-monthly').classList.toggle('on', type==='monthly');
+  // Update hint
+  const rate = parseFloat(document.getElementById('loan-rate').value) || 0;
+  if (rate > 0) {
+    const hint = document.getElementById('loan-rate-hint');
+    if (type === 'monthly') {
+      hint.textContent = '= ' + (rate * 12).toFixed(2) + '% annual';
+    } else {
+      hint.textContent = '= ' + (rate / 12).toFixed(4) + '% /month';
+    }
+  }
+  computeLoan();
+}
+
+function selInterestMethod(method, el) {
+  interestMethod = method;
+  document.getElementById('method-amort').className = 'type-opt' + (method==='amort'?' on-a':'');
+  document.getElementById('method-addon').className = 'type-opt' + (method==='addon'?' on-b':'');
+  computeLoan();
+}
+
 function selLoanType(type, el) {
   loanType = type;
   document.querySelectorAll('#loan-type-btns .ftab').forEach(t=>t.classList.remove('on'));
@@ -2795,6 +2819,22 @@ function computeLoan() {
   // Convert term to months
   const termMonths = termUnit === 'years' ? termVal * 12 : termVal;
 
+  // Normalize rate — always work in annual internally
+  // If user entered monthly rate, convert to annual
+  const effectiveAnnualRate = rateType === 'monthly' ? annualRate * 12 : annualRate;
+  const monthlyRate = effectiveAnnualRate / 100 / 12;
+  const dailyRate   = effectiveAnnualRate / 100 / 365;
+
+  // Update rate hint
+  const rateHint = document.getElementById('loan-rate-hint');
+  if (rateHint) {
+    if (rateType === 'monthly') {
+      rateHint.textContent = '= ' + effectiveAnnualRate.toFixed(2) + '% annual';
+    } else {
+      rateHint.textContent = '= ' + monthlyRate.toFixed(4) + '% /month';
+    }
+  }
+
   // Frequency
   let freqPerYear, freqLabel, freqChip;
   if (payFreq === 'monthly')   { freqPerYear=12; freqLabel='Monthly Payment';      freqChip='Per month (12x/year)'; }
@@ -2805,21 +2845,30 @@ function computeLoan() {
   const totalPeriods = Math.round(termMonths / 12 * freqPerYear);
 
   // Periodic rate
-  const periodicRate = annualRate / 100 / freqPerYear;
-  const monthlyRate  = annualRate / 100 / 12;
-  const dailyRate    = annualRate / 100 / 365;
+  const periodicRate = effectiveAnnualRate / 100 / freqPerYear;
 
-  // Payment formula
-  let periodicPayment;
-  if (periodicRate === 0) {
-    periodicPayment = principal / totalPeriods;
+  // ── Payment computation — depends on method ──
+  let periodicPayment, totalPayment, totalInterest;
+
+  if (interestMethod === 'addon') {
+    // ADD-ON / SIMPLE INTEREST (common in PH: 5-6, coops, informal)
+    // Total interest = Principal × monthly rate × months
+    // Monthly payment = (Principal + Total Interest) / periods
+    const totalInt  = principal * monthlyRate * termMonths;
+    totalPayment    = principal + totalInt;
+    periodicPayment = totalPayment / totalPeriods;
+    totalInterest   = totalInt;
   } else {
-    periodicPayment = principal * (periodicRate * Math.pow(1+periodicRate, totalPeriods)) /
-                      (Math.pow(1+periodicRate, totalPeriods) - 1);
+    // AMORTIZING (banks, SSS, Pag-IBIG)
+    if (periodicRate === 0) {
+      periodicPayment = principal / totalPeriods;
+    } else {
+      periodicPayment = principal * (periodicRate * Math.pow(1+periodicRate, totalPeriods)) /
+                        (Math.pow(1+periodicRate, totalPeriods) - 1);
+    }
+    totalPayment  = periodicPayment * totalPeriods;
+    totalInterest = totalPayment - principal;
   }
-
-  const totalPayment    = periodicPayment * totalPeriods;
-  const totalInterest   = totalPayment - principal;
   const interestPct     = totalPayment > 0 ? Math.round(totalInterest / totalPayment * 100) : 0;
   const principalPct    = 100 - interestPct;
 
@@ -2842,7 +2891,7 @@ function computeLoan() {
   document.getElementById('loan-results').style.display      = 'block';
   document.getElementById('loan-payment-label').textContent  = freqLabel;
   document.getElementById('loan-payment').textContent        = fmt(Math.round(periodicPayment));
-  document.getElementById('loan-payment-chip').textContent   = freqChip;
+  document.getElementById('loan-payment-chip').textContent   = freqChip + (interestMethod==='addon'?' · Add-on Rate':' · Amortizing');
   document.getElementById('lr-principal').textContent        = fmt(principal);
   document.getElementById('lr-interest').textContent         = fmt(Math.round(totalInterest));
   document.getElementById('lr-total').textContent            = fmt(Math.round(totalPayment));
@@ -2854,7 +2903,7 @@ function computeLoan() {
   document.getElementById('ld-interest-pct').textContent     = interestPct + '%';
 
   // Interest rate breakdown
-  document.getElementById('lr-annual-rate').textContent      = annualRate.toFixed(2) + '%';
+  document.getElementById('lr-annual-rate').textContent      = effectiveAnnualRate.toFixed(2) + '%';
   // Update equiv row
   if (rateType !== 'annual') {
     const equivEl = document.getElementById('rate-equiv-val');
@@ -2894,12 +2943,28 @@ function buildAmortSchedule(principal, periodicRate, payment, periods, freq, sta
   const schedule = [];
   let balance = principal;
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  let curMonth = (startMonth || new Date().getMonth() + 1) - 1; // 0-indexed
+  let curMonth = (startMonth || new Date().getMonth() + 1) - 1;
   let curYear  = startYear  || new Date().getFullYear();
 
+  // For add-on: fixed interest each period
+  const fixedInterest = interestMethod === 'addon'
+    ? (principal * (periodicRate * 12 / (12 / (periods))) / periods)
+    : 0;
+  // Simpler add-on: totalInterest / periods
+  const addonInterestPerPeriod = interestMethod === 'addon'
+    ? (payment * periods - principal) / periods
+    : 0;
+
   for (let i = 1; i <= periods; i++) {
-    const interestPaid  = balance * periodicRate;
-    const principalPaid = payment - interestPaid;
+    let interestPaid, principalPaid;
+    if (interestMethod === 'addon') {
+      // Fixed interest every period
+      interestPaid  = addonInterestPerPeriod;
+      principalPaid = payment - interestPaid;
+    } else {
+      interestPaid  = balance * periodicRate;
+      principalPaid = payment - interestPaid;
+    }
     balance = Math.max(0, balance - principalPaid);
 
     // Build period label with month/year for monthly, just period number for semi/weekly
