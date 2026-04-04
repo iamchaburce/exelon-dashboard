@@ -24,11 +24,8 @@
 [data-theme="lavender"]{--bg:#FAF5FF;--card:#fff;--border:#E9D5FF;--text:#3B0764;--muted:#7E22CE;--navy:#3B0764;--navy2:#4C1D95;--blue:#7C3AED;--sidebar-bg:#3B0764;--sidebar-active:rgba(124,58,237,.3);}
 [data-theme="earthy"]{--bg:#FEFCE8;--card:#fff;--border:#FEF08A;--text:#713F12;--muted:#A16207;--navy:#713F12;--navy2:#854D0E;--blue:#CA8A04;--sidebar-bg:#713F12;--sidebar-active:rgba(202,138,4,.3);}
 [data-theme="sakura"]{--bg:#FFF1F2;--card:#fff;--border:#FECDD3;--text:#881337;--muted:#BE123C;--navy:#881337;--navy2:#9F1239;--blue:#E11D48;--sidebar-bg:#881337;--sidebar-active:rgba(225,29,72,.3);}
-
 *{margin:0;padding:0;box-sizing:border-box;}
 html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px;}
-
-/* ─── SIDEBAR ─────────────────────────────────────────────── */
 #sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100%;background:var(--sidebar-bg);display:flex;flex-direction:column;z-index:200;border-right:1px solid rgba(255,255,255,.06);transition:background .3s;}
 .sb-logo{padding:14px 16px 12px;border-bottom:1px solid rgba(255,255,255,.07);}
 .sb-logo .brand{font-size:15px;font-weight:700;color:#fff;letter-spacing:-.2px;}
@@ -48,8 +45,6 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg
 .live{display:flex;align-items:center;gap:6px;font-size:10px;color:rgba(255,255,255,.38);}
 .live::before{content:'';width:6px;height:6px;background:#4CAF50;border-radius:50%;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-
-/* ─── HEADER ──────────────────────────────────────────────── */
 #header{position:fixed;top:0;left:var(--sidebar-w);right:0;height:var(--hdr-h);background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:10px;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06);}
 #pg-title{font-size:16px;font-weight:700;flex:1;}
 #pg-sub{color:var(--muted);font-weight:400;font-size:12px;margin-left:8px;}
@@ -58,14 +53,10 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg
 .hbtn.p{background:var(--blue);color:#fff;border-color:var(--blue);}
 .hbtn.p:hover{filter:brightness(1.1);}
 #sync-t{font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;white-space:nowrap;}
-
-/* ─── MAIN ────────────────────────────────────────────────── */
 #main{margin-left:var(--sidebar-w);margin-top:var(--hdr-h);padding:20px 22px;min-height:calc(100vh - var(--hdr-h));}
 .page{display:none;}
 .page.active{display:block;animation:fi .18s ease;}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-
-/* ─── CARDS & LAYOUT ─────────────────────────────────────── */
 .card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
 .ch{padding:13px 17px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;}
 .ch h3{font-size:13.5px;font-weight:700;flex:1;}
@@ -89,33 +80,23 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;background:var(--bg
 .sh h2{font-size:15px;font-weight:700;}
 .cnt{background:var(--blue);color:#fff;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:700;}
 .mla{margin-left:auto;}
-
-/* ─── TABLE ────────────────────────────────────────────────── */
 .tw{overflow-x:auto;}
 table{width:100%;border-collapse:collapse;font-size:12px;}
 th{background:var(--navy);color:#fff;padding:8px 11px;text-align:left;font-weight:600;font-size:11px;white-space:nowrap;position:sticky;top:0;z-index:2;}
 td{padding:7px 11px;border-bottom:1px solid var(--border);vertical-align:middle;}
 tr:hover td{background:rgba(21,101,192,.04);}
 tr:nth-child(even) td{background:rgba(0,0,0,.016);}
-
-/* ─── BADGES ──────────────────────────────────────────────── */
 .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:600;white-space:nowrap;}
 .bg{background:#E8F5E9;color:#1B5E20;} .bb{background:#E3F2FD;color:#0D47A1;}
 .by{background:#FFFDE7;color:#F57F17;} .bo{background:#FFF3E0;color:#E65100;}
 .br{background:#FFEBEE;color:#B71C1C;} .bgr{background:#ECEFF1;color:#37474F;}
 .bp{background:#F3E5F5;color:#4A148C;} .bt{background:#E0F2F1;color:#00695C;}
-
-/* ─── PROGRESS BAR ───────────────────────────────────────── */
 .pbar{background:var(--border);border-radius:6px;height:7px;overflow:hidden;min-width:70px;}
 .pfill{height:100%;border-radius:6px;transition:width .4s;}
-
-/* ─── FILTER BAR ──────────────────────────────────────────── */
 .fb{display:flex;gap:9px;margin-bottom:15px;flex-wrap:wrap;align-items:center;}
 .fb input,.fb select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:12px;font-family:'IBM Plex Sans',sans-serif;outline:none;}
 .fb input:focus,.fb select:focus{border-color:var(--blue);}
 .fb input{min-width:195px;}
-
-/* ─── MODALS ──────────────────────────────────────────────── */
 .mo{position:fixed;inset:0;background:rgba(0,0,0,.52);display:none;z-index:1000;align-items:center;justify-content:center;}
 .mo.open{display:flex;}
 .md{background:var(--card);border-radius:12px;width:700px;max-width:96vw;max-height:92vh;overflow:auto;box-shadow:var(--shadow2);animation:su .18s ease;}
@@ -132,8 +113,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
 .fr input:focus,.fr select:focus,.fr textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,101,192,.08);}
 .fg{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
 .fg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;}
-
-/* ─── MISC ────────────────────────────────────────────────── */
 .loading{text-align:center;padding:44px;color:var(--muted);}
 .spinner{width:26px;height:26px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 11px;}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -148,8 +127,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
 .tr{text-align:right;} .tc{text-align:center;} .bold{font-weight:700;} .mu{color:var(--muted);}
 .eb{padding:2px 8px;font-size:10px;border:1px solid var(--border);border-radius:4px;background:var(--card);cursor:pointer;color:var(--blue);font-weight:600;transition:all .14s;}
 .eb:hover{background:var(--blue);color:#fff;border-color:var(--blue);}
-
-/* ─── ALERT CARDS ─────────────────────────────────────────── */
 .ac{border-radius:8px;padding:11px 13px;margin-bottom:7px;cursor:pointer;transition:all .14s;border:1px solid var(--border);display:flex;align-items:flex-start;gap:9px;}
 .ac:hover{box-shadow:var(--shadow2);transform:translateY(-1px);}
 .ac.cv{background:#FFF8E1;border-left:4px solid #F57F17;}
@@ -157,26 +134,19 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
 .ac.dl{background:#E3F2FD;border-left:4px solid #1565C0;}
 .ac .act{font-weight:700;font-size:12px;}
 .ac .acs{font-size:10.5px;color:var(--muted);margin-top:2px;}
-
-/* ─── BOM STATUS BAR ──────────────────────────────────────── */
 .sbar{display:flex;height:9px;border-radius:5px;overflow:hidden;}
 .sbseg{transition:width .4s;}
-
-/* ─── THEME GRID ──────────────────────────────────────────── */
 .tg{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;}
 .to{border:2px solid var(--border);border-radius:8px;padding:9px 7px;cursor:pointer;text-align:center;transition:all .14s;}
 .to:hover{border-color:var(--blue);}
 .to.sel{border-color:var(--blue);box-shadow:0 0 0 3px rgba(21,101,192,.14);}
 .tsw{height:26px;border-radius:5px;margin-bottom:5px;}
 .tn{font-size:11px;font-weight:600;}
-
-/* ─── BATCH BOM ROWS ─────────────────────────────────────── */
 .br-row{display:grid;grid-template-columns:28px 2fr 60px 60px 90px 1fr 110px;gap:5px;margin-bottom:5px;align-items:center;}
 .br-row input,.br-row select{padding:5px 7px;border:1px solid var(--border);border-radius:5px;font-size:11px;background:var(--card);color:var(--text);}
 </style>
 </head>
 <body>
-
 <!-- ══════════ SIDEBAR ══════════ -->
 <nav id="sidebar">
   <div class="sb-logo">
@@ -188,6 +158,7 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="nav-grp">📋 Procurement</div>
     <a class="nav-item active" onclick="go('dashboard')"><span class="ico">📊</span>Dashboard</a>
     <a class="nav-item" onclick="go('alerts')"><span class="ico">🔔</span>BOM Alerts<span class="nb" id="nb-alert">…</span></a>
+    <a class="nav-item" onclick="go('actiontracker')"><span class="ico">📋</span>Action Tracker<span class="nb y" id="nb-at">…</span></a>
     <a class="nav-item" onclick="go('bom')"><span class="ico">📦</span>BOM / Projects</a>
     <a class="nav-item" onclick="go('mrs')"><span class="ico">📝</span>MRS<span class="nb y" id="nb-mrs">…</span></a>
     <a class="nav-item" onclick="go('po')"><span class="ico">🛒</span>Purchase Orders<span class="nb" id="nb-po">…</span></a>
@@ -197,7 +168,7 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="nav-grp">📁 Projects</div>
     <a class="nav-item" onclick="go('internal')"><span class="ico">🏢</span>Internal Request<span class="nb o" id="nb-ir">…</span></a>
     <a class="nav-item" onclick="go('progress')"><span class="ico">📈</span>Project Progress</a>
-    <a class="nav-item" onclick="go('budget')"><span class="ico">💹</span>Budget & Spending</a>
+    <a class="nav-item" onclick="go('budget')"><span class="ico">💹</span>Budget &amp; Spending</a>
     <a class="nav-item" onclick="go('weekly')"><span class="ico">📢</span>Weekly Review</a>
     <div class="nav-grp">🔧 Equipment</div>
     <a class="nav-item" onclick="go('machinelist')"><span class="ico">🔧</span>Machine Assets</a>
@@ -253,7 +224,38 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
   <div class="g3" id="alert-stats" style="margin-bottom:15px"></div>
   <div id="alert-list"></div>
 </div>
-
+<!-- ACTION TRACKER PAGE — LIVE FROM ODOO -->
+<div id="page-actiontracker" class="page">
+  <div class="sh">
+    <h2>📋 Action Tracker</h2>
+    <div class="cnt" id="cnt-at">0</div>
+    <div class="mla" style="display:flex;gap:8px;align-items:center">
+      <span id="at-sync-t" style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace"></span>
+      <button class="hbtn" onclick="loadActionTracker()" style="font-size:11px;padding:4px 10px">↻ Refresh</button>
+    </div>
+  </div>
+  <!-- Summary pills -->
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px" id="at-pills">
+    <div class="sc orange" style="cursor:pointer;outline:2px solid var(--gold)" onclick="atFilter('all',this)" id="at-pill-all">
+      <div class="si">📊</div><div class="sl">All Items</div><div class="sv b" id="at-tot-all">—</div><div class="ss">total actionable</div>
+    </div>
+    <div class="sc orange" style="cursor:pointer;opacity:.65" onclick="atFilter('canvass',this)" id="at-pill-c">
+      <div class="si">🔍</div><div class="sl">For Canvass</div><div class="sv b" id="at-tot-c">—</div><div class="ss">need vendor quotes</div>
+    </div>
+    <div class="sc purple" style="cursor:pointer;opacity:.65" onclick="atFilter('approval',this)" id="at-pill-a">
+      <div class="si">📋</div><div class="sl">PO for Approval</div><div class="sv b" id="at-tot-a">—</div><div class="ss">pending sign-off</div>
+    </div>
+    <div class="sc teal" style="cursor:pointer;opacity:.65" onclick="atFilter('delivery',this)" id="at-pill-d">
+      <div class="si">🚚</div><div class="sl">Pending Delivery</div><div class="sv b" id="at-tot-d">—</div><div class="ss" id="at-overdue-badge"></div>
+    </div>
+  </div>
+  <!-- Search -->
+  <div class="fb" style="margin-bottom:14px">
+    <input id="at-q" placeholder="🔍 Search project, PO#, vendor, item…" oninput="renderAT()" style="min-width:260px">
+  </div>
+  <!-- List -->
+  <div id="at-list"><div class="loading"><div class="spinner"></div>Loading live data…</div></div>
+</div>
 <!-- BOM -->
 <div id="page-bom" class="page">
   <div class="sh">
@@ -359,7 +361,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <tbody id="hist-body"></tbody></table>
   </div></div>
 </div>
-
 <!-- INTERNAL REQUEST -->
 <div id="page-internal" class="page">
   <div class="sh"><h2>🏢 Internal Request</h2><div class="cnt" id="cnt-ir">0</div>
@@ -386,7 +387,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     </div>
   </div>
   <div class="stats-grid" id="pp-stats"></div>
-  <!-- Overall progress bar -->
   <div class="card" style="margin-bottom:14px">
     <div class="ch"><h3>📊 Overall Procurement Progress</h3>
       <span id="pp-overall-pct" class="mono bold" style="font-size:20px;margin-left:auto;color:var(--blue)">—</span>
@@ -400,21 +400,12 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <input id="pp-q" placeholder="🔍 Search SO#, client…" oninput="filterPPLive()">
     <select id="pp-sf" onchange="filterPP()"><option value="">All Status</option><option>🔄 In Progress</option><option>✅ Completed</option><option>⚠️ At Risk</option><option>⏸️ On Hold</option></select>
   </div>
-  <!-- TABLE VIEW -->
   <div id="pp-tview">
     <div class="card"><div class="tw" style="max-height:58vh;overflow-y:auto">
-      <table><thead><tr>
-        <th>#</th><th>SO / Project</th><th>Client</th>
-        <th>Total<br>Items</th><th>🟡 For<br>Canvass</th><th>✅ PO<br>Issued</th>
-        <th>🚚 Delivered</th><th>🔄 Partial</th><th>✅ Complete</th><th>❌ Cancel</th>
-        <th>Completion %</th><th>Delivery %</th><th>PO %</th>
-        <th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th>
-        <th>Status</th>
-      </tr></thead>
+      <table><thead><tr><th>#</th><th>SO / Project</th><th>Client</th><th>Total<br>Items</th><th>🟡 For<br>Canvass</th><th>✅ PO<br>Issued</th><th>🚚 Delivered</th><th>🔄 Partial</th><th>✅ Complete</th><th>❌ Cancel</th><th>Completion %</th><th>Delivery %</th><th>PO %</th><th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th><th>Status</th></tr></thead>
       <tbody id="pp-body"></tbody>
     </table></div></div>
   </div>
-  <!-- CARD VIEW -->
   <div id="pp-cview" style="display:none">
     <div id="pp-cards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px"></div>
   </div>
@@ -422,68 +413,30 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
 
 <!-- BUDGET & SPENDING -->
 <div id="page-budget" class="page">
-  <div class="sh"><h2>💹 Budget & Spending</h2></div>
+  <div class="sh"><h2>💹 Budget &amp; Spending</h2></div>
   <div class="stats-grid" id="budget-stats"></div>
-  <!-- Section A: Project -->
   <div class="card" style="margin-bottom:14px">
     <div class="ch" style="background:var(--navy)"><h3 style="color:#fff">📦 Section A: Project Budget vs Actual</h3></div>
-    <div class="tw"><table><thead><tr>
-      <th>SO / Project</th><th>Client</th><th>Items</th><th>✅ Complete</th>
-      <th>Completion %</th><th>Delivery %</th><th>PO %</th>
-      <th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th><th>Var %</th><th>Status</th>
-    </tr></thead><tbody id="bg-proj"></tbody></table></div>
+    <div class="tw"><table><thead><tr><th>SO / Project</th><th>Client</th><th>Items</th><th>✅ Complete</th><th>Completion %</th><th>Delivery %</th><th>PO %</th><th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th><th>Var %</th><th>Status</th></tr></thead><tbody id="bg-proj"></tbody></table></div>
   </div>
-  <!-- Section B: Category per SO -->
   <div class="card" style="margin-bottom:14px">
     <div class="ch" style="background:var(--teal)">
       <h3 style="color:#fff">📊 Section B: Category Breakdown per SO / Project</h3>
-      <select id="bg-so-filter" onchange="filterBudgetBySO()" style="margin-left:auto;padding:4px 10px;border-radius:6px;border:none;font-size:12px;font-family:'IBM Plex Sans',sans-serif;background:#fff;color:var(--navy);cursor:pointer;min-width:200px">
-        <option value="">📦 All Projects (Summary)</option>
-      </select>
+      <select id="bg-so-filter" onchange="filterBudgetBySO()" style="margin-left:auto;padding:4px 10px;border-radius:6px;border:none;font-size:12px;font-family:'IBM Plex Sans',sans-serif;background:#fff;color:var(--navy);cursor:pointer;min-width:200px"><option value="">📦 All Projects (Summary)</option></select>
     </div>
     <div style="padding:10px 17px 6px" id="bg-cat-bars"></div>
-    <div class="tw"><table><thead><tr>
-      <th>Category</th><th>Items</th><th>✅ Complete</th><th>🛒 PO Issued</th><th>🟡 For Canvass</th>
-      <th>Progress %</th><th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th><th>Var %</th><th>Status</th>
-    </tr></thead><tbody id="bg-cat"></tbody></table></div>
+    <div class="tw"><table><thead><tr><th>Category</th><th>Items</th><th>✅ Complete</th><th>🛒 PO Issued</th><th>🟡 For Canvass</th><th>Progress %</th><th>Budget (₱)</th><th>PO Value (₱)</th><th>Variance (₱)</th><th>Var %</th><th>Status</th></tr></thead><tbody id="bg-cat"></tbody></table></div>
   </div>
-  <!-- Section C: Internal Request -->
   <div class="card" style="margin-bottom:14px">
     <div class="ch"><h3>🏢 Section C: Internal Request by Category</h3></div>
     <div class="cb" id="budget-cat"></div>
   </div>
-  <!-- Section D: Machine + Test Equip -->
   <div class="g2">
     <div class="card"><div class="ch" style="background:var(--orange)"><h3 style="color:#fff">🔧 Machine Spending</h3></div>
-      <div class="tw"><table><thead><tr><th>Equipment</th><th>Repair</th><th>Parts</th><th>Tools</th><th>Total (₱)</th></tr></thead>
-      <tbody id="bg-mach"></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>Equipment</th><th>Repair</th><th>Parts</th><th>Tools</th><th>Total (₱)</th></tr></thead><tbody id="bg-mach"></tbody></table></div>
     </div>
     <div class="card"><div class="ch" style="background:var(--purple)"><h3 style="color:#fff">🔬 Test Equipment</h3></div>
-      <div class="tw"><table><thead><tr><th>Equipment</th><th>2022</th><th>2023</th><th>2024</th><th>Total (₱)</th><th>Last Calib</th></tr></thead>
-      <tbody id="bg-te"></tbody></table></div>
-    </div>
-  </div>
-</div>
-
-<!-- BUDGET & SPENDING -->
-<div id="page-budget" class="page">
-  <div class="sh"><h2>💹 Budget & Spending</h2></div>
-  <div class="stats-grid" id="budget-stats"></div>
-  <div class="card" style="margin-bottom:14px">
-    <div class="ch"><h3>🏷️ Internal Request Spend by Category</h3></div>
-    <div class="cb" id="budget-cat"></div>
-  </div>
-  <div class="card" style="margin-bottom:14px">
-    <div class="ch" style="background:var(--blue)"><h3 style="color:#fff">📦 Project Budget vs Actual</h3></div>
-    <div class="tw"><table><thead><tr><th>SO #</th><th>Client</th><th>Contract (₱)</th><th>Budget (₱)</th><th>Spend (₱)</th><th>Remaining (₱)</th><th>% Used</th><th>Status</th></tr></thead>
-    <tbody id="bg-proj"></tbody></table></div>
-  </div>
-  <div class="g2">
-    <div class="card"><div class="ch" style="background:var(--orange)"><h3 style="color:#fff">🔧 Machine Spending</h3></div>
-      <div class="tw"><table><thead><tr><th>Equipment</th><th>Model</th><th>Repair</th><th>Parts</th><th>Tools</th><th>Total (₱)</th></tr></thead><tbody id="bg-mach"></tbody></table></div>
-    </div>
-    <div class="card"><div class="ch" style="background:var(--purple)"><h3 style="color:#fff">🔬 Test Equipment</h3></div>
-      <div class="tw"><table><thead><tr><th>Equipment</th><th>2022</th><th>2023</th><th>2024</th><th>Total (₱)</th><th>Last Calib</th><th>Next Due</th></tr></thead><tbody id="bg-te"></tbody></table></div>
+      <div class="tw"><table><thead><tr><th>Equipment</th><th>2022</th><th>2023</th><th>2024</th><th>Total (₱)</th><th>Last Calib</th></tr></thead><tbody id="bg-te"></tbody></table></div>
     </div>
   </div>
 </div>
@@ -534,11 +487,8 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
   </div></div>
 </div>
 
-</main><!-- end main -->
-
+</main>
 <!-- ════════ MODALS ════════ -->
-
-<!-- Internal Request -->
 <div class="mo" id="m-ir">
   <div class="md">
     <div class="mh"><h3 id="ir-modal-title">🏢 New Internal Request</h3><button class="mc" onclick="closeModal('m-ir')">✕</button></div>
@@ -563,8 +513,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="mf"><button class="hbtn" onclick="closeModal('m-ir')">Cancel</button><button class="hbtn p" id="ir-sbtn" onclick="submitIR()">💾 Save</button></div>
   </div>
 </div>
-
-<!-- Project Progress -->
 <div class="mo" id="m-pp">
   <div class="md">
     <div class="mh"><h3>📈 Add Project</h3><button class="mc" onclick="closeModal('m-pp')">✕</button></div>
@@ -589,8 +537,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="mf"><button class="hbtn" onclick="closeModal('m-pp')">Cancel</button><button class="hbtn p" id="pp-sbtn" onclick="submitPP()">💾 Save</button></div>
   </div>
 </div>
-
-<!-- Weekly Review -->
 <div class="mo" id="m-wr">
   <div class="md sm">
     <div class="mh"><h3>📢 Add Review Entry</h3><button class="mc" onclick="closeModal('m-wr')">✕</button></div>
@@ -613,8 +559,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="mf"><button class="hbtn" onclick="closeModal('m-wr')">Cancel</button><button class="hbtn p" id="wr-sbtn" onclick="submitWR()">💾 Save</button></div>
   </div>
 </div>
-
-<!-- Generic Edit -->
 <div class="mo" id="m-edit">
   <div class="md">
     <div class="mh"><h3 id="edit-title">✏️ Edit Record</h3><button class="mc" onclick="closeModal('m-edit')">✕</button></div>
@@ -622,16 +566,12 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="mf"><button class="hbtn" onclick="closeModal('m-edit')">Cancel</button><button class="hbtn p" id="edit-sbtn" onclick="submitEdit()">💾 Save Changes</button></div>
   </div>
 </div>
-
-<!-- PO Detail -->
 <div class="mo" id="m-po-detail">
   <div class="md w">
     <div class="mh"><h3 id="pod-title">📋 PO Summary</h3><button class="mc" onclick="closeModal('m-po-detail')">✕</button></div>
     <div class="mb" id="pod-body"></div>
   </div>
 </div>
-
-<!-- BOM Batch Add -->
 <div class="mo" id="m-bom-batch">
   <div class="md w">
     <div class="mh"><h3>➕ Add Multiple BOM Items</h3><button class="mc" onclick="closeModal('m-bom-batch')">✕</button></div>
@@ -646,8 +586,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="mf"><button class="hbtn" onclick="closeModal('m-bom-batch')">Cancel</button><button class="hbtn p" onclick="submitBatch()">💾 Save All Items</button></div>
   </div>
 </div>
-
-<!-- New Client BOM — SO# + Client Name ONLY -->
 <div class="mo" id="m-client">
   <div class="md sm">
     <div class="mh"><h3>🏗️ New Client BOM Tab</h3><button class="mc" onclick="closeModal('m-client')">✕</button></div>
@@ -659,8 +597,6 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="mf"><button class="hbtn" onclick="closeModal('m-client')">Cancel</button><button class="hbtn p" onclick="submitNewClient()">🏗️ Create BOM Tab</button></div>
   </div>
 </div>
-
-<!-- Theme Picker -->
 <div class="mo" id="m-theme">
   <div class="md sm">
     <div class="mh"><h3>🎨 Choose Theme</h3><button class="mc" onclick="closeModal('m-theme')">✕</button></div>
@@ -668,20 +604,19 @@ tr:nth-child(even) td{background:rgba(0,0,0,.016);}
     <div class="mf"><button class="hbtn" onclick="closeModal('m-theme')">Close</button></div>
   </div>
 </div>
-
 <div id="toasts"></div>
 <script>
 const API='https://script.google.com/macros/s/AKfycbz5tZPx3jLzVbzfW-nzy72hk4RnZ_-L5hRbV8yX1zhbp1Qe-tJOVDUUwYNOoZW2H8pU/exec';
 const SC={'📋 For Canvass':'#FFA726','🔍 Canvassed':'#42A5F5','📄 For PO':'#AB47BC','✅ PO Issued':'#66BB6A','🚚 Partial Delivery':'#FFCA28','📦 Fully Delivered':'#26A69A'};
 const THEMES=[
-  {id:'light',    name:'Classic',   ico:'🏢', navy:'#0A1628',accent:'#1565C0',bg:'#F0F4F8'},
-  {id:'dark',     name:'Midnight',  ico:'🌙', navy:'#0D1117',accent:'#238636',bg:'#0D1117'},
-  {id:'ocean',    name:'Ocean',     ico:'🌊', navy:'#0C4A6E',accent:'#0284C7',bg:'#E0F2FE'},
-  {id:'forest',   name:'Forest',    ico:'🌿', navy:'#14532D',accent:'#16A34A',bg:'#F0FDF4'},
-  {id:'sunset',   name:'Sunset',    ico:'🌅', navy:'#7C2D12',accent:'#EA580C',bg:'#FFF7ED'},
-  {id:'lavender', name:'Lavender',  ico:'💜', navy:'#3B0764',accent:'#7C3AED',bg:'#FAF5FF'},
-  {id:'earthy',   name:'Earthy',    ico:'🌍', navy:'#713F12',accent:'#CA8A04',bg:'#FEFCE8'},
-  {id:'sakura',   name:'Sakura',    ico:'🌸', navy:'#881337',accent:'#E11D48',bg:'#FFF1F2'},
+  {id:'light',name:'Classic',ico:'🏢',navy:'#0A1628',accent:'#1565C0',bg:'#F0F4F8'},
+  {id:'dark',name:'Midnight',ico:'🌙',navy:'#0D1117',accent:'#238636',bg:'#0D1117'},
+  {id:'ocean',name:'Ocean',ico:'🌊',navy:'#0C4A6E',accent:'#0284C7',bg:'#E0F2FE'},
+  {id:'forest',name:'Forest',ico:'🌿',navy:'#14532D',accent:'#16A34A',bg:'#F0FDF4'},
+  {id:'sunset',name:'Sunset',ico:'🌅',navy:'#7C2D12',accent:'#EA580C',bg:'#FFF7ED'},
+  {id:'lavender',name:'Lavender',ico:'💜',navy:'#3B0764',accent:'#7C3AED',bg:'#FAF5FF'},
+  {id:'earthy',name:'Earthy',ico:'🌍',navy:'#713F12',accent:'#CA8A04',bg:'#FEFCE8'},
+  {id:'sakura',name:'Sakura',ico:'🌸',navy:'#881337',accent:'#E11D48',bg:'#FFF1F2'},
 ];
 const S={page:'dashboard',data:{},theme:'light',editCtx:null,bomSheet:null,batchN:0,hlRow:null};
 
@@ -694,6 +629,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   loadDashboard();
   loadBOMSheets();
   setInterval(autoRefresh,120000);
+  setInterval(()=>{if(S.page==='actiontracker')loadActionTracker();},300000);
 });
 
 function td(){return new Date().toISOString().split('T')[0];}
@@ -702,26 +638,22 @@ function autoRefresh(){
   const fn=L[S.page];if(fn){S.data[S.page]=null;fn();}
 }
 
-// ─── NAVIGATION ──────────────────────────────────────────
 function go(page){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const el=document.getElementById('page-'+page);if(el)el.classList.add('active');
   document.querySelectorAll('.nav-item').forEach(n=>{if(n.getAttribute('onclick')==="go('"+page+"')")n.classList.add('active');});
   S.page=page;
-  const T={dashboard:'Dashboard',bom:'BOM / Projects',alerts:'BOM Alerts',mrs:'MRS',po:'Purchase Orders',wh:'WH Incoming',payable:'Vendor Payable',history:'Item Price History',internal:'Internal Request',progress:'Project Progress',budget:'Budget & Spending',weekly:'Weekly Review',machinelist:'Machine Assets',machinelog:'Machine Log',testequip:'Test Equipment'};
+  const T={dashboard:'Dashboard',bom:'BOM / Projects',alerts:'BOM Alerts',actiontracker:'Action Tracker',mrs:'MRS',po:'Purchase Orders',wh:'WH Incoming',payable:'Vendor Payable',history:'Item Price History',internal:'Internal Request',progress:'Project Progress',budget:'Budget & Spending',weekly:'Weekly Review',machinelist:'Machine Assets',machinelog:'Machine Log',testequip:'Test Equipment'};
   document.getElementById('pg-title').textContent=T[page]||page;
   document.getElementById('pg-sub').textContent='';
-  const L={mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,history:loadHistory,alerts:loadAlerts,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly,machinelist:loadMachineList,machinelog:loadMachineLog,testequip:loadTestEquip};
+  const L={mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,history:loadHistory,alerts:loadAlerts,actiontracker:renderAT,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly,actiontracker:loadActionTracker,machinelist:loadMachineList,machinelog:loadMachineLog,testequip:loadTestEquip};
   if(L[page]&&!S.data[page])L[page]();
 }
 function addEntry(){const M={internal:'m-ir',progress:'m-pp',weekly:'m-wr',bom:'m-bom-batch'};if(M[S.page])openModal(M[S.page]);else toast('Navigate to a section that supports adding entries.','i');}
 
-// ─── API ─────────────────────────────────────────────────
 async function api(action,params={}){const qs=new URLSearchParams({action,...params}).toString();const r=await fetch(`${API}?${qs}`);return r.json();}
 async function apiPost(payload){const r=await fetch(API,{method:'POST',body:JSON.stringify(payload)});return r.json();}
-
-// ─── DASHBOARD ───────────────────────────────────────────
 async function loadDashboard(){
   setLoad('dash-stats');
   const d=await api('getDashboard');
@@ -731,22 +663,18 @@ async function loadDashboard(){
     {l:'Total POs',v:d.po?.total||0,s:'₱'+sn(d.po?.totalValue),c:'blue',i:'🛒'},
     {l:'Pending Delivery',v:d.wh?.pending||0,s:(d.wh?.complete||0)+' completed',c:'orange',i:'🏭'},
     {l:'Unpaid Bills',v:d.payable?.unpaid||0,s:'₱'+sn(d.payable?.totalDue)+' due',c:'red',i:'💰'},
-    {l:'📋 For Canvass',v:al.forCanvass||0,s:'BOM items need quotes',c:'orange',i:'📋'},
-    {l:'📄 For PO',v:al.forPO||0,s:'BOM items ready for PO',c:'purple',i:'📄'},
-    {l:'🚚 Partial Delivery',v:al.forDelivery||0,s:'awaiting balance',c:'teal',i:'🚚'},
+    {l:'🔍 For Canvass',v:al.forCanvass||0,s:'BOM items need quotes',c:'orange',i:'🔍'},
+    {l:'📋 For PO',v:al.forPO||0,s:'BOM items ready for PO',c:'purple',i:'📋'},
+    {l:'🚚 Follow Delivery',v:al.forDelivery||0,s:'awaiting balance',c:'teal',i:'🚚'},
     {l:'Active Projects',v:d.projects?.inProgress||0,s:(d.projects?.completed||0)+' completed',c:'green',i:'📈'},
     {l:'Contract Value',v:'₱'+sn(d.projects?.totalContract||0),s:'₱'+sn(d.projects?.totalSpend||0)+' spent',c:'gold',i:'💹'},
   ];
   document.getElementById('dash-stats').innerHTML=stats.map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv ${typeof s.v==='string'?'b':''}">${s.v}</div><div class="ss">${s.s||''}</div></div>`).join('');
-
   S.data.alerts=d.bomAlerts;
-  // Dash BOM alerts (top 8)
   const items=(al.alerts||[]).slice(0,8);
   document.getElementById('dash-alerts').innerHTML=items.length?items.map(a=>aCard(a)).join(''):'<div class="empty" style="padding:20px"><div class="ei">✅</div><h4>No pending alerts</h4></div>';
-
   const bs=await api('getBOMSheets');
   document.getElementById('dash-bom-list').innerHTML=`<div style="display:flex;flex-direction:column;gap:7px">${(bs.sheets||[]).map(s=>`<div style="display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;font-weight:600;flex:1">📦 ${s.displayName}</span><button class="eb" onclick="loadBOMDirect('${s.name}',true)">View →</button></div>`).join('')}</div>`;
-
   setBadges(d,al);
   document.getElementById('sync-t').textContent='synced '+new Date().toLocaleTimeString();
 }
@@ -754,7 +682,7 @@ async function loadDashboard(){
 function aCard(a){
   const cls=a.status.includes('For Canvass')?'cv':a.status.includes('For PO')?'fp':'dl';
   const bc=cls==='cv'?'by':cls==='fp'?'bp':'bb';
-  return `<div class="ac ${cls}" onclick="goBOMRow('${a.sheetName.replace(/'/g,"\\'")}',${a.rowIndex})">
+  return `<div class="ac ${cls}" onclick="goBOMRow('${a.sheetName.replace(/'/g,"\'")}',${a.rowIndex})">
     <div style="flex:1">
       <div class="act">📦 ${a.displayName} <span style="font-weight:400;color:var(--muted)">— ${(a.description||'').substring(0,50)}${(a.description||'').length>50?'…':''}</span></div>
       <div class="acs"><span class="badge ${bc}" style="font-size:9px">${a.status}</span>&nbsp;Qty: <b>${a.qty} ${a.unit||''}</b>${a.vendor?' | '+a.vendor:''}${a.expDate?' | Due: '+a.expDate:''}</div>
@@ -780,18 +708,19 @@ function setBadges(d,al){
   s('nb-pay',d.payable?.unpaid||0,d.payable?.unpaid>0?'':'g');
   s('nb-ir',d.internalRequests?.pending||0,'o');
   s('nb-mrs',d.po?.pending||0,'y');
+  const _atT=(d.bomAlerts?.forCanvass||0)+(d.bomAlerts?.forPO||0)+(d.bomAlerts?.forDelivery||0);
+  s('nb-at',_atT,_atT>0?'':'g');
 }
 
-// ─── BOM ALERTS ──────────────────────────────────────────
 async function loadAlerts(){
   document.getElementById('alert-list').innerHTML='<div class="loading"><div class="spinner"></div>Loading alerts…</div>';
   const d=await api('getBOMAlerts');
   S.data.alerts=d;
   const el=document.getElementById('cnt-alert');if(el)el.textContent=d.count||0;
   document.getElementById('alert-stats').innerHTML=[
-    {l:'📋 For Canvass',v:d.forCanvass||0,c:'orange',i:'📋',s:'Need vendor quotes'},
-    {l:'📄 For PO',v:d.forPO||0,c:'purple',i:'📄',s:'Ready to issue PO'},
-    {l:'🚚 Partial Delivery',v:d.forDelivery||0,c:'teal',i:'🚚',s:'Balance delivery pending'},
+    {l:'🔍 For Canvass',v:d.forCanvass||0,c:'orange',i:'🔍',s:'Need vendor quotes'},
+    {l:'📋 For PO',v:d.forPO||0,c:'purple',i:'📋',s:'Ready to issue PO'},
+    {l:'🚚 Follow Delivery',v:d.forDelivery||0,c:'teal',i:'🚚',s:'Balance delivery pending'},
   ].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div><div class="ss">${s.s}</div></div>`).join('');
   renderAlerts();
 }
@@ -816,7 +745,6 @@ function renderAlerts(){
   document.getElementById('alert-list').innerHTML=html;
 }
 
-// ─── BOM ─────────────────────────────────────────────────
 async function loadBOMSheets(){
   const d=await api('getBOMSheets');
   const sel=document.getElementById('bom-sel');
@@ -838,19 +766,15 @@ async function loadBOMDirect(sheetName,switchPg=true){
   document.getElementById('bom-body').innerHTML='<tr><td colspan="17"><div class="loading"><div class="spinner"></div></div></td></tr>';
   document.getElementById('bom-prog-wrap').style.display='none';
   document.getElementById('bom-add-btn').style.display='none';
-
   const d=await api('getBOMByProject',{project:sheetName});
   const rows=d.data||[];
   document.getElementById('bom-title').textContent=sheetName.replace('📦 ','').replace('📦','').trim();
   document.getElementById('bom-cnt').textContent=rows.length+' items';
   document.getElementById('bom-add-btn').style.display='';
-
   if(rows.length&&d.statusBreakdown){document.getElementById('bom-prog-wrap').style.display='';renderBOMBar(d.statusBreakdown,rows.length,d.pctComplete||0);}
-
   document.getElementById('bom-body').innerHTML=rows.length?rows.map(r=>`
     <tr data-r="${r.rowIndex}" style="transition:background .3s">
-      <td class="mono">${r.num}</td>
-      <td style="font-size:11px">${r.category||''}</td>
+      <td class="mono">${r.num}</td><td style="font-size:11px">${r.category||''}</td>
       <td style="max-width:220px;font-weight:500">${r.description||''}</td>
       <td class="mono" style="font-size:10px">${r.partNo||''}</td>
       <td class="tr">${r.qty||''}</td><td>${r.unit||''}</td>
@@ -861,8 +785,7 @@ async function loadBOMDirect(sheetName,switchPg=true){
       <td class="mono" style="font-size:10px">${r.poNo||''}</td>
       <td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
       <td>${whBadge(r.whStatus)}</td>
-      <td class="tr">${r.delQty||''}</td>
-      <td class="tr">${r.balQty||''}</td>
+      <td class="tr">${r.delQty||''}</td><td class="tr">${r.balQty||''}</td>
       <td>${r.actDate||''}</td>
       <td><button class="eb" onclick='openBOMEdit(${JSON.stringify(r).replace(/'/g,"&#39;")})'>✏️</button></td>
     </tr>`).join(''):emr(17,'No data. Run ⚡ EXELON Tools → Detect Old BOM Format Sheets if data exists.');
@@ -870,7 +793,7 @@ async function loadBOMDirect(sheetName,switchPg=true){
 
 function renderBOMBar(bd,total,pct){
   const sts=Object.keys(SC);
-  document.getElementById('bom-sbar').innerHTML=sts.map(s=>{const w=total>0?((bd[s]||0)/total*100).toFixed(1):0;return w>0?`<div class="sbseg" style="width:${w}%;background:${SC[s]}" title="${s}: ${bd[s]||0}"></div>`:'';}).join('');
+  document.getElementById('bom-sbar').innerHTML=sts.map(s=>{const w=total>0?((bd[s]||0)/total*100).toFixed(1):0;return w>0?`<div class="sbseg" style="width:${w}%;background:${SC[s]}" title="${s}: ${bd[s]||0}"></div>`:''}).join('');
   document.getElementById('bom-legend').innerHTML=sts.map(s=>{const c=bd[s]||0;if(!c)return'';return`<span style="display:flex;align-items:center;gap:4px"><span style="width:9px;height:9px;border-radius:2px;background:${SC[s]};display:inline-block;border:1px solid rgba(0,0,0,.1)"></span>${s.replace(/^[^\s]+\s/,'')}: <b>${c}</b></span>`;}).filter(Boolean).join('');
   const p=Math.round(pct*100);
   const pl=document.getElementById('bom-pct');pl.textContent=p+'%';
@@ -896,7 +819,6 @@ function openBOMEdit(r){
   openModal('m-edit');
 }
 
-// Batch BOM add
 function openBOMBatch(){S.batchN=0;document.getElementById('batch-rows').innerHTML='';for(let i=0;i<3;i++)addBatchRow();openModal('m-bom-batch');}
 function addBatchRow(){
   S.batchN++;const n=S.batchN;
@@ -919,11 +841,10 @@ async function submitBatch(){
     if(desc)items.push({description:desc,qty:parseFloat(document.getElementById('bd-q-'+n)?.value)||0,unit:document.getElementById('bd-u-'+n)?.value||'pcs',budget:parseFloat(document.getElementById('bd-b-'+n)?.value)||0,category:document.getElementById('bd-c-'+n)?.value||'📋 Other',status:document.getElementById('bd-s-'+n)?.value||'📋 For Canvass'});
   });
   if(!items.length){toast('No items filled in.','e');return;}
-  toast(`ℹ️ ${items.length} items ready. Please add these directly in the 📦 Google Sheet, then Refresh. (API batch-write coming in next update)`,'i');
+  toast(`ℹ️ ${items.length} items ready. Please add these directly in the 📦 Google Sheet, then Refresh.`,'i');
   closeModal('m-bom-batch');
 }
 
-// ─── MRS ─────────────────────────────────────────────────
 async function loadMRS(){setLoad('mrs-body');const d=await api('getMRS');S.data.mrs=d.data||[];renderMRS(S.data.mrs);const e=document.getElementById('cnt-mrs');if(e)e.textContent=d.count||0;}
 function renderMRS(rows){
   const sort=document.getElementById('mrs-sort')?.value||'';
@@ -947,13 +868,12 @@ function renderMRS(rows){
       <td class="mono">${r.poNo||''}</td>
       <td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
       <td>${r.poDate||''}</td>
-      <td><button class="eb" onclick="openGenEdit('mrs',${r.rowIndex},'MRS','${(r.description||'').substring(0,25).replace(/'/g,"&#39;")}'",[['status','Status','select',['✅ PO Issued','🟡 For Canvass','🏭 Warehouse Stock']],['vendor','Vendor','text'],['poNo','PO #','text'],['unitPrice','Unit Price','number'],['poDate','PO Date','date']])">✏️</button></td>
+      <td><button class="eb" onclick="openGenEdit('mrs',${r.rowIndex},'MRS','${(r.description||'').substring(0,25).replace(/'/g,"&#39;")}',[['status','Status','select',['✅ PO Issued','🟡 For Canvass','🏭 Warehouse Stock']],['vendor','Vendor','text'],['poNo','PO #','text'],['unitPrice','Unit Price','number'],['poDate','PO Date','date']])">✏️</button></td>
     </tr>`;}).join('')||emr(15,'No MRS data');
 }
 function filterMRS(){const sf=document.getElementById('mrs-sf').value;renderMRS((S.data.mrs||[]).filter(r=>!sf||r.status===sf));}
 function filterMRSLive(){const q=document.getElementById('mrs-q').value.toLowerCase();renderMRS((S.data.mrs||[]).filter(r=>JSON.stringify(r).toLowerCase().includes(q)));}
 
-// ─── PO ──────────────────────────────────────────────────
 async function loadPO(){setLoad('po-body');const d=await api('getPO');S.data.po=d.data||[];renderPO(S.data.po);const e=document.getElementById('cnt-po');if(e)e.textContent=d.count||0;}
 function renderPO(rows){
   document.getElementById('po-body').innerHTML=rows.map(r=>`
@@ -964,13 +884,12 @@ function renderPO(rows){
       <td style="max-width:180px">${r.description||''}</td>
       <td class="mono" style="font-size:10px">${r.partNo||''}</td>
       <td style="font-size:11px">${r.supplier||''}</td>
-      <td>${r.unit||''}</td>
-      <td class="tr">${r.ordQty||''}</td>
+      <td>${r.unit||''}</td><td class="tr">${r.ordQty||''}</td>
       <td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td>
       <td class="tr mono bold">${r.lineTotal?'₱'+fmt(r.lineTotal):''}</td>
       <td>${r.poDate||''}</td><td>${sBadge(r.status)}</td>
       <td style="font-size:11px">${r.remarks||''}</td>
-      <td><button class="eb" onclick="openGenEdit('po',${r.rowIndex},'PO ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}'",[['status','Status','select',['⬜ Pending','✅ Delivered','❌ Cancelled']],['remarks','Remarks','text']])">✏️</button></td>
+      <td><button class="eb" onclick="openGenEdit('po',${r.rowIndex},'PO ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}',[['status','Status','select',['⬜ Pending','✅ Delivered','❌ Cancelled']],['remarks','Remarks','text']])">✏️</button></td>
     </tr>`).join('')||emr(14,'No PO data');
 }
 function showPODetail(poNo){
@@ -991,28 +910,25 @@ function showPODetail(poNo){
 }
 function filterPO(){const v=document.getElementById('po-sf').value;renderPO(v?(S.data.po||[]).filter(r=>r.status===v):S.data.po||[]);}
 
-// ─── WH ──────────────────────────────────────────────────
 async function loadWH(){setLoad('wh-body');const d=await api('getWH');S.data.wh=d.data||[];renderWH(S.data.wh);const e=document.getElementById('cnt-wh');if(e)e.textContent=d.count||0;}
 function renderWH(rows){
   document.getElementById('wh-body').innerHTML=rows.map(r=>{
     const ov=r.status!=='✅ Complete'&&r.daysVar&&r.daysVar>0;
     return`<tr${ov?' style="background:#FFEBEE"':''}><td class="mono bold">${r.poNo||''}</td><td style="font-size:11px">${r.project||''}</td><td style="max-width:170px">${r.description||''}</td><td style="font-size:11px">${r.supplier||''}</td><td>${r.unit||''}</td><td class="tr">${r.poQty||''}</td><td class="tr bold">${r.delQty||''}</td><td class="tr">${r.cancelQty||''}</td><td class="tr">${r.balQty||''}</td><td>${r.actDate||''}</td><td>${r.expDate||''}</td><td class="tr ${ov?'badge br':''}">${r.daysVar||''}</td><td>${sBadge(r.status)}</td>
-    <td><button class="eb" onclick="openGenEdit('wh',${r.rowIndex},'WH ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}'",[['status','Status','select',['⬜ Pending','🚚 Partial','✅ Complete']],['delQty','Del Qty','number'],['cancelQty','Cancel Qty','number'],['actDate','Actual Date','date']])">✏️</button></td></tr>`;
+    <td><button class="eb" onclick="openGenEdit('wh',${r.rowIndex},'WH ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}',[['status','Status','select',['⬜ Pending','🚚 Partial','✅ Complete']],['delQty','Del Qty','number'],['cancelQty','Cancel Qty','number'],['actDate','Actual Date','date']])">✏️</button></td></tr>`;
   }).join('')||emr(14,'No WH data');
 }
 function filterWH(v){renderWH(v?(S.data.wh||[]).filter(r=>r.status===v):S.data.wh||[]);}
 
-// ─── PAYABLE ─────────────────────────────────────────────
 async function loadPayable(){setLoad('pay-body');const d=await api('getPayable');S.data.payable=d.data||[];renderPayable(S.data.payable);const e=document.getElementById('cnt-pay');if(e)e.textContent=d.count||0;}
 function renderPayable(rows){
   document.getElementById('pay-body').innerHTML=rows.map(r=>`
     <tr><td class="mono">${r.num}</td><td class="mono bold">${r.poNo||''}</td><td style="font-size:11px">${r.project||''}</td><td style="font-size:11px">${r.supplier||''}</td><td style="max-width:150px">${r.description||''}</td><td class="tr">${r.delQty||''}</td><td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td><td class="tr mono bold">${r.amount?'₱'+fmt(r.amount):''}</td><td>${r.billingDate||''}</td><td class="mono">${r.invoiceNo||''}</td><td>${r.dueDate||''}</td><td>${payBadge(r.payStatus)}</td><td class="tr mono">${r.amtPaid?'₱'+fmt(r.amtPaid):''}</td><td class="tr mono bold">${r.balDue?'₱'+fmt(r.balDue):''}</td>
-    <td><button class="eb" onclick="openGenEdit('payable',${r.rowIndex},'Bill ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}'",[['payStatus','Pay Status','select',['⬜ Unpaid','✅ Paid','🔄 Partial']],['invoiceNo','Invoice #','text'],['amtPaid','Amt Paid','number'],['dueDate','Due Date','date']])">✏️</button></td>
+    <td><button class="eb" onclick="openGenEdit('payable',${r.rowIndex},'Bill ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}',[['payStatus','Pay Status','select',['⬜ Unpaid','✅ Paid','🔄 Partial']],['invoiceNo','Invoice #','text'],['amtPaid','Amt Paid','number'],['dueDate','Due Date','date']])">✏️</button></td>
     </tr>`).join('')||emr(15,'No payable data');
 }
 function filterPayable(v){renderPayable(v?(S.data.payable||[]).filter(r=>r.payStatus===v):S.data.payable||[]);}
 
-// ─── ITEM HISTORY ─────────────────────────────────────────
 async function loadHistory(){
   setLoad('hist-body');
   const d=await api('getItemHistory');
@@ -1042,7 +958,7 @@ function renderHistory(rows){
       <td style="font-size:11px">${r.project||''}</td>
       <td><span class="badge ${src.includes('MRS')?'bb':src.includes('PO')?'bt':'bgr'}" style="font-size:9px">${src}</span></td>
     </tr>`;
-  }).join('')||emr(12,'No item history. Check: 1) 📊 Item History tab has data in row 2+, 2) MRS/PO tabs have Unit Price filled.');
+  }).join('')||emr(12,'No item history.');
 }
 function filterHistory(){
   const cat=document.getElementById('hist-cat').value,src=document.getElementById('hist-src').value;
@@ -1052,7 +968,6 @@ function filterHistory(){
   renderHistory(rows);
 }
 
-// ─── INTERNAL REQ ────────────────────────────────────────
 async function loadInternalReqs(){
   setLoad('ir-body');const d=await api('getInternalReq');
   if(d.error){document.getElementById('ir-body').innerHTML=`<tr><td colspan="16" style="padding:18px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;return;}
@@ -1063,13 +978,12 @@ async function loadInternalReqs(){
 function renderIR(rows){
   document.getElementById('ir-body').innerHTML=rows.map(r=>`
     <tr><td class="mono">${r.num}</td><td>${r.date||''}</td><td style="font-size:11px">${r.category||''}</td><td style="max-width:180px;font-weight:600">${r.item||''}</td><td class="tr">${r.qty||''}</td><td>${r.unit||''}</td><td class="tr mono">${r.unitPrice?'₱'+fmt(r.unitPrice):''}</td><td class="tr mono bold">${r.total?'₱'+fmt(r.total):''}</td><td style="font-size:11px">${r.requestedBy||''}</td><td style="font-size:11px">${r.supplier||''}</td><td class="mono">${r.poNo||''}</td><td>${sBadge(r.status)}</td><td>${r.deliveryDate||''}</td><td class="tr mono">${r.amtPaid?'₱'+fmt(r.amtPaid):''}</td><td style="font-size:11px;max-width:120px">${r.notes||''}</td>
-    <td><button class="eb" onclick="openGenEdit('ir',${r.rowIndex},'IR#${r.num}','${(r.item||'').substring(0,20).replace(/'/g,"&#39;")}'",[['status','Status','select',['⬜ Pending','🟡 For Canvass','✅ PO Issued','🚚 In Transit','✅ Complete','❌ Cancelled']],['supplier','Supplier','text'],['poNo','PO#','text'],['unitPrice','Unit Price','number'],['deliveryDate','Del Date','date'],['amtPaid','Amt Paid','number'],['notes','Notes','text']])">✏️</button></td>
+    <td><button class="eb" onclick="openGenEdit('ir',${r.rowIndex},'IR#${r.num}','${(r.item||'').substring(0,20).replace(/'/g,"&#39;")}',[['status','Status','select',['⬜ Pending','🟡 For Canvass','✅ PO Issued','🚚 In Transit','✅ Complete','❌ Cancelled']],['supplier','Supplier','text'],['poNo','PO#','text'],['unitPrice','Unit Price','number'],['deliveryDate','Del Date','date'],['amtPaid','Amt Paid','number'],['notes','Notes','text']])">✏️</button></td>
     </tr>`).join('')||emr(16,'No data.');
 }
 function renderIRStats(s){document.getElementById('ir-stats').innerHTML=[{l:'Total',v:s.total||0,c:'blue',i:'📋'},{l:'Complete',v:s.complete||0,c:'green',i:'✅'},{l:'Pending',v:s.pending||0,c:'orange',i:'⬜'},{l:'In Transit',v:s.inTransit||0,c:'teal',i:'🚚'},{l:'Total Spend',v:'₱'+sn(s.totalSpend||0),c:'purple',i:'💵'},{l:'Total Paid',v:'₱'+sn(s.totalPaid||0),c:'teal',i:'💳'}].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');}
 function filterIR(){const cat=document.getElementById('ir-cf').value,sf=document.getElementById('ir-sf').value;let rows=S.data.internal||[];if(cat)rows=rows.filter(r=>r.category===cat);if(sf)rows=rows.filter(r=>r.status===sf);renderIR(rows);}
 
-// ─── PROJECT PROGRESS ────────────────────────────────────
 const PW={'For Canvass':0.10,'Ready for PO':0.40,'PO Issued':0.50,'Warehouse Stock':0.50,'Partial':0.75,'Delivered':0.75,'Complete':1.00,'Cancelled':0};
 const PCLR={complete:'#26A69A',delivered:'#42A5F5',partial:'#FFCA28',po:'#66BB6A',canvass:'#FFA726',cancel:'#EF5350'};
 let ppView='table';
@@ -1096,7 +1010,6 @@ function renderPP(rows){
     const del=((r.complete||0)+(r.partial||0)+(r.delivered||0))/(r.totalItems||1);
     const po=((r.poIssued||0)+(r.whStock||0)+(r.complete||0)+(r.partial||0)+(r.delivered||0))/(r.totalItems||1);
     const variance=(r.actualSpend||r.poValue||0)-(r.bomBudget||0);
-    const varCls=variance>0?'bo':'bg';
     return`<tr>
       <td class="mono">${r.num}</td>
       <td class="mono bold" style="cursor:pointer;color:var(--blue)" onclick="showProjDetail(${r.num-1})">${r.so||''}</td>
@@ -1113,7 +1026,7 @@ function renderPP(rows){
       <td style="min-width:80px">${pBar(po,'#66BB6A')}</td>
       <td class="tr mono">₱${fmt(r.bomBudget||0)}</td>
       <td class="tr mono bold">₱${fmt(r.actualSpend||r.poValue||0)}</td>
-      <td><span class="badge ${varCls}" style="font-size:10px">₱${fmt(Math.abs(variance))} ${variance>0?'▲over':'▼under'}</span></td>
+      <td><span class="badge ${variance>0?'bo':'bg'}" style="font-size:10px">₱${fmt(Math.abs(variance))} ${variance>0?'▲over':'▼under'}</span></td>
       <td>${sBadge(r.status||(comp>=1?'✅ Complete':comp>=0.5?'🔄 In Progress':'🟡 For Canvass'))}</td>
     </tr>`;
   }).join('')||emr(17,'No project data. Run ▶ Run Full Auto-Sync from Procurement Sync menu.');
@@ -1124,23 +1037,6 @@ function renderPPCards(rows){
     const del=Math.round(((r.complete||0)+(r.partial||0)+(r.delivered||0))/(r.totalItems||1)*100);
     const po=Math.round(((r.poIssued||0)+(r.whStock||0)+(r.complete||0)+(r.partial||0))/(r.totalItems||1)*100);
     const cc=cp>=80?'#26A69A':cp>=50?'#FF9800':'#1565C0';
-    const catHTML=(r.categoryProgress||[]).map(c=>{
-      const ccp=Math.round((c.pct||0)*100);const ccc=ccp>=100?'#26A69A':ccp>=50?'#FF9800':'#1565C0';
-      return`<div style="margin-bottom:6px">
-        <div style="display:flex;justify-content:space-between;font-size:10px;margin-bottom:2px">
-          <span style="font-weight:600">${c.category}</span>
-          <span style="display:flex;gap:7px">
-            <span style="color:#26A69A">✅${c.complete||0}</span>
-            <span style="color:#66BB6A">🛒${c.poIssued||0}</span>
-            <span style="color:#FFA726">🟡${c.forCanvass||0}</span>
-            <b class="mono" style="color:${ccc}">${ccp}%</b>
-          </span>
-        </div>
-        <div style="background:var(--border);border-radius:3px;height:7px;overflow:hidden">
-          <div style="width:${ccp}%;height:100%;background:${ccc};border-radius:3px"></div>
-        </div>
-      </div>`;
-    }).join('');
     return`<div class="card" style="overflow:hidden">
       <div style="background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:12px 14px 10px;color:#fff">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
@@ -1161,29 +1057,14 @@ function renderPPCards(rows){
         </div>
       </div>
       <div style="padding:10px 14px">
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:10px">
-          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px">
-            <div style="font-size:9px;color:var(--muted)">Delivery</div>
-            <div class="mono" style="font-size:15px;font-weight:700;color:#26A69A">${del}%</div>
-          </div>
-          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px">
-            <div style="font-size:9px;color:var(--muted)">PO Issued</div>
-            <div class="mono" style="font-size:15px;font-weight:700;color:#66BB6A">${po}%</div>
-          </div>
-          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px">
-            <div style="font-size:9px;color:var(--muted)">Budget</div>
-            <div class="mono" style="font-size:14px;font-weight:700;color:var(--blue)">₱${sn(r.actualSpend||0)}</div>
-          </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px"><div style="font-size:9px;color:var(--muted)">Delivery</div><div class="mono" style="font-size:15px;font-weight:700;color:#26A69A">${del}%</div></div>
+          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px"><div style="font-size:9px;color:var(--muted)">PO Issued</div><div class="mono" style="font-size:15px;font-weight:700;color:#66BB6A">${po}%</div></div>
+          <div style="text-align:center;background:var(--bg);border-radius:6px;padding:6px 4px"><div style="font-size:9px;color:var(--muted)">Budget</div><div class="mono" style="font-size:14px;font-weight:700;color:var(--blue)">₱${sn(r.actualSpend||0)}</div></div>
         </div>
-        ${catHTML?`<div style="border-top:1px solid var(--border);padding-top:8px">
-          <div style="font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Category Progress</div>
-          ${catHTML}
-        </div>`:''}
-        <div style="display:flex;justify-content:space-between;font-size:10.5px;margin-top:8px;padding-top:7px;border-top:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;font-size:10.5px;margin-top:6px;padding-top:7px;border-top:1px solid var(--border)">
           <span style="color:var(--muted)">Budget: <b class="mono">₱${fmt(r.bomBudget||0)}</b></span>
-          <span class="${(r.actualSpend||0)>(r.bomBudget||0)?'badge br':'badge bg'}" style="font-size:10px">
-            ₱${fmt(Math.abs((r.actualSpend||0)-(r.bomBudget||0)))} ${(r.actualSpend||0)>(r.bomBudget||0)?'over':'under'}
-          </span>
+          <span class="${(r.actualSpend||0)>(r.bomBudget||0)?'badge br':'badge bg'}" style="font-size:10px">₱${fmt(Math.abs((r.actualSpend||0)-(r.bomBudget||0)))} ${(r.actualSpend||0)>(r.bomBudget||0)?'over':'under'}</span>
         </div>
       </div>
     </div>`;
@@ -1207,20 +1088,6 @@ function showProjDetail(idx){
   const r=(S.data.progress||[])[idx];if(!r)return;
   const comp=Math.round(calcComp(r)*100);
   const del=Math.round(((r.complete||0)+(r.partial||0)+(r.delivered||0))/(r.totalItems||1)*100);
-  const catRows=(r.categoryProgress||[]).map(c=>{
-    const cp=Math.round((c.pct||0)*100);
-    return`<tr>
-      <td style="font-weight:600">${c.category}</td>
-      <td class="tc">${c.count||0}</td>
-      <td class="tc bold" style="color:#26A69A">${c.complete||0}</td>
-      <td class="tc" style="color:#66BB6A">${c.poIssued||0}</td>
-      <td class="tc" style="color:#FFA726">${c.forCanvass||0}</td>
-      <td style="min-width:90px">${pBar(c.pct||0)}</td>
-      <td class="tr mono">₱${fmt(c.budget||0)}</td>
-      <td class="tr mono">₱${fmt(c.actual||0)}</td>
-      <td><span class="badge ${(c.actual||0)>(c.budget||0)&&c.budget>0?'br':'bg'}" style="font-size:10px">₱${fmt(Math.abs((c.actual||0)-(c.budget||0)))} ${(c.actual||0)>(c.budget||0)&&c.budget>0?'over':'under'}</span></td>
-    </tr>`;
-  }).join('');
   document.getElementById('edit-title').textContent=`📊 ${r.so||''} — ${r.client||''}`;
   document.getElementById('edit-body').innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:14px">
@@ -1230,25 +1097,17 @@ function showProjDetail(idx){
           <div style="font-size:10px;color:var(--muted)">${l}</div>
         </div>`).join('')}
     </div>
-    <div style="margin-bottom:12px">${stageBar(r)}</div>
-    <div style="display:flex;flex-wrap:wrap;gap:9px;font-size:10.5px;margin-bottom:12px">
-      ${[['✅ Complete',r.complete||0,PCLR.complete],['🚚 Delivered',r.delivered||0,PCLR.delivered],['🔄 Partial',r.partial||0,PCLR.partial],['🛒 PO Issued',(r.poIssued||0)+(r.whStock||0),PCLR.po],['🟡 Canvass',(r.forCanvass||0)+(r.canvassed||0),PCLR.canvass],['❌ Cancelled',r.cancelled||0,PCLR.cancel]].map(([l,v,c])=>v>0?`<span style="background:var(--bg);border-radius:20px;padding:3px 10px;display:inline-flex;align-items:center;gap:5px"><span style="width:8px;height:8px;background:${c};border-radius:2px"></span>${l}: <b>${v}</b></span>`:'').join('')}
-    </div>
-    ${catRows?`<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px">Category Progress</div>
-    <div class="tw"><table><thead><tr><th>Category</th><th>Items</th><th>✅ Done</th><th>🛒 PO</th><th>🟡 Canvass</th><th>Progress %</th><th>Budget (₱)</th><th>Actual (₱)</th><th>Variance</th></tr></thead>
-    <tbody>${catRows}</tbody></table></div>`:''}`;
+    <div style="margin-bottom:12px">${stageBar(r)}</div>`;
   openModal('m-edit');
 }
 function renderPPStats(s){document.getElementById('pp-stats').innerHTML=[{l:'Total Projects',v:s.total||0,c:'blue',i:'📋'},{l:'🔄 In Progress',v:s.inProgress||0,c:'teal',i:'🔄'},{l:'✅ Completed',v:s.completed||0,c:'green',i:'✅'},{l:'Total Budget',v:'₱'+sn(s.totalBudget||s.totalContract||0),c:'purple',i:'💰'},{l:'Total Spend',v:'₱'+sn(s.totalActual||s.totalSpend||0),c:'orange',i:'💸'},{l:'Overall',v:s.overallProgress?Math.round(s.overallProgress*100)+'%':'—',c:'blue',i:'📊'}].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');}
 function filterPP(){const v=document.getElementById('pp-sf').value;const rows=v?(S.data.progress||[]).filter(r=>r.status===v):S.data.progress||[];renderPP(rows);if(ppView==='card')renderPPCards(rows);}
 function filterPPLive(){const q=document.getElementById('pp-q').value.toLowerCase();const rows=(S.data.progress||[]).filter(r=>JSON.stringify(r).toLowerCase().includes(q));renderPP(rows);if(ppView==='card')renderPPCards(rows);}
 
-// ─── BUDGET ──────────────────────────────────────────────
 async function loadBudget(){
   const d=await api('getBudgetSpend');S.data.budget=d;
   if(d.error){toast('⚠️ '+d.error,'e');return;}
   const ps=d.projects||[];
-  const tc=ps.reduce((s,r)=>s+(Number(r.contract)||0),0);
   const tb=ps.reduce((s,r)=>s+(Number(r.budget)||0),0);
   const ts=ps.reduce((s,r)=>s+(Number(r.spend)||0),0);
   document.getElementById('budget-stats').innerHTML=[
@@ -1256,129 +1115,62 @@ async function loadBudget(){
     {l:'% Budget Used',v:tb?pctF(ts/tb):'0%',c:ts/tb>0.9?'red':'green'},
     {l:'Variance',v:'₱'+sn(Math.abs(tb-ts)),c:ts>tb?'red':'teal'},
   ].map(s=>`<div class="sc ${s.c}"><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');
-
-  // Section A: Project table
   document.getElementById('bg-proj').innerHTML=ps.map(r=>{
-    const comp=Math.round((r.overallPct||0)*100);
-    const del=Math.round((r.deliveryPct||0)*100);
-    const po=Math.round((r.poPct||0)*100);
     const over=(r.spend||0)>(r.budget||0);
     return`<tr>
-      <td class="mono bold" style="cursor:pointer;color:var(--blue)" onclick="filterBudgetBySO('${r.so}')">${r.so||''}</td>
+      <td class="mono bold" style="cursor:pointer;color:var(--blue)">${r.so||''}</td>
       <td style="font-weight:600">${r.client||''}</td>
-      <td class="tc">${r.totalItems||0}</td>
-      <td class="tc bold" style="color:#26A69A">${r.complete||0}</td>
+      <td class="tc">${r.totalItems||0}</td><td class="tc bold" style="color:#26A69A">${r.complete||0}</td>
       <td style="min-width:90px">${pBar(r.overallPct||0)}</td>
       <td style="min-width:80px">${pBar(r.deliveryPct||0,'#26A69A')}</td>
       <td style="min-width:80px">${pBar(r.poPct||0,'#66BB6A')}</td>
       <td class="tr mono">₱${fmt(r.budget||0)}</td>
       <td class="tr mono bold">₱${fmt(r.spend||0)}</td>
       <td class="tr"><span class="badge ${over?'br':'bg'}" style="font-size:10px">₱${fmt(Math.abs((r.spend||0)-(r.budget||0)))} ${over?'▲over':'▼under'}</span></td>
-      <td><span class="mono" style="font-size:10px;color:${(r.pctUsed||0)>1?'#B71C1C':(r.pctUsed||0)>0.85?'#E65100':'#1B5E20'}">${pctF(r.pctUsed||0)}</span></td>
+      <td><span class="mono" style="font-size:10px">${pctF(r.pctUsed||0)}</span></td>
       <td>${bgBadge(r.status)}</td>
     </tr>`;
-  }).join('')||emr(12,'No project data. Run ▶ Run Full Auto-Sync first.');
-
-  // Populate SO filter dropdown
+  }).join('')||emr(12,'No project data.');
   const sel=document.getElementById('bg-so-filter');
-  if(sel){
-    const existing=Array.from(sel.options).map(o=>o.value);
-    (d.soList||d.projects||[]).forEach(p=>{
-      const key=p.so||p.key||'';
-      if(key&&!existing.includes(key)){
-        const opt=document.createElement('option');
-        opt.value=key;
-        opt.textContent=`${key} — ${p.client||''}`;
-        sel.appendChild(opt);
-      }
-    });
-  }
-
-  // Show all categories by default
-  renderBudgetCategories(d.categories||[], d.categoriesPerSO||{}, '');
-
-  // Internal request categories
+  if(sel){(d.soList||d.projects||[]).forEach(p=>{const key=p.so||p.key||'';if(key){const opt=document.createElement('option');opt.value=key;opt.textContent=`${key} — ${p.client||''}`;sel.appendChild(opt);}});}
+  renderBudgetCategories(d.categories||[],d.categoriesPerSO||{},'');
   const irCats=Object.entries(d.categoryTotals||{}).sort((a,b)=>b[1].spend-a[1].spend);
   const mx=irCats.length?Math.max(...irCats.map(([,v])=>v.spend||0),1):1;
-  document.getElementById('budget-cat').innerHTML=irCats.length?irCats.map(([cat,info])=>`<div style="display:flex;align-items:center;gap:9px;margin-bottom:7px">
-    <div style="font-size:11px;min-width:195px;font-weight:500">${cat}</div>
-    <div style="flex:1;background:var(--border);border-radius:4px;height:11px;overflow:hidden">
-      <div style="width:${(info.spend/mx*100).toFixed(1)}%;height:100%;background:var(--blue);border-radius:4px"></div>
-    </div>
-    <div class="mono" style="font-size:11px;min-width:80px;text-align:right">₱${fmt(info.spend)}</div>
-    <div class="mu" style="font-size:10px;min-width:28px">${info.count}x</div>
-  </div>`).join(''):'<div class="mu" style="padding:14px;text-align:center">No internal request data</div>';
-
-  // Machine + test equip
+  document.getElementById('budget-cat').innerHTML=irCats.length?irCats.map(([cat,info])=>`<div style="display:flex;align-items:center;gap:9px;margin-bottom:7px"><div style="font-size:11px;min-width:195px;font-weight:500">${cat}</div><div style="flex:1;background:var(--border);border-radius:4px;height:11px;overflow:hidden"><div style="width:${(info.spend/mx*100).toFixed(1)}%;height:100%;background:var(--blue);border-radius:4px"></div></div><div class="mono" style="font-size:11px;min-width:80px;text-align:right">₱${fmt(info.spend)}</div><div class="mu" style="font-size:10px;min-width:28px">${info.count}x</div></div>`).join(''):'<div class="mu" style="padding:14px;text-align:center">No internal request data</div>';
   document.getElementById('bg-mach').innerHTML=(d.machines||[]).map(r=>`<tr><td style="font-weight:600;max-width:160px">${r.name||''}</td><td class="tr mono">₱${fmt(r.repair||0)}</td><td class="tr mono">₱${fmt(r.parts||0)}</td><td class="tr mono">₱${fmt(r.tools||0)}</td><td class="tr mono bold">₱${fmt(r.total||0)}</td></tr>`).join('')||emr(5,'No machine data');
   document.getElementById('bg-te').innerHTML=(d.testEquip||[]).map(r=>`<tr><td style="font-weight:600;max-width:160px">${r.name||''}</td><td class="tr mono">₱${fmt(r.y2022||0)}</td><td class="tr mono">₱${fmt(r.y2023||0)}</td><td class="tr mono">₱${fmt(r.y2024||0)}</td><td class="tr mono bold">₱${fmt(r.total||0)}</td><td>${r.lastCalib||''}</td></tr>`).join('')||emr(6,'No test equip data');
 }
-
-function renderBudgetCategories(globalCats, perSO, selectedSO){
-  let cats = [];
-  if(selectedSO && perSO[selectedSO]){
-    cats = perSO[selectedSO].categories || [];
-  } else {
-    cats = globalCats;
-  }
-  const maxActual = cats.length ? Math.max(...cats.map(c=>c.actual||0),1) : 1;
-
-  // Visual bars
-  document.getElementById('bg-cat-bars').innerHTML = cats.length ? cats.map(c=>{
-    const over = (c.actual||0)>(c.budget||0) && c.budget>0;
-    const compPct = Math.round((c.overallPct||0)*100);
-    const cc = compPct>=80?'#26A69A':compPct>=50?'#FF9800':'#2196F3';
-    const varPct = Math.round(Math.abs(c.pctVariance||0)*100);
+function renderBudgetCategories(globalCats,perSO,selectedSO){
+  let cats=selectedSO&&perSO[selectedSO]?(perSO[selectedSO].categories||[]):globalCats;
+  const maxActual=cats.length?Math.max(...cats.map(c=>c.actual||0),1):1;
+  document.getElementById('bg-cat-bars').innerHTML=cats.length?cats.map(c=>{
+    const over=(c.actual||0)>(c.budget||0)&&c.budget>0;
+    const compPct=Math.round((c.overallPct||0)*100);
+    const cc=compPct>=80?'#26A69A':compPct>=50?'#FF9800':'#2196F3';
     return`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:4px 0">
       <div style="font-size:11px;font-weight:600;min-width:210px">${c.category}</div>
-      <div style="flex:1;position:relative;background:var(--border);border-radius:5px;height:12px;overflow:hidden">
-        <div style="width:${((c.actual||0)/maxActual*100).toFixed(1)}%;height:100%;background:${over?'#EF5350':'#1565C0'};opacity:.75;border-radius:5px"></div>
-      </div>
+      <div style="flex:1;position:relative;background:var(--border);border-radius:5px;height:12px;overflow:hidden"><div style="width:${((c.actual||0)/maxActual*100).toFixed(1)}%;height:100%;background:${over?'#EF5350':'#1565C0'};opacity:.75;border-radius:5px"></div></div>
       <div style="display:flex;align-items:center;gap:8px;min-width:360px">
         <span class="mono" style="font-size:10px;min-width:80px;text-align:right">₱${fmt(c.actual||0)}</span>
         <span class="mu" style="font-size:10px">/₱${fmt(c.budget||0)}</span>
-        <span class="badge ${over?'br':'bg'}" style="font-size:9px;min-width:62px">${over?'▲ over':'▼ under'} ${varPct}%</span>
-        <div style="display:flex;align-items:center;gap:3px">
-          <div style="background:var(--border);border-radius:3px;height:8px;width:55px;overflow:hidden">
-            <div style="width:${compPct}%;height:100%;background:${cc};border-radius:3px"></div>
-          </div>
-          <span class="mono" style="font-size:9px;font-weight:700;color:${cc}">${compPct}%</span>
-        </div>
+        <span class="badge ${over?'br':'bg'}" style="font-size:9px">${over?'▲ over':'▼ under'}</span>
+        <div style="display:flex;align-items:center;gap:3px"><div style="background:var(--border);border-radius:3px;height:8px;width:55px;overflow:hidden"><div style="width:${compPct}%;height:100%;background:${cc};border-radius:3px"></div></div><span class="mono" style="font-size:9px;font-weight:700;color:${cc}">${compPct}%</span></div>
       </div>
     </div>`;
-  }).join('') : '<div class="mu" style="padding:10px;text-align:center">No category data</div>';
-
-  // Detail table
-  document.getElementById('bg-cat').innerHTML = cats.map(c=>{
+  }).join(''):'<div class="mu" style="padding:10px;text-align:center">No category data</div>';
+  document.getElementById('bg-cat').innerHTML=cats.map(c=>{
     const over=(c.actual||0)>(c.budget||0)&&c.budget>0;
-    const compPct=Math.round((c.overallPct||0)*100);
-    const delPct=Math.round((c.deliveryPct||0)*100);
-    return`<tr>
-      <td style="font-weight:600">${c.category}</td>
-      <td class="tc">${c.count||0}</td>
-      <td class="tc bold" style="color:#26A69A">${c.complete||0}</td>
-      <td class="tc" style="color:#66BB6A">${c.poIssued||0}</td>
-      <td class="tc" style="color:#FFA726">${c.forCanvass||0}</td>
-      <td style="min-width:90px">${pBar(c.overallPct||0)}</td>
-      <td class="tr mono">₱${fmt(c.budget||0)}</td>
-      <td class="tr mono bold">₱${fmt(c.actual||0)}</td>
-      <td class="tr"><span class="badge ${over?'br':'bg'}" style="font-size:10px">₱${fmt(Math.abs((c.actual||0)-(c.budget||0)))} ${over?'▲':'▼'}</span></td>
-      <td class="tc mono" style="font-size:10px;color:${over?'#E65100':'#1B5E20'}">${over?'▲':'▼'}${Math.round(Math.abs(c.pctVariance||0)*100)}%</td>
-      <td>${bgBadge(over?'🔴 Over Budget':'🟢 Under Budget')}</td>
-    </tr>`;
-  }).join('')||emr(11,'No category data for selected project.');
+    return`<tr><td style="font-weight:600">${c.category}</td><td class="tc">${c.count||0}</td><td class="tc bold" style="color:#26A69A">${c.complete||0}</td><td class="tc" style="color:#66BB6A">${c.poIssued||0}</td><td class="tc" style="color:#FFA726">${c.forCanvass||0}</td><td style="min-width:90px">${pBar(c.overallPct||0)}</td><td class="tr mono">₱${fmt(c.budget||0)}</td><td class="tr mono bold">₱${fmt(c.actual||0)}</td><td class="tr"><span class="badge ${over?'br':'bg'}" style="font-size:10px">₱${fmt(Math.abs((c.actual||0)-(c.budget||0)))} ${over?'▲':'▼'}</span></td><td class="tc mono" style="font-size:10px">${over?'▲':'▼'}${Math.round(Math.abs(c.pctVariance||0)*100)}%</td><td>${bgBadge(over?'🔴 Over Budget':'🟢 Under Budget')}</td></tr>`;
+  }).join('')||emr(11,'No category data.');
 }
-
 function filterBudgetBySO(soVal){
   const sel=document.getElementById('bg-so-filter');
-  const so = soVal!==undefined ? soVal : (sel?sel.value:'');
-  if(soVal!==undefined && sel) sel.value=so;
-  const d=S.data.budget;
-  if(!d) return;
-  renderBudgetCategories(d.categories||[], d.categoriesPerSO||{}, so);
+  const so=soVal!==undefined?soVal:(sel?sel.value:'');
+  if(soVal!==undefined&&sel)sel.value=so;
+  const d=S.data.budget;if(!d)return;
+  renderBudgetCategories(d.categories||[],d.categoriesPerSO||{},so);
 }
 
-// ─── WEEKLY REVIEW ───────────────────────────────────────
 async function loadWeekly(){
   setLoad('wr-body');const d=await api('getWeeklyReview');
   if(d.error){document.getElementById('wr-body').innerHTML=`<tr><td colspan="12" style="padding:18px;color:#B71C1C">⚠️ ${d.error}</td></tr>`;return;}
@@ -1388,12 +1180,11 @@ async function loadWeekly(){
 function renderWR(rows){
   document.getElementById('wr-body').innerHTML=rows.map(r=>`
     <tr><td class="mono">${r.num}</td><td>${r.date||''}</td><td class="mono bold">${r.so||''}</td><td style="font-weight:600">${r.client||''}</td><td style="font-size:11px;max-width:160px">${r.project||''}</td><td>${r.targetDate||''}</td><td>${sBadge(r.status)}</td><td>${prioBadge(r.priority)}</td><td style="max-width:210px;font-size:11px">${r.notes||''}</td><td style="font-size:11px">${r.updatedBy||''}</td><td style="font-size:11px;max-width:150px">${r.nextAction||''}</td>
-    <td><button class="eb" onclick="openGenEdit('wr',${r.rowIndex},'WR#${r.num}','${(r.client||'').replace(/'/g,"&#39;")}'",[['status','Status','select',['🔄 In Progress','✅ On Track','⚠️ At Risk','⏸️ On Hold','✅ Completed']],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['notes','Notes/Updates','text'],['updatedBy','Updated By','text'],['nextAction','Next Action','text']])">✏️</button></td>
-    </tr>`).join('')||emr(12,'No weekly review data. Click ➕ Add Entry to start.');
+    <td><button class="eb" onclick="openGenEdit('wr',${r.rowIndex},'WR#${r.num}','${(r.client||'').replace(/'/g,"&#39;")}',[['status','Status','select',['🔄 In Progress','✅ On Track','⚠️ At Risk','⏸️ On Hold','✅ Completed']],['priority','Priority','select',['🔴 High','🟡 Normal','🟢 Low']],['notes','Notes/Updates','text'],['updatedBy','Updated By','text'],['nextAction','Next Action','text']])">✏️</button></td>
+    </tr>`).join('')||emr(12,'No weekly review data.');
 }
 function filterWR(v){renderWR(v?(S.data.weekly||[]).filter(r=>r.status===v):S.data.weekly||[]);}
 
-// ─── EQUIPMENT ───────────────────────────────────────────
 async function loadMachineList(){
   const d=await api('getMachineList');
   document.getElementById('ml-body').innerHTML=(d.data||[]).map(r=>`<tr><td style="font-weight:600;max-width:190px">${r.name||''}</td><td>${r.brand||''}</td><td class="mono">${r.model||''}</td><td class="mono">${r.serialNo||''}</td><td class="mono">${r.exelonCode||''}</td><td class="tr mono">${r.unitCost?'₱'+fmt(r.unitCost):''}</td><td style="font-size:11px">${r.supplier||''}</td><td>${r.datePurchased||''}</td><td class="mono">${r.po||''}</td><td style="font-size:11px">${r.remarks||''}</td><td><span class="badge ${!r.status||r.status==='ACTIVE'?'bg':'br'}">${r.status||'ACTIVE'}</span></td></tr>`).join('')||emr(11,d.error||'No machine data');
@@ -1401,7 +1192,6 @@ async function loadMachineList(){
 async function loadMachineLog(){
   setLoad('mlog-body');const d=await api('getMachineLog');S.data.mlog=d.data||[];renderMLog(S.data.mlog);
   const e=document.getElementById('cnt-mlog');if(e)e.textContent=d.count||0;
-  if(d.count===0&&!d.error)toast('Machine Log: 0 rows found. Check sheet column order: Date=col1, Equipment=col2, Brand=col3, etc.','w');
 }
 function renderMLog(rows){
   document.getElementById('mlog-body').innerHTML=rows.map(r=>`
@@ -1415,7 +1205,6 @@ async function loadTestEquip(){
   document.getElementById('te-body').innerHTML=(d.data||[]).map(r=>`<tr><td>${r.date||''}</td><td style="font-weight:600;max-width:150px">${r.equipmentName||''}</td><td style="font-size:11px">${[r.brand,r.model].filter(Boolean).join(' ')}</td><td><span class="badge bp">${r.transactionType||''}</span></td><td style="font-size:11px;max-width:130px">${r.problem||''}</td><td style="font-size:11px;max-width:130px">${r.scopeOfWork||''}</td><td style="font-size:11px">${r.recommendations||''}</td><td style="font-size:11px">${r.partsUsed||''}</td><td>${r.status?`<span class="badge bg">${r.status}</span>`:''}</td><td class="mono">${r.poNo||''}</td><td class="tr mono bold">${r.totalPrice?'₱'+fmt(r.totalPrice):''}</td><td style="font-size:11px">${r.supplier||''}</td></tr>`).join('')||emr(12,d.error||'No test equip data');
 }
 
-// ─── EDIT MODAL ──────────────────────────────────────────
 function openGenEdit(section,rowIndex,title,subtitle,fields){
   S.editCtx={section,rowIndex,fields};
   document.getElementById('edit-title').textContent=`✏️ Edit — ${title}`;
@@ -1443,7 +1232,6 @@ async function submitEdit(){
   }else toast('❌ '+(res.error||'Unknown error'),'e');
 }
 
-// ─── FORM SUBMITS ────────────────────────────────────────
 function openIRModal(){
   document.getElementById('ir-modal-title').textContent='🏢 New Internal Request';
   document.getElementById('ir-date').value=td();
@@ -1484,35 +1272,19 @@ async function submitNewClient(){
   if(!so||!client){toast('SO# and Client Name required.','e');return;}
   toast('⏳ Creating BOM tab in Google Sheets…','i');
   const res=await apiPost({action:'createClientBOM',so,client});
-  if(res.success){
-    toast('✅ Created: 📦 '+client,'s');closeModal('m-client');
-    const sel=document.getElementById('bom-sel');const o=document.createElement('option');o.value='📦 '+client;o.textContent=client;sel.appendChild(o);
-  }else toast('❌ '+(res.error||'Unknown'),'e');
+  if(res.success){toast('✅ Created: 📦 '+client,'s');closeModal('m-client');const sel=document.getElementById('bom-sel');const o=document.createElement('option');o.value='📦 '+client;o.textContent=client;sel.appendChild(o);}
+  else toast('❌ '+(res.error||'Unknown'),'e');
 }
 
-// ─── THEME ───────────────────────────────────────────────
 function openThemePicker(){
-  document.getElementById('theme-grid').innerHTML=THEMES.map(t=>`
-    <div class="to ${S.theme===t.id?'sel':''}" onclick="selectTheme('${t.id}')">
-      <div class="tsw" style="background:linear-gradient(135deg,${t.navy} 0%,${t.accent} 55%,${t.bg} 100%)"></div>
-      <div style="font-size:16px;margin-bottom:3px">${t.ico}</div>
-      <div class="tn">${t.name}</div>
-    </div>`).join('');
+  document.getElementById('theme-grid').innerHTML=THEMES.map(t=>`<div class="to ${S.theme===t.id?'sel':''}" onclick="selectTheme('${t.id}')"><div class="tsw" style="background:linear-gradient(135deg,${t.navy} 0%,${t.accent} 55%,${t.bg} 100%)"></div><div style="font-size:16px;margin-bottom:3px">${t.ico}</div><div class="tn">${t.name}</div></div>`).join('');
   openModal('m-theme');
 }
-function selectTheme(id){
-  S.theme=id;localStorage.setItem('epsi-theme',id);applyTheme(id);
-  document.querySelectorAll('.to').forEach(e=>{e.classList.toggle('sel',e.getAttribute('onclick')===`selectTheme('${id}')`);});
-  toast('🎨 Theme changed to '+THEMES.find(t=>t.id===id)?.name,'s');
-}
+function selectTheme(id){S.theme=id;localStorage.setItem('epsi-theme',id);applyTheme(id);document.querySelectorAll('.to').forEach(e=>{e.classList.toggle('sel',e.getAttribute('onclick')===`selectTheme('${id}')`);});toast('🎨 Theme changed to '+THEMES.find(t=>t.id===id)?.name,'s');}
 function applyTheme(id){document.documentElement.setAttribute('data-theme',id);}
-
-// ─── MODAL HELPERS ───────────────────────────────────────
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
-
-// ─── GENERAL HELPERS ─────────────────────────────────────
-function refreshAll(){Object.keys(S.data).forEach(k=>S.data[k]=null);const L={dashboard:loadDashboard,bom:()=>{if(S.bomSheet)loadBOMDirect(S.bomSheet,false);},alerts:loadAlerts,mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,history:loadHistory,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly,machinelist:loadMachineList,machinelog:loadMachineLog,testequip:loadTestEquip};const fn=L[S.page];if(fn)fn();toast('↻ Refreshing…','i');}
+function refreshAll(){Object.keys(S.data).forEach(k=>S.data[k]=null);const L={dashboard:loadDashboard,bom:()=>{if(S.bomSheet)loadBOMDirect(S.bomSheet,false);},alerts:loadAlerts,actiontracker:renderAT,mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,history:loadHistory,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly,actiontracker:loadActionTracker,machinelist:loadMachineList,machinelog:loadMachineLog,testequip:loadTestEquip};const fn=L[S.page];if(fn)fn();toast('↻ Refreshing…','i');}
 function filterTable(bodyId,inputId){const q=document.getElementById(inputId).value.toLowerCase();document.getElementById(bodyId).querySelectorAll('tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'-');}
 function setLoad(id){const el=document.getElementById(id);if(!el)return;if(el.tagName==='TBODY'){const c=el.closest('table')?.querySelectorAll('th').length||6;el.innerHTML=`<tr><td colspan="${c}"><div class="loading"><div class="spinner"></div>Loading…</div></td></tr>`;}else el.innerHTML='<div class="loading"><div class="spinner"></div>Loading…</div>';}
 function toast(msg,type='i'){const el=document.createElement('div');el.className=`toast t${type}`;el.textContent=msg;document.getElementById('toasts').appendChild(el);setTimeout(()=>el.remove(),3500);}
@@ -1520,14 +1292,148 @@ function fmt(n){return(Number(n)||0).toLocaleString('en-PH',{minimumFractionDigi
 function sn(n){const v=Number(n)||0;if(v>=1e9)return(v/1e9).toFixed(1)+'B';if(v>=1e6)return(v/1e6).toFixed(1)+'M';if(v>=1e3)return(v/1e3).toFixed(1)+'K';return v.toFixed(0);}
 function pctF(n){return((Number(n)||0)*100).toFixed(1)+'%';}
 function emr(c,msg){return`<tr><td colspan="${c}"><div class="empty"><div class="ei">📭</div><h4>${msg}</h4></div></td></tr>`;}
-
-// ─── BADGE HELPERS ────────────────────────────────────────
 function sBadge(s){if(!s)return'';const m={'✅':'bg','🟢':'bg','🏭':'bt','🟡':'by','⬜':'bgr','❌':'br','🚚':'bt','🔄':'bb','⚠️':'bo','⏸️':'bgr','📋':'bgr'};const k=Object.keys(m).find(k=>String(s).startsWith(k));return`<span class="badge ${m[k]||'bgr'}">${s}</span>`;}
 function bomBadge(s){if(!s)return'<span class="badge bgr">📋 For Canvass</span>';const m={'📋':'bgr','🔍':'bb','📄':'bp','✅':'bg','🚚':'by','📦':'bt'};const k=Object.keys(m).find(k=>String(s).startsWith(k));return`<span class="badge ${m[k]||'bgr'}">${s}</span>`;}
 function whBadge(s){if(!s)return'<span class="badge bgr">⬜ Pending</span>';return`<span class="badge ${s.includes('✅')?'bg':s.includes('🚚')?'bt':'bgr'}">${s}</span>`;}
 function payBadge(s){if(!s)return'<span class="badge bgr">⬜ Unpaid</span>';return`<span class="badge ${s.includes('✅')?'bg':'bo'}">${s}</span>`;}
 function prioBadge(s){if(!s)return'';return`<span class="badge ${s.includes('🔴')?'br':s.includes('🟡')?'by':'bg'}">${s}</span>`;}
 function bgBadge(s){if(!s)return'';return`<span class="badge ${s.includes('🔴')?'br':s.includes('🟡')?'by':'bg'}">${s}</span>`;}
+
+
+// ─── ACTION TRACKER — LIVE ────────────────────────────────────
+let atAF='all', atData=null;
+
+async function loadActionTracker(){
+  document.getElementById('at-list').innerHTML='<div class="loading"><div class="spinner"></div>Loading live data from Odoo…</div>';
+  ['at-tot-all','at-tot-c','at-tot-a','at-tot-d'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent='…';});
+  try {
+    const r=await fetch(`${API}?action=getActionTracker`);
+    atData=await r.json();
+    if(atData.error){document.getElementById('at-list').innerHTML=`<div class="empty"><div class="ei">⚠️</div><h4>${atData.error}</h4></div>`;return;}
+    // Update summary pills
+    const s=atData.summary||{};
+    document.getElementById('at-tot-all').textContent=s.total||0;
+    document.getElementById('at-tot-c').textContent=(s.forCanvass||0)+(s.readyForPO||0);
+    document.getElementById('at-tot-a').textContent=s.forApproval||0;
+    document.getElementById('at-tot-d').textContent=s.pendingDelivery||0;
+    document.getElementById('cnt-at').textContent=s.total||0;
+    const nb=document.getElementById('nb-at');if(nb)nb.textContent=s.total||0;
+    const od=document.getElementById('at-overdue-badge');
+    if(od)od.textContent=(s.overdueCount||0)>0?`⚠️ ${s.overdueCount} overdue`:'awaiting balance';
+    if(od&&(s.overdueCount||0)>0)od.style.color='var(--red)';
+    const st=document.getElementById('at-sync-t');
+    if(st)st.textContent='synced '+new Date().toLocaleTimeString();
+    renderAT();
+  } catch(e){
+    document.getElementById('at-list').innerHTML=`<div class="empty"><div class="ei">❌</div><h4>Failed to load: ${e.message}</h4></div>`;
+  }
+}
+
+function atFilter(f,el){
+  atAF=f;
+  document.querySelectorAll('[id^="at-pill-"]').forEach(p=>{p.style.opacity='.65';p.style.outline='none';});
+  el.style.opacity='1';el.style.outline='2px solid var(--gold)';
+  renderAT();
+}
+
+function renderAT(){
+  if(!atData){loadActionTracker();return;}
+  const q=(document.getElementById('at-q')?.value||'').toLowerCase();
+  let html='';
+
+  // ── FOR CANVASS + READY FOR PO ──
+  if(atAF==='all'||atAF==='canvass'){
+    const items=[...(atData.forCanvass||[]),...(atData.readyForPO||[])].filter(it=>
+      !q||JSON.stringify(it).toLowerCase().includes(q));
+    if(items.length){
+      html+=`<div class="card" style="margin-bottom:12px">
+        <div class="ch" style="background:var(--orange)">
+          <h3 style="color:#fff">🔍 For Canvass <span style="font-weight:400;font-size:11px;opacity:.8">${items.length} items — need vendor quotes</span></h3>
+        </div>
+        <div class="tw" style="max-height:340px;overflow-y:auto">
+          <table><thead><tr><th>Project</th><th>Description</th><th style="text-align:right">Qty</th><th>Vendor</th></tr></thead>
+          <tbody>${items.map(it=>`<tr>
+            <td style="font-size:11px;font-weight:600;max-width:140px">${it.project||''}</td>
+            <td style="max-width:260px;font-weight:500">${it.desc||''}</td>
+            <td style="text-align:right;font-family:'IBM Plex Mono',monospace;font-size:11px">${it.qty||''} ${it.unit||''}</td>
+            <td style="font-size:11px;color:var(--muted)">${it.vendor||'—'}</td>
+          </tr>`).join('')}</tbody></table>
+        </div></div>`;
+    } else if(atAF==='canvass'){
+      html+='<div class="empty"><div class="ei">✅</div><h4>No items for canvass</h4></div>';
+    }
+  }
+
+  // ── PO FOR APPROVAL ──
+  if(atAF==='all'||atAF==='approval'){
+    const items=(atData.forApproval||[]).filter(it=>!q||JSON.stringify(it).toLowerCase().includes(q));
+    if(items.length){
+      html+=`<div class="card" style="margin-bottom:12px">
+        <div class="ch" style="background:var(--purple)">
+          <h3 style="color:#fff">📋 PO for Approval <span style="font-weight:400;font-size:11px;opacity:.8">${items.length} POs — pending sign-off</span></h3>
+        </div>
+        <div class="tw" style="max-height:380px;overflow-y:auto">
+          <table><thead><tr><th>PO #</th><th>Vendor</th><th>Purpose / Project</th><th style="text-align:right">Amount (₱)</th><th>Approver</th><th>Days</th><th>Link</th></tr></thead>
+          <tbody>${items.map(it=>{
+            const isHigh=it.approver==='Lawrence Tiu';
+            const oldBadge=it.days>5?'br':'by';
+            return`<tr>
+              <td class="mono bold" style="color:var(--blue)">${it.poNo||''}</td>
+              <td style="font-size:11px;max-width:160px">${it.vendor||''}</td>
+              <td style="font-size:11px;max-width:180px">${it.purpose||''}</td>
+              <td style="text-align:right;font-family:'IBM Plex Mono',monospace;font-weight:700">₱${fmt(it.amount||0)}</td>
+              <td><span class="badge ${isHigh?'bp':'bg'}" style="font-size:9px">${it.approver||''}</span></td>
+              <td><span class="badge ${oldBadge}" style="font-size:9px">${it.days}d</span></td>
+              <td><a href="${it.link||'#'}" target="_blank" class="eb">View →</a></td>
+            </tr>`;
+          }).join('')}</tbody></table>
+        </div></div>`;
+    } else if(atAF==='approval'){
+      html+='<div class="empty"><div class="ei">✅</div><h4>No POs pending approval</h4></div>';
+    }
+  }
+
+  // ── PENDING DELIVERY ──
+  if(atAF==='all'||atAF==='delivery'){
+    const items=(atData.pendingDelivery||[]).filter(it=>!q||JSON.stringify(it).toLowerCase().includes(q));
+    if(items.length){
+      const overdue=items.filter(d=>d.level==='overdue');
+      const soon=items.filter(d=>d.level==='soon'||d.level==='today');
+      const normal=items.filter(d=>d.level==='normal');
+      const delivRow=(d)=>{
+        const bg=d.level==='overdue'?'background:#FFF5F5;':d.level==='today'?'background:#FFFBEB;':d.level==='soon'?'background:#FEFCE8;':'';
+        const urgCls=d.level==='overdue'?'br':d.level==='today'||d.level==='soon'?'bo':'bg';
+        return`<tr style="${bg}">
+          <td class="mono" style="font-size:11px">${d.receipt||''}</td>
+          <td style="font-size:11px;max-width:160px">${d.vendor||''}</td>
+          <td style="font-size:11px;max-width:200px">${d.poRef||''}</td>
+          <td>${d.scheduled||''}</td>
+          <td><span class="badge ${urgCls}" style="font-size:9px">${d.urgency||''}</span></td>
+          <td style="display:flex;gap:4px;flex-wrap:wrap">
+            <a href="${d.link||'#'}" target="_blank" class="eb" style="font-size:9px">Receipt →</a>
+            ${d.poLink?`<a href="${d.poLink}" target="_blank" class="eb" style="font-size:9px">PO →</a>`:''}
+          </td>
+        </tr>`;
+      };
+      html+=`<div class="card" style="margin-bottom:12px">
+        <div class="ch" style="background:var(--teal)">
+          <h3 style="color:#fff">🚚 Pending Delivery <span style="font-weight:400;font-size:11px;opacity:.8">${items.length} receipts${overdue.length>0?' — ⚠️ '+overdue.length+' OVERDUE':''}</span></h3>
+        </div>
+        ${overdue.length>0?`<div style="padding:8px 14px;background:#FFF5F5;border-bottom:1px solid var(--border);font-size:11px;color:var(--red);font-weight:700">⚠️ ${overdue.length} overdue deliveries — needs immediate follow-up!</div>`:''}
+        <div class="tw" style="max-height:420px;overflow-y:auto">
+          <table><thead><tr><th>Receipt #</th><th>Vendor</th><th>PO Reference</th><th>Scheduled</th><th>Status</th><th>Links</th></tr></thead>
+          <tbody>${[...overdue,...soon,...normal].map(delivRow).join('')}</tbody></table>
+        </div></div>`;
+    } else if(atAF==='delivery'){
+      html+='<div class="empty"><div class="ei">✅</div><h4>No pending deliveries</h4></div>';
+    }
+  }
+
+  if(!html)html='<div class="empty"><div class="ei">✅</div><h4>No items match your filter or search</h4></div>';
+  document.getElementById('at-list').innerHTML=html;
+}
+
+
 </script>
 </body>
 </html>
