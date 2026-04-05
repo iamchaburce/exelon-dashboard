@@ -871,7 +871,14 @@ function renderMRS(rows){
       <td><button class="eb" onclick="openGenEdit('mrs',${r.rowIndex},'MRS','${(r.description||'').substring(0,25).replace(/'/g,"&#39;")}',[['status','Status','select',['✅ PO Issued','🟡 For Canvass','🏭 Warehouse Stock']],['vendor','Vendor','text'],['poNo','PO #','text'],['unitPrice','Unit Price','number'],['poDate','PO Date','date']])">✏️</button></td>
     </tr>`;}).join('')||emr(15,'No MRS data');
 }
-function filterMRS(){const sf=document.getElementById('mrs-sf').value;renderMRS((S.data.mrs||[]).filter(r=>!sf||r.status===sf));}
+function filterMRS(){
+  const sf=document.getElementById('mrs-sf').value;
+  const q=(document.getElementById('mrs-q')?.value||'').toLowerCase();
+  let rows=S.data.mrs||[];
+  if(q)rows=rows.filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  if(sf)rows=rows.filter(r=>r.status===sf);
+  renderMRS(rows);
+}
 function filterMRSLive(){const q=document.getElementById('mrs-q').value.toLowerCase();renderMRS((S.data.mrs||[]).filter(r=>JSON.stringify(r).toLowerCase().includes(q)));}
 
 async function loadPO(){setLoad('po-body');const d=await api('getPO');S.data.po=d.data||[];renderPO(S.data.po);const e=document.getElementById('cnt-po');if(e)e.textContent=d.count||0;}
@@ -908,7 +915,14 @@ function showPODetail(poNo){
     <div style="margin-top:11px;text-align:right;font-weight:700">Grand Total: <span class="mono" style="font-size:16px;color:var(--blue)">₱${fmt(total)}</span></div>`;
   openModal('m-po-detail');
 }
-function filterPO(){const v=document.getElementById('po-sf').value;renderPO(v?(S.data.po||[]).filter(r=>r.status===v):S.data.po||[]);}
+function filterPO(){
+  const v=document.getElementById('po-sf').value;
+  const q=(document.getElementById('po-q')?.value||'').toLowerCase();
+  let rows=S.data.po||[];
+  if(q)rows=rows.filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  if(v)rows=rows.filter(r=>r.status===v);
+  renderPO(rows);
+}
 
 async function loadWH(){setLoad('wh-body');const d=await api('getWH');S.data.wh=d.data||[];renderWH(S.data.wh);const e=document.getElementById('cnt-wh');if(e)e.textContent=d.count||0;}
 function renderWH(rows){
@@ -918,7 +932,13 @@ function renderWH(rows){
     <td><button class="eb" onclick="openGenEdit('wh',${r.rowIndex},'WH ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}',[['status','Status','select',['⬜ Pending','🚚 Partial','✅ Complete']],['delQty','Del Qty','number'],['cancelQty','Cancel Qty','number'],['actDate','Actual Date','date']])">✏️</button></td></tr>`;
   }).join('')||emr(14,'No WH data');
 }
-function filterWH(v){renderWH(v?(S.data.wh||[]).filter(r=>r.status===v):S.data.wh||[]);}
+function filterWH(v){
+  const q=(document.getElementById('wh-q')?.value||'').toLowerCase();
+  let rows=S.data.wh||[];
+  if(q)rows=rows.filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  if(v)rows=rows.filter(r=>r.status===v);
+  renderWH(rows);
+}
 
 async function loadPayable(){setLoad('pay-body');const d=await api('getPayable');S.data.payable=d.data||[];renderPayable(S.data.payable);const e=document.getElementById('cnt-pay');if(e)e.textContent=d.count||0;}
 function renderPayable(rows){
@@ -927,7 +947,13 @@ function renderPayable(rows){
     <td><button class="eb" onclick="openGenEdit('payable',${r.rowIndex},'Bill ${r.poNo}','${(r.supplier||'').replace(/'/g,"&#39;")}',[['payStatus','Pay Status','select',['⬜ Unpaid','✅ Paid','🔄 Partial']],['invoiceNo','Invoice #','text'],['amtPaid','Amt Paid','number'],['dueDate','Due Date','date']])">✏️</button></td>
     </tr>`).join('')||emr(15,'No payable data');
 }
-function filterPayable(v){renderPayable(v?(S.data.payable||[]).filter(r=>r.payStatus===v):S.data.payable||[]);}
+function filterPayable(v){
+  const q=(document.getElementById('pay-q')?.value||'').toLowerCase();
+  let rows=S.data.payable||[];
+  if(q)rows=rows.filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  if(v)rows=rows.filter(r=>r.payStatus===v);
+  renderPayable(rows);
+}
 
 async function loadHistory(){
   setLoad('hist-body');
@@ -961,8 +987,17 @@ function renderHistory(rows){
   }).join('')||emr(12,'No item history.');
 }
 function filterHistory(){
-  const cat=document.getElementById('hist-cat').value,src=document.getElementById('hist-src').value;
+  const cat=document.getElementById('hist-cat').value;
+  const src=document.getElementById('hist-src').value;
+  const q=(document.getElementById('hist-q')?.value||'').toLowerCase();
   let rows=S.data.history||[];
+  if(q)rows=rows.filter(r=>
+    (r.catNo||'').toLowerCase().includes(q)||
+    (r.description||'').toLowerCase().includes(q)||
+    (r.supplier||'').toLowerCase().includes(q)||
+    (r.poNo||'').toLowerCase().includes(q)||
+    (r.project||'').toLowerCase().includes(q)
+  );
   if(cat)rows=rows.filter(r=>r.category===cat);
   if(src)rows=rows.filter(r=>(r.source||'').includes(src));
   renderHistory(rows);
@@ -982,7 +1017,16 @@ function renderIR(rows){
     </tr>`).join('')||emr(16,'No data.');
 }
 function renderIRStats(s){document.getElementById('ir-stats').innerHTML=[{l:'Total',v:s.total||0,c:'blue',i:'📋'},{l:'Complete',v:s.complete||0,c:'green',i:'✅'},{l:'Pending',v:s.pending||0,c:'orange',i:'⬜'},{l:'In Transit',v:s.inTransit||0,c:'teal',i:'🚚'},{l:'Total Spend',v:'₱'+sn(s.totalSpend||0),c:'purple',i:'💵'},{l:'Total Paid',v:'₱'+sn(s.totalPaid||0),c:'teal',i:'💳'}].map(s=>`<div class="sc ${s.c}"><div class="si">${s.i}</div><div class="sl">${s.l}</div><div class="sv b">${s.v}</div></div>`).join('');}
-function filterIR(){const cat=document.getElementById('ir-cf').value,sf=document.getElementById('ir-sf').value;let rows=S.data.internal||[];if(cat)rows=rows.filter(r=>r.category===cat);if(sf)rows=rows.filter(r=>r.status===sf);renderIR(rows);}
+function filterIR(){
+  const cat=document.getElementById('ir-cf').value;
+  const sf=document.getElementById('ir-sf').value;
+  const q=(document.getElementById('ir-q')?.value||'').toLowerCase();
+  let rows=S.data.internal||[];
+  if(q)rows=rows.filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  if(cat)rows=rows.filter(r=>r.category===cat);
+  if(sf)rows=rows.filter(r=>r.status===sf);
+  renderIR(rows);
+}
 
 const PW={'For Canvass':0.10,'Ready for PO':0.40,'PO Issued':0.50,'Warehouse Stock':0.50,'Partial':0.75,'Delivered':0.75,'Complete':1.00,'Cancelled':0};
 const PCLR={complete:'#26A69A',delivered:'#42A5F5',partial:'#FFCA28',po:'#66BB6A',canvass:'#FFA726',cancel:'#EF5350'};
@@ -1285,7 +1329,7 @@ function applyTheme(id){document.documentElement.setAttribute('data-theme',id);}
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function refreshAll(){Object.keys(S.data).forEach(k=>S.data[k]=null);const L={dashboard:loadDashboard,bom:()=>{if(S.bomSheet)loadBOMDirect(S.bomSheet,false);},alerts:loadAlerts,actiontracker:renderAT,mrs:loadMRS,po:loadPO,wh:loadWH,payable:loadPayable,history:loadHistory,internal:loadInternalReqs,progress:loadProjectProg,budget:loadBudget,weekly:loadWeekly,actiontracker:loadActionTracker,machinelist:loadMachineList,machinelog:loadMachineLog,testequip:loadTestEquip};const fn=L[S.page];if(fn)fn();toast('↻ Refreshing…','i');}
-function filterTable(bodyId,inputId){const q=document.getElementById(inputId).value.toLowerCase();document.getElementById(bodyId).querySelectorAll('tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'-');}
+function filterTable(bodyId,inputId){const q=document.getElementById(inputId).value.toLowerCase();document.getElementById(bodyId).querySelectorAll('tr').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(q)?'':'none');}
 function setLoad(id){const el=document.getElementById(id);if(!el)return;if(el.tagName==='TBODY'){const c=el.closest('table')?.querySelectorAll('th').length||6;el.innerHTML=`<tr><td colspan="${c}"><div class="loading"><div class="spinner"></div>Loading…</div></td></tr>`;}else el.innerHTML='<div class="loading"><div class="spinner"></div>Loading…</div>';}
 function toast(msg,type='i'){const el=document.createElement('div');el.className=`toast t${type}`;el.textContent=msg;document.getElementById('toasts').appendChild(el);setTimeout(()=>el.remove(),3500);}
 function fmt(n){return(Number(n)||0).toLocaleString('en-PH',{minimumFractionDigits:0,maximumFractionDigits:2});}
